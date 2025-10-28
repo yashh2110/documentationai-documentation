@@ -1,0 +1,81 @@
+{
+  "name": "Paperguide Documentation",
+  "initialRoute": "introduction",
+  "colors": {
+    "light": {
+      "brand": "#e45d20"
+    },
+    "dark": {
+      "brand": "#ff7f50"
+    }
+  },
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "icon": "book",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "icon": "rocket",
+            "pages": [
+              {
+                "title": "Introduction",
+                "path": "introduction",
+                "icon": "star"
+              }
+            ]
+          },
+          {
+            "group": "Core Concepts",
+            "icon": "lightbulb",
+            "pages": [
+              {
+                "title": "Smart Discovery",
+                "path": "smart-discovery",
+                "icon": "search"
+              },
+              {
+                "title": "Intelligent Analysis",
+                "path": "intelligent-analysis",
+                "icon": "bar-chart"
+              }
+            ]
+          },
+          {
+            "group": "Advanced Features",
+            "icon": "zap",
+            "pages": [
+              {
+                "title": "Writing Assistant",
+                "path": "writing-assistant",
+                "icon": "edit"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "icon": "code",
+        "groups": [
+          {
+            "group": "Endpoints",
+            "openapi": "openapi.yaml"
+          }
+        ]
+      },
+      {
+        "tab": "Changelog",
+        "icon": "clock",
+        "pages": [
+          {
+            "title": "Release History",
+            "path": "changelog",
+            "icon": "history"
+          }
+        ]
+      }
+    ]
+  }
+}
