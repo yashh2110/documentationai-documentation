@@ -77,5 +77,11 @@
         ]
       }
     ]
-  }
+  },
+  "redirects": [
+    {
+      "source": "/smart-discovery",
+      "destination": "/writing-assistant"
+    }
+  ]
 }
