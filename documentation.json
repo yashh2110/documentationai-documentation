@@ -81,7 +81,8 @@
   "redirects": [
     {
       "source": "/smart-discovery",
-      "destination": "/writing-assistant"
+      "destination": "/writing-assistant",
+      "statusCode": 308
     }
   ]
 }
