@@ -1,0 +1,124 @@
+---
+title: Configuration
+description: Customize Yashwanth Documentation settings for your needs
+---
+
+## Setup File
+
+You configure Yashwanth Documentation via a JSON file for flexibility. Locate `config.json` in the root directory. Edit values to match your environment.
+
+<CodeGroup tabs="Basic,Advanced">
+  ```json
+  {
+    "port": 3000,
+    "theme": "light"
+  }
+  ```
+  ```json
+  {
+    "port": 3000,
+    "theme": "dark",
+    "auth": {
+      "enabled": true,
+      "provider": "oauth"
+    }
+  }
+  ```
+</CodeGroup>
+
+<Callout kind="warning">
+  Backup your config before changes. Invalid JSON causes startup failures.
+</Callout>
+
+## Authentication
+
+Enable secure access to protect your documents. Choose between local or external providers. Set up users and roles for granular control.
+
+<Steps>
+  <Step title="Enable Auth" icon="lock">
+    Update the config to activate authentication.
+    
+    ```javascript
+    // In config.js
+    module.exports = {
+      auth: {
+        enabled: true
+      }
+    };
+    ```
+  </Step>
+  <Step title="Add Users" icon="user">
+    Use the admin panel to create accounts.
+    
+    ```bash
+    node add-user.js --name admin --role owner
+    ```
+  </Step>
+  <Step title="Test Login" icon="login">
+    Verify access with credentials.
+  </Step>
+</Steps>
+
+## Theme Customization
+
+You tailor the appearance to brand guidelines. Modify colors and fonts in the theme section. Preview changes without restarting.
+
+<Tabs>
+  <Tab title="Colors" icon="palette">
+    Define primary and secondary hues.
+    
+    | Property | Default | Custom |
+    |----------|---------|--------|
+    | Primary | #e45d20 | #yourcolor |
+    | Text | #333 | #darkgray |
+  </Tab>
+  <Tab title="Fonts" icon="font">
+    Select typefaces for readability. Use system fonts for performance.
+    
+    ```css
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    ```
+  </Tab>
+</Tabs>
+
+<Expandable title="Advanced Options" default-open={false}>
+  Explore integrations and plugins.
+  
+  <ExpandableGroup>
+    <Expandable title="Git Integration">
+      Sync changes automatically.
+    </Expandable>
+    <Expandable title="Search Engine">
+      Index content for fast queries.
+    </Expandable>
+  </ExpandableGroup>
+</Expandable>
+
+## Performance Tuning
+
+Optimize for large document sets. Set cache limits and enable compression. Monitor usage to adjust settings dynamically.
+
+```javascript
+// Example optimization script
+async function optimize() {
+  await clearCache();
+  console.log('Optimized');
+}
+optimize();
+```
+
+This configuration empowers your documentation workflow. Users see `>50%` faster load times with proper tuning. Refer to API integration for external connections.
+
+## Security Best Practices
+
+Implement measures to safeguard data. Use HTTPS in production. Regularly update dependencies to patch vulnerabilities.
+
+| Setting | Recommendation | Impact |
+|---------|----------------|--------|
+| HTTPS | Mandatory | Encrypts traffic |
+| Rate Limiting | Enable | Prevents abuse |
+| Backups | Daily | Data recovery |
+
+Your customized setup now aligns with project needs. Test thoroughly before deployment.

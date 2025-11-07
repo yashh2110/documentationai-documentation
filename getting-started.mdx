@@ -1,0 +1,105 @@
+---
+title: Getting Started
+description: Step-by-step guide to set up and begin using Yashwanth Documentation
+---
+
+## Installation
+
+You install Yashwanth Documentation quickly to start organizing your projects. Download the latest version from the official repository. Run the setup script to configure your environment.
+
+<Steps>
+  <Step title="Prerequisites" icon="check">
+    Verify your system meets the requirements.
+    
+    ```bash
+    node --version  # Should be >= 14
+    npm --version   # Should be >= 6
+    ```
+  </Step>
+  <Step title="Clone Repository" icon="download">
+    Get the source code using Git.
+    
+    ```bash
+    git clone https://github.com/yashwanth-muddana/docs.git
+    cd docs
+    ```
+  </Step>
+  <Step title="Install Dependencies" icon="package">
+    Use npm to add required packages. This step takes about 2 minutes.
+    
+    ```bash
+    npm install
+    ```
+  </Step>
+  <Step title="Start Server" icon="play">
+    Launch the application to access your documentation space.
+    
+    ```bash
+    npm start
+    ```
+    
+    Open `http://{localhost}:3000` in your browser.
+  </Step>
+</Steps>
+
+<Callout kind="tip">
+  Use `npm run dev` for development mode with hot reloading enabled.
+</Callout>
+
+## First Document
+
+Create your initial document to familiarize yourself with the interface. The editor supports syntax highlighting for code blocks. Save frequently to avoid data loss.
+
+<Tabs>
+  <Tab title="Markdown Editor" icon="file-text">
+    Write content using Markdown syntax.
+    
+    ```markdown
+    # Welcome
+    This is your first doc.
+    
+    - List item 1
+    - List item 2
+    ```
+  </Tab>
+  <Tab title="Visual Builder" icon="edit">
+    Drag and drop elements for non-technical users.
+    
+    <Columns cols={2}>
+      <Card title="Add Text" icon="font">
+        Insert paragraphs easily.
+      </Card>
+      <Card title="Embed Media" icon="image">
+        Include images and videos.
+      </Card>
+    </Columns>
+  </Tab>
+</Tabs>
+
+## Navigation Basics
+
+You navigate the dashboard to manage documents. Use the sidebar for quick access to folders. Search bar locates specific content instantly.
+
+<Expandable title="Folder Structure" default-open={true}>
+  Organize files hierarchically.
+  
+  - Root Folder
+    - Project A
+      - README.md
+    - Project B
+      - API.md
+</Expandable>
+
+This guide equips you to build your documentation space. Expect smooth performance with `<100` MB RAM usage. Proceed to configuration for advanced options.
+
+## Best Practices
+
+Adopt habits for effective documentation. Version control prevents overwrites. Regular backups safeguard your work.
+
+| Practice | Why It Matters | Tip |
+|----------|----------------|-----|
+| Use Headings | Improves readability | Start with H2 |
+| Add Descriptions | Provides context | Keep concise |
+| Review Changes | Ensures accuracy | Use diff tools |
+
+Teams using these practices report higher satisfaction. Your setup now supports collaborative editing for up to `>10` users simultaneously.
