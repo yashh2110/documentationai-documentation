@@ -2,19 +2,20 @@
 title: Introduction
 description: Overview of Yashwanth Documentation and its core capabilities
 ---
-
 ## Overview
 
-Yashwanth Documentation provides a centralized space to organize and manage project documentation. You create, edit, and collaborate on docs efficiently. Access features like version control and search to streamline your workflow.
+Yashwanth Documentation provides a centralized space to organize and manage project documentation. You create, edit, and collaborate on docs efficiently. Access features like version control and search to streamline your workflow
 
-<Columns cols={3}>
-  <Card title="Quick Setup" icon="rocket" href="#">
+<Columns cols="3">
+  <Card title="Quick Setup" href="#" icon="rocket" horizontal="false">
     Start documenting in minutes with simple installation steps.
   </Card>
-  <Card title="Collaboration" icon="users" href="#">
+
+  <Card title="Collaboration" href="#" icon="users" horizontal="false">
     Invite team members and track changes seamlessly.
   </Card>
-  <Card title="Search & Export" icon="search" href="#">
+
+  <Card title="Search & Export" href="#" icon="search" horizontal="false">
     Find content quickly and export to various formats.
   </Card>
 </Columns>
@@ -23,14 +24,14 @@ Yashwanth Documentation provides a centralized space to organize and manage proj
 
 You benefit from robust tools designed for documentation management. The platform supports Markdown editing with live previews. Integrate with Git for version history and backups.
 
-<Callout kind="info">
+<Callout kind="info" collapsed="false">
   Ensure you have Node.js installed before setup. This prevents common compatibility issues.
 </Callout>
 
 <Tabs>
   <Tab title="Basic Usage" icon="play">
     Begin by creating a new document. Use the editor to add headings and lists.
-    
+
     ```javascript
     // Example: Simple script to initialize
     const initDoc = () => {
@@ -39,32 +40,35 @@ You benefit from robust tools designed for documentation management. The platfor
     initDoc();
     ```
   </Tab>
+
   <Tab title="Advanced" icon="zap">
     Customize themes and add plugins for enhanced functionality.
-    
+
     <Steps>
-      <Step title="Install Plugin" icon="download">
+      <Step title="Install Plugin" icon="download" title-type="p">
         Run the installation command in your terminal.
-        
+
         ```bash
         npm install doc-plugin
         ```
       </Step>
-      <Step title="Configure" icon="settings">
+
+      <Step title="Configure" icon="settings" title-type="p">
         Edit the config file to enable the plugin.
       </Step>
     </Steps>
   </Tab>
 </Tabs>
 
-<Expandable title="Frequently Asked Questions" default-open={false}>
+<Expandable title="Frequently Asked Questions" default-open="false">
   Learn more about common queries.
-  
+
   <ExpandableGroup>
-    <Expandable title="How do I add images?" default-open={true}>
+    <Expandable title="How do I add images?" default-open="true">
       Upload files via the media manager or drag and drop.
     </Expandable>
-    <Expandable title="What formats are supported?">
+
+    <Expandable title="What formats are supported?" default-open="false">
       Markdown, HTML, and plain text work best.
     </Expandable>
   </ExpandableGroup>
@@ -76,10 +80,10 @@ You integrate Yashwanth Documentation into your workflow for better organization
 
 Professionals use this space for API docs, user manuals, and internal wikis. Customize permissions to control access levels. The search feature indexes all content for quick retrieval.
 
-| Feature | Benefit | Example |
-|---------|---------|---------|
-| Version Control | Track changes | Git integration |
-| Real-time Edit | Collaborate | Multi-user sessions |
-| Export Options | Share easily | PDF, HTML exports |
+| Feature         | Benefit       | Example             |
+| --------------- | ------------- | ------------------- |
+| Version Control | Track changes | Git integration     |
+| Real-time Edit  | Collaborate   | Multi-user sessions |
+| Export Options  | Share easily  | PDF, HTML exports   |
 
 This setup ensures your documentation stays current and accessible. Dive deeper into configuration for tailored setups.
