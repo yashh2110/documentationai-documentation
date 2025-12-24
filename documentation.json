@@ -39,6 +39,27 @@
                 "icon": "code"
               }
             ]
+          },
+          {
+            "group": "Tests",
+            "icon": "beaker",
+            "pages": [
+              {
+                "title": "Test 1",
+                "path": "test-1",
+                "icon": "test-tube"
+              },
+              {
+                "title": "Test 2",
+                "path": "test-2",
+                "icon": "test-tube-diagonal"
+              },
+              {
+                "title": "Test 3",
+                "path": "test-3",
+                "icon": "test-tubes"
+              }
+            ]
           }
         ]
       },
