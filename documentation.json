@@ -58,6 +58,16 @@
                 "title": "Test 3",
                 "path": "test-3",
                 "icon": "test-tubes"
+              },
+              {
+                "title": "Test 4",
+                "path": "test-4",
+                "icon": "flask-conical"
+              },
+              {
+                "title": "Test 5",
+                "path": "test-5",
+                "icon": "flask-round"
               }
             ]
           }
