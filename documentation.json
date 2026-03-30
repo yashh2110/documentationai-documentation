@@ -78,6 +78,15 @@
                 "icon": "flask-round"
               }
             ]
+          },
+          {
+            "group": "promp-21",
+            "pages": [
+              {
+                "title": "new",
+                "path": "new"
+              }
+            ]
           }
         ]
       },
