@@ -45,6 +45,10 @@
             "icon": "beaker",
             "pages": [
               {
+                "title": "prob-4",
+                "path": "prob-4"
+              },
+              {
                 "title": "prob-3",
                 "path": "prob-3"
               },
