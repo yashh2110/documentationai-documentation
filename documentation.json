@@ -74,6 +74,15 @@
                 "icon": "flask-round"
               }
             ]
+          },
+          {
+            "group": "promp1",
+            "pages": [
+              {
+                "title": "hey there",
+                "path": "hey-there"
+              }
+            ]
           }
         ]
       },
