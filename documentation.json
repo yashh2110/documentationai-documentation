@@ -45,6 +45,10 @@
             "icon": "beaker",
             "pages": [
               {
+                "title": "prob-2",
+                "path": "prob-2"
+              },
+              {
                 "title": "Tewt-1",
                 "path": "tewt-1"
               },
@@ -72,15 +76,6 @@
                 "title": "Test 5",
                 "path": "test-5",
                 "icon": "flask-round"
-              }
-            ]
-          },
-          {
-            "group": "promp1",
-            "pages": [
-              {
-                "title": "hey there",
-                "path": "hey-there"
               }
             ]
           }
