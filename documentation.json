@@ -82,6 +82,19 @@
                 "icon": "flask-round"
               }
             ]
+          },
+          {
+            "group": "promp-21",
+            "pages": [
+              {
+                "title": "newww",
+                "path": "newww"
+              },
+              {
+                "title": "new",
+                "path": "new"
+              }
+            ]
           }
         ]
       },
