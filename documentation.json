@@ -45,6 +45,10 @@
             "icon": "beaker",
             "pages": [
               {
+                "title": "Tewt-1",
+                "path": "tewt-1"
+              },
+              {
                 "title": "Test 1",
                 "path": "test-1",
                 "icon": "test-tube"
@@ -68,39 +72,6 @@
                 "title": "Test 5",
                 "path": "test-5",
                 "icon": "flask-round"
-              }
-            ]
-          },
-          {
-            "group": "New Group",
-            "pages": [
-              {
-                "title": "Guides/page 08",
-                "path": "guides/page-08"
-              },
-              {
-                "title": "Guides/page 07",
-                "path": "guides/page-07"
-              },
-              {
-                "title": "Guides/page 06",
-                "path": "guides/page-06"
-              },
-              {
-                "title": "Guides/page 05",
-                "path": "guides/page-05"
-              },
-              {
-                "title": "Guides/page 03",
-                "path": "guides/page-03"
-              },
-              {
-                "title": "Guides/page 02",
-                "path": "guides/page-02"
-              },
-              {
-                "title": "Guides/page 01",
-                "path": "guides/page-01"
               }
             ]
           }
