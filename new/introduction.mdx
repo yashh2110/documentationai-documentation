@@ -1,51 +1,53 @@
 ---
 title: Introduction
-description: Overview of Yashwanth Documentation and its core capabilities
+description: >-
+  Overview of Yashwanth Documentation and the setup steps you need to get
+  started
 ---
 ## Overview
 
-Yashwanth Documentation provides a centralized space to organize and manage project documentation. You create, edit, and collaborate on docs efficiently. Access features like version control and search to streamline your workflow
+Yashwanth Documentation gives you one place to write, organize, and maintain project documentation. You can draft pages, collaborate with your team, and keep content easy to find as it grows. hey bob
 
 <Columns cols="3">
-  <Card title="Quick Setup" href="#" icon="rocket" horizontal="false">
-    Start documenting in minutes with simple installation steps.
+  <Card title="Quick setup" href="#key-features" icon="rocket" horizontal="false">
+    Get started with the core setup steps and create your first page.
   </Card>
 
-  <Card title="Collaboration" href="#" icon="users" horizontal="false">
-    Invite team members and track changes seamlessly.
+  <Card title="Collaboration" href="#use-cases" icon="users" horizontal="false">
+    Invite teammates to review, edit, and maintain documentation together.
   </Card>
 
-  <Card title="Search & Export" href="#" icon="search" horizontal="false">
-    Find content quickly and export to various formats.
+  <Card title="Search and export" href="#use-cases" icon="search" horizontal="false">
+    Find content quickly and share it in the format your team needs.
   </Card>
 </Columns>
 
-## Key Features
+## Key features
 
-You benefit from robust tools designed for documentation management. The platform supports Markdown editing with live previews. Integrate with Git for version history and backups.
+The platform supports Markdown editing, live preview, version history, and search. Use it to keep documentation current without splitting work across separate tools.
 
 <Callout kind="info" collapsed="false">
-  Ensure you have Node.js installed before setup. This prevents common compatibility issues.
+  Install Node.js before you begin if you plan to run the documentation locally.
 </Callout>
 
 <Tabs>
-  <Tab title="Basic Usage" icon="play">
-    Begin by creating a new document. Use the editor to add headings and lists.
+  <Tab title="Core workflow" icon="play">
+    Create a page, add content, preview the result, and publish when the page is ready.
 
     ```javascript
-    // Example: Simple script to initialize
     const initDoc = () => {
-      console.log('Documentation initialized');
+      console.log("Documentation initialized");
     };
+
     initDoc();
     ```
   </Tab>
 
-  <Tab title="Advanced" icon="zap">
-    Customize themes and add plugins for enhanced functionality.
+  <Tab title="Advanced setup" icon="zap">
+    Customize themes and extend the workspace with plugins when your team needs more control.
 
     <Steps>
-      <Step title="Install Plugin" icon="download" title-type="p">
+      <Step title="Install the plugin" icon="download" title-type="p">
         Run the installation command in your terminal.
 
         ```bash
@@ -53,37 +55,98 @@ You benefit from robust tools designed for documentation management. The platfor
         ```
       </Step>
 
-      <Step title="Configure" icon="settings" title-type="p">
-        Edit the config file to enable the plugin.
+      <Step title="Configure the plugin" icon="settings" title-type="p">
+        Update the config file to enable the plugin and restart the local environment.
       </Step>
     </Steps>
   </Tab>
 </Tabs>
 
-<Expandable title="Frequently Asked Questions" default-open="false">
-  Learn more about common queries.
+## Getting started
 
-  <ExpandableGroup>
-    <Expandable title="How do I add images?" default-open="true">
-      Upload files via the media manager or drag and drop.
-    </Expandable>
+Follow these steps to set up your workspace and prepare your first document.
 
-    <Expandable title="What formats are supported?" default-open="false">
-      Markdown, HTML, and plain text work best.
-    </Expandable>
-  </ExpandableGroup>
-</Expandable>
+<Steps>
+  <Step title="Install dependencies" icon="download" title-type="p">
+    Install the packages your documentation project needs.
 
-You integrate Yashwanth Documentation into your workflow for better organization. Teams report 30% faster access to information. Explore the getting started guide next for hands-on instructions.
+    ```bash
+    npm install
+    ```
 
-## Use Cases
+    After the install finishes, your terminal should return to the prompt without errors.
+  </Step>
 
-Professionals use this space for API docs, user manuals, and internal wikis. Customize permissions to control access levels. The search feature indexes all content for quick retrieval.
+  <Step title="Start the local environment" icon="play-circle" title-type="p">
+    Run the development server so you can preview changes as you work.
 
-| Feature         | Benefit       | Example             |
-| --------------- | ------------- | ------------------- |
-| Version Control | Track changes | Git integration     |
-| Real-time Edit  | Collaborate   | Multi-user sessions |
-| Export Options  | Share easily  | PDF, HTML exports   |
+    ```bash
+    npm run dev
+    ```
 
-This setup ensures your documentation stays current and accessible. Dive deeper into configuration for tailored setups.
+    When the server starts, open the local address shown in your terminal.
+  </Step>
+
+  <Step title="Create your first page" icon="plus" title-type="p">
+    Add a new document, write a short introduction, and save the page.
+
+    Your first page should appear in the editor or file tree after it is created.
+  </Step>
+
+  <Step title="Review and publish" icon="check-circle" title-type="p">
+    Preview the page, confirm the formatting, and publish it when the content is ready.
+
+    A successful publish makes the page available to your team or readers.
+  </Step>
+</Steps>
+
+<Callout kind="tip" collapsed="false">
+  Start with one page and one clear owner. That keeps the first setup manageable and makes review faster.
+</Callout>
+
+## First steps
+
+Use the first document to confirm that the editor, preview, and collaboration flow work the way you expect.
+
+1. Write a title and a short summary.
+
+2. Add one heading, one paragraph, and one list.
+
+3. Preview the page and check the spacing.
+
+4. Share the page with a teammate for feedback.
+
+If the page renders correctly and your teammate can open it, your setup is ready for regular use.
+
+## Use cases
+
+Teams use this workspace for API documentation, user guides, and internal knowledge bases. The same structure works for product notes, onboarding material, and shared procedures.
+
+| Feature           | Benefit                             | Example                  |
+| ----------------- | ----------------------------------- | ------------------------ |
+| Version history   | Track changes over time             | Review earlier revisions |
+| Real-time editing | Collaborate on the same page        | Multi-user updates       |
+| Export options    | Share content outside the workspace | PDF and HTML exports     |
+
+Choose the format that matches the audience, then keep the page structure consistent so content stays easy to scan.
+
+## FAQ
+
+<ExpandableGroup>
+  <Expandable title="Who should use this page?" default-open="true">
+    Use this page if you want a combined introduction and setup path for the documentation workspace.
+  </Expandable>
+
+  <Expandable title="What do I need before I start?" default-open="false">
+    Install Node.js if you plan to run the project locally, then make sure you have access to the repository or workspace files.
+  </Expandable>
+
+  <Expandable title="How do I know the setup worked?" default-open="false">
+    The local server starts without errors, the first page renders in preview, and you can create or edit content successfully.
+  </Expandable>
+
+  <Expandable title="Does this support team collaboration?" default-open="false">
+    Yes. Teams can review, edit, and maintain documentation together while keeping version history and shared access in one place.hee
+  </Expandable>
+</ExpandableGroup>
+

@@ -3,127 +3,127 @@
   "initialRoute": "introduction",
   "primaryColor": "#e45d20",
   "navigation": {
-    "tabs": [
+    "products": [
       {
-        "tab": "Documentation",
-        "icon": "book",
-        "groups": [
+        "product": "paperguide",
+        "tabs": [
           {
-            "group": "Getting Started",
-            "icon": "rocket",
-            "pages": [
+            "tab": "Documentation",
+            "icon": "book",
+            "groups": [
               {
-                "title": "Introduction",
-                "path": "new/introduction",
-                "icon": "home"
+                "group": "Getting Started",
+                "icon": "rocket",
+                "pages": [
+                  {
+                    "title": "Introduction",
+                    "path": "new/introduction",
+                    "icon": "home"
+                  }
+                ]
               },
               {
-                "title": "Getting Started",
-                "path": "getting-started",
-                "icon": "play"
+                "group": "Core Concepts",
+                "icon": "lightbulb",
+                "pages": [
+                  {
+                    "title": "Configuration",
+                    "path": "new/configuration",
+                    "icon": "settings"
+                  },
+                  {
+                    "title": "API Integration",
+                    "path": "new/api-integration",
+                    "icon": "code"
+                  }
+                ]
+              },
+              {
+                "group": "Tests",
+                "icon": "beaker",
+                "pages": [
+                  {
+                    "title": "prob-4",
+                    "path": "prob-4"
+                  },
+                  {
+                    "title": "prob-3",
+                    "path": "prob-3"
+                  },
+                  {
+                    "title": "prob-2",
+                    "path": "prob-2"
+                  },
+                  {
+                    "title": "Tewt-1",
+                    "path": "tewt-1"
+                  },
+                  {
+                    "title": "Test 1",
+                    "path": "test-1",
+                    "icon": "test-tube"
+                  },
+                  {
+                    "title": "Test 2",
+                    "path": "test-2",
+                    "icon": "test-tube-diagonal"
+                  },
+                  {
+                    "title": "Test 3",
+                    "path": "test-3",
+                    "icon": "test-tubes"
+                  },
+                  {
+                    "title": "Test 4",
+                    "path": "test-4",
+                    "icon": "flask-conical"
+                  },
+                  {
+                    "title": "Test 5",
+                    "path": "test-5",
+                    "icon": "flask-round"
+                  }
+                ]
+              },
+              {
+                "group": "promp-21",
+                "pages": [
+                  {
+                    "title": "probl0",
+                    "path": "probl0"
+                  },
+                  {
+                    "title": "newww",
+                    "path": "newww"
+                  },
+                  {
+                    "title": "new",
+                    "path": "new"
+                  }
+                ]
               }
             ]
           },
           {
-            "group": "Core Concepts",
-            "icon": "lightbulb",
-            "pages": [
+            "tab": "API Reference",
+            "icon": "code",
+            "groups": [
               {
-                "title": "Configuration",
-                "path": "new/configuration",
-                "icon": "settings"
-              },
-              {
-                "title": "API Integration",
-                "path": "new/api-integration",
-                "icon": "code"
+                "group": "Endpoints",
+                "openapi": "openapi.yaml"
               }
             ]
           },
           {
-            "group": "Tests",
-            "icon": "beaker",
+            "tab": "Changelog",
+            "icon": "clock",
             "pages": [
               {
-                "title": "prob-4",
-                "path": "prob-4"
-              },
-              {
-                "title": "prob-3",
-                "path": "prob-3"
-              },
-              {
-                "title": "prob-2",
-                "path": "prob-2"
-              },
-              {
-                "title": "Tewt-1",
-                "path": "tewt-1"
-              },
-              {
-                "title": "Test 1",
-                "path": "test-1",
-                "icon": "test-tube"
-              },
-              {
-                "title": "Test 2",
-                "path": "test-2",
-                "icon": "test-tube-diagonal"
-              },
-              {
-                "title": "Test 3",
-                "path": "test-3",
-                "icon": "test-tubes"
-              },
-              {
-                "title": "Test 4",
-                "path": "test-4",
-                "icon": "flask-conical"
-              },
-              {
-                "title": "Test 5",
-                "path": "test-5",
-                "icon": "flask-round"
+                "title": "Release History",
+                "path": "new/changelog",
+                "icon": "history"
               }
             ]
-          },
-          {
-            "group": "promp-21",
-            "pages": [
-              {
-                "title": "probl0",
-                "path": "probl0"
-              },
-              {
-                "title": "newww",
-                "path": "newww"
-              },
-              {
-                "title": "new",
-                "path": "new"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "API Reference",
-        "icon": "code",
-        "groups": [
-          {
-            "group": "Endpoints",
-            "openapi": "openapi.yaml"
-          }
-        ]
-      },
-      {
-        "tab": "Changelog",
-        "icon": "clock",
-        "pages": [
-          {
-            "title": "Release History",
-            "path": "new/changelog",
-            "icon": "history"
           }
         ]
       }
