@@ -2,18 +2,18 @@
 title: Configuration
 description: Customize Yashwanth Documentation settings for your needs
 ---
-
 ## Setup File
 
-You configure Yashwanth Documentation via a JSON file for flexibility. Locate `config.json` in the root directory. Edit values to match your environment.
+You configure Yashwanth Documentation via a JSON file for flexibility. Locate `config.json` in the root directory. Edit values to match your environment.a
 
-<CodeGroup tabs="Basic,Advanced">
+<CodeGroup show-lines="true" tabs={[]}>
   ```json
   {
     "port": 3000,
     "theme": "light"
   }
   ```
+
   ```json
   {
     "port": 3000,
@@ -26,7 +26,7 @@ You configure Yashwanth Documentation via a JSON file for flexibility. Locate `c
   ```
 </CodeGroup>
 
-<Callout kind="warning">
+<Callout kind="warning" collapsed="false">
   Backup your config before changes. Invalid JSON causes startup failures.
 </Callout>
 
@@ -35,9 +35,9 @@ You configure Yashwanth Documentation via a JSON file for flexibility. Locate `c
 Enable secure access to protect your documents. Choose between local or external providers. Set up users and roles for granular control.
 
 <Steps>
-  <Step title="Enable Auth" icon="lock">
+  <Step title="Enable Auth" icon="lock" title-type="p">
     Update the config to activate authentication.
-    
+
     ```javascript
     // In config.js
     module.exports = {
@@ -47,14 +47,16 @@ Enable secure access to protect your documents. Choose between local or external
     };
     ```
   </Step>
-  <Step title="Add Users" icon="user">
+
+  <Step title="Add Users" icon="user" title-type="p">
     Use the admin panel to create accounts.
-    
+
     ```bash
     node add-user.js --name admin --role owner
     ```
   </Step>
-  <Step title="Test Login" icon="login">
+
+  <Step title="Test Login" icon="login" title-type="p">
     Verify access with credentials.
   </Step>
 </Steps>
@@ -66,15 +68,16 @@ You tailor the appearance to brand guidelines. Modify colors and fonts in the th
 <Tabs>
   <Tab title="Colors" icon="palette">
     Define primary and secondary hues.
-    
-    | Property | Default | Custom |
-    |----------|---------|--------|
-    | Primary | #e45d20 | #yourcolor |
-    | Text | #333 | #darkgray |
+
+    | Property | Default | Custom     |
+    | -------- | ------- | ---------- |
+    | Primary  | #e45d20 | #yourcolor |
+    | Text     | #333    | #darkgray  |
   </Tab>
+
   <Tab title="Fonts" icon="font">
     Select typefaces for readability. Use system fonts for performance.
-    
+
     ```css
     body {
       font-family: 'Inter', sans-serif;
@@ -83,14 +86,15 @@ You tailor the appearance to brand guidelines. Modify colors and fonts in the th
   </Tab>
 </Tabs>
 
-<Expandable title="Advanced Options" default-open={false}>
+<Expandable title="Advanced Options" default-open="false">
   Explore integrations and plugins.
-  
+
   <ExpandableGroup>
-    <Expandable title="Git Integration">
+    <Expandable title="Git Integration" default-open="false">
       Sync changes automatically.
     </Expandable>
-    <Expandable title="Search Engine">
+
+    <Expandable title="Search Engine" default-open="false">
       Index content for fast queries.
     </Expandable>
   </ExpandableGroup>
@@ -115,10 +119,10 @@ This configuration empowers your documentation workflow. Users see `>50%` faster
 
 Implement measures to safeguard data. Use HTTPS in production. Regularly update dependencies to patch vulnerabilities.
 
-| Setting | Recommendation | Impact |
-|---------|----------------|--------|
-| HTTPS | Mandatory | Encrypts traffic |
-| Rate Limiting | Enable | Prevents abuse |
-| Backups | Daily | Data recovery |
+| Setting       | Recommendation | Impact           |
+| ------------- | -------------- | ---------------- |
+| HTTPS         | Mandatory      | Encrypts traffic |
+| Rate Limiting | Enable         | Prevents abuse   |
+| Backups       | Daily          | Data recovery    |
 
 Your customized setup now aligns with project needs. Test thoroughly before deployment.
