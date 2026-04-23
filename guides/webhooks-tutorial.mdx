@@ -1,0 +1,231 @@
+---
+title: Webhook tutorial
+description: Learn how to receive webhook events securely, compare webhooks with polling, and build a reliable handler with retries and signature checks.
+---
+
+## Why webhooks matter
+
+Webhooks push event data to your application as soon as something changes. Instead of asking an API whether a new payment, signup, or deployment happened, your server receives an HTTP request with the event payload.
+
+That delivery model reduces unnecessary polling, shortens response time, and helps you automate downstream work such as provisioning accounts, updating internal systems, or sending customer notifications.
+
+<Callout kind="info">
+
+Use webhooks when your application needs near real-time updates from another system. Polling still works for simple periodic checks, but webhooks are usually the better fit for time-sensitive workflows and lower API usage.
+
+</Callout>
+
+## Polling versus webhooks
+
+Choose the delivery model that matches your integration pattern.
+
+<Tabs>
+  <Tab title="Polling" icon="refresh-cw">
+
+Polling works by sending repeated requests on a schedule to look for new data. Your application controls when those checks run, which makes local testing straightforward.
+
+The tradeoff is latency and wasted traffic. You may wait until the next poll interval before seeing an update, and frequent polling increases API usage even when nothing changed.
+
+  </Tab>
+  <Tab title="Webhooks" icon="workflow">
+
+Webhooks send an event to your endpoint as soon as the source system emits it. Delivery is event-driven instead of schedule-driven, so your automation reacts faster.
+
+That speed comes with handler responsibilities such as signature verification, retry safety, and idempotent processing. When the upstream system already supports webhooks, they are usually the better default for time-sensitive workflows.
+
+  </Tab>
+</Tabs>
+
+## Set up a secure webhook endpoint
+
+Use this sequence to move from a blank endpoint to a production-ready webhook consumer.
+
+<Steps>
+  <Step title="Register your endpoint URL" icon="link">
+
+Create a public HTTPS endpoint that accepts `POST` requests from the provider. Store the endpoint at a stable route such as `https://api.acme.io/webhooks/documentation-ai` so you do not need to update provider settings after every deploy.
+
+A basic Express route can receive the raw request body before you add signature verification.
+
+```javascript
+import express from "express";
+
+const app = express();
+
+app.post(
+  "/webhooks/documentation-ai",
+  express.raw({ type: "application/json" }),
+  (req, res) => {
+    console.log("Received webhook", req.headers["x-docai-event"]);
+    res.status(200).send("ok");
+  }
+);
+
+app.listen(3000, () => {
+  console.log("Webhook listener running on port 3000");
+});
+```
+
+Success signal: the provider accepts the endpoint URL and your server logs the first delivery attempt.
+
+  </Step>
+  <Step title="Configure the events you want to receive" icon="settings">
+
+Subscribe only to the event types your workflow actually needs. A narrow subscription reduces noise, lowers processing cost, and makes troubleshooting easier when event traffic increases.
+
+Typical event selections include:
+
+- `site.published` to trigger post-publish automation
+- `user.invited` to sync internal onboarding flows
+- `billing.subscription.updated` to update plan-dependent access
+- `search.feedback.created` to capture downstream analytics
+
+Start with the smallest event set that supports your use case. You can add more events later after the initial handler is stable.
+
+Success signal: the provider dashboard shows your endpoint as active and lists the selected event types.
+
+  </Step>
+  <Step title="Verify the webhook signature" icon="shield">
+
+Treat every inbound webhook as untrusted until you validate its signature. Compute a signature from the raw request payload and your shared secret, then compare it with the signature header sent by the provider.
+
+Do not parse or mutate the body before verification. Signature mismatches often happen because middleware converted the raw payload into a JavaScript object before hashing.
+
+<CodeGroup tabs="JavaScript,Python">
+```javascript
+import crypto from "crypto";
+import express from "express";
+
+const app = express();
+const webhookSecret = "whsec_example_7fd2a1c9b3";
+
+function computeSignature(payload, secret) {
+  return crypto.createHmac("sha256", secret).update(payload).digest("hex");
+}
+
+app.post(
+  "/webhooks/documentation-ai",
+  express.raw({ type: "application/json" }),
+  (req, res) => {
+    const payload = req.body;
+    const receivedSignature = req.header("x-docai-signature");
+    const expectedSignature = computeSignature(payload, webhookSecret);
+
+    if (!receivedSignature) {
+      return res.status(400).json({ error: "Missing signature header" });
+    }
+
+    const signaturesMatch = crypto.timingSafeEqual(
+      Buffer.from(receivedSignature, "utf8"),
+      Buffer.from(expectedSignature, "utf8")
+    );
+
+    if (!signaturesMatch) {
+      return res.status(400).json({ error: "Invalid signature" });
+    }
+
+    const event = JSON.parse(payload.toString("utf8"));
+    console.log(`Verified event ${event.id} of type ${event.type}`);
+
+    return res.status(200).json({ received: true });
+  }
+);
+```
+```python
+import hashlib
+import hmac
+import json
+
+from flask import Flask, jsonify, request
+
+app = Flask(__name__)
+webhook_secret = b"whsec_example_7fd2a1c9b3"
+
+
+def compute_signature(payload: bytes, secret: bytes) -> str:
+    return hmac.new(secret, payload, hashlib.sha256).hexdigest()
+
+
+@app.post("/webhooks/documentation-ai")
+def handle_webhook():
+    payload = request.get_data()
+    received_signature = request.headers.get("X-DocAI-Signature")
+    expected_signature = compute_signature(payload, webhook_secret)
+
+    if not received_signature:
+        return jsonify({"error": "Missing signature header"}), 400
+
+    if not hmac.compare_digest(received_signature, expected_signature):
+        return jsonify({"error": "Invalid signature"}), 400
+
+    event = json.loads(payload.decode("utf-8"))
+    app.logger.info("Verified event %s of type %s", event["id"], event["type"])
+
+    return jsonify({"received": True}), 200
+```
+</CodeGroup>
+
+Success signal: valid test deliveries return `200`, and intentionally modified payloads fail verification with `400`.
+
+  </Step>
+  <Step title="Handle retries and make processing idempotent" icon="refresh-cw">
+
+Most webhook providers retry when your endpoint times out or returns a non-`2xx` status. Design your consumer so the same event can arrive more than once without duplicating downstream work.
+
+Use the event ID as an idempotency key, store processing status in durable storage, and acknowledge the request quickly after signature verification. Move slower side effects such as database updates, email delivery, or third-party API calls into an async job when possible.
+
+A minimal retry-safe flow looks like this:
+
+```text
+1. Verify signature
+2. Check whether the event ID was already processed
+3. Store the event as received
+4. Queue background work
+5. Return 200 immediately
+```
+
+Success signal: repeated deliveries for the same event ID do not create duplicate records or duplicate side effects.
+
+  </Step>
+</Steps>
+
+## Troubleshooting common webhook issues
+
+Use these checks when deliveries fail or events behave inconsistently.
+
+<ExpandableGroup>
+  <Expandable title="Why do I keep getting signature verification failures?" default-open="true">
+
+Verify that your framework preserves the raw request body for the webhook route. If middleware parses JSON before hashing, the payload bytes change and the computed signature no longer matches the provider header.
+
+Also confirm that the webhook secret matches the environment that sent the event. Test secrets and production secrets are often different.
+
+  </Expandable>
+  <Expandable title="Why does the provider keep retrying the same event?" default-open="false">
+
+Retries usually mean your endpoint timed out, returned a non-`2xx` status, or closed the connection before sending a response. Log both the HTTP status and the event ID so you can distinguish transient infrastructure failures from application errors.
+
+Return a success response as soon as you finish verification and persistence. Process expensive work asynchronously instead of blocking the response.
+
+  </Expandable>
+  <Expandable title="Why do I see duplicate actions in my system?" default-open="false">
+
+Webhook systems are commonly at-least-once delivery systems. A duplicated side effect usually means your handler processed the same event twice without checking whether that event ID was already stored.
+
+Persist the event ID before starting downstream work, and make each worker safe to run multiple times for the same input.
+
+  </Expandable>
+  <Expandable title="How should I test webhooks locally?" default-open="false">
+
+Expose your local server through a secure tunnel, then send test events from the provider dashboard or CLI. Keep the same raw-body handling and signature verification path you use in production so local tests catch real integration issues.
+
+Capture one real payload, replay it against your local route, and confirm that the handler logs a verified event and returns `200`.
+
+  </Expandable>
+</ExpandableGroup>
+
+<Callout kind="alert">
+
+Always verify the signature against the raw payload before you parse JSON, enqueue work, or write to your database. If your framework modifies whitespace, encoding, or key order before verification, a forged or replayed request can slip past your assumptions or cause persistent verification failures.
+
+</Callout>
