@@ -1,0 +1,198 @@
+---
+title: Expandables
+description: >-
+  Reference for creating collapsible content sections using the editor UI and
+  the Expandable / ExpandableGroup components.
+type: reference
+---
+
+## Overview
+
+Expandables let you hide detailed content behind a clickable title. They are useful anywhere you want **progressive disclosure** in your docs instead of long, uninterrupted sections.
+
+Use expandables to:
+
+- Build FAQ sections where each question expands to show the answer
+- Tuck away optional configuration details or advanced settings
+- Hide long troubleshooting sections until they are needed
+- Group related details under a shared heading
+
+In Documentation.AI you can add expandables in two ways:
+
+- **Web Editor** – Insert Expandable / Expandable Group blocks from the slash menu.
+- **Code Editor (MDX)** – Use the `<Expandable>` and `<ExpandableGroup>` components.
+
+You can freely mix expandables with other components such as [`Callout`](/components/callout) and [`Steps`](/components/steps) to create richer, more scannable pages.
+
+<Expandable title="Example expandable" default-open="false">
+  This is a simple expandable created with the component.\
+  You can add text, lists, images, callouts, steps, and more inside.
+
+</Expandable>
+
+## Using with Web Editor
+
+In the Web Editor, Expandable and Expandable Group are available as blocks from the slash menu.
+
+### Add a single expandable
+
+1. Place your cursor on a new line where you want the collapsible section.
+2. Type <kbd>/</kbd> and search for **Expandable**.
+3. Select **Expandable** to insert an accordion-style block.
+4. Click the **title text** in the header to rename it.
+5. Click inside the **content area** to start adding body content.
+
+Each expandable has:
+
+- A **title row** – what readers click to open or close the section.
+- A **content area** – where you can add rich content such as text, images, [`Callout`](/components/callout), or [`Steps`](/components/steps).
+
+<Callout kind="info">
+
+Prefer writing in code?
+
+You can switch to **MDX view inside the Web Editor** to write or edit this component using the same syntax as the Code Editor. This is useful if you want full control while staying in the Web Editor.
+
+</Callout>
+
+### Control default open or closed
+
+For each expandable block:
+
+- Use the **expand/collapse icon** on the right side of the header to set the **default state**.
+- When you click it while open, the tooltip shows **“Set Default State to Collapsed”** (and vice versa).
+- The default state only affects how the page appears **when it first loads**; readers can still open and close it.
+
+### Add and manage an expandable group
+
+Use **Expandable Group** when you want multiple expandables that belong together, such as an FAQ list or a set of configuration topics.
+
+To add and manage a group:
+
+1. Place your cursor on a new line.
+2. Type <kbd>/</kbd> and search for **Expandable Group**, then insert it.
+3. Inside the group:
+   - Use the **<kbd>+</kbd> button** at the bottom of the group to add another item.
+   - Click the **trash icon** on an item to delete just that expandable.
+   - Use the **drag handle** to reorder items.
+   - Edit titles and content just like a single expandable.
+
+Expandable Group ensures consistent spacing, borders, and behavior across all items in the group.
+
+## Using with Code Editor
+
+In the Code Editor (MDX), you work directly with the `<Expandable>` and `<ExpandableGroup>` components.
+
+### `<Expandable>` component
+
+Use `<Expandable>` for a single collapsible section.
+
+```jsx
+<Expandable title="Click to expand" default-open="false">
+  Add your content here...
+</Expandable>
+```
+
+The two main attributes are:
+
+- `title` – text shown in the header that users click.
+- `default-open` – `"true"` to start open, `"false"` to start closed (defaults to `"false"`).
+
+```jsx
+<Expandable title="Getting started guide" default-open="true">
+  This section starts open by default and is useful for key onboarding content.
+</Expandable>
+```
+
+Expandables can contain rich content including lists, code blocks, [`Callout`](/components/callout), and [`Steps`](/components/steps):
+
+````jsx
+<Expandable title="API configuration" default-open="false">
+## Environment variables
+
+Set these variables in your `.env` file:
+
+- `API_KEY` - Your API authentication key
+- `API_URL` - Base URL for API calls
+
+```bash
+# Example .env file
+API_KEY=your-secret-key
+API_URL=https://api.example.com
+```
+
+<Callout kind="danger">
+  Never commit API keys to version control.
+</Callout>
+</Expandable>
+````
+
+### `<ExpandableGroup>` component
+
+Use `<ExpandableGroup>` to group multiple `<Expandable>` components together with consistent styling.
+
+````jsx
+<ExpandableGroup>
+  <Expandable title="Installation" default-open="true">
+    Install the package using your preferred package manager:
+
+    ```bash
+    npm install documentation-ai
+    ```
+  </Expandable>
+
+  <Expandable title="Configuration" default-open="false">
+    Create a configuration file in your project root:
+
+    ```json
+    {
+      "name": "My Documentation",
+      "theme": "light",
+      "sidebar": true
+    }
+    ```
+  </Expandable>
+
+  <Expandable title="Deployment" default-open="false">
+    Deploy your documentation using the CLI:
+
+    ```bash
+    npm run deploy
+    ```
+  </Expandable>
+</ExpandableGroup>
+````
+
+`<ExpandableGroup>` itself does not take any attributes; it is a simple wrapper that applies layout and spacing to the child `<Expandable>` components.
+
+### Attribute reference
+
+<ParamField path="title" param-type="string" required="false" deprecated="false">
+  Header text displayed in the expandable button (default: `"Click to expand"`).
+</ParamField>
+
+<ParamField path="default-open" param-type="string" required="false" deprecated="false">
+  Initial state: `"true"` (open) or `"false"` (closed). Defaults to `"false"`.
+</ParamField>
+
+## Advanced options
+
+### Content and layout best practices
+
+- **Use for progressive disclosure**  
+  Keep pages scannable by showing only the essentials by default, and placing advanced details or edge cases in expandables.
+
+- **Keep titles short and specific**  
+  Aim for clear, action-oriented titles such as `"Advanced configuration"`, `"Troubleshooting"`, or `"See full example"` rather than full sentences.
+
+- **Avoid nesting deeply**  
+  While you can place many components (including [`Callout`](/components/callout) and [`Steps`](/components/steps)) inside an expandable, avoid deeply nested expandables or many layers of headings, which can be harder to navigate.
+
+- **Use groups for related items**  
+  Prefer `<ExpandableGroup>` when you have several related items so spacing, borders, and behavior feel consistent.
+
+### Behavioral notes and limitations
+
+- Expandables control **only visibility**, not navigation; readers cannot link directly to an individual expandable item unless you add an anchor heading inside the content.
+- The `default-open` state is evaluated on initial page load only. User open/close actions are not persisted across sessions.
+- `<ExpandableGroup>` does not currently support additional props such as single-open-only or auto-close behavior; all items expand and collapse independently.

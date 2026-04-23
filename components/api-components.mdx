@@ -1,0 +1,298 @@
+---
+title: API Components
+description: >-
+  Reference for Request and Response components that automatically display in
+  the right panel for API documentation.
+type: reference
+---
+
+## Overview
+
+The **Request** and **Response** components create a two-column layout for API examples:
+
+- **Desktop:** Requests and responses appear in a sticky right sidebar while your main documentation stays on the left.
+
+- **Mobile:** Components render as regular code blocks inside the main content.
+
+These components are designed for developers and work like sidebar versions of **CodeGroup**.
+
+Common use cases:
+
+- **Endpoint docs:** Request and response examples for each API route.
+
+- **Multi-language SDKs:** Tabs for JavaScript, Python, cURL, and more.
+
+- **Status examples:** Response examples for different HTTP status codes.
+
+- **Tutorials:** Before/after or success/error examples next to explanations.
+
+<Request uid="c6ca1719-456a-4c7f-aae8-06b2b5aaa11a" show-lines="true" tabs={["JavaScript","cURL"]}>
+
+```javascript
+const response = await fetch("/api/docs", {
+  method: "POST",
+  headers: {
+    Authorization: "Bearer TOKEN",
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({ title: "Getting Started" }),
+});
+const response = await fetch("/api/docs", {
+  method: "POST",
+  headers: {
+    Authorization: "Bearer TOKEN",
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({ title: "Getting Started" }),
+});
+const response = await fetch("/api/docs", {
+  method: "POST",
+  headers: {
+    Authorization: "Bearer TOKEN",
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({ title: "Getting Started" }),
+});
+const response = await fetch("/api/docs", {
+  method: "POST",
+  headers: {
+    Authorization: "Bearer TOKEN",
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({ title: "Getting Started" }),
+});
+```
+
+```bash
+curl -X POST https://api.example.com/docs \
+  -H "Authorization: Bearer TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"title": "Getting Started"}'
+```
+
+</Request>
+
+<Response uid="a1a2053a-c2e9-494d-b580-d6604d9e7788" show-lines="true" tabs={["200","404"]}>
+
+```json
+{
+  "id": "doc-123",
+  "title": "Getting Started",
+  "status": "published",
+  "created_at": "2024-01-15T10:30:00Z"
+}
+{
+  "id": "doc-123",
+  "title": "Getting Started",
+  "status": "published",
+  "created_at": "2024-01-15T10:30:00Z"
+}
+{
+  "id": "doc-123",
+  "title": "Getting Started",
+  "status": "published",
+  "created_at": "2024-01-15T10:30:00Z"
+}
+```
+
+```json
+{
+  "error": "Document not found",
+  "code": "DOC_NOT_FOUND",
+  "message": "The requested document does not exist"
+}
+```
+
+</Response>
+
+## Using with Web Editor
+
+### Request in the editor UI
+
+1. Place your cursor where you want the sidebar example.
+
+2. Type <kbd>/</kbd> and search for **Request**.
+
+3. Select **Request** to insert a Request block.
+
+Inside the Request block:
+
+- Tabs row: One tab is created by default, with a **+** button to add more.
+
+- Rename tabs: Double-click a tab name (for example, `request`) and type a new label.
+
+- Code editor: Click in the code area, paste or write your example.
+
+- Language selector: Use the dropdown on the right to choose the language for that tab.
+
+<Image
+  src="https://blob-cdn.documentation.ai/org-53a37986-2c9e-4094-b9e8-1e1ffae9e9ee/doc-b389b141-ae58-4fd5-91f9-6702fae9ac58/1765447133805-xmduk8b2tpf-pasted-image-1765447130714.png?q=85&fm=auto&auto=compress%2Cformat"
+  width="500"
+  height="297"
+  alt=""
+  style="width: 500px; height: auto; cursor: pointer;"
+/>
+
+### Response in the editor UI
+
+1. Place your cursor under the related Request (or wherever you want the response).
+
+2. Type <kbd>/</kbd> and search for **Response**.
+
+3. Select **Response** to insert a Response block.
+
+Inside the Response block:
+
+- Tabs row: One tab is created by default, with a **+** button to add more.
+
+- Rename tabs: Double-click a tab name (commonly use status codes like `200`, `404`).
+
+- Code editor: Paste or write your JSON or other response example.
+
+- Language selector: Choose the language (usually JSON) from the dropdown on the right.
+
+<Image
+  src="https://blob-cdn.documentation.ai/org-53a37986-2c9e-4094-b9e8-1e1ffae9e9ee/doc-b389b141-ae58-4fd5-91f9-6702fae9ac58/1765447322447-gmaotxgck8t-pasted-image-1765447320243.png?q=85&fm=auto&auto=compress%2Cformat"
+  width="508"
+  height="250"
+  alt=""
+  style="width: 508px; height: auto; cursor: pointer;"
+/>
+
+<Callout kind="info">
+
+Prefer writing in code?
+
+You can switch to **MDX view inside the Web Editor** to write or edit this component using the same syntax as the Code Editor. This is useful if you want full control while staying in the Web Editor.
+
+</Callout>
+
+## Using with Code Editor
+
+### Request in MDX
+
+Use `Request` to display API request examples in the right sidebar. This component works like [`CodeGroup`](/components/code-blocks-and-groups) but displays in the sidebar instead of inline.
+
+````jsx
+<Request tabs="JavaScript,Python">
+```javascript
+const response = await fetch('/api/docs', {
+  method: 'POST',
+  headers: { 'Authorization': 'Bearer TOKEN' },
+  body: JSON.stringify({ title: 'Getting Started' })
+});
+```
+
+```python
+import requests
+response = requests.post('/api/docs',
+  headers={'Authorization': 'Bearer TOKEN'},
+  json={'title': 'Getting Started'}
+)
+```
+</Request>
+````
+
+### Response in MDX
+
+Use `Response` to display API response examples in the right sidebar beneath any `Request` content on the same page.
+
+````jsx
+<Response tabs="200,500">
+```json
+{
+  "id": "doc-123",
+  "status": "success"
+}
+```
+
+```json
+{
+  "error": "Internal server error",
+  "code": "INTERNAL_ERROR"
+}
+```
+</Response>
+````
+
+## Advanced options
+
+### Request attributes
+
+<ParamField
+  uid="329c19b1-2df8-4b4b-8b1d-a7d4653542be"
+  path="tabs"
+  param-type="string"
+  required="false"
+  deprecated="false"
+>
+  Comma-separated tab names. Overrides auto-detected languages.
+</ParamField>
+
+<ParamField
+  uid="575ba8e6-f64b-4e83-b3aa-52db47eaf171"
+  path="show-lines"
+  param-type="string"
+  required="false"
+  deprecated="false"
+>
+  Shows line numbers when set to `"true"`. Request shows lines by default.
+</ParamField>
+
+<ParamField
+  uid="970358b1-b814-4be7-b606-018115239bb1"
+  path="default-tab"
+  param-type="string"
+  required="false"
+  deprecated="false"
+>
+  Default active tab index (1-based).
+</ParamField>
+
+### Response attributes
+
+<ParamField
+  uid="bfac6f1e-b49a-4364-8e8e-5e3e6ec25e00"
+  path="tabs"
+  param-type="string"
+  required="false"
+  deprecated="false"
+>
+  Comma-separated tab names. Commonly HTTP status codes or formats.
+</ParamField>
+
+<ParamField
+  uid="5c39a939-d9c2-4947-9dce-ca3b3e232530"
+  path="show-lines"
+  param-type="string"
+  required="false"
+  deprecated="false"
+>
+  Shows line numbers when set to `"true"`. Response hides lines by default.
+</ParamField>
+
+<ParamField
+  uid="d90140ed-94dd-48e0-af5c-ea0a0854bab9"
+  path="default-tab"
+  param-type="string"
+  required="false"
+  deprecated="false"
+>
+  Default active tab index (1-based).
+</ParamField>
+
+### Common patterns
+
+- **Per-endpoint examples:** Pair one Request and one Response block for each API operation.
+
+- **Multi-language SDKs:** Use Request tabs for JavaScript, Python, Bash, and other SDKs.
+
+- **Status-specific responses:** Use Response tabs labeled `200`, `400`, `404`, `500` to show different outcomes.
+
+- **Guided walkthroughs:** Keep Request and Response in the sidebar while the left column explains parameters, flows, and edge cases.
+
+<Callout kind="success" collapsed="false">
+
+Request and Response automatically participate in the sidebar layout on desktop, so you get a polished API reference without custom layout work.
+
+</Callout>
