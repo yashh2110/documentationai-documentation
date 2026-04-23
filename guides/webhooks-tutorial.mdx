@@ -1,0 +1,244 @@
+---
+title: Webhooks tutorial
+description: Set up webhook delivery, verify signatures, handle retries, and compare webhooks with polling using practical JavaScript and Python examples.
+---
+
+## Understand webhooks
+
+Webhooks push event data to your application as soon as something important happens. Instead of checking an API on a schedule, you expose an HTTPS endpoint and let the platform deliver a signed event payload when a matching event occurs.
+
+<Callout kind="info">
+
+Use webhooks when you need low-latency updates for changes such as document processing, payment status changes, user lifecycle events, or background job completion.
+
+</Callout>
+
+Webhooks matter because they reduce wasted requests, shorten the time between an event and your response, and make background workflows easier to automate. A good webhook integration does four things well: accepts delivery quickly, verifies the sender, processes events idempotently, and retries safely when something fails.
+
+## Set up a webhook endpoint
+
+<Steps>
+  <Step title="Register your delivery URL" icon="link">
+
+  Create a public HTTPS endpoint that accepts `POST` requests. In your dashboard or developer settings, register a URL such as `https://app.paperguide.dev/webhooks/events` so the platform knows where to deliver events.
+
+  Your endpoint should return a success status quickly after basic validation. Do not wait for slow downstream work before acknowledging receipt.
+
+  </Step>
+  <Step title="Choose the events to receive" icon="settings">
+
+  Subscribe only to the event types your application actually uses. Start with the smallest useful set, such as `document.completed`, `document.failed`, and `document.deleted`, then expand later if your workflow needs more coverage.
+
+  Narrow subscriptions make payload handling simpler and reduce noise in your logs and retry queue.
+
+  </Step>
+  <Step title="Verify the webhook signature" icon="shield">
+
+  Read the signature header and validate it with your webhook secret before you trust the payload. Reject requests with a missing signature, an invalid signature, or a timestamp outside your allowed tolerance window.
+
+  Signature verification prevents an attacker from posting fake events directly to your endpoint.
+
+  </Step>
+  <Step title="Handle retries and deduplicate events" icon="refresh-cw">
+
+  Store the event identifier from each delivery and treat repeated deliveries as duplicates. If processing fails because of a temporary dependency issue, return a non-2xx status so the sender can retry.
+
+  A durable queue works well here: verify first, enqueue second, process third.
+
+  </Step>
+</Steps>
+
+<Callout kind="alert">
+
+Never skip signature verification, even on internal or staging environments. If you process unsigned payloads, anyone who can reach the endpoint can trigger fake events and corrupt your application state.
+
+</Callout>
+
+<Update label="2026-04-23" description="Recommended production baseline">
+
+Verify every delivery signature, acknowledge valid events quickly, and move slow processing into an idempotent queue-backed worker.
+
+</Update>
+
+## Implement the endpoint
+
+The examples below show the same workflow in JavaScript and Python: read the raw request body, verify the signature, ignore duplicate events, and acknowledge the delivery.
+
+<CodeGroup tabs="JavaScript,Python">
+```javascript
+import crypto from "node:crypto";
+import express from "express";
+
+const app = express();
+const webhookSecret = "whsec_example_paperguide_9xmk7q2r";
+const processedEvents = new Set();
+
+app.post(
+  "/webhooks/events",
+  express.raw({ type: "application/json" }),
+  (req, res) => {
+    const signature = req.header("x-paperguide-signature");
+    const rawBody = req.body;
+
+    if (!signature) {
+      return res.status(400).json({ error: "Missing signature header" });
+    }
+
+    const expectedSignature = crypto
+      .createHmac("sha256", webhookSecret)
+      .update(rawBody)
+      .digest("hex");
+
+    const signatureIsValid = crypto.timingSafeEqual(
+      Buffer.from(signature),
+      Buffer.from(expectedSignature)
+    );
+
+    if (!signatureIsValid) {
+      return res.status(401).json({ error: "Invalid signature" });
+    }
+
+    const event = JSON.parse(rawBody.toString("utf8"));
+
+    if (processedEvents.has(event.id)) {
+      return res.status(200).json({ received: true, duplicate: true });
+    }
+
+    processedEvents.add(event.id);
+
+    switch (event.type) {
+      case "document.completed":
+        console.log("Document completed", event.data.document_id);
+        break;
+      case "document.failed":
+        console.error("Document failed", event.data.document_id);
+        break;
+      default:
+        console.log("Unhandled event", event.type);
+    }
+
+    return res.status(200).json({ received: true });
+  }
+);
+
+app.listen(3000, () => {
+  console.log("Webhook listener running on port 3000");
+});
+```
+
+```python
+import hashlib
+import hmac
+import json
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+webhook_secret = b"whsec_example_paperguide_9xmk7q2r"
+processed_events = set()
+
+@app.post("/webhooks/events")
+def handle_webhook():
+    signature = request.headers.get("X-Paperguide-Signature")
+    raw_body = request.get_data()
+
+    if not signature:
+        return jsonify({"error": "Missing signature header"}), 400
+
+    expected_signature = hmac.new(
+        webhook_secret,
+        raw_body,
+        hashlib.sha256,
+    ).hexdigest()
+
+    if not hmac.compare_digest(signature, expected_signature):
+        return jsonify({"error": "Invalid signature"}), 401
+
+    event = json.loads(raw_body.decode("utf-8"))
+
+    if event["id"] in processed_events:
+        return jsonify({"received": True, "duplicate": True}), 200
+
+    processed_events.add(event["id"])
+
+    if event["type"] == "document.completed":
+        print("Document completed", event["data"]["document_id"])
+    elif event["type"] == "document.failed":
+        print("Document failed", event["data"]["document_id"])
+    else:
+        print("Unhandled event", event["type"])
+
+    return jsonify({"received": True}), 200
+
+if __name__ == "__main__":
+    app.run(port=3000)
+```
+</CodeGroup>
+
+If your framework parses JSON automatically, make sure you can still access the raw request body before verification. HMAC validation must run against the exact bytes the sender signed, not a re-serialized JSON object.
+
+## Test delivery locally
+
+Start by sending a signed sample payload to your local endpoint through a tunnel such as ngrok or Cloudflare Tunnel. A successful test usually looks like this:
+
+- Your server logs the event type and event identifier.
+- The endpoint responds with `200 OK` in under a few seconds.
+- A repeated delivery with the same event identifier is marked as a duplicate.
+- An invalid signature returns `401` and does not trigger business logic.
+
+Once that path works, move your handler logic into a queue-backed worker if event processing takes longer than a few seconds.
+
+## Compare polling and webhooks
+
+<Tabs>
+  <Tab title="Webhooks" icon="zap">
+
+  Webhooks fit best when you need fast, event-driven updates.
+
+  - The sender notifies you only when something changes.
+  - Your application reacts with lower latency.
+  - You spend fewer API requests checking for status changes.
+  - You must run a public HTTPS endpoint and verify signatures.
+
+  </Tab>
+  <Tab title="Polling" icon="clock-3">
+
+  Polling fits best when your environment cannot receive inbound traffic or when the upstream system does not support webhook delivery.
+
+  - Your application asks for updates on a fixed schedule.
+  - Implementation is simpler when you already have scheduled jobs.
+  - Latency depends on the polling interval.
+  - Frequent polling increases request volume and can miss short-lived states between checks.
+
+  </Tab>
+</Tabs>
+
+For most production workflows, start with webhooks and keep a limited polling fallback only for recovery or reconciliation jobs.
+
+## Troubleshoot common webhook issues
+
+<ExpandableGroup>
+  <Expandable title="Why does signature verification fail even when the secret is correct?">
+
+  The most common cause is using a parsed JSON body instead of the raw request bytes. Capture the raw request body first, then compute the HMAC over that exact payload. Also confirm that you are reading the correct signature header and not trimming or normalizing it before comparison.
+
+  </Expandable>
+  <Expandable title="Why do I receive the same event more than once?">
+
+  Webhook systems retry when they do not see a timely success response or when a network error interrupts delivery. Store the event identifier and make your handler idempotent so duplicate deliveries are safe.
+
+  </Expandable>
+  <Expandable title="What should I return when downstream processing fails?">
+
+  Return a non-2xx status only when you want the sender to retry the event. If verification succeeds but a background job fails later, acknowledge the webhook first and retry inside your own queue instead of forcing repeated delivery from the sender.
+
+  </Expandable>
+  <Expandable title="How do I keep webhook processing fast?">
+
+  Limit synchronous work inside the request handler. Verify the signature, validate the event shape, store the event, enqueue a job, and return success. Move database fan-out, notifications, and third-party API calls into asynchronous workers.
+
+  </Expandable>
+</ExpandableGroup>
+
+## What to do next
+
+After your endpoint accepts signed events reliably, add monitoring around delivery failures, retry counts, and processing latency. That gives you enough visibility to expand webhook usage without turning event delivery into a blind spot.
