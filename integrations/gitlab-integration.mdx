@@ -1,8 +1,283 @@
 ---
-title: GitLab Integration
-description: "Integrations and workflows: GitLab Integration with Documentation.AI."
+title: GitLab integration
+description: Run a GitLab-based documentation workflow with branches, merge requests, and review-ready MDX so docs ship with the same process as code.
 ---
 
-# GitLab Integration
+## Use GitLab as your documentation workflow
 
-[How-to Guide] Connect GitLab Integration to automate workflows and integrate Documentation.AI with your tooling.
+GitLab works well when your team already ships changes through branches, merge requests, and structured review. Connect your docs repository, edit MDX in your normal development environment, and publish documentation through the same release flow you use for code.
+
+<Callout kind="info">
+
+This page focuses on a GitLab-based authoring and review workflow. If you want the AI agent to read linked source repositories as extra implementation context, see the [GitHub integration](/integrations/github).
+
+
+
+
+</Callout>
+
+## Prerequisites
+
+Before you connect the repository, confirm that your team has the minimum GitLab access and project details in place:
+
+- Maintainer or Owner access to the GitLab project that stores the docs
+- Permission to create branches and open merge requests
+- Approval or merge rights for the protected production branch
+- The exact GitLab project path and default branch Documentation.AI should watch
+
+A typical supported GitLab project setup looks like this:
+
+```text
+Project path: acme/docs
+Default branch: main
+Protected branch: main
+Docs changes land through merge requests
+```
+
+No additional Documentation.AI config file is required for this workflow. Once you connect the repository and choose the deployment branch, Documentation.AI builds from that branch after each merged update.
+
+## Set up a GitLab-backed docs workflow
+
+<Steps>
+
+  <Step title="Connect the repository" icon="settings" title-type="p">
+
+  Open your Documentation.AI project settings and connect the GitLab repository that stores your docs. Use the same project path and default branch you verified above, then choose the branch that should deploy to production, which is usually `main` or `master`.
+
+  After the connection is saved, pushes to the configured branch trigger a new documentation build.
+
+
+
+
+  </Step>
+
+  <Step title="Clone the repo and create a branch" icon="git-branch" title-type="p">
+
+  Start each documentation change from a short-lived branch so review stays focused.
+
+  ```bash
+  git clone git@gitlab.com:acme/docs.git
+  cd docs
+  git checkout -b docs/update-gitlab-workflow
+  ```
+
+  Success looks like a clean local branch that contains only the docs change you plan to review.
+
+
+
+
+  </Step>
+
+  <Step title="Edit pages and navigation together" icon="edit" title-type="p">
+
+  Update the relevant `.mdx` files and keep `documentation.json` in sync when you add, rename, or move pages.
+
+  - Edit content in the page file.
+  - Update navigation paths if the page slug changes.
+  - Preview the rendered MDX in your editor before you commit.
+
+  Use the [Code Editor](/write-and-publish/code-editor) guide if you need a refresher on MDX structure, internal links, or navigation paths.
+
+
+
+
+  </Step>
+
+  <Step title="Open a merge request for review" icon="upload" title-type="p">
+
+  Push the branch to GitLab and open a merge request with a clear summary of what changed, why it changed, and which pages reviewers should verify.
+
+  ```bash
+  git add .
+  git commit -m "Update GitLab integration workflow docs"
+  git push origin docs/update-gitlab-workflow
+  ```
+
+  A strong merge request makes review faster because content reviewers can scan the diff, then check the rendered preview or staging output.
+
+
+
+
+  </Step>
+
+  <Step title="Merge and verify the live site" icon="check-circle" title-type="p">
+
+  Merge after review, then confirm the production build completes and the updated pages render correctly.
+
+  Check the final result on the live site:
+
+  - The page loads without MDX or build errors.
+  - Navigation still points to the correct path.
+  - Internal links and code blocks render as expected.
+
+
+
+
+  </Step>
+</Steps>
+
+## Structure a review-ready merge request
+
+A documentation merge request should tell reviewers what changed without forcing them to reconstruct the context from commit history.
+
+<ParamField body="summary" param-type="string" required="true" show-location="false">
+
+A one-sentence description of the user-facing change. Focus on the reader impact, not the internal task name.
+
+
+
+
+</ParamField>
+
+<ParamField body="scope" param-type="string[]" required="true" show-location="false">
+
+List the pages, sections, or navigation items that changed so reviewers know where to focus.
+
+
+
+
+</ParamField>
+
+<ParamField body="source-links" param-type="string[]" show-location="false">
+
+Link the GitLab issue, product spec, API change, or release note that drove the update.
+
+
+
+
+</ParamField>
+
+<ParamField body="verification" param-type="string[]" show-location="false">
+
+Capture how you checked the change, such as previewing the page locally, confirming navigation, or testing a code sample.
+
+
+
+
+</ParamField>
+
+## Pick the right repository pattern
+
+<Tabs>
+
+  <Tab title="Docs in the product repo" icon="folder">
+
+  Keep documentation beside application code when changes usually land together.
+
+  This pattern works best when:
+
+  - Engineers update docs in the same merge request as code.
+  - Reviewers want implementation and documentation changes in one diff.
+  - Release branches already exist and docs should follow the same promotion path.
+
+  The trade-off is noisier repository history, so use clear labels or file filters in GitLab review.
+
+
+
+
+  </Tab>
+
+  <Tab title="Dedicated docs repo" icon="book-open">
+
+  Use a separate repository when documentation has its own contributors, review cycle, or publishing cadence.
+
+  This pattern works best when:
+
+  - Technical writers or support teams own most content changes.
+  - You want lighter clone times and simpler navigation reviews.
+  - Documentation publishes more often than product releases.
+
+  If product changes drive the work, link the source merge request or issue in the docs merge request so reviewers can trace the original change.
+
+
+
+
+  </Tab>
+</Tabs>
+
+## Keep GitLab issues and docs changes connected
+
+Use the same branch and merge request naming rules every time so documentation work stays traceable.
+
+<Callout kind="tip">
+
+A simple pattern such as `docs/<issue-key>-short-description` makes it easy to search for related branches, merge requests, and published changes later.
+
+
+
+
+</Callout>
+
+When the update is release-driven, add the issue or release key to:
+
+- The branch name
+- The merge request title
+- The final commit message
+- The [changelog](/changelog) entry, if the update affects customers
+
+## Troubleshoot common GitLab workflow issues
+
+<ExpandableGroup>
+
+  <Expandable title="The right branch merged, but the docs did not update">
+
+  Confirm the project is connected to the same GitLab repository and deployment branch you merged into. Then check whether the latest merge triggered a Documentation.AI build. If the wrong branch is configured, new merges will not publish until you update the repository settings.
+
+
+
+
+  </Expandable>
+
+  <Expandable title="Navigation breaks after a rename or move">
+
+  A renamed file usually needs a matching `path` update in `documentation.json`. Compare the final file path with the sidebar path and make sure both still match.
+
+
+
+
+  </Expandable>
+
+  <Expandable title="The merge request diff is hard to review">
+
+  Split structural changes from wording changes when possible. For example, move files in one merge request and rewrite content in a second one. Smaller diffs make rendered review and approval much faster.
+
+
+
+
+  </Expandable>
+
+  <Expandable title="Multiple teams edit the same docs pages">
+
+  Use CODEOWNERS, protected branches, or required reviewers in GitLab so domain owners review the pages they are responsible for. This reduces accidental overwrites on shared integration, API, or release pages.
+
+
+
+
+  </Expandable>
+</ExpandableGroup>
+
+## Next steps
+
+<Columns cols={2}>
+
+  <Card title="Code Editor" href="/write-and-publish/code-editor" icon="code">
+
+  Review the full Git-based authoring model, MDX structure, and navigation rules.
+
+
+
+
+  </Card>
+
+  <Card title="Issue tracker workflows" href="/integrations/issue-trackers" icon="folder">
+
+  Turn GitLab issues, Jira tickets, or Linear tasks into repeatable documentation work.
+
+
+
+
+  </Card>
+
+
+
+</Columns>

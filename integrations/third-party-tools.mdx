@@ -1,8 +1,328 @@
 ---
-title: Third-party Tools (All Integrations)
-description: "Integrations and workflows: Third-party Tools (All Integrations) with Documentation.AI."
+title: Third-party tools
+description: Choose the right extension path for analytics, chat, workflow, and custom tooling, then route setup to the right Documentation.AI guide.
 ---
 
-# Third-party Tools (All Integrations)
+## Connect the tool through the right extension path
 
-[Reference] Connect Third-party Tools (All Integrations) to automate workflows and integrate Documentation.AI with your tooling.
+Most third-party tools do not need the same kind of setup. Some tools connect directly in Documentation.AI through built-in integrations, some belong in a workflow layer such as webhooks or Zapier, and some are best added as custom scripts when you need an embedded widget or unsupported vendor snippet.
+
+<Callout kind="info">
+
+Start with the lowest-maintenance option. If Documentation.AI already supports the tool directly, use the built-in integration guide first. Use workflow automation when the tool needs event routing, approvals, or notifications. Use custom scripts only when you need code that runs in the published site.
+
+
+</Callout>
+
+## Decide what kind of connection you need
+
+<Tabs>
+
+  <Tab title="Built-in integration" icon="settings">
+
+  Use a built-in integration when Documentation.AI already knows how to load the provider and expects only a project ID, API key, measurement ID, or app ID.
+
+  This path fits:
+
+  - Analytics and behavior tools such as [Google Analytics](/integrations/google-analytics), [PostHog](/integrations/posthog), [Plausible](/integrations/plausible), and other providers grouped in [analytics integrations](/integrations/analytics-integration)
+  - Support widgets such as [Intercom](/integrations/intercom) and [Crisp](/integrations/crisp)
+  - Code-aware AI setup through the [GitHub integration](/integrations/github)
+
+  Use this path when your goal is to load a provider on the site or connect a supported platform without building extra glue code.
+
+
+  </Tab>
+
+  <Tab title="Workflow connection" icon="zap">
+
+  Use a workflow connection when the tool should react to documentation events instead of loading on every page.
+
+  This path fits:
+
+  - Review and release handoffs through the [GitLab integration guide](/integrations/gitlab-integration)
+  - Intake and tracking through [issue tracker workflows](/integrations/issue-trackers)
+  - Team notifications through [Slack notifications](/integrations/slack-notifications)
+  - Event delivery through [webhook setup](/integrations/webhook-setup)
+  - Multi-step automation through [Zapier integration](/integrations/zapier-integration)
+
+  Use this path when the tool needs structured events, routing rules, approvals, or fan-out to several systems.
+
+
+  </Tab>
+
+  <Tab title="Custom script or embed" icon="code">
+
+  Use a custom script when the tool is not covered by a built-in integration and you need to inject JavaScript into the published site.
+
+  This path fits:
+
+  - Vendor snippets for unsupported analytics or chat tools
+  - Consent managers, testing tools, and custom widgets
+  - Site-specific logic that should run in the browser after publish
+
+  Start with [Custom Scripts](/customize/custom-scripts) and pair it with [Cookie Consent](/customize/cookie-consent) if the script should load only after user consent.
+
+
+  </Tab>
+</Tabs>
+
+## Plan the extension before you implement it
+
+A short planning pass prevents most failed integrations. Collect the fields below before anyone starts editing configuration or wiring automations.
+
+<ParamField body="outcome" param-type="string" required="true" show-location="false">
+
+State what the tool should actually do, such as track page views, open docs tasks, post review alerts, or embed a support widget.
+
+
+</ParamField>
+
+<ParamField body="connection-type" param-type="string" required="true" show-location="false">
+
+Choose one of three patterns: built-in integration, workflow connection, or custom script. This decision determines which guide to follow and where the configuration should live.
+
+
+</ParamField>
+
+<ParamField body="source-system" param-type="string" show-location="false">
+
+Name the system that owns the event or credential, such as Google Analytics, GitLab, Jira, Slack, or your internal webhook relay.
+
+
+</ParamField>
+
+<ParamField body="credential-or-snippet" param-type="string" show-location="false">
+
+Capture the exact measurement ID, API key, app ID, webhook secret, or script source before implementation. Most setup failures come from missing or incorrectly formatted values.
+
+
+</ParamField>
+
+<ParamField body="owner" param-type="string" show-location="false">
+
+Assign the team that will maintain the integration after launch. Analytics, support, docs, and platform teams often own different parts of the same workflow.
+
+
+</ParamField>
+
+<ParamField body="consent-requirement" param-type="string" show-location="false">
+
+Decide whether the tool should always load or wait for a consent category. This matters for analytics, replay tools, chat widgets, and any script that handles user data.
+
+
+</ParamField>
+
+## Follow the setup sequence
+
+<Steps>
+
+  <Step title="Define the one job the tool should do" icon="check-circle" title-type="p">
+
+  Start with a concrete result, such as "track docs traffic in GA4," "post a Slack message when a docs review opens," or "embed Intercom on published pages." Clear outcomes make it obvious whether you need a site integration, a workflow event, or a custom script.
+
+  Success looks like one tool, one owner, and one measurable result.
+
+
+  </Step>
+
+  <Step title="Choose the lowest-maintenance path" icon="settings" title-type="p">
+
+  Prefer a built-in integration when Documentation.AI already supports the provider. If the tool is event-driven, use a workflow guide such as webhooks, Slack, issue trackers, or Zapier. If the tool only gives you a browser snippet, use custom scripts.
+
+  Avoid combining two patterns unless the job truly requires both. For example, do not load two page-tracking tools directly when one routing layer would be cleaner.
+
+
+  </Step>
+
+  <Step title="Collect the exact input before you configure anything" icon="lock" title-type="p">
+
+  Gather the real identifier or endpoint first. That might be a GA4 measurement ID, Intercom app ID, webhook URL, signing secret, or JavaScript snippet path.
+
+  If the tool also needs privacy review, decide the consent category before you publish.
+
+
+  </Step>
+
+  <Step title="Configure the integration in the right place" icon="code" title-type="p">
+
+  Built-in tools usually belong in the editor or `documentation.json`. Workflow tools belong in the system that emits or receives the event. Custom embeds belong in your script files and site config.
+
+  Keep configuration close to the system that owns it. A notification workflow should not be hidden inside an unrelated analytics script.
+
+
+  </Step>
+
+  <Step title="Verify on the live site or live workflow" icon="zap" title-type="p">
+
+  Publish the site, then confirm the third-party tool receives a real signal. Analytics tools should show a page view or session. Chat widgets should load on the published site. Workflow tools should receive one test event with the expected payload and destination.
+
+  A working extension produces a visible result outside the editor.
+
+
+  </Step>
+</Steps>
+
+## Route the request to the right guide
+
+### Built-in integrations and embeds
+
+<Columns cols={3}>
+
+  <Card title="Integrations overview" href="/integrations/overview" icon="settings">
+
+  Start here when you need the full list of supported analytics, support, and developer integrations.
+
+
+  </Card>
+
+  <Card title="Analytics integrations" href="/integrations/analytics-integration" icon="bar-chart">
+
+  Choose the right analytics, routing, or replay provider and follow the provider-specific setup path.
+
+
+  </Card>
+
+  <Card title="GitHub integration" href="/integrations/github" icon="github">
+
+  Connect context repositories so the AI agent can use code and commit history while working on docs.
+
+
+  </Card>
+
+  <Card title="Intercom" href="/integrations/intercom" icon="message-square">
+
+  Add a support messenger when readers need live help from within the documentation site.
+
+
+  </Card>
+
+  <Card title="Crisp" href="/integrations/crisp" icon="message-square">
+
+  Embed Crisp chat on your docs site with the provider app ID.
+
+
+  </Card>
+
+  <Card title="Custom Scripts" href="/customize/custom-scripts" icon="code">
+
+  Inject unsupported vendor scripts, widgets, or browser-side logic into the published site.
+
+
+  </Card>
+
+
+</Columns>
+
+### Workflow and automation guides
+
+<Columns cols={3}>
+
+  <Card title="GitLab integration guide" href="/integrations/gitlab-integration" icon="github">
+
+  Route merge, release, and repository events into your documentation workflow.
+
+
+  </Card>
+
+  <Card title="Issue tracker workflows" href="/integrations/issue-trackers" icon="folder">
+
+  Turn Jira or Linear issues into structured documentation work with clear handoffs.
+
+
+  </Card>
+
+  <Card title="Slack notifications" href="/integrations/slack-notifications" icon="message-square">
+
+  Send review, launch, and support signals to the channels that own the next action.
+
+
+  </Card>
+
+  <Card title="Webhook setup" href="/integrations/webhook-setup" icon="zap">
+
+  Standardize event delivery with signed payloads, retries, and reliable routing.
+
+
+  </Card>
+
+  <Card title="Zapier integration" href="/integrations/zapier-integration" icon="arrow-right">
+
+  Fan out the same docs event across several tools without maintaining custom glue code.
+
+
+  </Card>
+
+  <Card title="Cookie consent" href="/customize/cookie-consent" icon="shield">
+
+  Gate analytics, replay, and chat tooling behind user consent when privacy rules require it.
+
+
+  </Card>
+
+
+</Columns>
+
+## Know when a custom script is the right answer
+
+<Callout kind="alert">
+
+Use custom scripts only when a built-in integration or workflow guide cannot solve the problem cleanly. If a provider already has a supported integration, loading a second manual snippet usually creates duplicate tracking, harder debugging, and more privacy risk.
+
+
+</Callout>
+
+A custom script is usually the right choice when the vendor gives you a JavaScript snippet, the tool must run in the browser, and the behavior is specific to your site. It is usually the wrong choice when you really need event routing, ticket creation, or team notifications. Those jobs belong in workflow tools instead.
+
+## Troubleshoot extension planning problems
+
+<ExpandableGroup>
+
+  <Expandable title="The tool is not listed in built-in integrations">
+
+  First decide whether the tool needs to load on the site or react to an event. If it needs a browser snippet, use [Custom Scripts](/customize/custom-scripts). If it needs routing or automation, start with [Webhook setup](/integrations/webhook-setup) or [Zapier integration](/integrations/zapier-integration).
+
+
+  </Expandable>
+
+  <Expandable title="The request mixes analytics, chat, and workflow requirements">
+
+  Split the problem by job. Site tracking belongs in an analytics integration. Messaging widgets belong in chat integrations. Review and publish handoffs belong in Slack, webhooks, issue trackers, or Zapier. Cleaner boundaries make ownership and debugging much easier.
+
+
+  </Expandable>
+
+  <Expandable title="Security or privacy review blocked the rollout">
+
+  Document the exact credential, payload, or script source, then decide whether the tool should load only after consent. Reviews move faster when you can show where the code runs, which data it receives, and which team owns it.
+
+
+  </Expandable>
+
+  <Expandable title="The setup works in preview but not after publish">
+
+  Confirm the configuration was published, test on the live site, and verify that ad blockers or consent settings are not suppressing the script. For workflow tools, send one live test event and confirm the destination records it.
+
+
+  </Expandable>
+</ExpandableGroup>
+
+## Next steps
+
+<Columns cols={2}>
+
+  <Card title="Integrations overview" href="/integrations/overview" icon="settings">
+
+  Review the supported provider list before you decide that a custom extension is necessary.
+
+
+  </Card>
+
+  <Card title="Custom Scripts" href="/customize/custom-scripts" icon="code">
+
+  Add browser-side tooling when you need an unsupported provider snippet or site-specific script.
+
+
+  </Card>
+
+
+</Columns>

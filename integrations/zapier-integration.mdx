@@ -1,8 +1,245 @@
 ---
-title: Zapier Integration
-description: "Integrations and workflows: Zapier Integration with Documentation.AI."
+title: Zapier integration
+description: Connect docs workflows across issue trackers, Git, Slack, and internal tools with small Zaps that route stable events instead of manual updates.
 ---
 
-# Zapier Integration
+## Use Zapier as glue between docs systems
 
-[How-to Guide] Connect Zapier Integration to automate workflows and integrate Documentation.AI with your tooling.
+Zapier is useful when documentation work crosses tools that do not share a direct integration. Instead of asking people to copy updates between Jira, GitLab, Slack, forms, and internal systems, use a small Zap to move the right fields to the next step automatically.
+
+<Callout kind="info">
+
+Treat Zapier as an orchestration layer, not the source of truth. Keep the authoritative state in the system that owns the work, such as your issue tracker, Git provider, or release workflow.
+
+
+</Callout>
+
+## Pick the workflow you want to automate
+
+<Tabs>
+
+  <Tab title="Ticket triage" icon="folder">
+
+  Use Zapier when docs requests begin in a form, support queue, or product tracker and need to become a structured task.
+
+  Common patterns include:
+
+  - Create a Jira or Linear ticket when a release form marks docs as required
+  - Add a Slack notification when a docs issue is labeled urgent
+  - Copy request metadata into a triage spreadsheet or internal queue
+
+  Pair this with [issue tracker workflows](/integrations/issue-trackers) so every created task contains a page path, reader goal, and source links.
+
+
+  </Tab>
+
+  <Tab title="Review and publish" icon="edit">
+
+  Use Zapier when a docs change needs to notify several systems at once.
+
+  Common patterns include:
+
+  - Post to Slack when a docs merge request opens
+  - Update a release tracker when documentation is approved
+  - Open a follow-up task after a page is published
+
+  This pattern works well when a webhook or repository event needs light transformation before downstream systems can use it.
+
+
+  </Tab>
+
+  <Tab title="Support and follow-up" icon="message-square">
+
+  Use Zapier when customer feedback, support themes, or post-launch issues should create documentation work automatically.
+
+  Common patterns include:
+
+  - Create a docs issue after a support form selects "missing documentation"
+  - Send a new troubleshooting page to a support channel after publish
+  - Add repeated support themes to a backlog when the same tag appears several times in one week
+
+  This keeps docs work tied to real user demand instead of scattered chat messages.
+
+
+  </Tab>
+</Tabs>
+
+## Build a Zap that stays maintainable
+
+<Steps>
+
+  <Step title="Start with one trigger and one action" icon="zap" title-type="p">
+
+  Begin with a single workflow, such as "when a docs issue moves to review, post the page path in Slack" or "when a release form marks docs required, create a Jira ticket." Small Zaps are easier to test and easier to trust.
+
+  Success looks like one business outcome, not a chain that tries to replace your entire release process.
+
+
+  </Step>
+
+  <Step title="Normalize the record before branching" icon="settings" title-type="p">
+
+  Make sure the Zap carries the same core fields no matter where the event came from. Add a formatter or webhook step early so later actions do not depend on provider-specific field names.
+
+  Stable fields are the difference between a Zap that lasts for months and one that breaks every time a source tool changes a label.
+
+
+  </Step>
+
+  <Step title="Route the event to the next system" icon="arrow-right" title-type="p">
+
+  Send the normalized record to the tool that owns the next action. That might be Slack for review, Jira for tracking, Google Sheets for intake, or an internal webhook for further automation.
+
+  If two systems need the same data, fan out from the normalized step instead of mapping the raw source payload twice.
+
+
+  </Step>
+
+  <Step title="Test the unhappy path" icon="check-circle" title-type="p">
+
+  Run the Zap with missing optional fields, duplicate events, and outdated links. Confirm the automation either handles the issue gracefully or routes the record to a fallback queue for manual review.
+
+  A reliable Zap fails visibly instead of silently dropping documentation work.
+
+
+  </Step>
+</Steps>
+
+## Pass the same core fields through every Zap
+
+Use a small shared record so every downstream step knows how to route the event.
+
+<ParamField body="event-name" param-type="string" required="true" show-location="false">
+
+A stable event name such as `docs.review.opened`, `docs.page.published`, or `docs.support.followup`.
+
+
+</ParamField>
+
+<ParamField body="page-path" param-type="string" show-location="false">
+
+The affected page or section when the task maps to a specific documentation URL.
+
+
+</ParamField>
+
+<ParamField body="source-link" param-type="string" required="true" show-location="false">
+
+A direct link back to the ticket, merge request, form submission, or release record that triggered the Zap.
+
+
+</ParamField>
+
+<ParamField body="owner" param-type="string" show-location="false">
+
+The person or team responsible for the next action.
+
+
+</ParamField>
+
+<ParamField body="priority" param-type="string" show-location="false">
+
+A lightweight urgency value such as `low`, `normal`, or `high` so routing rules stay simple.
+
+
+</ParamField>
+
+<ParamField body="published-url" param-type="string" show-location="false">
+
+The final docs URL when the automation runs after publish and downstream systems need the live page.
+
+
+</ParamField>
+
+```json
+{
+  "eventName": "docs.review.opened",
+  "pagePath": "integrations/zapier-integration",
+  "sourceLink": "https://linear.app/acme/issue/DOC-184",
+  "owner": "docs-team",
+  "priority": "normal",
+  "publishedUrl": "https://docs.acme.com/integrations/zapier-integration"
+}
+```
+
+## Use the right trigger pattern
+
+<Columns cols={3}>
+
+  <Card title="Webhook-first" href="/integrations/webhook-setup" icon="zap">
+
+  Start from a webhook when your source tool can already emit the event you need.
+
+
+  </Card>
+
+  <Card title="Slack follow-up" href="/integrations/slack-notifications" icon="message-square">
+
+  Fan out the same event to a Slack channel after the tracking step is complete.
+
+
+  </Card>
+
+  <Card title="Git workflow" href="/integrations/gitlab-integration" icon="github">
+
+  Use branch, merge, and release events to keep docs review tied to the shipping workflow.
+
+
+  </Card>
+
+
+</Columns>
+
+## Avoid the most common Zapier mistakes
+
+<ExpandableGroup>
+
+  <Expandable title="The Zap keeps breaking when the source tool changes fields">
+
+  Add a formatter or webhook normalization step immediately after the trigger. Downstream actions should depend on your own stable field names, not the raw provider payload.
+
+
+  </Expandable>
+
+  <Expandable title="The automation created duplicate docs tasks">
+
+  Check whether both the trigger system and a second integration are generating the same record. Add a deduplication key based on the issue ID, merge request URL, or release identifier.
+
+
+  </Expandable>
+
+  <Expandable title="Nobody trusts the Zap enough to rely on it">
+
+  Make the actions visible. Post a Slack confirmation, update the original ticket, or write the result back to the triggering system so people can see that the automation actually ran.
+
+
+  </Expandable>
+
+  <Expandable title="A single Zap now does too many unrelated things">
+
+  Split it by outcome. One Zap should create a review notification, another should open a follow-up task, and another should record a published URL. Smaller Zaps are easier to debug and safer to change.
+
+
+  </Expandable>
+</ExpandableGroup>
+
+## Next steps
+
+<Columns cols={2}>
+
+  <Card title="Webhook setup" href="/integrations/webhook-setup" icon="zap">
+
+  Standardize the event record before Zapier fans it out to other systems.
+
+
+  </Card>
+
+  <Card title="Issue tracker workflows" href="/integrations/issue-trackers" icon="folder">
+
+  Use structured docs tickets so every Zap carries the page path, owner, and source links the assignee needs.
+
+
+  </Card>
+
+
+</Columns>

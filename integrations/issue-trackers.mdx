@@ -1,8 +1,245 @@
 ---
-title: Issue Trackers (Jira, Linear)
-description: "Integrations and workflows: Issue Trackers (Jira, Linear) with Documentation.AI."
+title: Issue tracker workflows
+description: Turn Jira or Linear issues into clear documentation tasks, route them through review, and connect updates to Slack, webhooks, or automation tools.
 ---
 
-# Issue Trackers (Jira, Linear)
+## Turn issues into documentation work that ships
 
-[How-to Guide] Connect Issue Trackers (Jira, Linear) to automate workflows and integrate Documentation.AI with your tooling.
+A reliable documentation workflow starts before anyone opens an editor. When Jira or Linear issues capture the page path, reader goal, source material, and release timing up front, writers and engineers can move from ticket to published docs without guessing what “done” means.
+
+<Callout kind="info">
+
+You do not need a deep native sync to run a strong issue-tracker workflow. Consistent issue fields, clear ownership, and links back to the final documentation page usually matter more than pushing every ticket update into the docs tool.
+
+
+
+</Callout>
+
+## Capture the details every docs issue needs
+
+Use the same set of fields in every request so work arrives with enough context to be actionable.
+
+<ParamField body="page-path" param-type="string" required="true" show-location="false">
+
+The target page or section, such as `integrations/webhook-setup` or `api-documentation-and-playground/api-authentication`. If the page does not exist yet, call that out explicitly.
+
+
+
+</ParamField>
+
+<ParamField body="reader-goal" param-type="string" required="true" show-location="false">
+
+State what the reader should be able to do after the change, such as configure a webhook, troubleshoot a failed sync, or understand a new release behavior.
+
+
+
+</ParamField>
+
+<ParamField body="source-of-truth" param-type="string[]" required="true" show-location="false">
+
+Link the implementation issue, product spec, pull request, or support thread that proves what changed.
+
+
+
+</ParamField>
+
+<ParamField body="change-type" param-type="string" show-location="false">
+
+Label the request as a new page, update, migration note, troubleshooting fix, or changelog item so the assignee can choose the right documentation shape.
+
+
+
+</ParamField>
+
+<ParamField body="release-timing" param-type="string" show-location="false">
+
+Note whether the docs must publish before launch, with launch, or immediately after rollout. This keeps documentation review aligned with the release plan.
+
+
+
+</ParamField>
+
+<ParamField body="done-when" param-type="string[]" show-location="false">
+
+Define the acceptance criteria, such as “page updated,” “navigation checked,” “example tested,” or “changelog entry added.”
+
+
+
+</ParamField>
+
+## Run the workflow from ticket to publish
+
+<Steps>
+
+  <Step title="Open or label the issue as documentation work" icon="plus" title-type="p">
+
+  Create a dedicated docs issue or apply a documentation label to an existing product ticket. The key requirement is that someone can filter the queue and immediately see which items still need docs.
+
+  In Jira, this is often a component, label, or issue type. In Linear, it is usually a label, team, or project view.
+
+
+
+  </Step>
+
+  <Step title="Attach the source material" icon="folder" title-type="p">
+
+  Add links to the engineering pull request, design spec, API diff, support conversation, or release checklist. If the request changes customer behavior, include the exact screenshots, payloads, or UI states the docs must reflect.
+
+  Success looks like a ticket that another teammate can pick up without chasing context in chat.
+
+
+
+  </Step>
+
+  <Step title="Implement the documentation change" icon="edit" title-type="p">
+
+  Update the page content, examples, and navigation entries that the issue calls for. If the change affects an existing release, also update the [changelog](/changelog) or release notes workflow your team uses.
+
+  Keep the issue open until the documentation change is reviewed, not just drafted.
+
+
+
+  </Step>
+
+  <Step title="Review and publish" icon="check-circle" title-type="p">
+
+  Ask the right reviewer to verify technical accuracy and reader clarity. After the change merges and publishes, add the final page URL back to the issue so anyone following the ticket can find the shipped documentation.
+
+  This closing link becomes your audit trail for future updates.
+
+
+
+  </Step>
+</Steps>
+
+## Adapt the workflow to Jira or Linear
+
+<Tabs>
+
+  <Tab title="Jira" icon="folder">
+
+  Jira works well when documentation requests need structured intake and release coordination.
+
+  A practical Jira setup usually includes:
+
+  - A docs label or dedicated issue type
+  - Required fields for page path, release target, and source links
+  - A workflow state such as `Needs docs`, `In review`, and `Published`
+  - A dashboard or filter that shows open documentation work by team or release
+
+  Use Jira when you need heavier process, multiple approvals, or cross-team reporting.
+
+
+
+  </Tab>
+
+  <Tab title="Linear" icon="folder">
+
+  Linear works well when documentation requests need to move quickly with product work.
+
+  A practical Linear setup usually includes:
+
+  - A docs label or project for documentation work
+  - Triage views for unscoped, in-progress, and blocked requests
+  - Linked issues between product work and the docs follow-up
+  - A standard template that asks for page path, reader goal, and source material
+
+  Use Linear when your team prefers lightweight process and short feedback loops.
+
+
+
+  </Tab>
+</Tabs>
+
+## Automate the handoff points
+
+Issue trackers become more useful when they notify the rest of the documentation workflow at the right moments.
+
+<Columns cols={3}>
+
+  <Card title="Webhook setup" href="/integrations/webhook-setup" icon="zap">
+
+  Send issue or release events into downstream systems when a docs-related status changes.
+
+
+
+  </Card>
+
+  <Card title="Slack notifications" href="/integrations/slack-notifications" icon="message-square">
+
+  Route review, publish, or launch notifications into the channel your docs team already monitors.
+
+
+
+  </Card>
+
+  <Card title="Zapier integration" href="/integrations/zapier-integration" icon="arrow-right">
+
+  Connect Jira or Linear to lightweight automations without building custom glue code.
+
+
+
+  </Card>
+
+
+</Columns>
+
+## Avoid the most common workflow gaps
+
+<ExpandableGroup>
+
+  <Expandable title="The issue says “update docs” but does not name a page">
+
+  Do not start writing yet. Ask for the target page, audience, and expected outcome first. A vague issue usually creates duplicate content because the assignee has to guess where the update belongs.
+
+
+
+  </Expandable>
+
+  <Expandable title="A product issue shipped, but the docs task stayed open">
+
+  Add a final published URL to the issue and close it only after the page is live. This separates “content drafted” from “documentation delivered.”
+
+
+
+  </Expandable>
+
+  <Expandable title="The docs request depends on engineering details that keep changing">
+
+  Keep the issue linked to the implementation pull request or release ticket, then hold the documentation merge until the underlying behavior stabilizes. This avoids rewriting examples for every intermediate change.
+
+
+
+  </Expandable>
+
+  <Expandable title="Teams forget to create docs issues at all">
+
+  Add documentation to your release checklist and definition of done. When launch workflows require a docs issue or waiver, missing documentation becomes visible before release day.
+
+
+
+  </Expandable>
+</ExpandableGroup>
+
+## Next steps
+
+<Columns cols={2}>
+
+  <Card title="Webhook setup" href="/integrations/webhook-setup" icon="zap">
+
+  Send workflow events to external systems when an issue reaches a docs milestone.
+
+
+
+  </Card>
+
+  <Card title="AI documentation agent" href="/ai/ai-documentation-agent" icon="code">
+
+  Use well-scoped issues as input when you delegate documentation work to the AI agent.
+
+
+
+  </Card>
+
+
+</Columns>

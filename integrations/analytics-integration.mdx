@@ -1,8 +1,382 @@
 ---
-title: Analytics Integration (Google Analytics, etc.)
-description: "Integrations and workflows: Analytics Integration (Google Analytics, etc.) with Documentation.AI."
+title: Analytics integrations
+description: Choose the right analytics provider, configure it from the editor or documentation.json, and route setup to the right tool guide.
 ---
 
-# Analytics Integration (Google Analytics, etc.)
+## Choose the right analytics path
 
-[How-to Guide] Connect Analytics Integration (Google Analytics, etc.) to automate workflows and integrate Documentation.AI with your tooling.
+Documentation.AI supports direct analytics providers, routing layers, and behavior tools from the same integrations panel. Start with the path that matches how your team already measures docs usage, then follow the provider guide for the exact credential and config key.
+
+<Callout kind="info">
+
+Use one direct page-tracking tool per site unless you intentionally need multiple destinations. If you need to fan out events to several tools, route traffic through [Google Tag Manager](/integrations/google-tag-manager) or [Segment](/integrations/segment) instead of enabling overlapping trackers.
+
+
+
+</Callout>
+
+## Set up an analytics integration
+
+<Steps>
+
+  <Step title="Choose your event destination" icon="bar-chart" title-type="p">
+
+  Pick a direct provider such as [Google Analytics](/integrations/google-analytics), [PostHog](/integrations/posthog), or [Plausible](/integrations/plausible) if one tool owns reporting. Pick [Google Tag Manager](/integrations/google-tag-manager) or [Segment](/integrations/segment) if you want to route the same documentation traffic into multiple downstream tools.
+
+
+
+  </Step>
+
+  <Step title="Collect the required credential" icon="lock" title-type="p">
+
+  Each provider expects one primary value, such as a GA4 measurement ID, GTM container ID, PostHog API key, or Segment write key. The provider pages below show where to find each value and the exact format Documentation.AI expects.
+
+
+
+  </Step>
+
+  <Step title="Configure the integration" icon="settings" title-type="p">
+
+  Add the integration from **Site Config** in the editor, or commit it in `documentation.json` if you manage docs in version control. The example below is illustrative only. Use the linked provider guide for the exact integration name, required keys, and accepted values.
+
+  ```js
+  {
+    integrations: {
+      analyticsProvider: {
+        siteId: "provider_example_9xmk7q2r"
+      }
+    }
+  }
+  ```
+
+  After you save the setting, publish the site so the script loads on your live documentation.
+
+
+
+  </Step>
+
+  <Step title="Verify page views and events" icon="check-circle" title-type="p">
+
+  Open your live docs in a private browser window, then confirm the provider receives a page view or session. Success usually appears as a new real-time visit, live event, or active session in the provider dashboard within a few minutes.
+
+
+
+  </Step>
+</Steps>
+
+## Pick an integration pattern
+
+<Tabs>
+
+  <Tab title="Single provider" icon="bar-chart">
+
+  A direct integration is the fastest setup when one team owns reporting in one analytics tool.
+
+  - Use [Google Analytics](/integrations/google-analytics) for GA4 reporting and marketing attribution.
+  - Use [PostHog](/integrations/posthog), [Amplitude](/integrations/amplitude), [Mixpanel](/integrations/mixpanel), or [Heap](/integrations/heap) for product-style event analytics.
+  - Use [Plausible](/integrations/plausible), [Fathom](/integrations/fathom), or [Pirsch](/integrations/pirsch) for lightweight, privacy-focused traffic reporting.
+
+
+
+  </Tab>
+
+  <Tab title="Routing layer" icon="share-2">
+
+  A routing layer helps when different teams need the same documentation traffic in different systems.
+
+  - Use [Google Tag Manager](/integrations/google-tag-manager) if your marketing or web team already manages tags centrally.
+  - Use [Segment](/integrations/segment) when your analytics pipeline already starts with a Segment source.
+  - Use [Hightouch](/integrations/hightouch) when you want to move documentation events into downstream warehouse or reverse ETL workflows.
+
+
+
+  </Tab>
+
+  <Tab title="Behavior tools" icon="monitor">
+
+  Behavior and replay tools answer different questions than page-view analytics.
+
+  - Use [Hotjar](/integrations/hotjar) or [Microsoft Clarity](/integrations/clarity) for heatmaps and session replay.
+  - Use [LogRocket](/integrations/logrocket) when you need replay plus client-side debugging context.
+  - Use [Clearbit](/integrations/clearbit) when you want to enrich traffic with company data rather than measure sessions alone.
+
+
+
+  </Tab>
+</Tabs>
+
+## Understand the config handoff
+
+<Callout kind="info">
+
+The examples in this section are illustrative. Exact integration names, keys, and accepted values vary by provider. Use the linked provider guide before you save changes to `documentation.json`.
+
+
+
+</Callout>
+
+<Tabs>
+
+  <Tab title="Direct provider" icon="bar-chart">
+
+  Direct analytics providers usually need a single site identifier, project key, or API key.
+
+  ```js
+  {
+    integrations: {
+      analyticsProvider: {
+        siteId: "provider_example_9xmk7q2r"
+      }
+    }
+  }
+  ```
+
+  Continue with the provider guide for the real integration name and exact field names.
+
+
+
+  </Tab>
+
+  <Tab title="Routing layer" icon="share-2">
+
+  Routing tools usually need a container, source, or workspace identifier before they pass traffic downstream.
+
+  ```js
+  {
+    integrations: {
+      routingProvider: {
+        containerId: "route_example_a1b2c3d4"
+      }
+    }
+  }
+  ```
+
+  Continue with the [Google Tag Manager](/integrations/google-tag-manager), [Segment](/integrations/segment), or [Hightouch](/integrations/hightouch) guide for the exact schema.
+
+
+
+  </Tab>
+
+  <Tab title="Replay or enrichment" icon="monitor">
+
+  Replay and enrichment tools often add one project key plus optional host, region, or consent settings.
+
+  ```js
+  {
+    integrations: {
+      behaviorProvider: {
+        projectKey: "behavior_example_m7n8p9q0"
+      }
+    }
+  }
+  ```
+
+  Continue with the tool-specific guide for any required host, region, or consent options.
+
+
+
+  </Tab>
+</Tabs>
+
+## Provider setup guides
+
+### Direct analytics providers
+
+<Columns cols={2}>
+
+  <Card title="Google Analytics" href="/integrations/google-analytics" icon="bar-chart">
+
+  Track page views and events with a GA4 measurement ID.
+
+
+
+  </Card>
+
+  <Card title="PostHog" href="/integrations/posthog" icon="bar-chart">
+
+  Capture docs events with API key and host settings.
+
+
+
+  </Card>
+
+  <Card title="Amplitude" href="/integrations/amplitude" icon="bar-chart">
+
+  Send documentation activity into your Amplitude project.
+
+
+
+  </Card>
+
+  <Card title="Mixpanel" href="/integrations/mixpanel" icon="bar-chart">
+
+  Measure docs engagement with Mixpanel events.
+
+
+
+  </Card>
+
+  <Card title="Heap" href="/integrations/heap" icon="bar-chart">
+
+  Track user interactions automatically with Heap.
+
+
+
+  </Card>
+
+  <Card title="Plausible" href="/integrations/plausible" icon="shield">
+
+  Add lightweight, privacy-friendly traffic tracking.
+
+
+
+  </Card>
+
+  <Card title="Fathom" href="/integrations/fathom" icon="shield">
+
+  Monitor page views with a privacy-first analytics stack.
+
+
+
+  </Card>
+
+  <Card title="Pirsch" href="/integrations/pirsch" icon="shield">
+
+  Track traffic with minimal setup and privacy-focused reporting.
+
+
+
+  </Card>
+
+
+</Columns>
+
+### Routing and orchestration
+
+<Columns cols={2}>
+
+  <Card title="Google Tag Manager" href="/integrations/google-tag-manager" icon="settings">
+
+  Route documentation traffic through your existing GTM container.
+
+
+
+  </Card>
+
+  <Card title="Segment" href="/integrations/segment" icon="share-2">
+
+  Send docs events into Segment before they fan out to downstream tools.
+
+
+
+  </Card>
+
+  <Card title="Hightouch" href="/integrations/hightouch" icon="upload">
+
+  Extend documentation events into warehouse and reverse ETL workflows.
+
+
+
+  </Card>
+
+
+</Columns>
+
+### Replay and enrichment
+
+<Columns cols={2}>
+
+  <Card title="Hotjar" href="/integrations/hotjar" icon="monitor">
+
+  Review heatmaps and session recordings for documentation readers.
+
+
+
+  </Card>
+
+  <Card title="Microsoft Clarity" href="/integrations/clarity" icon="monitor">
+
+  Inspect recordings and heatmaps with Clarity.
+
+
+
+  </Card>
+
+  <Card title="LogRocket" href="/integrations/logrocket" icon="monitor">
+
+  Combine session replay with front-end debugging signals.
+
+
+
+  </Card>
+
+  <Card title="Clearbit" href="/integrations/clearbit" icon="users">
+
+  Enrich reader data with company-level attributes.
+
+
+
+  </Card>
+
+
+</Columns>
+
+## Troubleshoot tracking issues
+
+<ExpandableGroup>
+
+  <Expandable title="No events appear after publishing">
+
+  First confirm you published the project after saving the integration. Then open the live site, not the editor preview, and check the provider's real-time or live-events view. If nothing appears, verify the credential format exactly matches the provider requirement, such as `G-` for GA4 or `GTM-` for Google Tag Manager.
+
+
+
+  </Expandable>
+
+  <Expandable title="Page views are duplicated">
+
+  Duplicate page views usually mean two tools are tracking the same route changes. Remove overlapping direct trackers, or centralize routing through Google Tag Manager or Segment so one integration owns page-view dispatch.
+
+
+
+  </Expandable>
+
+  <Expandable title="Scripts load only after consent">
+
+  That behavior is expected when you assign the integration to a consent category. Readers must accept the matching category before the analytics script initializes. Follow the [Cookie Consent guide](/customize/cookie-consent) if you need to review category setup.
+
+
+
+  </Expandable>
+
+  <Expandable title="Ad blockers hide analytics traffic during testing">
+
+  Many browser extensions block analytics and replay scripts. Test in a clean private window with extensions disabled before you assume the integration is misconfigured.
+
+
+
+  </Expandable>
+</ExpandableGroup>
+
+## Next steps
+
+<Columns cols={2}>
+
+  <Card title="Analytics overview" href="/analytics/overview" icon="bar-chart">
+
+  Review how Documentation.AI reports traffic, usage, and engagement after your integration is live.
+
+
+
+  </Card>
+
+  <Card title="Cookie consent" href="/customize/cookie-consent" icon="shield">
+
+  Gate analytics scripts behind consent categories for privacy and compliance workflows.
+
+
+
+  </Card>
+
+
+</Columns>

@@ -1,8 +1,302 @@
 ---
-title: Slack Notifications
-description: "Integrations and workflows: Slack Notifications with Documentation.AI."
+title: Slack notifications
+description: Send docs review, release, and support updates to Slack with focused messages, stable links, and routing that avoids noisy channels.
 ---
 
-# Slack Notifications
+## Send the docs signals people actually act on
 
-[How-to Guide] Connect Slack Notifications to automate workflows and integrate Documentation.AI with your tooling.
+Slack works best when it receives a small number of high-value documentation events. Instead of forwarding every commit or edit, send the moments that need review, approval, launch coordination, or customer follow-up.
+
+<Callout kind="info">
+
+If your team already has a webhook relay or automation layer, route documentation updates through it instead of posting directly from every source tool. Central routing makes formatting, retries, and channel rules much easier to maintain.
+
+
+
+</Callout>
+
+## Use the supported delivery path
+
+The recommended path is simple: let your source workflow emit one documentation event, route it through a single formatter or relay, and send the final message to Slack from that one place.
+
+Use [Webhook setup](/integrations/webhook-setup) when you already have an endpoint or relay that can normalize payloads. Use [Zapier integration](/integrations/zapier-integration) when you want the same event to branch into Slack and other downstream tools without maintaining custom glue code.
+
+## Decide which messages belong in Slack
+
+<Tabs>
+
+  <Tab title="Review workflow" icon="edit">
+
+  Notify Slack when a docs merge request or pull request needs feedback.
+
+  A useful review message usually includes:
+
+  - The page or section that changed
+  - The owner or reviewer
+  - A link to the diff or preview
+  - The deadline or release window if timing matters
+
+  This works well with the [GitHub integration](/integrations/github) or [GitLab integration](/integrations/gitlab-integration).
+
+
+
+  </Tab>
+
+  <Tab title="Release workflow" icon="upload">
+
+  Notify Slack when documentation is ready to publish or when a launch-sensitive page has gone live.
+
+  Common examples include:
+
+  - Release notes ready for final review
+  - Migration guidance published before a breaking change
+  - A changelog entry shipped with a product launch
+
+  Pair these messages with your [changelog](/changelog) and release checklist so customer-facing teams see the same final links.
+
+
+
+  </Tab>
+
+  <Tab title="Support workflow" icon="message-square">
+
+  Notify Slack when support content or troubleshooting guidance changes after an incident, bug fix, or repeated ticket pattern.
+
+  Common examples include:
+
+  - A help article updated to answer a frequent support question
+  - A troubleshooting page changed after an outage
+  - An escalation channel needs the published URL for a new workaround
+
+  This pattern helps support and success teams reuse the final docs instead of rewriting answers by hand.
+
+
+
+  </Tab>
+</Tabs>
+
+## Set up a useful Slack notification flow
+
+<Steps>
+
+  <Step title="Choose the channel and owner" icon="users" title-type="p">
+
+  Send documentation notifications to the channel where the next action actually happens. Review requests belong in a docs or engineering review channel. Launch messages belong in a release or go-to-market channel. Support updates belong where support leads already triage incidents.
+
+  Success looks like one clear owner for the message, not a channel full of bystanders.
+
+
+
+  </Step>
+
+  <Step title="Pick the source event" icon="zap" title-type="p">
+
+  Start from the workflow system that already knows when the event happened. That source might be GitHub, GitLab, Jira, Linear, CI, or a webhook relay.
+
+  If more than one tool can emit the same event, choose one source of truth so reviewers do not see duplicate messages.
+
+
+
+  </Step>
+
+  <Step title="Format the message for action" icon="edit" title-type="p">
+
+  Include the page path, a short summary, a direct link, and what the recipient should do next. The message should be understandable without opening the source ticket first.
+
+  The example below is intentionally short because Slack messages need to scan quickly.
+
+  ```json
+  {
+    "text": "Docs review needed: integrations/webhook-setup",
+    "blocks": [
+      {
+        "type": "section",
+        "text": {
+          "type": "mrkdwn",
+          "text": "*Docs review needed*\nPage: `integrations/webhook-setup`\nOwner: Jane Chen\nAction: Review the merge request before the 2026.04 release cut."
+        }
+      },
+      {
+        "type": "actions",
+        "elements": [
+          {
+            "type": "button",
+            "text": {
+              "type": "plain_text",
+              "text": "Open merge request"
+            },
+            "url": "https://gitlab.com/acme/docs/-/merge_requests/142"
+          }
+        ]
+      }
+    ]
+  }
+  ```
+
+
+
+  </Step>
+
+  <Step title="Test in a low-noise channel" icon="check-circle" title-type="p">
+
+  Send the first message to a private test channel, then confirm the links render correctly, the text is readable on mobile, and duplicate events are suppressed.
+
+  Once the message format is stable, route it to the production channel.
+
+
+
+  </Step>
+</Steps>
+
+## What to expect after setup
+
+Once the flow is live, these behaviors should be predictable:
+
+- **Delivery:** Slack messages should appear only after the source event is accepted by your relay, webhook target, or automation step.
+- **Channel targeting:** Route by workflow outcome, not by source tool. Review events should land in review channels, and launch or support events should land where those teams already work.
+- **Duplicate handling:** A retry from the source system should not create a second visible message if the same merge request, ticket, or publish event was already posted.
+
+## Include the fields Slack readers need
+
+A good Slack notification should answer three questions immediately: what changed, who owns it, and what should happen next.
+
+<ParamField body="channel" param-type="string" required="true" show-location="false">
+
+The destination Slack channel or webhook target. Route by workflow, not by tool name. For example, use a review channel for review messages and a release channel for launch messages.
+
+
+
+</ParamField>
+
+<ParamField body="summary" param-type="string" required="true" show-location="false">
+
+A one-line description of the docs event, such as "Docs review needed" or "Migration guide published." Keep it short enough to scan in the Slack sidebar preview.
+
+
+
+</ParamField>
+
+<ParamField body="page-path" param-type="string" show-location="false">
+
+The page or section most affected by the change, such as `integrations/slack-notifications` or `api-documentation-and-playground/api-authentication`.
+
+
+
+</ParamField>
+
+<ParamField body="owner" param-type="string" show-location="false">
+
+The reviewer, writer, or release owner responsible for the next step.
+
+
+
+</ParamField>
+
+<ParamField body="action-link" param-type="string" required="true" show-location="false">
+
+A direct URL to the merge request, issue, preview, deployment log, or published page. Do not make people search for the source record.
+
+
+
+</ParamField>
+
+<ParamField body="deadline" param-type="string" show-location="false">
+
+The release cut, review target, or urgency window when timing matters.
+
+
+
+</ParamField>
+
+## Pick a routing pattern
+
+<Columns cols={3}>
+
+  <Card title="Webhook relay" href="/integrations/webhook-setup" icon="zap">
+
+  Normalize events from Git, issue trackers, or CI before they reach Slack.
+
+
+
+  </Card>
+
+  <Card title="Issue tracker workflow" href="/integrations/issue-trackers" icon="folder">
+
+  Post a message when a docs ticket needs triage, review, or publish confirmation.
+
+
+
+  </Card>
+
+  <Card title="Zapier integration" href="/integrations/zapier-integration" icon="arrow-right">
+
+  Format and route Slack messages with lightweight automation when you do not want to maintain a custom relay.
+
+
+
+  </Card>
+
+
+
+</Columns>
+
+## Troubleshoot noisy or broken notifications
+
+<ExpandableGroup>
+
+  <Expandable title="The channel is too noisy to be useful">
+
+  Reduce the event list first. Keep only messages that require a decision, review, or customer response. Status chatter that nobody acts on should stay in logs, not Slack.
+
+
+
+  </Expandable>
+
+  <Expandable title="Messages are duplicated after merges or retries">
+
+  Check whether both the source system and the relay are posting to Slack. Pick one sender and add idempotency rules based on merge request URL, deployment ID, or ticket key.
+
+
+
+  </Expandable>
+
+  <Expandable title="Links point to the wrong environment">
+
+  Separate preview, staging, and production links in your payload mapping. Review channels often need preview URLs, while launch or support channels usually need the published page.
+
+
+
+  </Expandable>
+
+  <Expandable title="People ignore the messages">
+
+  The message probably does not make the next step obvious. Rewrite it so the headline describes the event and the button or link matches the action the reader should take.
+
+
+
+  </Expandable>
+</ExpandableGroup>
+
+## Next steps
+
+<Columns cols={2}>
+
+  <Card title="Webhook setup" href="/integrations/webhook-setup" icon="zap">
+
+  Standardize your incoming event payload before it reaches Slack.
+
+
+
+  </Card>
+
+  <Card title="Zapier integration" href="/integrations/zapier-integration" icon="arrow-right">
+
+  Use no-code automation to route the same docs signal into Slack and other downstream tools.
+
+
+
+  </Card>
+
+
+
+</Columns>

@@ -1,8 +1,362 @@
 ---
-title: Webhook Setup
-description: "Integrations and workflows: Webhook Setup with Documentation.AI."
+title: Webhook setup
+description: Design a reliable docs webhook flow with signed payloads, event routing, retries, and practical patterns for Slack, Zapier, and internal tools.
 ---
 
-# Webhook Setup
+## Use webhooks to move documentation work between systems
 
-[How-to Guide] Connect Webhook Setup to automate workflows and integrate Documentation.AI with your tooling.
+Webhooks are the simplest way to connect documentation work to the rest of your stack. Use them to push review, release, or support signals from the tools around Documentation.AI into Slack, Zapier, CI, incident tooling, or your own internal services.
+
+<Callout kind="info">
+
+This page focuses on a practical workflow pattern, not a single vendor-specific toggle. In most teams, the webhook source is a Git provider, issue tracker, deployment pipeline, or automation tool that already sits beside the docs workflow.
+
+
+
+</Callout>
+
+## Confirm the endpoint prerequisites
+
+Before you enable a webhook flow, make sure you already have these concrete inputs:
+
+- A public HTTPS endpoint that can accept `POST` requests
+- A signing secret that both sides can store securely
+- A signature or source header your receiver will verify on every request
+- A retry and timeout policy that matches how your destination processes events
+
+If any of these inputs are missing, pause here and collect them first. Most rollout problems come from turning on delivery before the endpoint contract is fully defined.
+
+## Choose the event source before you write payloads
+
+A useful webhook starts with a clear moment in the workflow. Pick the event your team already acts on, then decide who needs to receive it.
+
+<Tabs>
+
+  <Tab title="Git-based workflow" icon="github">
+
+  Use repository events when documentation changes are reviewed and deployed through branches and merge requests or pull requests.
+
+  Common triggers include:
+
+  - A merge request or pull request opened for a docs page
+  - A docs branch merged into the production branch
+  - A deployment or build finished for the documentation site
+
+  This pattern works well with the [GitHub integration](/integrations/github) or the [GitLab integration](/integrations/gitlab-integration).
+
+
+
+  </Tab>
+
+  <Tab title="Issue tracker workflow" icon="folder">
+
+  Use issue events when documentation requests begin in Jira, Linear, or another planning tool.
+
+  Common triggers include:
+
+  - A ticket moves to `Needs docs`
+  - A ticket is approved for release
+  - A docs follow-up is marked `Published`
+
+  This pattern pairs well with [issue tracker workflows](/integrations/issue-trackers).
+
+
+
+  </Tab>
+
+  <Tab title="Release or support workflow" icon="zap">
+
+  Use release or support events when customer-facing changes need immediate downstream action.
+
+  Common triggers include:
+
+  - Release notes published for a feature launch
+  - A support article updated after an incident
+  - A deprecation notice shipped and customer-success teams need a heads-up
+
+  These events often feed Slack, CRM automations, or internal status dashboards.
+
+
+
+  </Tab>
+</Tabs>
+
+## Set up a webhook flow that survives real traffic
+
+<Steps>
+
+  <Step title="Define the one event that matters" icon="zap" title-type="p">
+
+  Start with one concrete outcome, such as "notify the docs review channel when a docs merge request opens" or "open a follow-up task when a release ticket reaches launch-ready." Avoid broad event streams until the first path is working.
+
+  Success looks like one event, one destination, and one team that knows what to do when the message arrives.
+
+
+
+  </Step>
+
+  <Step title="Send a small, consistent payload" icon="code" title-type="p">
+
+  Keep the webhook body predictable. Include the event name, page or release reference, actor, link back to the source system, and the time the event happened. Stable payloads make Slack formatting, Zapier mapping, and retry handling much easier.
+
+  Use the recommended envelope below as a starting point, even if the original source produces many more fields.
+
+
+
+  </Step>
+
+  <Step title="Protect the endpoint" icon="lock" title-type="p">
+
+  Sign incoming requests with a shared secret or provider signature and reject anything that fails verification. If the destination is an internal relay, log the source system and request ID so you can trace failed deliveries later.
+
+  If the webhook contains user data, issue details, or internal release timing, store only the fields you need and treat the endpoint like any other production integration.
+
+
+
+  </Step>
+
+  <Step title="Acknowledge fast and process asynchronously" icon="check-circle" title-type="p">
+
+  Return a `2xx` response as soon as the payload is accepted, then do the heavy work in a queue or background job. Slow destinations cause retries, duplicate notifications, and timeouts.
+
+  A healthy flow records the event immediately, then fans out to Slack, Zapier, or internal services after the acknowledgment is complete.
+
+
+
+  </Step>
+
+  <Step title="Test retries and duplicate handling" icon="settings" title-type="p">
+
+  Replay the same payload twice and confirm the destination behaves safely. Merge events, release notifications, and publish hooks often retry when the first delivery times out.
+
+  Success looks like one visible action in the destination system even when the same webhook arrives more than once.
+
+
+
+  </Step>
+</Steps>
+
+## Start with a concrete endpoint configuration
+
+Keep the receiver configuration small enough to review in one place. This example shows the minimum settings most teams need before turning on delivery.
+
+```yaml
+endpoint:
+  url: https://automations.acme.com/hooks/docs-events
+  signingSecret: whsec_example_7mK2qQ9pL4x
+  signatureHeader: X-Docs-Signature
+  headers:
+    X-Docs-Event-Source: documentation-ai
+    Content-Type: application/json
+  retries:
+    maxAttempts: 3
+    backoff: exponential
+    timeoutSeconds: 10
+```
+
+<ParamField body="endpoint.url" param-type="string" required="true" show-location="false">
+
+The public HTTPS URL that receives the webhook. Point it at the first system that can acknowledge quickly, such as your relay, automation service, or queue-backed API.
+
+
+
+</ParamField>
+
+<ParamField body="endpoint.signingSecret" param-type="string" required="true" show-location="false">
+
+The shared secret used to sign the payload. Rotate it like any other production credential and never place it in the request body.
+
+
+
+</ParamField>
+
+<ParamField body="endpoint.signatureHeader" param-type="string" required="true" show-location="false">
+
+The header your receiver checks before accepting the event, such as `X-Docs-Signature` or the provider-specific signature header your relay expects.
+
+
+
+</ParamField>
+
+<ParamField body="endpoint.retries" param-type="object" required="true" show-location="false">
+
+The retry contract for failed deliveries. Start with three attempts, exponential backoff, and a short timeout so duplicate events stay manageable.
+
+
+
+</ParamField>
+
+## Use a stable event envelope
+
+Document the fields every downstream system can rely on. A small contract is usually more valuable than forwarding the raw provider payload unchanged.
+
+<ParamField body="event" param-type="string" required="true" show-location="false">
+
+A namespaced event such as `docs.review.opened`, `docs.page.published`, or `docs.release.ready`.
+
+
+
+</ParamField>
+
+<ParamField body="source" param-type="string" required="true" show-location="false">
+
+The system that emitted the event, such as `github`, `gitlab`, `jira`, `linear`, `ci`, or `support`.
+
+
+
+</ParamField>
+
+<ParamField body="action" param-type="string" required="true" show-location="false">
+
+The workflow change that happened, such as `opened`, `merged`, `published`, or `resolved`.
+
+
+
+</ParamField>
+
+<ParamField body="page.path" param-type="string" show-location="false">
+
+The documentation page path when the event maps to a specific page, such as `integrations/webhook-setup`.
+
+
+
+</ParamField>
+
+<ParamField body="actor" param-type="object" show-location="false">
+
+The person or service that triggered the change. Include a display name and stable identifier if the destination needs routing or ownership.
+
+
+
+</ParamField>
+
+<ParamField body="url" param-type="string" required="true" show-location="false">
+
+A direct link back to the source record, such as the merge request, ticket, deployment log, or published page.
+
+
+
+</ParamField>
+
+<ParamField body="occurredAt" param-type="string" required="true" show-location="false">
+
+An ISO 8601 timestamp so downstream systems can sort, deduplicate, and audit deliveries.
+
+
+
+</ParamField>
+
+```json
+{
+  "event": "docs.page.published",
+  "source": "gitlab",
+  "action": "merged",
+  "page": {
+    "path": "integrations/webhook-setup",
+    "title": "Webhook setup"
+  },
+  "actor": {
+    "name": "Jane Chen",
+    "id": "usr_a1b2c3d4"
+  },
+  "url": "https://docs.acme.com/integrations/webhook-setup",
+  "occurredAt": "2026-04-23T14:22:10Z",
+  "metadata": {
+    "environment": "production",
+    "release": "2026.04"
+  }
+}
+```
+
+## Route webhooks to the right destination
+
+<Columns cols={3}>
+
+  <Card title="Slack notifications" href="/integrations/slack-notifications" icon="message-square">
+
+  Post review, release, or support updates into the channels that already own the next action.
+
+
+
+  </Card>
+
+  <Card title="Zapier integration" href="/integrations/zapier-integration" icon="arrow-right">
+
+  Transform webhook events into lightweight automations without building custom glue code.
+
+
+
+  </Card>
+
+  <Card title="Issue tracker workflows" href="/integrations/issue-trackers" icon="folder">
+
+  Open follow-up tasks when a webhook shows that docs work needs review, launch coordination, or remediation.
+
+
+
+  </Card>
+
+
+
+</Columns>
+
+## Troubleshoot common webhook problems
+
+<ExpandableGroup>
+
+  <Expandable title="Events arrive, but nothing happens downstream">
+
+  Check whether the receiver returns a successful `2xx` response quickly enough. If the destination waits on long-running work before acknowledging the request, the source system may treat the delivery as failed and retry.
+
+
+
+  </Expandable>
+
+  <Expandable title="The same notification appears more than once">
+
+  Add an idempotency rule at the destination. A request ID, event timestamp, or merge request URL is usually enough to detect a retry and skip duplicate work.
+
+
+
+  </Expandable>
+
+  <Expandable title="Slack or Zapier payload mapping keeps breaking">
+
+  The source payload is probably changing shape between event types. Normalize it first in a relay or automation step so downstream tools always receive the same top-level fields.
+
+
+
+  </Expandable>
+
+  <Expandable title="Security review blocks the webhook rollout">
+
+  Reduce the payload to operational fields only, sign requests, and avoid sending secrets or unnecessary personal data. Many reviews move faster once the endpoint stores only the event metadata needed for automation.
+
+
+
+  </Expandable>
+</ExpandableGroup>
+
+## Next steps
+
+<Columns cols={2}>
+
+  <Card title="Slack notifications" href="/integrations/slack-notifications" icon="message-square">
+
+  Turn webhook events into messages that reviewers, support teams, and release owners will actually read.
+
+
+
+  </Card>
+
+  <Card title="Zapier integration" href="/integrations/zapier-integration" icon="arrow-right">
+
+  Use no-code routing and enrichment when one webhook needs to update several systems.
+
+
+
+  </Card>
+
+
+
+</Columns>
