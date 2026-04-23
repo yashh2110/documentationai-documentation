@@ -1,0 +1,247 @@
+---
+title: 5-minute API Quick Start
+description: Import an OpenAPI spec, enable authentication and the playground, and publish a usable API reference in Documentation.AI in about 5 minutes.
+type: tutorial
+---
+
+## Launch your API docs
+
+Turn an OpenAPI file into a browsable, testable API reference with authentication, code samples, and response examples in a few minutes.
+
+<Callout kind="info">
+
+Before you start, make sure you have an OpenAPI 3.0 or newer file and at least one endpoint with a response. Documentation.AI generates the best first pass when your spec already includes summaries, tags, and security schemes.
+
+</Callout>
+
+<Steps>
+  <Step title="Add your OpenAPI file" icon="file-code">
+
+  Save your spec in the `api-reference` folder. Documentation.AI reads OpenAPI files from that folder when you connect them in navigation.
+
+  ```text
+  your-docs/
+  ├── api-reference/
+  │   └── openapi.yaml
+  ├── documentation.json
+  └── ...
+  ```
+
+  If you are starting from scratch, a small spec with one secured endpoint is enough for your first publish.
+
+  <CodeGroup tabs="YAML,JSON">
+
+  ```yaml
+  openapi: 3.0.3
+  info:
+    title: Acme API
+    version: 1.0.0
+  servers:
+    - url: https://api.acme.dev/v1
+  paths:
+    /projects:
+      get:
+        summary: List projects
+        tags:
+          - Projects
+        security:
+          - BearerAuth: []
+        responses:
+          "200":
+            description: Project list
+  components:
+    securitySchemes:
+      BearerAuth:
+        type: http
+        scheme: bearer
+        bearerFormat: JWT
+  ```
+
+  ```json
+  {
+    "openapi": "3.0.3",
+    "info": {
+      "title": "Acme API",
+      "version": "1.0.0"
+    },
+    "servers": [
+      {
+        "url": "https://api.acme.dev/v1"
+      }
+    ],
+    "paths": {
+      "/projects": {
+        "get": {
+          "summary": "List projects",
+          "tags": ["Projects"],
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Project list"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "securitySchemes": {
+        "BearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      }
+    }
+  }
+  ```
+
+  </CodeGroup>
+
+  Success looks like this: your repo contains `api-reference/openapi.yaml`, and the file validates as OpenAPI 3.0 or newer.
+
+  </Step>
+
+  <Step title="Connect the spec in documentation.json" icon="folder-tree">
+
+  Add the `openapi` field to the group where you want your API reference to appear. Documentation.AI uses that link to generate endpoint pages in the sidebar.
+
+  ```json
+  {
+    "group": "API Reference",
+    "icon": "server",
+    "openapi": "api-reference/openapi.yaml",
+    "pages": []
+  }
+  ```
+
+  If your OpenAPI file uses tags, Documentation.AI groups endpoints automatically. If you want a custom overview page in the same section, add that page alongside the generated content.
+
+  Success looks like this: your navigation shows an API Reference section, and endpoint pages appear under it after the site reloads.
+
+  </Step>
+
+  <Step title="Make authentication and the playground usable" icon="lock">
+
+  The interactive playground becomes useful as soon as your spec includes a supported security scheme and complete request details. For most teams, that means defining an API key or Bearer token scheme in `components.securitySchemes` and applying it to the relevant operations.
+
+  ```yaml
+  components:
+    securitySchemes:
+      BearerAuth:
+        type: http
+        scheme: bearer
+        bearerFormat: JWT
+  security:
+    - BearerAuth: []
+  ```
+
+  Once authentication is configured, test the same endpoint the way your users will. These examples request a project list from the sample server defined in the spec.
+
+  <CodeGroup tabs="JavaScript,Python,curl">
+
+  ```javascript
+  const response = await fetch("https://api.acme.dev/v1/projects", {
+    headers: {
+      Authorization: "Bearer dkai_example_9xmk7q2r",
+      Accept: "application/json"
+    }
+  });
+
+  const data = await response.json();
+  console.log(data);
+  ```
+
+  ```python
+  import requests
+
+  response = requests.get(
+      "https://api.acme.dev/v1/projects",
+      headers={
+          "Authorization": "Bearer dkai_example_9xmk7q2r",
+          "Accept": "application/json",
+      },
+      timeout=30,
+  )
+
+  print(response.json())
+  ```
+
+  ```bash
+  curl --request GET \
+    --url https://api.acme.dev/v1/projects \
+    --header "Authorization: Bearer dkai_example_9xmk7q2r" \
+    --header "Accept: application/json"
+  ```
+
+  </CodeGroup>
+
+  When you open a generated endpoint page, you should see authentication inputs, parameter forms, and live response previews. If the auth input is missing, check the security scheme in your spec before changing anything else.
+
+  </Step>
+
+  <Step title="Review the generated developer experience" icon="code">
+
+  Open one generated endpoint and verify the basics before you publish widely.
+
+  - Confirm the endpoint summary is readable in the sidebar and on the page.
+  - Confirm parameters, request bodies, and responses render from the schema.
+  - Confirm the playground can send a request with your auth scheme.
+  - Confirm the generated code samples match the request developers should copy.
+  - Confirm your spec documents common errors and any rate limit headers you expect users to handle.
+
+  If one of those pieces is weak, improve the OpenAPI source instead of editing generated pages by hand. Your spec remains the fastest way to improve every endpoint at once.
+
+  Success looks like this: you can open an endpoint, authorize once, send a request, and understand both the success response and the common failure cases.
+
+  </Step>
+
+  <Step title="Publish and iterate" icon="rocket">
+
+  Once the first endpoint looks right, publish and share the API reference with your team. Start small, then expand the spec with more tags, examples, and reusable schemas.
+
+  A good first iteration includes clear authentication rules, realistic example payloads, at least one error response per critical endpoint, and documented rate limit behavior.
+
+  Success looks like this: a developer who has never seen your API can find an endpoint, authenticate, test it, and copy a working example without opening another tool.
+
+  </Step>
+</Steps>
+
+## If something does not look right
+
+<ExpandableGroup>
+  <Expandable title="Endpoints are missing from the sidebar">
+
+  Validate the OpenAPI file first. Missing pages usually come from invalid OpenAPI structure, missing operations, or a spec path in `documentation.json` that does not match the file in `api-reference`.
+
+  </Expandable>
+
+  <Expandable title="The playground shows no auth input">
+
+  Check that your spec defines a supported security scheme and applies it at the global or operation level. A security scheme that is declared but never referenced will not appear in the playground.
+
+  </Expandable>
+
+  <Expandable title="Requests fail even though the docs render">
+
+  Check your API's CORS settings, test credentials, and server URL definitions in the spec. Rendering success does not guarantee that live requests can reach your API from the browser.
+
+  </Expandable>
+</ExpandableGroup>
+
+## Go deeper
+
+<Columns cols={3}>
+  <Card title="OpenAPI import" href="/api-documentation-and-playground/openapi-import" icon="file-code" cta="Import a spec" />
+  <Card title="API authentication" href="/api-documentation-and-playground/api-authentication" icon="lock" cta="Configure auth" />
+  <Card title="Interactive playground setup" href="/api-documentation-and-playground/interactive-playground-setup" icon="play-circle" cta="Enable testing" />
+</Columns>
+
+<Columns cols={3}>
+  <Card title="Code samples and SDKs" href="/api-documentation-and-playground/code-samples-and-sdks" icon="code" cta="Improve examples" />
+  <Card title="API errors and error codes" href="/api-documentation-and-playground/api-error-codes" icon="alert-triangle" cta="Document failures" />
+  <Card title="Rate limits and headers" href="/api-documentation-and-playground/rate-limits-and-headers" icon="gauge" cta="Explain limits" />
+</Columns>
