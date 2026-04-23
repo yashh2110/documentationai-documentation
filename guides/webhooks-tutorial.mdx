@@ -1,0 +1,225 @@
+---
+title: Webhooks tutorial
+description: Learn how webhooks work, why signature verification matters, and how to build a reliable endpoint with retries and troubleshooting.
+type: tutorial
+---
+
+## Understand webhooks before you build
+
+Webhooks send an HTTP request to your application when an event happens. Instead of checking for updates every few minutes, your app receives data as soon as the provider has something new to report.
+
+That delivery model matters when you need fast follow-up actions, lower API usage, and a clean audit trail of event-driven work. Common examples include syncing CRM records, triggering internal alerts, and updating billing or fulfillment systems after a status change.
+
+<Callout kind="info">
+
+Start with a single endpoint, subscribe to only the events you need, and move slow processing into a queue or background worker. That keeps your webhook receiver fast and predictable.
+
+</Callout>
+
+## Compare polling and webhooks
+
+<Tabs>
+  <Tab title="Polling" icon="refresh-cw">
+
+  Polling asks the provider for updates on a schedule. It is easy to understand, but most requests return no change and every update waits for the next polling interval.
+
+  - Good for prototypes and infrequent changes
+  - Higher API usage because you make repeated check requests
+  - More latency because updates arrive on the next scheduled poll
+
+  </Tab>
+  <Tab title="Webhooks" icon="workflow">
+
+  Webhooks push updates to your endpoint as events happen. They reduce unnecessary traffic and let you react almost immediately, as long as your receiver is secure and resilient.
+
+  - Better for near real-time automation
+  - Lower API usage because the provider only sends relevant events
+  - More operational responsibility because you must verify, log, and retry safely
+
+  </Tab>
+</Tabs>
+
+## Set up a reliable webhook receiver
+
+<Steps>
+  <Step title="Register a public URL" icon="globe">
+
+  Create an HTTPS endpoint that your provider can reach from the public internet, such as `https://api.acme.com/webhooks/documentation-ai`. If you are testing locally, expose your app through a tunnel so the provider can deliver requests to your machine.
+
+  Add the endpoint URL in the provider dashboard, then send a test event. You know this step worked when the provider marks the endpoint as reachable or your local logs show the first delivery attempt.
+
+  </Step>
+  <Step title="Choose the events you want to receive" icon="settings">
+
+  Subscribe only to the event types your application actually uses. Narrow subscriptions reduce noise, make troubleshooting easier, and lower the chance that a new event type triggers unexpected side effects.
+
+  A good first pass is to enable one success event and one failure event, then expand after your handler is stable. Your delivery log should show a small, intentional set of event names instead of a broad stream of unrelated updates.
+
+  </Step>
+  <Step title="Verify signatures before processing events" icon="shield">
+
+  Treat every incoming delivery as untrusted until you confirm the signature with your shared secret and the raw request body. Signature verification protects you from forged requests, replay attacks, and accidental processing of tampered payloads.
+
+  <Callout kind="alert">
+
+  Skip signature verification and anyone who discovers your webhook URL can send forged events to your application. Verify against the raw body, reject stale timestamps, rotate secrets regularly, and use constant-time comparison before you trust the payload.
+
+  </Callout>
+
+  <CodeGroup tabs="JavaScript,Python">
+```javascript
+import crypto from "node:crypto";
+import express from "express";
+
+const app = express();
+const webhookSecret = "whsec_example_9xmk7q2r";
+
+app.post("/webhooks/documentation-ai", express.raw({ type: "application/json" }), (req, res) => {
+  const signature = req.get("x-signature");
+  const timestamp = req.get("x-timestamp");
+
+  if (!signature || !timestamp) {
+    return res.status(400).json({ error: "Missing signature headers" });
+  }
+
+  const rawBody = req.body.toString("utf8");
+  const signedPayload = `${timestamp}.${rawBody}`;
+  const expectedSignature = crypto
+    .createHmac("sha256", webhookSecret)
+    .update(signedPayload)
+    .digest("hex");
+
+  const signatureBuffer = Buffer.from(signature, "hex");
+  const expectedBuffer = Buffer.from(expectedSignature, "hex");
+
+  if (
+    signatureBuffer.length !== expectedBuffer.length ||
+    !crypto.timingSafeEqual(signatureBuffer, expectedBuffer)
+  ) {
+    return res.status(400).json({ error: "Invalid signature" });
+  }
+
+  const maxAgeInSeconds = 300;
+  const now = Math.floor(Date.now() / 1000);
+  if (now - Number(timestamp) > maxAgeInSeconds) {
+    return res.status(400).json({ error: "Expired timestamp" });
+  }
+
+  const event = JSON.parse(rawBody);
+  console.log(`Received ${event.type} (${event.id})`);
+
+  return res.status(200).send("ok");
+});
+
+app.listen(3000, () => {
+  console.log("Webhook receiver listening on http://localhost:3000");
+});
+```
+
+```python
+from flask import Flask, request, jsonify
+import hashlib
+import hmac
+import json
+import time
+
+app = Flask(__name__)
+webhook_secret = b"whsec_example_9xmk7q2r"
+
+@app.post("/webhooks/documentation-ai")
+def receive_webhook():
+    signature = request.headers.get("x-signature")
+    timestamp = request.headers.get("x-timestamp")
+
+    if not signature or not timestamp:
+        return jsonify({"error": "Missing signature headers"}), 400
+
+    raw_body = request.get_data(as_text=True)
+    signed_payload = f"{timestamp}.{raw_body}".encode("utf-8")
+    expected_signature = hmac.new(
+        webhook_secret,
+        signed_payload,
+        hashlib.sha256,
+    ).hexdigest()
+
+    if not hmac.compare_digest(signature, expected_signature):
+        return jsonify({"error": "Invalid signature"}), 400
+
+    max_age_in_seconds = 300
+    now = int(time.time())
+    if now - int(timestamp) > max_age_in_seconds:
+        return jsonify({"error": "Expired timestamp"}), 400
+
+    event = json.loads(raw_body)
+    print(f"Received {event['type']} ({event['id']})")
+
+    return "ok", 200
+
+if __name__ == "__main__":
+    app.run(port=3000, debug=True)
+```
+  </CodeGroup>
+
+  After you deploy this handler, send a signed test event. Success looks like a `200` response in the provider dashboard and a log entry that includes the event type and event ID.
+
+  </Step>
+  <Step title="Handle retries and return fast responses" icon="refresh-cw">
+
+  Return a `2xx` response as soon as you verify the signature and safely persist or enqueue the event. Providers usually retry deliveries after timeouts or `4xx` and `5xx` responses, so a slow endpoint can create duplicate work even when nothing is wrong with the event itself.
+
+  - Store each event ID and ignore duplicates.
+  - Move expensive work, such as database writes or third-party API calls, to a background job.
+  - Log the reason for every non-`2xx` response so you can explain later retries.
+  - Keep old webhook secrets available during rotations until all in-flight retries are finished.
+
+  A healthy delivery log may include retries during deploys or transient outages, but those retries should not create duplicate side effects in your application.
+
+  </Step>
+</Steps>
+
+## Know which headers and fields matter
+
+<ParamField header="x-signature" param-type="string" required="true">
+The HMAC digest for the raw request body. Compute the digest locally with your shared secret and compare it before you parse or trust the payload.
+</ParamField>
+
+<ParamField header="x-timestamp" param-type="integer" required="true">
+A Unix timestamp that helps prevent replay attacks. Reject deliveries that are older than your accepted time window.
+</ParamField>
+
+<ParamField body="id" param-type="string" required="true" show-location="false">
+The unique event ID. Store this value to make retry handling idempotent.
+</ParamField>
+
+<ParamField body="type" param-type="string" required="true" show-location="false">
+The event name, such as `invoice.paid` or `site.published`. Route your handler logic on this field after verification succeeds.
+</ParamField>
+
+<ParamField body="data" param-type="object" required="true" show-location="false">
+The event payload that your application uses after verification. Keep the payload as small as possible and fetch extra data later when you need it.
+</ParamField>
+
+## Troubleshooting FAQ
+
+<ExpandableGroup>
+  <Expandable title="Why do I see duplicate webhook deliveries?">
+
+  Duplicate deliveries usually mean the provider retried because your endpoint timed out, returned a non-`2xx` status, or closed the connection before the response finished. Store the event ID, process asynchronously, and treat retries as expected behavior instead of exceptional behavior.
+
+  </Expandable>
+  <Expandable title="Why does signature verification fail in production but work locally?">
+
+  The most common cause is reading or reformatting the request body before you verify the signature. Use the raw body exactly as the provider sent it, confirm that your production secret matches the current environment, and check that your server clock is accurate enough for timestamp validation.
+
+  </Expandable>
+  <Expandable title="Should I retry when my handler returns a client error?">
+
+  Retry only after you fix the cause of the failure. A persistent `400` response usually means a bad signature, an invalid payload, or a mismatch between environments, and automatic retries will not correct any of those issues on their own.
+
+  </Expandable>
+  <Expandable title="How should I test webhooks on localhost?">
+
+  Run your app locally, expose it through a tunnel, and register the temporary HTTPS URL with your provider. Keep delivery logs open while you test so you can compare the incoming headers, timestamps, and response codes with your local application logs.
+
+  </Expandable>
+</ExpandableGroup>
