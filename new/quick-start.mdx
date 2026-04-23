@@ -1,0 +1,143 @@
+---
+title: Quick Start
+description: Set up Yashwanth Documentation, start the local preview, and create your first page in about five minutes with a simple workflow.
+---
+
+## Launch your docs workspace
+
+Get the local docs site running, make a small content change, and confirm the edit-to-preview workflow in a single pass.
+
+<Update label="2026-04-23" description="First API request">
+
+This quick start now includes a first-request flow so you can confirm authentication and get a live API response early.
+
+</Update>
+
+<Callout kind="info">
+
+You need Node.js 18 or later, repository access, and a terminal with `npm` or `pnpm` installed.
+
+</Callout>
+
+<Steps>
+  <Step title="Install dependencies" icon="download">
+
+    Install the packages the docs site needs before you start the preview server.
+
+    <CodeGroup tabs="npm,pnpm">
+      ```bash
+      npm install
+      ```
+
+      ```bash
+      pnpm install
+      ```
+    </CodeGroup>
+
+    The command finishes without dependency errors and returns control to your terminal.
+
+  </Step>
+
+  <Step title="Start the local preview" icon="play-circle">
+
+    Run the development server so you can review changes as soon as you save them.
+
+    <CodeGroup tabs="npm,pnpm">
+      ```bash
+      npm run dev
+      ```
+
+      ```bash
+      pnpm dev
+      ```
+    </CodeGroup>
+
+    A successful start shows the local preview URL in your terminal.
+
+  </Step>
+
+  <Step title="Send your first API request" icon="code">
+
+    Use the existing documents endpoint to confirm your API key works and to inspect a real response.
+
+    <CodeGroup tabs="JavaScript,Python,cURL">
+      ```javascript
+      const response = await fetch("https://api.example.com/api/documents?limit=1", {
+        headers: {
+          Authorization: "Bearer dkai_example_9xmk7q2r"
+        }
+      });
+
+      const data = await response.json();
+      console.log(data);
+      ```
+
+      ```python
+      import requests
+
+      response = requests.get(
+          "https://api.example.com/api/documents?limit=1",
+          headers={"Authorization": "Bearer dkai_example_9xmk7q2r"}
+      )
+
+      print(response.json())
+      ```
+
+      ```curl
+      curl --request GET \
+        --url "https://api.example.com/api/documents?limit=1" \
+        --header "Authorization: Bearer dkai_example_9xmk7q2r"
+      ```
+    </CodeGroup>
+
+    A successful request returns a `200` response with a `documents` array. If you get `401`, generate a fresh API key and retry.
+
+  </Step>
+
+  <Step title="Verify the workflow end to end" icon="check-circle">
+
+    Open the preview, check that the page renders, and confirm the sidebar still loads the existing docs without errors.
+
+    You are done when the preview opens, headings render correctly, and your latest file change appears in the browser.
+
+  </Step>
+</Steps>
+
+## What to check before you move on
+
+A working setup is easy to recognize:
+
+- The dev server starts without build errors.
+- Existing pages such as [Introduction](/new/introduction) still load normally.
+- Your test page renders with the correct title and description.
+- Saving a file updates the preview without a manual rebuild.
+
+<Callout kind="tip">
+
+If you want a clean first commit, remove the temporary test page after you confirm the workflow.
+
+</Callout>
+
+## Continue from here
+
+Use these pages next to move from a local smoke test to a full documentation workflow.
+
+<Columns cols={3}>
+  <Card title="Introduction" href="/new/introduction" icon="home">
+
+    Review the platform basics and the main workspace concepts.
+
+  </Card>
+
+  <Card title="Configuration" href="/new/configuration" icon="settings">
+
+    Adjust site settings, authentication, and theme options for your environment.
+
+  </Card>
+
+  <Card title="API Integration" href="/new/api-integration" icon="code">
+
+    Connect the docs platform to external systems and automate document workflows.
+
+  </Card>
+</Columns>
