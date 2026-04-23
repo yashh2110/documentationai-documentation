@@ -1,0 +1,139 @@
+---
+title: Quick Start
+description: Make your first authenticated request to the Yashwanth Documentation API, confirm the response, and find the next pages to explore.
+---
+
+## Send your first request
+
+Fetch your first document list in a few minutes, confirm that your API key works, and use the response as the starting point for the rest of your integration.
+
+<Callout kind="info">
+
+You need an API key and access to `https://api.yashwanth-docs.com/v1` before you begin. If you do not have a key yet, create one in your workspace settings.
+
+</Callout>
+
+<Steps>
+  <Step title="Collect your access details" icon="lock">
+
+Store your API key in an environment variable so you can reuse it across requests without hard-coding secrets into your scripts.
+
+```bash
+export YDOCS_API_KEY="ydoc_example_9xmk7q2r"
+export YDOCS_BASE_URL="https://api.yashwanth-docs.com/v1"
+```
+
+When this step is complete, your shell keeps both variables available for the commands in the next step.
+
+  </Step>
+
+  <Step title="Send your first API request" icon="terminal">
+
+Request the first document from the collection endpoint. Each example below sends the same authenticated `GET /documents?limit=1` request.
+
+<CodeGroup tabs="JavaScript,Python,curl">
+
+```javascript
+const apiKey = "ydoc_example_9xmk7q2r";
+const baseUrl = "https://api.yashwanth-docs.com/v1";
+
+async function listDocuments() {
+  const response = await fetch(`${baseUrl}/documents?limit=1`, {
+    headers: {
+      Authorization: `Bearer ${apiKey}`
+    }
+  });
+
+  const documents = await response.json();
+  console.log(documents);
+}
+
+listDocuments();
+```
+
+```python
+import requests
+
+api_key = "ydoc_example_9xmk7q2r"
+base_url = "https://api.yashwanth-docs.com/v1"
+
+response = requests.get(
+    f"{base_url}/documents",
+    params={"limit": 1},
+    headers={"Authorization": f"Bearer {api_key}"},
+)
+
+print(response.json())
+```
+
+```curl
+curl --request GET \
+  --url "https://api.yashwanth-docs.com/v1/documents?limit=1" \
+  --header "Authorization: Bearer ydoc_example_9xmk7q2r"
+```
+
+</CodeGroup>
+
+A working request returns a `200` response and a JSON array with at least one document object.
+
+  </Step>
+
+  <Step title="Confirm the response shape" icon="check-circle">
+
+Use the response body to verify that authentication, network access, and JSON parsing all work in your environment.
+
+```json
+[
+  {
+    "id": 42,
+    "title": "Getting Started",
+    "content": "Set up your workspace and publish your first page.",
+    "tags": ["onboarding", "docs"]
+  }
+]
+```
+
+If you see an array with document fields such as `id`, `title`, and `content`, your integration is ready for the next endpoint.
+
+  </Step>
+
+  <Step title="Try the next request" icon="rocket">
+
+Now that the connection works, use the same API key to test a more specific call.
+
+- Fetch one document with `GET /documents/{docId}` when you know the document ID.
+- Search content with `GET /search?query=setup&limit=5` when you need matching pages.
+- Move to a `POST /documents` request when you are ready to create content programmatically.
+
+These follow-up calls use the same base URL, the same bearer token, and the same request pattern you just verified.
+
+  </Step>
+</Steps>
+
+## Next steps
+
+<Columns cols={2}>
+  <Card title="Introduction" href="/new/introduction" icon="book-open">
+
+Review the platform overview and the broader setup flow before you expand your workspace.
+
+  </Card>
+
+  <Card title="API Integration" href="/new/api-integration" icon="code">
+
+See the main API patterns, authentication guidance, and endpoint usage in more detail.
+
+  </Card>
+
+  <Card title="Configuration" href="/new/configuration" icon="settings">
+
+Adjust project settings, authentication behavior, and theme options for your environment.
+
+  </Card>
+
+  <Card title="API Reference" href="/openapi.yaml" icon="terminal">
+
+Inspect the full OpenAPI specification for available endpoints, parameters, and response models.
+
+  </Card>
+</Columns>
