@@ -1,0 +1,168 @@
+---
+title: API Quick Start
+description: Make your first authenticated API request, confirm the response, and move on to authentication, playground setup, and schema import.
+---
+
+## Make your first request
+
+Send an authenticated request to the example API, confirm the response, and use that working call as the baseline for the rest of your setup.
+
+<Callout kind="info">
+
+Before you begin:
+
+- Get an API key for the example API.
+- Use the base URL `https://api.example.com/v2`.
+- Choose one HTTP client: cURL, JavaScript, or Python.
+
+</Callout>
+
+## Send the request
+
+<Steps>
+  <Step title="Store your API key" icon="key">
+
+  The example API accepts an `X-API-Key` header. Save your key in an environment variable so you can reuse it across requests.
+
+  ```bash
+  export DOCS_API_KEY="dkai_example_9xmk7q2r"
+  ```
+
+  If you use PowerShell, run:
+
+  ```powershell
+  $env:DOCS_API_KEY="dkai_example_9xmk7q2r"
+  ```
+
+  </Step>
+
+  <Step title="Call the users endpoint" icon="play-circle">
+
+  Send a `GET /users` request with `page` and `limit` query parameters. Each example below calls the same endpoint and returns the same response shape.
+
+  <CodeGroup tabs="cURL,JavaScript,Python">
+
+  ```bash
+  curl --request GET \
+    --url "https://api.example.com/v2/users?page=1&limit=2" \
+    --header "X-API-Key: $DOCS_API_KEY" \
+    --header "X-Request-ID: 123e4567-e89b-12d3-a456-426614174000"
+  ```
+
+  ```javascript
+  const response = await fetch("https://api.example.com/v2/users?page=1&limit=2", {
+    method: "GET",
+    headers: {
+      "X-API-Key": process.env.DOCS_API_KEY,
+      "X-Request-ID": "123e4567-e89b-12d3-a456-426614174000"
+    }
+  });
+
+  const data = await response.json();
+  console.log(data);
+  ```
+
+  ```python
+  import os
+  import requests
+
+  response = requests.get(
+      "https://api.example.com/v2/users",
+      params={"page": 1, "limit": 2},
+      headers={
+          "X-API-Key": os.environ["DOCS_API_KEY"],
+          "X-Request-ID": "123e4567-e89b-12d3-a456-426614174000"
+      },
+      timeout=30,
+  )
+
+  print(response.json())
+  ```
+
+  </CodeGroup>
+
+  </Step>
+
+  <Step title="Verify the response" icon="check-circle">
+
+  A successful request returns a `200` response with a `users` array and `pagination` object. If you see this shape, your authentication and base URL are set correctly.
+
+  <Response tabs="200" show-lines="true">
+
+  ```json
+  {
+    "users": [
+      {
+        "id": 101,
+        "name": "Jane Chen",
+        "email": "jane.chen@acme.dev",
+        "role": "admin",
+        "created_at": "2024-02-20T14:30:00Z",
+        "last_active": "2024-12-24T09:15:00Z"
+      },
+      {
+        "id": 102,
+        "name": "Marcus Rivera",
+        "email": "marcus.rivera@acme.dev",
+        "role": "user",
+        "created_at": "2024-03-01T11:10:00Z",
+        "last_active": "2024-12-25T08:42:00Z"
+      }
+    ],
+    "pagination": {
+      "page": 1,
+      "limit": 2,
+      "total": 150,
+      "has_next": true
+    }
+  }
+  ```
+
+  </Response>
+
+  </Step>
+
+  <Step title="Handle the first common failure" icon="alert-triangle">
+
+  If the API returns `401 Unauthorized`, the key is missing, expired, or sent in the wrong header. If the API returns `403 Forbidden`, the key is valid but does not have permission for that endpoint.
+
+  <Callout kind="tip">
+
+  Start with the authentication guide if your first request fails. It covers API keys, bearer tokens, and OAuth flows in one place.
+
+  </Callout>
+
+  </Step>
+</Steps>
+
+## Next steps
+
+Use the pages below to turn a working request into a complete API docs experience.
+
+<Columns cols={2}>
+
+<Card title="Review authentication" href="/api-documentation-and-playground/api-authentication" icon="lock" cta="Open guide">
+
+Understand how API keys, bearer tokens, and OAuth schemes appear in generated documentation.
+
+</Card>
+
+<Card title="Set up the playground" href="/api-documentation-and-playground/interactive-playground-setup" icon="play-circle" cta="Configure requests">
+
+Add live request support so readers can send authenticated calls directly from your docs.
+
+</Card>
+
+<Card title="Import an OpenAPI schema" href="/api-documentation-and-playground/openapi-import" icon="file-code" cta="Import schema">
+
+Generate reference pages from an OpenAPI or JSON Schema file instead of creating endpoint docs manually.
+
+</Card>
+
+<Card title="Generate code samples" href="/api-documentation-and-playground/code-generation" icon="terminal" cta="Add examples">
+
+Create language-specific examples that match your endpoints and authentication setup.
+
+</Card>
+
+</Columns>
