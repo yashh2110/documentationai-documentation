@@ -1,8 +1,67 @@
 ---
-title: Third-party Tools (All Integrations)
-description: "Integrations and workflows: Third-party Tools (All Integrations) with Documentation.AI."
+title: Third-party tools
+description: Find built-in integrations on the main overview page, or use custom scripts to add unsupported analytics, widgets, and tooling.
 ---
 
-# Third-party Tools (All Integrations)
+## Use the current integrations guides
 
-[Reference] Connect Third-party Tools (All Integrations) to automate workflows and integrate Documentation.AI with your tooling.
+Third-party tool setup now lives in two focused guides. Use the [Integrations and Workflows](/integrations/overview) page for built-in analytics, support, and developer tool integrations. Use [Custom Scripts](/customize/custom-scripts) when the tool you need is not supported out of the box.
+
+<Callout kind="info">
+
+Built-in integrations are the fastest path when your provider is supported. Add the required ID or key in the Editor or `documentation.json`, then publish your site.
+
+
+</Callout>
+
+## Choose the right path
+
+<Steps>
+
+  <Step title="Check the built-in integrations list" icon="plug" title-type="p">
+
+    Open [Integrations and Workflows](/integrations/overview) to see the supported providers for analytics, chat, and developer workflows.
+
+
+  </Step>
+
+  <Step title="Use the built-in setup when your tool is supported" icon="check-circle" title-type="p">
+
+    Follow the provider-specific setup steps from the Editor, or add the integration directly in `documentation.json` if you manage configuration in version control.
+
+
+  </Step>
+
+  <Step title="Switch to custom scripts for unsupported tools" icon="code" title-type="p">
+
+    If your provider is not listed, go to [Custom Scripts](/customize/custom-scripts) and load your own `.js` or `.mjs` file.
+
+
+  </Step>
+
+</Steps>
+
+## When to use each guide
+
+Use [Integrations and Workflows](/integrations/overview) for zero-code setup of supported providers such as analytics tools, chat widgets, and the GitHub integration. Use [Custom Scripts](/customize/custom-scripts) when you need to install a custom widget, tracking script, consent tool, or another third-party script that is not built in.
+
+## What's next
+
+<Columns cols={2}>
+
+  <Card title="Integrations and Workflows" href="/integrations/overview" icon="plug">
+
+    Browse supported integrations and configure them from the Editor or in `documentation.json`.
+
+
+  </Card>
+
+  <Card title="Custom Scripts" href="/customize/custom-scripts" icon="code">
+
+    Add unsupported third-party tools by publishing your own JavaScript file.
+
+
+  </Card>
+
+
+</Columns>

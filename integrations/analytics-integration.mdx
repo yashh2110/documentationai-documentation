@@ -1,8 +1,59 @@
 ---
-title: Analytics Integration (Google Analytics, etc.)
-description: "Integrations and workflows: Analytics Integration (Google Analytics, etc.) with Documentation.AI."
+title: Analytics integrations
+description: Configure supported analytics tools from the integrations overview, or use custom scripts when your provider is not built in.
 ---
 
-# Analytics Integration (Google Analytics, etc.)
+## Use the main integrations guide
 
-[How-to Guide] Connect Analytics Integration (Google Analytics, etc.) to automate workflows and integrate Documentation.AI with your tooling.
+Analytics integrations now live on the [Integrations and Workflows](/integrations/overview) page. Go there to configure supported providers such as Google Analytics, Google Tag Manager, PostHog, Amplitude, Mixpanel, Segment, Heap, Plausible, Fathom, Pirsch, Hotjar, Microsoft Clarity, Clearbit, LogRocket, and Hightouch.
+
+<Callout kind="info">
+
+  Use a built-in integration when your provider is supported. Enter the provider-specific tracking ID or project key, then publish your site.
+
+</Callout>
+
+## Choose the right setup path
+
+<Steps>
+
+  <Step title="Open the integrations overview" icon="bar-chart" title-type="p">
+
+    Go to [Integrations and Workflows](/integrations/overview) for the full list of supported analytics, chat, and developer tool integrations.
+
+  </Step>
+
+  <Step title="Use built-in integrations when available" icon="check-circle" title-type="p">
+
+    Pick your analytics provider and follow the zero-code setup steps from the Editor or `documentation.json`.
+
+  </Step>
+
+  <Step title="Use custom scripts for unsupported tools" icon="code" title-type="p">
+
+    If your analytics provider is not listed, use [Custom Scripts](/customize/custom-scripts) to add your own `.js` or `.mjs` file to the published site.
+
+  </Step>
+</Steps>
+
+## When to use custom scripts
+
+Use [Custom Scripts](/customize/custom-scripts) when you need to load an analytics provider that does not have a built-in integration. Custom scripts let you inject your own JavaScript file and publish it with the rest of your documentation changes.
+
+## What's next
+
+<Columns cols={2}>
+
+  <Card title="Integrations and Workflows" href="/integrations/overview" icon="bar-chart">
+
+    Configure supported analytics and chat providers from the Editor or in `documentation.json`.
+
+  </Card>
+
+  <Card title="Custom Scripts" href="/customize/custom-scripts" icon="code">
+
+    Add an unsupported analytics provider by loading your own JavaScript file.
+
+  </Card>
+
+</Columns>
