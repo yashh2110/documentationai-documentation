@@ -1,8 +1,311 @@
 ---
-title: GitLab Integration
-description: "Integrations and workflows: GitLab Integration with Documentation.AI."
+title: GitLab integration
+description: Set up a GitLab docs-as-code workflow with Documentation.AI, including repository connection, local editing, merge requests, and publishing.
 ---
 
-# GitLab Integration
+## Overview
 
-[How-to Guide] Connect GitLab Integration to automate workflows and integrate Documentation.AI with your tooling.
+Use the GitLab integration when you want a docs-as-code workflow for Documentation.AI. You keep your documentation in a GitLab repository, edit `.mdx` files locally, review changes in merge requests, and publish from a configured branch.
+
+This workflow is a good fit when your team already uses GitLab for code review, branch protection, and change history. Documentation.AI reads the repository content, builds the site, and deploys updates after changes reach the branch you selected for publishing.
+
+<Callout kind="info">
+
+Use this page for repository-backed publishing with GitLab. The [GitHub integration](/integrations/github) page covers GitHub context repositories for the AI agent, not publishing a docs repository.
+
+If you want browser-based editing without Git, use the [Web Editor](/write-and-publish/web-editor). For the broader Git-based authoring model, see [Code Editor](/write-and-publish/code-editor).
+
+
+</Callout>
+
+## Before you start
+
+Make sure you have the access and repository setup needed to complete the connection without interruptions.
+
+<Callout kind="info">
+
+You need:
+
+- A Documentation.AI project
+- Access to a GitLab repository that will store your docs
+- Permission in GitLab to clone, push branches, and open merge requests
+- A Git authentication method for local work, typically SSH or HTTPS with a personal access token
+- A branch you want Documentation.AI to publish from, such as `main`
+
+
+
+
+</Callout>
+
+## Connect GitLab to Documentation.AI
+
+Connect the repository once, then let Documentation.AI build and publish from the branch you choose.
+
+<Steps>
+
+  <Step title="Open your documentation settings" icon="settings">
+
+  In Documentation.AI, open the project you want to connect, then go to **Settings**. Start the repository connection flow from the Git-based publishing settings.
+
+
+
+
+  </Step>
+
+  <Step title="Select GitLab and choose the repository" icon="folder">
+
+  Choose **GitLab** as the Git provider, then select the repository that contains your documentation content.
+
+  If your docs live in a dedicated repository, select that repo directly. If your docs live alongside product code, select the monorepo and keep your documentation files in a stable folder structure.
+
+
+
+
+  </Step>
+
+  <Step title="Choose the deployment branch" icon="check-circle">
+
+  Select the branch Documentation.AI should publish from, typically `main` or another protected branch used for production docs.
+
+  After you save the connection, pushes to that branch trigger an automatic build and deployment.
+
+
+
+
+  </Step>
+</Steps>
+
+<Callout kind="tip">
+
+Start with a protected default branch and require merge requests for documentation changes. That keeps publishing predictable and makes reviews easier.
+
+
+
+
+</Callout>
+
+## Clone the repository and open it locally
+
+Clone the connected repository to your machine so you can edit docs in your preferred editor.
+
+<CodeGroup tabs="SSH,HTTPS">
+
+```bash
+git clone git@gitlab.com:acme/docs.git
+cd docs
+```
+
+```bash
+git clone https://gitlab.com/acme/docs.git
+cd docs
+```
+
+</CodeGroup>
+
+If you clone over HTTPS and your GitLab account uses two-factor authentication, use a personal access token instead of your password when Git prompts for credentials.
+
+After the clone completes, open the folder in your editor and confirm the docs files are present.
+
+```bash
+code .
+```
+
+## Work with Documentation.AI files
+
+Documentation.AI uses your repository as the source of truth. Most GitLab-based projects include the same core files and conventions as any other Git workflow.
+
+```bash
+docs/
+├── documentation.json
+├── getting-started/
+│   ├── introduction.mdx
+│   └── quickstart.mdx
+├── integrations/
+│   └── gitlab-integration.mdx
+└── api-documentation-and-playground/
+    └── openapi.yaml
+```
+
+<ParamField body="documentation.json" param-type="file" required="true" show-location="false">
+
+Controls navigation, grouping, and other site-level configuration. Keep every page `path` aligned with the actual file tree.
+
+
+
+
+</ParamField>
+
+<ParamField body="page.mdx" param-type="file" required="true" show-location="false">
+
+Stores page content. Each page should include frontmatter with at least `title` and `description`, then start body content with `##` headings.
+
+
+
+
+</ParamField>
+
+<ParamField body="openapi.yaml" param-type="file" show-location="false">
+
+Defines your API reference when you use OpenAPI-based API documentation.
+
+
+
+
+</ParamField>
+
+For a deeper walkthrough of file structure, MDX, and navigation, see [Code Editor](/write-and-publish/code-editor) and [Site configuration](/customize/site-configuration).
+
+## Use branches and merge requests for documentation changes
+
+Treat documentation updates like code changes: branch, review, merge, then publish.
+
+<Steps>
+
+  <Step title="Create a branch for the change" icon="edit">
+
+  Start from your publishing branch and create a feature branch with a descriptive name.
+
+  ```bash
+  git checkout main
+  git pull
+  git checkout -b docs/update-gitlab-setup
+  ```
+
+  A clear branch name makes merge requests easier to review later.
+
+
+
+
+  </Step>
+
+  <Step title="Edit content and update navigation if needed" icon="terminal">
+
+  Make your documentation changes in `.mdx` files. If you add, remove, or rename a page, update `documentation.json` in the same branch so the site navigation stays in sync.
+
+  A successful change set usually includes both the content update and any required navigation update.
+
+
+
+
+  </Step>
+
+  <Step title="Commit and push the branch" icon="upload">
+
+  Commit related documentation changes together, then push the branch to GitLab.
+
+  ```bash
+  git add .
+  git commit -m "Add GitLab docs-as-code guide"
+  git push origin docs/update-gitlab-setup
+  ```
+
+  After the push, your branch is available in GitLab for review.
+
+
+
+
+  </Step>
+
+  <Step title="Open a merge request in GitLab" icon="check-circle">
+
+  Create a merge request from your feature branch into the branch Documentation.AI publishes from.
+
+  In the merge request, review:
+
+  - The file diff for content accuracy
+  - Any `documentation.json` changes for navigation correctness
+  - Whether internal links point to real pages
+
+  Merge only after the documentation looks correct.
+
+
+
+
+  </Step>
+
+  <Step title="Let Documentation.AI rebuild and publish" icon="rocket">
+
+  When the merge request lands on the configured deployment branch, Documentation.AI starts a new build and publishes the updated site.
+
+  Success looks like this:
+
+  - The latest commit is present on the publishing branch in GitLab
+  - The Documentation.AI build completes successfully
+  - The updated page appears on the live site with the expected navigation entry
+
+
+
+
+  </Step>
+</Steps>
+
+## Recommended repository practices
+
+Use a few basic GitLab conventions to keep docs maintenance predictable as your content grows.
+
+- **Protect the publishing branch** so direct pushes do not bypass review.
+- **Keep branch names descriptive** so teammates can understand the purpose of a change quickly.
+- **Update content and config together** when a page move or rename changes navigation.
+- **Prefer small merge requests** so reviewers can focus on one topic at a time.
+- **Use stable paths** and add redirects when you must change a published slug.
+
+## Troubleshooting
+
+<ExpandableGroup>
+
+  <Expandable title="Build did not update after a merge request was merged" default-open="false">
+
+  Check that the merge request was merged into the exact branch Documentation.AI is configured to publish from. If the change landed on a different branch, Documentation.AI will not deploy it until that branch is selected or merged into the publishing branch.
+
+  If the branch is correct, review the latest build in Documentation.AI and check for invalid MDX, broken configuration, or missing files.
+
+
+
+
+  </Expandable>
+
+  <Expandable title="A page appears in navigation but returns a 404" default-open="false">
+
+  Compare the page path in `documentation.json` with the actual repository path.
+
+  For example, `integrations/gitlab-integration` must map to `integrations/gitlab-integration.mdx`. If the file was renamed or moved, update navigation in the same commit.
+
+
+
+
+  </Expandable>
+
+  <Expandable title="GitLab rejects my push over HTTPS" default-open="false">
+
+  If your GitLab account uses two-factor authentication, Git over HTTPS usually requires a personal access token instead of your account password.
+
+  You can also switch to SSH if your team prefers key-based Git authentication.
+
+
+
+
+  </Expandable>
+</ExpandableGroup>
+
+## What to read next
+
+<Columns cols={2}>
+
+  <Card title="Code Editor" href="/write-and-publish/code-editor" icon="code">
+
+    Learn the full Git-based writing workflow, including MDX patterns, navigation, and collaboration.
+
+
+
+  </Card>
+  <Card title="Site configuration" href="/customize/site-configuration" icon="settings">
+
+    Configure navigation, redirects, branding, and other settings stored in `documentation.json`.
+
+
+
+  </Card>
+
+
+
+</Columns>

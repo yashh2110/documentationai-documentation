@@ -1,8 +1,246 @@
 ---
-title: Third-party Tools (All Integrations)
-description: "Integrations and workflows: Third-party Tools (All Integrations) with Documentation.AI."
+title: Third-party tools
+description: Connect tools that do not have a native Documentation.AI integration by using custom scripts, consent categories, and existing routing systems.
 ---
 
-# Third-party Tools (All Integrations)
+## Connect tools outside the built-in integrations list
 
-[Reference] Connect Third-party Tools (All Integrations) to automate workflows and integrate Documentation.AI with your tooling.
+Not every vendor needs a dedicated Documentation.AI integration. When a tool is missing from the integrations UI, you can still add it with custom scripts, consent controls, and the same Git-based workflow you use for the rest of your docs.
+
+Use this page to choose the right integration pattern for unsupported tools, understand the tradeoffs, and avoid the most common setup mistakes.
+
+<Callout kind="info">
+
+Start with the [Integrations overview](/integrations/overview) before building a custom setup. If a provider already has a native integration, that option is usually simpler to maintain than a handwritten script.
+
+
+
+</Callout>
+
+## Choose the right integration pattern
+
+<Tabs>
+
+  <Tab title="Custom script" icon="code">
+
+  Use a custom script when the vendor gives you a JavaScript embed snippet, a hosted script URL, or a local bundle you want to ship with your docs project.
+
+  This is the most direct option for support widgets, marketing pixels, consent banners, status widgets, and internal tracking code.
+
+
+
+  </Tab>
+
+  <Tab title="Existing routing layer" icon="upload">
+
+  Use an existing routing layer when your organization already manages vendors through a parent tool such as Google Tag Manager or Segment.
+
+  In that setup, Documentation.AI only needs to load the supported parent integration. Your team keeps the downstream vendor logic in the system that already owns it.
+
+
+
+  </Tab>
+
+  <Tab title="Docs-as-code workflow" icon="github">
+
+  Use a docs-as-code workflow when the integration needs local files, reviewable diffs, or environment-specific script changes.
+
+  This keeps scripts, page changes, and `documentation.json` updates in the same repository and review process.
+
+
+
+  </Tab>
+
+</Tabs>
+
+## Add an unsupported tool with custom scripts
+
+[Custom Scripts](/customize/custom-scripts) is the main extension point for third-party tools that do not have native configuration. You can reference either a local file in your docs project or an external script URL.
+
+```json
+{
+  "scripts": [
+    { "src": "scripts/vendor-widget.js" }
+  ]
+}
+```
+
+Use local script files when you want version control, code review, and the ability to ship vendor initialization logic alongside documentation updates.
+
+<Callout kind="alert">
+
+Custom scripts run in your readers' browsers with access to the page. Review every local file and external script URL before you publish it, because an untrusted script can expose reader data, break the site, or inject unwanted behavior.
+
+
+</Callout>
+
+<Steps>
+
+  <Step title="Add the vendor script" icon="plus">
+
+  Save the vendor's JavaScript snippet as a local `.js` or `.mjs` file, or reference the vendor's hosted script URL if that is the supported install method.
+
+  For local files, keep the script in your docs project so it can be reviewed and deployed with the rest of your content.
+
+
+
+  </Step>
+
+  <Step title="Reference the script in configuration" icon="settings">
+
+  Add the script under `scripts` in `documentation.json`, or use **Site Config > Custom Scripts** in the editor.
+
+  Script paths must be relative to the project root, such as `scripts/vendor-widget.js`.
+
+
+
+  </Step>
+
+  <Step title="Gate optional tools behind consent" icon="shield">
+
+  If the tool should not load until a visitor opts in, assign a `category` and configure the matching consent rule in [Cookie Consent](/customize/cookie-consent).
+
+  Leave essential scripts, such as a consent banner itself, uncategorized so they always load.
+
+
+
+  </Step>
+
+  <Step title="Publish and test on the live site" icon="check-circle">
+
+  Publish the change, then verify that the script appears in the browser network panel and behaves correctly on the live documentation site.
+
+  Test the full reader journey, including page navigation and consent changes, rather than checking only the initial page load.
+
+
+
+  </Step>
+
+</Steps>
+
+## Use supported integrations as building blocks
+
+Some third-party setups are easier when Documentation.AI only handles the upstream integration and your team manages the rest in its existing tooling.
+
+<Columns cols={2}>
+
+  <Card title="Google Tag Manager" href="/integrations/google-tag-manager" icon="code">
+
+  Load a GTM container on your docs site and manage downstream tags in your tag manager workspace.
+
+
+
+  </Card>
+
+  <Card title="Segment" href="/integrations/segment" icon="upload">
+
+  Send data to Segment when your organization already routes analytics and marketing tools through it.
+
+
+
+  </Card>
+
+  <Card title="Custom Scripts" href="/customize/custom-scripts" icon="terminal">
+
+  Add tools that need bespoke JavaScript or do not fit a built-in integration model.
+
+
+
+  </Card>
+
+  <Card title="Cookie Consent" href="/customize/cookie-consent" icon="shield">
+
+  Control when optional scripts are allowed to load for privacy and compliance workflows.
+
+
+
+  </Card>
+
+
+
+</Columns>
+
+## Decide where each tool belongs
+
+A simple decision rule keeps most integrations maintainable:
+
+- **Built-in integration available**: use the native integration first.
+- **Vendor provides a script snippet**: use a custom script.
+- **Your team already manages vendors through GTM or Segment**: connect that supported parent tool and keep downstream configuration there.
+- **The integration changes code and content together**: store the script in the docs repository and review it alongside page updates.
+
+## Troubleshoot third-party integrations
+
+<ExpandableGroup>
+
+  <Expandable title="The script works locally but not on the live site" default-open="false">
+
+  Confirm that the script file is actually referenced from `documentation.json` or the editor, then publish the change. A local file in the repository does not load until it is added to the `scripts` array and deployed.
+
+  If the script is referenced correctly, open browser developer tools and look for 404s, syntax errors, or CSP-related blocking.
+
+
+
+  </Expandable>
+
+  <Expandable title="The tool should wait for consent, but it loads immediately" default-open="false">
+
+  Check whether the script has a `category` value. Scripts without a category default to `essential`, which means they load immediately.
+
+  Then verify that the category name exactly matches a configured consent rule in [Cookie Consent](/customize/cookie-consent).
+
+
+
+  </Expandable>
+
+  <Expandable title="I am not sure whether to use a script or request a native integration" default-open="false">
+
+  Use a custom script when the setup is stable and your team already has the install snippet. Prefer a native integration when the provider is already supported, or when your team needs a simpler setup for non-technical editors.
+
+  If the vendor is business-critical and you keep repeating the same custom-script setup across projects, that is a good signal to standardize the pattern internally.
+
+
+
+  </Expandable>
+
+</ExpandableGroup>
+
+## Related pages
+
+<Columns cols={2}>
+
+  <Card title="Integrations overview" href="/integrations/overview" icon="folder">
+
+  Review the full list of supported analytics, chat, and developer integrations.
+
+
+
+  </Card>
+
+  <Card title="Custom Scripts" href="/customize/custom-scripts" icon="code">
+
+  Add unsupported vendors with local or hosted JavaScript files.
+
+
+
+  </Card>
+
+  <Card title="GitLab integration" href="/integrations/gitlab-integration" icon="github">
+
+  Manage scripts and configuration in a docs-as-code workflow with branches and merge requests.
+
+
+
+  </Card>
+
+  <Card title="Site configuration" href="/customize/site-configuration" icon="settings">
+
+  Update `documentation.json` and keep script configuration in version control.
+
+
+
+  </Card>
+
+
+
+</Columns>

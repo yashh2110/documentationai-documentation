@@ -1,8 +1,235 @@
 ---
-title: Analytics Integration (Google Analytics, etc.)
-description: "Integrations and workflows: Analytics Integration (Google Analytics, etc.) with Documentation.AI."
+title: Analytics integrations
+description: Choose the right analytics setup for Documentation.AI, from built-in providers to custom scripts, consent gating, and verification steps.
 ---
 
-# Analytics Integration (Google Analytics, etc.)
+## Choose an analytics setup that matches your stack
 
-[How-to Guide] Connect Analytics Integration (Google Analytics, etc.) to automate workflows and integrate Documentation.AI with your tooling.
+Documentation.AI supports two reliable ways to add analytics to your docs site: built-in integrations for supported providers, or custom scripts for everything else. Both approaches work with version-controlled configuration, and both can be gated behind consent when you need privacy controls.
+
+Use this page to decide which path to take, understand what gets configured, and jump to the provider-specific guide that matches your tooling.
+
+<Tabs>
+
+  <Tab title="Built-in integrations" icon="bar-chart">
+
+  Built-in integrations are the fastest path when your provider already has a dedicated setup in Documentation.AI. You add the provider ID or API key, publish, and let Documentation.AI load the script for you.
+
+  This is the best option when you want predictable configuration, minimal custom code, and a clear place to manage analytics from the editor or `documentation.json`.
+
+
+  </Tab>
+
+  <Tab title="Custom scripts" icon="code">
+
+  Use custom scripts when your provider is not listed in the integrations UI, when you need a vendor-specific embed snippet, or when your team already manages analytics through its own JavaScript.
+
+  Custom scripts give you more flexibility, but you are responsible for the script contents, testing, and any provider-specific behavior.
+
+
+  </Tab>
+
+</Tabs>
+
+## Use a built-in integration when your provider is supported
+
+Documentation.AI includes first-class setup for common analytics, attribution, and session analysis tools. These integrations are the right default when one of the supported providers already matches your stack.
+
+<Columns cols={2}>
+
+  <Card title="Google Analytics" href="/integrations/google-analytics" icon="bar-chart">
+
+  Track page views and events with a GA4 measurement ID.
+
+
+  </Card>
+
+  <Card title="Google Tag Manager" href="/integrations/google-tag-manager" icon="code">
+
+  Load a GTM container across your docs site and manage tags from your existing workspace.
+
+
+  </Card>
+
+  <Card title="PostHog" href="/integrations/posthog" icon="bar-chart">
+
+  Connect product analytics with configurable API host settings.
+
+
+  </Card>
+
+  <Card title="Mixpanel" href="/integrations/mixpanel" icon="bar-chart">
+
+  Send usage data to Mixpanel for event analysis and funnels.
+
+
+  </Card>
+
+  <Card title="Plausible" href="/integrations/plausible" icon="shield">
+
+  Add lightweight traffic analytics with a privacy-focused provider.
+
+
+  </Card>
+
+  <Card title="Segment" href="/integrations/segment" icon="upload">
+
+  Route analytics data through Segment when it is already part of your data pipeline.
+
+
+  </Card>
+
+
+</Columns>
+
+If your provider is also listed on the main [Integrations overview](/integrations/overview), start with that built-in option before reaching for custom scripts.
+
+## What the setup flow looks like
+
+Most analytics integrations follow the same deployment pattern.
+
+<Steps>
+
+  <Step title="Open the integrations settings" icon="settings">
+
+  In the editor, open **Site Config** and go to **Integrations**. If you manage docs as code, update the `integrations` object in `documentation.json` instead.
+
+
+  </Step>
+
+  <Step title="Add the provider credentials" icon="key">
+
+  Enter the provider-specific value the integration expects, such as a measurement ID, container ID, app ID, or API key.
+
+  Use the dedicated provider guide when the required field format is not obvious.
+
+
+  </Step>
+
+  <Step title="Publish the change" icon="upload">
+
+  Publish after saving the configuration. Documentation.AI injects the provider script into the live site during deployment.
+
+  A successful publish means the config change is live, but you should still verify that your analytics vendor is receiving traffic.
+
+
+  </Step>
+
+  <Step title="Verify collection in your analytics tool" icon="check-circle">
+
+  Open the live documentation site, visit a few pages, then confirm the provider dashboard shows incoming traffic or debug events.
+
+  If you use consent gating, test both states: before consent and after consent.
+
+
+  </Step>
+
+</Steps>
+
+## Use custom scripts for unsupported providers
+
+If your analytics tool does not have a native integration, load it with [Custom Scripts](/customize/custom-scripts). This is the right fallback for vendor snippets, internal analytics libraries, A/B testing scripts, and any tracking code your team maintains directly.
+
+<Callout kind="info">
+
+Custom scripts support both local files in your docs project and external script URLs. Keep paths relative when you reference local files from `documentation.json`.
+
+
+</Callout>
+
+A typical custom-script setup looks like this:
+
+```json
+{
+  "scripts": [
+    { "src": "scripts/custom-analytics.js", "category": "analytics" }
+  ]
+}
+```
+
+Use this route when you need full control over script contents. If you only need a supported provider like GA4, PostHog, or Intercom, the built-in integration is usually easier to maintain.
+
+## Add consent before analytics loads
+
+Analytics often needs to wait for user consent. Documentation.AI can gate both built-in integrations and custom scripts behind consent categories configured in `documentation.json` or the editor.
+
+<Callout kind="tip">
+
+Start with the [Cookie Consent](/customize/cookie-consent) guide if you need GDPR-style controls. It explains how to map a consent banner's stored key and value to categories like `analytics` or `marketing`.
+
+
+</Callout>
+
+Common patterns:
+
+- **Built-in analytics integrations** usually default to the `analytics` category when cookie consent is enabled.
+- **Custom scripts** default to `essential`, so add a `category` field if the script should wait for consent.
+- **Consent banner scripts** should stay uncategorized so they load before any optional tracking scripts.
+
+## Troubleshoot analytics setup
+
+<ExpandableGroup>
+
+  <Expandable title="The provider is configured but I do not see traffic" default-open="false">
+
+  First confirm that the change was published. Then open the live site and check the browser developer tools for blocked requests, JavaScript errors, or network failures.
+
+  If the script loads correctly, the remaining issue is usually in the provider workspace: the wrong property ID, the wrong project, or filters that exclude your own traffic.
+
+
+  </Expandable>
+
+  <Expandable title="Traffic appears only after I accept cookies" default-open="false">
+
+  That usually means consent gating is working as expected. Review your [Cookie Consent](/customize/cookie-consent) configuration to confirm which category the integration or script is assigned to.
+
+  If you want the tool to load before consent, remove the consent category or change the setup to match your legal and privacy requirements.
+
+
+  </Expandable>
+
+  <Expandable title="My provider is not listed in the integrations UI" default-open="false">
+
+  Use [Custom Scripts](/customize/custom-scripts) for that provider instead of forcing it into a built-in integration slot.
+
+  If your organization already manages downstream vendors through Google Tag Manager or Segment, you can also keep that routing logic in your existing analytics stack and connect the supported parent integration in Documentation.AI.
+
+
+  </Expandable>
+
+</ExpandableGroup>
+
+## Related pages
+
+<Columns cols={2}>
+
+  <Card title="Integrations overview" href="/integrations/overview" icon="folder">
+
+  Browse all supported analytics, chat, and developer integrations.
+
+
+  </Card>
+
+  <Card title="Custom Scripts" href="/customize/custom-scripts" icon="code">
+
+  Load unsupported analytics vendors, consent banners, and custom JavaScript.
+
+
+  </Card>
+
+  <Card title="Cookie Consent" href="/customize/cookie-consent" icon="shield">
+
+  Control when analytics and other optional scripts are allowed to load.
+
+
+  </Card>
+
+  <Card title="Analytics overview" href="/analytics/overview" icon="bar-chart">
+
+  Review the built-in Documentation.AI analytics dashboard and telemetry behavior.
+
+
+  </Card>
+
+
+</Columns>
