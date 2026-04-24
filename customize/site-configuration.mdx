@@ -2,13 +2,17 @@
 title: Site Configuration
 description: Site configuration using documentation.json options and examples.
 type: reference
+createdAt: '2026-04-10T07:33:08.374Z'
+updatedAt: '2026-04-10T07:33:08.374Z'
 ---
 ## Overview
 
 Configure your documentation site using the `documentation.json` file. This file controls your site's branding, navigation structure, SEO settings, and API documentation generation.&#x20;
 
 <Callout kind="alert" collapsed="false">
+
   This page is primarily intended for Code/IDE-based editing. Most of these settings can also be configured visually from **Site Config** in the Editor top toolbar.
+
 </Callout>
 
 ## Site Configuration
@@ -25,14 +29,18 @@ Basic site settings that control your documentation's identity and behavior
 ```
 
 <ParamField path="name" param-type="string" required="true" deprecated="false">
+
   Site name displayed in the browser title, navigation header, and social media
   previews.
+
 </ParamField>
 
 <ParamField path="initialRoute" param-type="string" required="false" deprecated="false">
+
   Default page path when users visit the root URL. Points to an MDX file in your
   documentation project (all pages must be in MDX format). Specify the path
   without the `.mdx` extension.
+
 </ParamField>
 
 ## Template Configuration
@@ -58,9 +66,11 @@ If you do not set `template`, the system defaults to `"classic"`.
 ```
 
 <ParamField path="template" param-type="string" required="false" deprecated="false">
+
   Site template that selects the base layout and style for your documentation.
   Accepted values: `"classic"` or `"atlas"`. Defaults to `"classic"` when not
   specified.
+
 </ParamField>
 
 ## Branding Configuration
@@ -79,19 +89,27 @@ Configure logo variants for different themes and sizes. All logo fields are opti
 ```
 
 <ParamField path="logo-dark" param-type="string" required="false" deprecated="false">
+
   Main logo displayed in dark theme. Supports PNG, SVG, WEBP formats.
+
 </ParamField>
 
 <ParamField path="logo-light" param-type="string" required="false" deprecated="false">
+
   Main logo displayed in light theme.
+
 </ParamField>
 
 <ParamField path="logo-small-dark" param-type="string" required="false" deprecated="false">
+
   Small logo/favicon for dark theme. Used in browser tabs and mobile view.
+
 </ParamField>
 
 <ParamField path="logo-small-light" param-type="string" required="false" deprecated="false">
+
   Small logo/favicon for light theme.
+
 </ParamField>
 
 ### Brand Colors
@@ -118,41 +136,61 @@ Customize your site's color scheme with automatic contrast optimization.
 ### Light Theme Colors
 
 <ParamField path="light" param-type="object" required="false" deprecated="false">
+
   Color scheme for light mode appearance.
 
   <Expandable title="Light Mode Color Options" default-open="false">
+
     <ParamField path="brand" param-type="string" required="false" deprecated="false">
+
       Primary brand color for buttons, links, and accents. Use hex format (e.g., `#3143e3`).
+
     </ParamField>
 
     <ParamField path="heading" param-type="string" required="false" deprecated="false">
+
       Heading and title text color. Default: `#1a1a1a`.
+
     </ParamField>
 
     <ParamField path="text" param-type="string" required="false" deprecated="false">
+
       Body text color for readability. Default: `#374151`.
+
     </ParamField>
+
   </Expandable>
+
 </ParamField>
 
 ### Dark Theme Colors
 
 <ParamField path="dark" param-type="object" required="false" deprecated="false">
+
   Color scheme for dark mode appearance.
 
   <Expandable title="Dark Mode Color Options" default-open="false">
+
     <ParamField path="brand" param-type="string" required="false" deprecated="false">
+
       Primary brand color optimized for dark backgrounds. Use hex format (e.g., `#85a1ff`).
+
     </ParamField>
 
     <ParamField path="heading" param-type="string" required="false" deprecated="false">
+
       Heading and title text color for dark mode. Default: `#f2f2f2`.
+
     </ParamField>
 
     <ParamField path="text" param-type="string" required="false" deprecated="false">
+
       Body text color for dark mode readability. Default: `#c1c1c1`.
+
     </ParamField>
+
   </Expandable>
+
 </ParamField>
 
 ### Navbar Configuration
@@ -187,17 +225,25 @@ Configure the top navigation bar with action buttons and links.
 Configure the main call-to-action button that appears prominently in your navbar.
 
 <ParamField path="primary" param-type="object" required="false" deprecated="false">
+
   Main action button for user engagement (e.g., "Get Started", "Sign Up", "Try Now").
 
   <Expandable title="Button Configuration" default-open="false">
+
     <ParamField path="title" param-type="string" required="true" deprecated="false">
+
       Text displayed on the button.
+
     </ParamField>
 
     <ParamField path="link" param-type="string" required="true" deprecated="false">
+
       Destination URL when clicked.
+
     </ParamField>
+
   </Expandable>
+
 </ParamField>
 
 ### Secondary Navigation Links
@@ -205,17 +251,25 @@ Configure the main call-to-action button that appears prominently in your navbar
 Add supplementary text links for additional navigation options.
 
 <ParamField path="links" param-type="array" required="false" deprecated="false">
+
   Array of secondary navigation links displayed as text in the navbar.
 
   <Expandable title="Link Configuration" default-open="false">
+
     <ParamField path="title" param-type="string" required="true" deprecated="false">
+
       Display text for the link.
+
     </ParamField>
 
     <ParamField path="link" param-type="string" required="true" deprecated="false">
+
       Target URL. Supports `mailto:` and `tel:` protocols for contact links.
+
     </ParamField>
+
   </Expandable>
+
 </ParamField>
 
 ## Navigation Architecture
@@ -239,9 +293,11 @@ flowchart TB
 3. **Content** defines *what* the reader sees (e.g., groups and pages of documentation)
 
 <Callout kind="note" collapsed="false">
+
   **Navigation Rule**: Each container must choose exactly ONE child type. For
   example, a tab can contain `groups` OR `pages` OR `dropdowns`, but not
   multiple types simultaneously.
+
 </Callout>
 
 ### Visibility Control with public
@@ -249,6 +305,7 @@ flowchart TB
 When using [partial access control](/customize/access-control/password#partial-access-control), you can control which parts of your documentation are publicly accessible or protected using the `public` property. This property can be set on **any navigation node** across all three layers.
 
 <ParamField path="public" param-type="boolean" required="false" deprecated="false">
+
   Controls visibility when access control mode is `partial`. Can be applied to dimensions, views, and content nodes.
 
   - `true` makes this node and its descendants public
@@ -258,11 +315,14 @@ When using [partial access control](/customize/access-control/password#partial-a
   - Omit to inherit from the nearest parent that defines it
 
   The closest explicit value wins for any subtree.
+
 </ParamField>
 
 <Callout kind="info" collapsed="false">
+
   The `public` property only affects page access when access control is enabled and mode is set to `partial`.
   In public mode (no access control) or private mode (full protection), this property is ignored.
+
 </Callout>
 
 ---
@@ -274,15 +334,21 @@ Dimensions describe the organizational axes of your documentation. They define c
 ### Supported Dimension Types
 
 <ParamField path="products" param-type="array" required="false" deprecated="false">
+
   Organize documentation by different products or services your company offers.
+
 </ParamField>
 
 <ParamField path="versions" param-type="array" required="false" deprecated="false">
+
   Organize documentation by product versions or API versions.
+
 </ParamField>
 
 <ParamField path="languages" param-type="array" required="false" deprecated="false">
+
   Organize documentation by language for internationalization.
+
 </ParamField>
 
 ### Dimension Behavior
@@ -304,15 +370,21 @@ Each dimension item must have a unique identifier and can contain nested dimensi
 **Dimension Item Properties:**
 
 <ParamField path="product | version | language" param-type="string" required="true" deprecated="false">
+
   Display name for the dimension item shown in the selector UI.
+
 </ParamField>
 
 <ParamField path="icon" param-type="string" required="false" deprecated="false">
+
   Visual icon from the Lucide React icon library.
+
 </ParamField>
 
 <ParamField path="public" param-type="boolean" required="false" deprecated="false">
+
   Controls visibility for this dimension and its descendants in partial access control mode. See [Visibility Control](#visibility-control-with-public).
+
 </ParamField>
 
 <CodeGroup show-lines="true" tabs={[]}>
@@ -593,11 +665,13 @@ You can nest multiple dimensions to create sophisticated organizational structur
 </CodeGroup>
 
 <Callout kind="note" collapsed="false">
+
   **Dimension Order Matters**: The order of nested dimensions affects user
   experience. Consider what users will select first. For example, `products →
               versions` works well when users first choose a product, then its version. Use
   `versions → products` if version selection is more important for your use
   case.
+
 </Callout>
 
 ---
@@ -609,13 +683,17 @@ Views control how content is organized and navigated within a chosen dimension c
 ### Supported View Types
 
 <ParamField path="tabs" param-type="array" required="false" deprecated="false">
+
   Horizontal navigation bar for switching between parallel sections like
   "Guides" and "API Reference".
+
 </ParamField>
 
 <ParamField path="dropdowns" param-type="array" required="false" deprecated="false">
+
   Collapsible dropdown menus for selecting between sub-categories in the
   sidebar.
+
 </ParamField>
 
 ### View Nesting Patterns
@@ -629,9 +707,11 @@ Our standard UI templates support these view combinations:
 | **Pattern 3** | `Tabs → Dropdown → Dropdown` | Tab-based sections with nested categories    |
 
 <Callout kind="note" collapsed="false">
+
   **Enterprise Customization**: Custom UI templates can support additional view
   combinations beyond these standard patterns. Contact support for enterprise
   options.
+
 </Callout>
 
 ### Tab Configuration
@@ -678,20 +758,28 @@ Tabs create horizontal navigation sections that are visible at the top of your d
 **Tab Properties:**
 
 <ParamField path="tab" param-type="string" required="true" deprecated="false">
+
   Display name for the tab shown in the navigation bar.
+
 </ParamField>
 
 <ParamField path="icon" param-type="string" required="false" deprecated="false">
+
   Visual icon from the Lucide React icon library.
+
 </ParamField>
 
 <ParamField path="href" param-type="string" required="false" deprecated="false">
+
   External URL for tabs that link outside your documentation. Use instead of
   nested content.
+
 </ParamField>
 
 <ParamField path="public" param-type="boolean" required="false" deprecated="false">
+
   Controls visibility for this tab and its descendants in partial access control mode. See [Visibility Control](#visibility-control-with-public).
+
 </ParamField>
 
 **Tab Children** (choose ONE):
@@ -737,24 +825,34 @@ Dropdowns create collapsible sections in the sidebar for hierarchical navigation
 **Dropdown Properties:**
 
 <ParamField path="dropdown" param-type="string" required="true" deprecated="false">
+
   Display name for the dropdown shown in the sidebar.
+
 </ParamField>
 
 <ParamField path="icon" param-type="string" required="false" deprecated="false">
+
   Visual icon from the Lucide React icon library.
+
 </ParamField>
 
 <ParamField path="description" param-type="string" required="false" deprecated="false">
+
   Optional descriptive text shown below the dropdown title.
+
 </ParamField>
 
 <ParamField path="href" param-type="string" required="false" deprecated="false">
+
   External URL for dropdowns that link outside your documentation. Use instead
   of nested content.
+
 </ParamField>
 
 <ParamField path="public" param-type="boolean" required="false" deprecated="false">
+
   Controls visibility for this dropdown and its descendants in partial access control mode. See [Visibility Control](#visibility-control-with-public).
+
 </ParamField>
 
 **Dropdown Children** (choose ONE):
@@ -883,34 +981,48 @@ Groups organize related pages into collapsible sections within your sidebar navi
 **Group Properties:**
 
 <ParamField path="group" param-type="string" required="true" deprecated="false">
+
   Display name shown in the sidebar navigation.
+
 </ParamField>
 
 <ParamField path="icon" param-type="string" required="false" deprecated="false">
+
   Visual icon from the Lucide React icon library.
+
 </ParamField>
 
 <ParamField path="expandable" param-type="boolean" required="false" deprecated="false">
+
   Whether users can collapse/expand this group. Default: `true`.
+
 </ParamField>
 
 <ParamField path="public" param-type="boolean" required="false" deprecated="false">
+
   Controls visibility for this group and its descendants in partial access control mode. See [Visibility Control](#visibility-control-with-public).
+
 </ParamField>
 
 <ParamField path="openapi" param-type="string" required="false" deprecated="false">
+
   Path to OpenAPI specification file for automatic API documentation generation.
   Supports both JSON (`.json`) and YAML (`.yaml`, `.yml`) formats.
+
 </ParamField>
 
 <ParamField path="hidden-apis" param-type="array" required="false" deprecated="false">
+
   Array of endpoint identifiers to exclude from automatic generation when using `openapi`.
   Each entry must use the exact format `"METHOD /path"` with uppercase method (e.g., `"DELETE /users/{id}"`).
+
 </ParamField>
 
 <ParamField path="pages" param-type="array" required="true" deprecated="false">
+
   Array of pages and nested groups. Pages arrays can contain both individual
   page items AND nested group items mixed together.
+
 </ParamField>
 
 **Group Children** (choose ONE):
@@ -957,78 +1069,110 @@ Pages are the individual documentation files that contain your content.
 ```
 
 <Callout kind="note" collapsed="false">
+
   **MDX File Format Required**: All documentation pages must be in MDX format.
   When referencing files in your configuration, always omit the `.mdx` extension
   from the path (e.g., use `"getting-started/introduction"` instead of
   `"getting-started/introduction.mdx"`).
+
 </Callout>
 
 <Callout kind="tip" collapsed="false">
+
   Page display options like `show-sidebar`, `show-toc`, `show-parent-label`, and `content-width` all have sensible defaults. Only include them when you need to override the default behavior — for example, setting `"show-sidebar": false` on a changelog or landing page.
+
 </Callout>
 
 **Page Properties:**
 
 <ParamField path="title" param-type="string" required="true" deprecated="false">
+
   Display name shown in navigation and browser title.
+
 </ParamField>
 
 <ParamField path="public" param-type="boolean" required="false" deprecated="false">
+
   Controls visibility for this page in partial access control mode. See [Visibility Control](#visibility-control-with-public).
+
 </ParamField>
 
 <ParamField path="path" param-type="string" required="false" deprecated="false">
+
   Relative path to your MDX file without the `.mdx` extension (e.g.,
   `"getting-started/introduction"`). Required unless using `href`.
+
 </ParamField>
 
 <ParamField path="href" param-type="string" required="false" deprecated="false">
+
   External URL for links that open in new tabs. Use instead of `path` for
   external resources.
+
 </ParamField>
 
 <ParamField path="icon" param-type="string" required="false" deprecated="false">
+
   Page icon from the Lucide React icon library.
+
 </ParamField>
 
 <ParamField path="method" param-type="string" required="false" deprecated="false">
+
   HTTP method for API endpoint pages (e.g., `"GET"`, `"POST"`, `"DELETE"`). Used
   for visual indicators in API documentation.
+
 </ParamField>
 
 <ParamField path="tags" param-type="string" required="false" deprecated="false">
+
   Categorization tags for organizing related content.
+
 </ParamField>
 
 <ParamField path="badge" param-type="string" required="false" deprecated="false">
+
   Short label displayed as a colored pill next to the page title in the sidebar. Useful for highlighting page status such as `"New"`, `"Beta"`, or `"Deprecated"`. Uses your brand color for styling.
+
 </ParamField>
 
 <ParamField path="show-sidebar" param-type="boolean" required="false" deprecated="false">
+
   Controls the left sidebar visibility on this page. Set to `false` to hide the sidebar and expand content to full width. Default: `true`.
+
 </ParamField>
 
 <ParamField path="show-toc" param-type="boolean" required="false" deprecated="false">
+
   Controls the right-side Table of Contents panel visibility on this page. Set to `false` to hide the TOC. Default: `true`.
+
 </ParamField>
 
 <ParamField path="show-parent-label" param-type="boolean" required="false" deprecated="false">
+
   Controls the group/parent name label that appears above the page title. Set to `false` to hide it. Default: `true`.
+
 </ParamField>
 
 <ParamField path="content-width" param-type="string" required="false" deprecated="false">
+
   Controls the maximum width of the content area on this page. Accepted values: `"narrow"` for focused reading, `"normal"` for standard layout, `"wide"` for full-width content. Default: `"normal"`.
+
 </ParamField>
 
 <ParamField path="openapi" param-type="string" required="false" deprecated="false">
+
   Connects a specific OpenAPI endpoint to this page for content injection.
   Format: `"filepath METHOD /endpoint"` (e.g., `"api-reference/openapi.yaml GET /users/{id}"`).
   The method must be uppercase.
+
 </ParamField>
 
 <ParamField path="openapi-mode" param-type="string" required="false" deprecated="false">
+
   Controls content injection when using page-level `openapi`. Values: `"auto"` (default)
   injects full documentation. `"custom"` injects only playground, request examples, and responses.
+
 </ParamField>
 
 ### Mixed Content in Pages Arrays
@@ -1123,12 +1267,16 @@ Add the `openapi` property to a group to automatically generate documentation pa
 **Group-level OpenAPI Properties:**
 
 <ParamField path="openapi" param-type="string" required="false" deprecated="false">
+
   Path to OpenAPI 3.0+ specification file within your documentation project.
   Supports both JSON (`.json`) and YAML (`.yaml`, `.yml`) formats.
+
 </ParamField>
 
 <ParamField path="hidden-apis" param-type="array" required="false" deprecated="false">
+
   Array of endpoint identifiers to exclude from automatic generation. Each entry must use the exact format `"METHOD /path"` with uppercase HTTP method (e.g., `"DELETE /users/{id}"`).
+
 </ParamField>
 
 **Hiding Endpoints**
@@ -1149,7 +1297,9 @@ Use `hidden-apis` to exclude specific endpoints from automatic generation while 
 ```
 
 <Callout kind="info" collapsed="false">
+
   The `hidden-apis` format must match exactly: uppercase HTTP method, single space, then the path as defined in your OpenAPI spec. For example, `"GET /users/{id}"` is valid, but `"get /users/{id}"` or `"GET/users/{id}"` will not work.
+
 </Callout>
 
 ### Nested OpenAPI Specifications
@@ -1207,11 +1357,15 @@ Add the `openapi` property to a page with the format `"filepath METHOD /endpoint
 **Page-level OpenAPI Properties:**
 
 <ParamField path="openapi" param-type="string" required="false" deprecated="false">
+
   Connects a specific OpenAPI endpoint to this page for content injection. Format: `"filepath METHOD /endpoint"` (e.g., `"api-reference/openapi.yaml GET /users/{id}"`). The method must be uppercase.
+
 </ParamField>
 
 <ParamField path="openapi-mode" param-type="string" required="false" deprecated="false">
+
   Controls how much content is injected into your page. Values: `"auto"` (default) or `"custom"`.
+
 </ParamField>
 
 ### OpenAPI Injection Modes
@@ -1246,7 +1400,9 @@ Add the `openapi` property to a page with the format `"filepath METHOD /endpoint
 ```
 
 <Callout kind="tip" collapsed="false">
+
   Use `"openapi-mode": "custom"` when you want to write your own parameter descriptions, add custom sections, or structure the page differently than the auto-generated format.
+
 </Callout>
 
 ### Combining Group and Page Connections
@@ -1282,7 +1438,9 @@ Hide an endpoint from automatic generation and create a custom page for it:
 ### OpenAPI File Requirements
 
 <Callout kind="info" collapsed="false">
+
   All OpenAPI specification files must be placed in the `api-reference` folder within your documentation project. When you add OpenAPI specs via the dashboard (Editor > OpenAPI Specs tab or Navigation section), this folder structure is created automatically.
+
 </Callout>
 
 ```
@@ -1301,16 +1459,23 @@ your-docs/
 You can view and manage your OpenAPI specifications from the Documentation.AI dashboard.
 
 <Steps>
+
   <Step title="Open the Editor" icon="edit" title-type="p">
+
     Navigate to your project in the Documentation.AI dashboard and open the **Editor** section.
+
   </Step>
 
   <Step title="Access OpenAPI Specs tab" icon="file-code" title-type="p">
+
     Click on the **OpenAPI Specs** tab to view all available OpenAPI files detected in your `api-reference` folder.
+
   </Step>
 
   <Step title="Review and configure" icon="settings" title-type="p">
+
     From this view, you can see which specs are connected to groups in your navigation and manage your API documentation configuration.
+
   </Step>
 </Steps>
 
@@ -1332,12 +1497,14 @@ Connect analytics platforms and chat widgets to your documentation site. Each in
 ```
 
 <ParamField path="integrations" param-type="object" required="false" deprecated="false">
+
   Analytics and chat integrations. Each key corresponds to a provider. See [Analytics and Chat Integrations](/integrations/overview) for all supported providers and their configuration options.
+
 </ParamField>
 
 ### Cookie Consent
 
-Control which integrations and scripts require user consent before loading. Define consent categories under `integrations.cookies`, then assign categories to your integrations and scripts. See the [Cookie Consent guide](/customize/cookie-consent) for step-by-step setup and CMP examples.
+Control which integrations and scripts require user consent before loading. Define consent categories under `integrations.cookies`, then assign categories to your integrations and scripts. Built-in telemetry follows its own `integrations.telemetry` settings and can also be gated when cookie consent is active. See the [Cookie Consent guide](/customize/cookie-consent) for step-by-step setup and CMP examples.
 
 ```json
 {
@@ -1353,21 +1520,29 @@ Control which integrations and scripts require user consent before loading. Defi
 ```
 
 <ParamField path="integrations.cookies" param-type="object" required="false" deprecated="false">
+
   Cookie consent configuration. Each key is a consent category name, and its value defines the cookie or localStorage key-value pair to check in the browser. Scripts and integrations assigned to that category only load when the matching value is found.
 
   <Expandable title="Category entry properties" default-open="false">
+
     <ParamField path="key" param-type="string" required="true" deprecated="false">
+
       The cookie or localStorage key to check (e.g., `CookieConsent`, `OptanonConsent`).
+
     </ParamField>
     <ParamField path="value" param-type="string" required="true" deprecated="false">
+
       The substring to match in the stored value (e.g., `statistics:true`, `C0002:1`).
+
     </ParamField>
+
   </Expandable>
+
 </ParamField>
 
 ### Telemetry
 
-Control Documentation.ai's built-in page view tracking.
+Control Documentation.ai's built-in page view tracking. Disable it entirely with `enabled: "false"`, or keep it enabled and gate it behind a consent category when cookie consent is active.
 
 ```json
 {
@@ -1378,11 +1553,15 @@ Control Documentation.ai's built-in page view tracking.
 ```
 
 <ParamField path="integrations.telemetry.enabled" param-type="string" required="false" deprecated="false">
-  Set to `"false"` to disable page view tracking. Defaults to enabled.
+
+  Set to `"false"` to disable built-in page view tracking entirely. Defaults to enabled.
+
 </ParamField>
 
 <ParamField path="integrations.telemetry.category" param-type="string" required="false" deprecated="false">
-  Consent category for telemetry when cookie consent is active. Defaults to `"analytics"`.
+
+  Consent category for telemetry when cookie consent is active and telemetry remains enabled. Defaults to `"analytics"`.
+
 </ParamField>
 
 ## Custom Scripts
@@ -1399,16 +1578,24 @@ Inject custom JavaScript files into your published documentation site. Use custo
 ```
 
 <ParamField path="scripts" param-type="array" required="false" deprecated="false">
+
   Array of script entries to inject into your published site. Each entry references a local `.js` or `.mjs` file in your project. See [Custom Scripts](/customize/custom-scripts) for details.
 
   <Expandable title="Script entry properties" default-open="false">
+
     <ParamField path="src" param-type="string" required="true" deprecated="false">
+
       Relative file path to a `.js` or `.mjs` file in your project, or an external URL. Paths must be relative — no leading `/`, `./`, or `../`. Maximum file size is 5 MB.
+
     </ParamField>
     <ParamField path="category" param-type="string" required="false" deprecated="false">
+
       Consent category name matching a key in `integrations.cookies`. Scripts without a category default to `essential` (always loads).
+
     </ParamField>
+
   </Expandable>
+
 </ParamField>
 
 ## SEO Configuration
@@ -1429,26 +1616,34 @@ Configure search engine optimization and meta tag behavior.
 ### Search Engine Indexing
 
 <ParamField path="robots:index" param-type="boolean" required="false" deprecated="false">
+
   Allow search engines to index your documentation pages. Default: `true`.
+
 </ParamField>
 
 ### Search Engine Link Following
 
 <ParamField path="robots:follow" param-type="boolean" required="false" deprecated="false">
+
   Allow search engines to follow links within your documentation. Default:
   `true`.
+
 </ParamField>
 
 ### Sitemap Generation
 
 <ParamField path="sitemap:enabled" param-type="boolean" required="false" deprecated="false">
+
   Generate and serve a `/sitemap.xml` for your published documentation. Default: `true`. See [Sitemap](/seo-and-geo/sitemap) for details.
+
 </ParamField>
 
 ### LLMs.txt Generation
 
 <ParamField path="llms-txt:enabled" param-type="boolean" required="false" deprecated="false">
+
   Generate and serve `/llms.txt` and `/llms-full.txt` files for LLM consumption. Default: `true`. See [Robots.txt & llms.txt](/seo-and-geo/robots-txt-and-llm-txt) for details.
+
 </ParamField>
 
 ## Navigation Examples

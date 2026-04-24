@@ -4,8 +4,10 @@ description: >-
   Set up cookie consent to control when integrations, custom scripts, and
   telemetry load on your documentation site. Works with any consent management
   platform (CMP).
+createdAt: '2026-04-13T09:29:28.894Z'
+updatedAt: '2026-04-13T09:29:28.894Z'
 ---
-Control which integrations and scripts require user consent before loading. When cookie consent is configured, scripts only load after the user accepts the relevant consent category through your consent banner.
+Control which integrations and scripts require user consent before loading, and when built-in telemetry can start tracking. When cookie consent is configured, scripts only load after the user accepts the relevant consent category through your consent banner.
 
 This works with any consent management platform (CMP) — CookieBot, OneTrust, CookieYes, Osano, Termly, or a custom consent banner.
 
@@ -24,7 +26,9 @@ This works with any consent management platform (CMP) — CookieBot, OneTrust, C
 Integrations and scripts without a consent category always load — only the categories you configure are gated.
 
 <Callout kind="note" collapsed="false">
+
   Documentation.ai does not include a built-in consent banner. You need to add your CMP's script via [Custom Scripts](/customize/custom-scripts). The cookie consent configuration here only controls **when** your other scripts and integrations are allowed to load.
+
 </Callout>
 
 ## Choose your setup
@@ -47,7 +51,7 @@ Some CMPs only show a consent banner and store the user's choice — they don't 
 
 ### I just want to disable Documentation.ai telemetry
 
-If you don't need a consent banner at all but want to turn off our built-in page view tracking, you don't need cookie consent configuration.
+If you don't need a consent banner at all but want to turn off our built-in page view tracking entirely, you don't need cookie consent configuration.
 
 **What to do:** Go to **Site Config > Integrations > Telemetry** in the Editor and toggle it off. Or add this to `documentation.json`:
 
@@ -59,7 +63,7 @@ If you don't need a consent banner at all but want to turn off our built-in page
 }
 ```
 
-No CMP or cookies setup required.
+No CMP or cookies setup required. This disables telemetry completely instead of waiting for consent.
 
 ---
 
@@ -76,7 +80,9 @@ Your CMP provides a JavaScript snippet or script URL to show the consent banner.
 ### From the Editor
 
 <Steps>
+
   <Step title="Get the embed code from your CMP" icon="clipboard" title-type="p">
+
     Log in to your CMP dashboard and copy the JavaScript embed snippet. It typically looks like this:
 
     ```js
@@ -84,14 +90,19 @@ Your CMP provides a JavaScript snippet or script URL to show the consent banner.
     script.src = "https://consent.cookiebot.com/uc.js?cbid=YOUR_ID";
     document.head.appendChild(script);
     ```
+
   </Step>
 
   <Step title="Create a script file" icon="file-code" title-type="p">
+
     In the Editor, go to **Site Config > Custom Scripts**. Click **Add Script > Create New Script**. Name it something like `cmp-banner.js` and paste your CMP's embed code into the editor.
+
   </Step>
 
   <Step title="Publish" icon="upload" title-type="p">
+
     Click **Publish**. The consent banner will now appear on every page of your documentation site.
+
   </Step>
 </Steps>
 
@@ -118,7 +129,9 @@ Or if you saved the embed code as a local `.js` file in your project:
 ```
 
 <Callout kind="info" collapsed="false">
+
   Scripts without a `category` field default to `essential`, which means they always load — exactly what you need for a consent banner. Do **not** assign a consent category to your CMP script, otherwise the banner itself would be blocked.
+
 </Callout>
 
 ## Step 2: Configure consent categories
@@ -136,28 +149,39 @@ You have two options:
 ### From the Editor
 
 <Steps>
+
   <Step title="Open Site Config" icon="settings" title-type="p">
+
     In the Editor, click **Site Config** in the top toolbar.
+
   </Step>
 
   <Step title="Navigate to Cookies" icon="cookie" title-type="p">
+
     Select **Cookies** from the left sidebar.
+
   </Step>
 
   <Step title="Enable and add categories" icon="toggle-right" title-type="p">
+
     Toggle cookie consent on. An **analytics** category is created by default. Add more categories using the quick-add buttons (marketing, functional, etc.) or create a custom one.
+
   </Step>
 
   <Step title="Fill in key and value" icon="key" title-type="p">
+
     For each category, enter the **key** and **value** from your CMP:
 
     - **Key** — the cookie name or localStorage key your CMP writes (e.g., `CookieConsent`)
 
     - **Value** — the substring that indicates consent for this category (e.g., `statistics:true`)
+
   </Step>
 
   <Step title="Publish" icon="upload" title-type="p">
+
     Click **Publish** to deploy the consent configuration.
+
   </Step>
 </Steps>
 
@@ -191,17 +215,25 @@ You have two options:
 ```
 
 <ParamField path="integrations.cookies" param-type="object" required="false" deprecated="false">
+
   Each key is a consent category name you define. The value tells Documentation.ai what to look for in the browser.
 
   <Expandable title="Category properties" default-open="true">
+
     <ParamField path="key" param-type="string" required="true" deprecated="false">
+
       The cookie name or localStorage key that your consent banner writes to.
+
     </ParamField>
 
     <ParamField path="value" param-type="string" required="true" deprecated="false">
+
       The substring to look for in the stored value. Documentation.ai checks if the cookie or localStorage value **contains** this string.
+
     </ParamField>
+
   </Expandable>
+
 </ParamField>
 
 ## Step 3: Assign categories to integrations and scripts
@@ -245,7 +277,9 @@ Custom scripts default to `essential` (always loads). To gate a script behind co
 | `tracking.js`     | `analytics`           | Only loads after analytics consent is granted                       |
 
 <Callout kind="danger" collapsed="false">
+
   Never assign a consent category to your CMP banner script. If the banner itself requires consent to load, visitors will never see it and can never grant consent.
+
 </Callout>
 
 ## CMP reference
@@ -317,7 +351,9 @@ If you built your own consent banner that sets a simple localStorage value when 
 ```
 
 <Callout kind="info" collapsed="false">
+
   Category names are flexible — use whatever names match your CMP's terminology. Common names include `analytics`, `statistics`, `marketing`, `advertising`, `functional`, and `personalization`.
+
 </Callout>
 
 ### Not sure which values to use?
@@ -365,7 +401,7 @@ When cookie consent is configured, telemetry is automatically gated behind the `
 }
 ```
 
-You can also manage telemetry from the Editor under **Integrations > Telemetry**.
+You can also manage telemetry from the Editor under **Integrations > Telemetry**. If you set `enabled` to `"false"`, telemetry stays off regardless of any cookie consent category.
 
 ## Complete example
 
