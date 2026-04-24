@@ -1,8 +1,10 @@
 ---
 title: AI Assistant
 description: >-
-  AI Assistant helps users get accurate, docs‑aware answers with reliable
-  citations.
+  AI Assistant helps users get accurate, docs-aware answers with reliable
+  citations and configurable behavior.
+createdAt: '2026-01-08T10:29:14.523Z'
+updatedAt: '2026-01-08T10:29:14.523Z'
 ---
 ## Overview
 
@@ -10,9 +12,9 @@ The AI Assistant helps readers, customers, and internal teams get fast, accurate
 
 Unlike a generic chatbot, the assistant is:
 
-- **Docs‑aware** – it relies on your published documentation as its source of truth.
+- **Docs-aware** – it relies on your published documentation as its source of truth.
 
-- **Agentic** – it plans how to answer, not just reply turn‑by‑turn.
+- **Agentic** – it plans how to answer, not just reply turn-by-turn.
 
 - **Cited** – it shows where each answer came from in your docs.
 
@@ -35,13 +37,13 @@ The AI Assistant:
 
 - **Retrieves first, then answers** – it searches your docs and uses the retrieved content as grounding.
 
-- **Plans actions, not just replies** – it reasons about which docs to consult, when to ask follow‑up questions, and how to structure multi‑step answers.
+- **Plans actions, not just replies** – it reasons about which docs to consult, when to ask follow-up questions, and how to structure multi-step answers.
 
 - **Stays within your content** – it is designed to prefer your docs over general model knowledge.
 
 - **Signals uncertainty** – when it can’t find reliable content, it avoids making confident but unsupported claims.
 
-This makes it safer to use in support and customer‑facing workflows.
+This makes it safer to use in support and customer-facing workflows.
 
 ## Citations: how they work and why they matter
 
@@ -51,7 +53,7 @@ What users see:
 
 - A short answer and explanation in the chat
 
-- One or more citations linked to specific pages (often down to the section)
+- One or more citations linked to specific pages, often down to the section
 
 - The ability to click through to read the full context
 
@@ -81,12 +83,72 @@ The assistant appears in your documentation as an **Ask AI** entry point.
 
    - A concise answer or explanation
 
-   - Optional step‑by‑step guidance
+   - Optional step-by-step guidance
 
    - Citations and links to relevant pages or sections
 
+Depending on how you configure the assistant, users can also see starter questions when they open the chat and suggested follow-up questions after an answer.
+
 <Callout kind="alert" collapsed="false">
   Currently, the AI Assistant is enabled for all documentation sites. If you would like to disable it, please contact us.
+</Callout>
+
+## Configure assistant behavior
+
+You can tailor the AI Assistant for each documentation site. These settings control how the chat behaves for your readers without changing your underlying documentation.
+
+<Steps>
+  <Step title="Open the assistant settings">
+
+Open your documentation site's AI Assistant settings in the dashboard.
+
+  </Step>
+  <Step title="Choose how the assistant should respond">
+
+Set the assistant's fallback behavior, tone, language, and prompts based on how you want readers to use Ask AI.
+
+  </Step>
+  <Step title="Publish the changes">
+
+Save and deploy your updates so the new assistant behavior appears on your live site.
+
+  </Step>
+</Steps>
+
+### Available settings
+
+<ParamField body="Fallback channel" param-type="email | link" show-location="false">
+  Choose what happens when the assistant cannot answer confidently. You can send users to an email contact flow or a link such as a support page, contact form, or help desk.
+</ParamField>
+
+<ParamField body="Fallback email" param-type="string" show-location="false">
+  Set the destination email address used when the fallback channel is email.
+</ParamField>
+
+<ParamField body="Fallback link destination" param-type="string" show-location="false">
+  Set the destination URL used when the fallback channel is link.
+</ParamField>
+
+<ParamField body="Custom instructions" param-type="string" show-location="false">
+  Add site-specific guidance that shapes how the assistant answers. Use this to steer tone, preferred phrasing, or how the assistant should frame responses for your audience.
+</ParamField>
+
+<ParamField body="Response language" param-type="string" show-location="false">
+  Force responses into a specific language, or leave it unset so the assistant can respond based on the user's message.
+</ParamField>
+
+<ParamField body="Starter questions" param-type="string[]" show-location="false">
+  Add up to three suggested questions that appear when the chat opens. These help users understand what they can ask and guide them toward common tasks.
+</ParamField>
+
+<ParamField body="Follow-up questions" param-type="boolean" show-location="false">
+  Turn suggested follow-up questions on or off after each answer.
+</ParamField>
+
+<Callout kind="info">
+
+Fallback settings only appear when the assistant needs to hand the conversation off. Use them to give readers a clear next step when your docs do not contain a strong answer.
+
 </Callout>
 
 ## Benefits for admins and doc owners
@@ -97,9 +159,6 @@ The AI Assistant can:
 
 - **Reduce support tickets** – many basic “where is…” and “how do I…” questions are handled directly in the docs.
 
-- **Make customer‑facing teams faster** – support and AM/CS teams can use the same assistant to pull accurate, cited answers during conversations.
+- **Make customer-facing teams faster** – support and AM/CS teams can use the same assistant to pull accurate, cited answers during conversations.
 
 - **Expose documentation gaps** – repeated questions without good citations highlight where your docs need better coverage or structure.
-
-
-

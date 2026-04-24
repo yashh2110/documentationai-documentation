@@ -1,11 +1,15 @@
 ---
 title: Code Editor
-description: Use Git-based workflows and MDX in your preferred code editor to write, organize, and publish documentation with Documentation.AI.
+description: >-
+  Use Git-based workflows and MDX in your preferred code editor to write,
+  organize, and publish documentation with Documentation.AI.
+createdAt: '2025-12-29T11:44:28.465Z'
+updatedAt: '2025-12-29T11:44:28.465Z'
 ---
 
 ## Overview
 
-The code editor workflow lets you write and manage documentation in your preferred development environment (for example, VS Code, Cursor, or Windsurf). You work with `.mdx` files locally, commit changes to Git, and Documentation.AI builds and deploys from your connected repository.
+The code editor workflow lets you write and manage documentation in your preferred development environment (for example, VS Code, Cursor, or Windsurf). You work with `.mdx` files locally, commit changes to Git, choose a deployment branch for production, and use other branches for preview deployments and pull request review.
 
 Use this page as the single reference for:
 
@@ -52,9 +56,9 @@ Use the [Web Editor](/write-and-publish/web-editor) when you need:
 1. In the Documentation.AI dashboard, open **Settings**.
 2. Connect your Git provider (GitHub, GitLab, or another supported provider).
 3. Select the repository that contains (or will contain) your documentation.
-4. Choose the branch to deploy (typically `main` or `master`).
+4. Choose the branch that should deploy to production (typically `main` or `master`).
 
-After the connection, pushes to the configured branch trigger an automatic build and deployment.
+After the connection, pushes to the configured deployment branch trigger a production build and deployment. Pushes to other branches can create preview deployments so you can review changes before they go live.
 
 ### 2. Clone and open in your editor
 
@@ -239,8 +243,8 @@ Documentation.AI uses your Git repository as the single source of truth. A typic
 1. Edit content locally in your editor.
 2. Commit changes to a branch.
 3. Push to your Git provider.
-4. Open a pull request (PR).
-5. Documentation.AI builds previews for the PR and deploys when merged.
+4. Use that branch for a preview deployment and open a pull request (PR) when you are ready for review.
+5. Merge into your chosen deployment branch to publish to production.
 
 ### Recommended branch workflow
 
@@ -278,23 +282,23 @@ Documentation.AI uses your Git repository as the single source of truth. A typic
 
   </Step>
 
-  <Step title="Push and open a PR" icon="upload">
+  <Step title="Push your branch and share a preview" icon="upload">
 
   ```bash
   git push origin add-webhook-docs
   ```
 
-  Then open a pull request in your Git provider. Documentation.AI automatically builds a preview for the PR so reviewers can see the rendered docs.
+  Documentation.AI can create a preview deployment from that non-deployment branch so you can review rendered changes before publishing. When you want feedback or approval, open a pull request in your Git provider and share the preview with reviewers.
 
   </Step>
 
   <Step title="Review and merge" icon="check-circle">
 
-  - Use the preview build to verify formatting, navigation, and links.
+  - Use the preview deployment to verify formatting, navigation, and links.
   - Address review comments and push updates to the same branch.
-  - When ready, merge the PR into the deployment branch (for example, `main`).
+  - When ready, merge the PR into the deployment branch you selected in Documentation.AI.
 
-  Documentation.AI then runs a production build and publishes changes.
+  Documentation.AI then runs a production build from that deployment branch and publishes the changes.
 
   </Step>
 </Steps>
@@ -332,7 +336,7 @@ Documentation.AI uses your Git repository as the single source of truth. A typic
 
 <Callout kind="tip">
 
-Use feature branches and PRs even for documentation-only changes. Documentation.AI generates preview builds for pull requests, which helps reviewers catch structural or navigation issues before they reach production.
+Use feature branches and PRs even for documentation-only changes. Documentation.AI can generate preview deployments from non-deployment branches, which helps reviewers catch structural or navigation issues before those changes reach your production deployment branch.
 
 </Callout>
 
@@ -349,8 +353,8 @@ If something looks wrong after a change:
   - Ensure all components use valid props (for example, `kind="info"` on `<Callout>`).
 
 - **Deployment did not update**  
-  - Confirm that your changes were merged into the configured deployment branch.  
-  - Verify that the latest commit triggered a build in your Documentation.AI project.
+  - Confirm that your changes were merged into the configured deployment branch. A preview deployment from another branch does not update production.  
+  - Verify that the latest commit on the deployment branch triggered a build in your Documentation.AI project.
 
 For deeper debugging, see the general [Troubleshoot build failures](/help/troubleshoot-build-failures) guide.
 
@@ -360,7 +364,7 @@ Use the code editor workflow when you want Git-based, developer-friendly documen
 
 - Write in `.mdx` using Documentation.AI components.
 - Organize files to match navigation, and keep `documentation.json` in sync.
-- Use branches, commits, and PRs to collaborate, with preview builds for each change.
-- Let Documentation.AI handle builds and deployments from your main branch.
+- Use branches, commits, and PRs to collaborate, with preview deployments for non-deployment branches.
+- Let Documentation.AI publish from the deployment branch you choose for production.
 
 For teams that prefer WYSIWYG editing or non-Git workflows, pair this with the [Web Editor](/write-and-publish/web-editor) so both technical and non-technical contributors can work where they are most productive.
