@@ -214,31 +214,41 @@ Documentation.AI uses a single Callout component with different `kind` values:
 #### Info - Neutral contextual information
 
 <Callout kind="info">
+
   Supplementary information that supports the main content without interrupting flow
+
 </Callout>
 
 #### Tip - Best practices and recommendations
 
 <Callout kind="tip">
+
   Expert advice, shortcuts, or best practices that enhance user success
+
 </Callout>
 
 #### Alert - Important cautions
 
 <Callout kind="alert">
+
   Critical information about potential issues, breaking changes, or actions requiring attention
+
 </Callout>
 
 #### Danger - High-risk actions
 
 <Callout kind="danger">
+
   Warnings about destructive actions, data loss, or irreversible operations
+
 </Callout>
 
 #### Success - Confirmations and positive outcomes
 
 <Callout kind="success">
+
   Positive confirmations, successful completions, or achievement indicators
+
 </Callout>
 
 ### Code components
@@ -337,7 +347,9 @@ Example of request/response documentation:
 Example of step-by-step instructions:
 
 <Steps>
+
   <Step title="Install dependencies" icon="download" titleType="p">
+
     Run the installation command to add required packages.
 
     ```bash
@@ -345,11 +357,15 @@ Example of step-by-step instructions:
     ```
 
     <Callout kind="success" collapsed="false">
+
       Verify installation by running `npm list documentation-ai`.
+
     </Callout>
+
   </Step>
 
   <Step title="Configure environment" icon="settings" titleType="p">
+
     Create a `documentation.json` file with your site configuration.
 
     ```json
@@ -360,16 +376,21 @@ Example of step-by-step instructions:
     ```
 
     <Callout kind="alert" collapsed="false">
+
       Never commit API keys or secrets to version control.
+
     </Callout>
+
   </Step>
 
   <Step title="Start development server" icon="play" titleType="p">
+
     Launch the local development server.
 
     ```bash
     npm run dev
     ```
+
   </Step>
 </Steps>
 
@@ -378,25 +399,32 @@ Example of step-by-step instructions:
 Example of tabbed content:
 
 <Tabs>
+
   <Tab title="macOS" icon="apple">
+
     ```bash
     brew install documentation-ai
     npm install -g doc-ai-cli
     ```
+
   </Tab>
 
   <Tab title="Windows" icon="monitor">
+
     ```powershell
     winget install documentation-ai
     npm install -g doc-ai-cli
     ```
+
   </Tab>
 
   <Tab title="Linux" icon="terminal">
+
     ```bash
     sudo apt install documentation-ai
     npm install -g doc-ai-cli
     ```
+
   </Tab>
 </Tabs>
 
@@ -405,7 +433,9 @@ Example of tabbed content:
 Example of expandable groups:
 
 <ExpandableGroup>
+
   <Expandable title="Troubleshooting connection issues" default-open="false">
+
     - Ensure your API key is valid and not expired
 
     - Check firewall settings allow outbound connections
@@ -413,9 +443,11 @@ Example of expandable groups:
     - Verify you're using the correct API endpoint
 
     - Try increasing the timeout value in your configuration
+
   </Expandable>
 
   <Expandable title="Advanced configuration options" default-open="false">
+
     ```javascript
     const advancedConfig = {
       retryAttempts: 3,
@@ -423,6 +455,7 @@ Example of expandable groups:
       logging: { level: 'debug', format: 'json' }
     };
     ```
+
   </Expandable>
 </ExpandableGroup>
 
@@ -431,25 +464,37 @@ Example of expandable groups:
 Example of cards:
 
 <Card title="Getting started guide" href="/getting-started/quickstart" icon="rocket" horizontal="false">
+
   Complete walkthrough from installation to your first deployment in under 10 minutes.
+
 </Card>
 
 <Columns cols="2">
+
   <Card title="Components" href="/components/heading-and-text" icon="component" horizontal="false">
+
     Learn about all available Documentation.AI components for rich content.
+
   </Card>
 
   <Card title="API Reference" href="/api-documentation-and-playground/openapi-import" icon="code" horizontal="false">
+
     Import and organize your API documentation with OpenAPI support.
+
   </Card>
 
   <Card title="AI Features" href="/ai/ai-assistant" icon="bot" horizontal="false">
+
     Explore AI-powered documentation assistance and search.
+
   </Card>
 
   <Card title="Customize" href="/customize/site-configuration" icon="palette" horizontal="false">
+
     Customize your documentation site's appearance and behavior.
+
   </Card>
+
 </Columns>
 
 ### API documentation components
@@ -459,19 +504,27 @@ Example of cards:
 Example of parameter documentation:
 
 <ParamField path="doc_id" param-type="string" required="true" deprecated="false">
+
   Unique identifier for the documentation page. Must be a valid slug format (lowercase, hyphens only).
+
 </ParamField>
 
 <ParamField query="version" param-type="string" required="false" deprecated="false">
+
   API version to use for the request. Defaults to the latest stable version if not specified.
+
 </ParamField>
 
 <ParamField header="Authorization" param-type="string" required="true" deprecated="false">
+
   Bearer token for API authentication. Format: `Bearer YOUR_API_KEY`
+
 </ParamField>
 
 <ParamField body="title" param-type="string" required="true" deprecated="false">
+
   Page title displayed in navigation and browser tabs. Maximum 100 characters.
+
 </ParamField>
 
 #### Response fields
@@ -479,29 +532,43 @@ Example of parameter documentation:
 Example of response field documentation:
 
 <ResponseField name="doc_id" field-type="string" required="true" deprecated="false">
+
   Unique identifier assigned to the newly created documentation page.
+
 </ResponseField>
 
 <ResponseField name="published_at" field-type="string" required="false" deprecated="false">
+
   ISO 8601 formatted timestamp of when the page was published.
+
 </ResponseField>
 
 <ResponseField name="metadata" field-type="string" required="false" deprecated="false">
+
   Additional metadata associated with the documentation page.
 
   <Expandable title="Metadata properties" default-open="false">
+
     <ResponseField name="author" field-type="string" required="false" deprecated="false">
+
       Username or email of the page author.
+
     </ResponseField>
 
     <ResponseField name="tags" field-type="string" required="false" deprecated="false">
+
       Array of tag strings for categorization and search.
+
     </ResponseField>
 
     <ResponseField name="last_modified" field-type="string" required="false" deprecated="false">
+
       ISO 8601 timestamp of the most recent modification.
+
     </ResponseField>
+
   </Expandable>
+
 </ResponseField>
 
 ### Images
@@ -515,6 +582,7 @@ Wrap images using the Image component:
 Example of Update component for version releases:
 
 <Update label="2025-01-15" description="v2.0.0" tags={["Breaking Change"]}>
+
   ### Major update
 
   - New authentication system with OAuth 2.0 support
@@ -523,10 +591,12 @@ Example of Update component for version releases:
 
   - Breaking: Old API endpoints deprecated, use v2 endpoints
 
-  **Migration guide:** Follow the [v2 migration guide](/api/migration-v2) to update your integration.
+  **Migration guide:** Follow the [v2 migration guide](#) to update your integration.
+
 </Update>
 
 <Update label="2024-12-01" description="v1.5.0" tags={["New Feature"]}>
+
   ### Enhanced search
 
   - AI-powered semantic search
@@ -534,6 +604,7 @@ Example of Update component for version releases:
   - Filter by content type
 
   - Search suggestions and autocomplete
+
 </Update>
 
 ### Mermaid diagrams
@@ -567,17 +638,25 @@ Example of columns with plain content:
 Example of columns with Cards:
 
 <Columns cols="3">
+
   <Card title="Fast Setup" href="#" icon="zap" horizontal="false">
+
     Get started in minutes with zero configuration.
+
   </Card>
 
   <Card title="Full Control" href="#" icon="settings" horizontal="false">
+
     Customize every aspect of your documentation.
+
   </Card>
 
   <Card title="Team Ready" href="#" icon="users" horizontal="false">
+
     Built for collaboration and scale.
+
   </Card>
+
 </Columns>
 
 ### Collection components
@@ -808,7 +887,9 @@ Connect your own Documentation.AI MCP server to Cursor so it helps you write doc
 The MCP server exposes a single `searchDocumentation` tool that provides read-only, grounded search across your public documentation using the same relevance ranking as the in-product AI Assistant.
 
 <Steps>
+
   <Step title="Add your MCP server to Cursor" icon="settings" title-type="p">
+
     Create or edit the MCP configuration file in your Cursor settings directory:
 
     **File location:** `~/.cursor/mcp.json`
@@ -833,18 +914,25 @@ The MCP server exposes a single `searchDocumentation` tool that provides read-on
     This configuration tells Cursor to connect to your Documentation.AI MCP server over Server-Sent Events (SSE) and use the `searchDocumentation` tool to retrieve grounded context from Documentation.AI's published docs.
 
     <Callout kind="tip" collapsed="false">
+
       If you already have other MCP servers configured, add the `documentation-ai` entry to your existing `mcpServers` object instead of replacing it. Just ensure the URL points to your own `/_mcp` endpoint.
+
     </Callout>
+
   </Step>
 
   <Step title="Restart Cursor" icon="rotate-cw" title-type="p">
+
     Restart Cursor to load the updated MCP configuration.
 
     After restarting, the `documentation-ai` MCP server will be available to Cursor's Agent in Composer.
 
     <Callout kind="alert" collapsed="false">
+
       MCP tools (including `searchDocumentation`) are only available to the Agent in Composer, not in inline chat. Use Composer when you want grounded documentation generation.
+
     </Callout>
+
   </Step>
 </Steps>
 

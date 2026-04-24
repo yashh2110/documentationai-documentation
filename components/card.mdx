@@ -34,13 +34,31 @@ In the Documentation.AI component system:
   - [Columns](/components/columns) when you need multi-column layouts.
 
 <Columns cols="2">
+
   <Card title="Getting Started" href="/getting-started/quickstart" icon="book-open" horizontal="false">
+
     Learn the fundamentals and get your project up and running in minutes.
+
+
+
+
+
   </Card>
 
   <Card title="API Reference" href="/api-documentation-and-playground/interactive-playground-setup" icon="code" horizontal="false" target="_self">
+
     Explore the core authentication flows and API usage.
+
+
+
+
+
   </Card>
+
+
+
+
+
 </Columns>
 
 ## Using with Web Editor
@@ -64,7 +82,13 @@ You can add and configure cards visually in the Web Editor without writing MDX.
 - **Description:** Click the description text inside the card and type your own content. You can remove it entirely if you prefer a very compact card.
 
 <Callout kind="tip" collapsed="false">
+
   If you don’t want a description, click the placeholder and delete it.
+
+
+
+
+
 </Callout>
 
 ### Configure card settings
@@ -94,9 +118,15 @@ You can add and configure cards visually in the Web Editor without writing MDX.
 <Image src="https://blob-cdn.documentation.ai/org-53a37986-2c9e-4094-b9e8-1e1ffae9e9ee/doc-b389b141-ae58-4fd5-91f9-6702fae9ac58/1767251631396-ttzl0cgdt6f-pasted-image-1767251628058.png?q=85&fm=auto&auto=compress%2Cformat" width="369" height="532" alt="Card settings in Web Editor" caption="Card settings in Web Editor" style="width: 369px; height: auto; cursor: pointer; margin: 0 auto;" />
 
 <Callout kind="info" collapsed="false">
+
   Prefer writing in code?
 
   You can switch to **MDX view inside the Web Editor** to write or edit this component using the same syntax as the Code Editor. This is useful if you want full control while staying in the Web Editor.
+
+
+
+
+
 </Callout>
 
 ### Card groups in the Web Editor
@@ -131,14 +161,26 @@ A minimal card with a title, icon, and link:
 
 ```jsx
 <Card title="Quickstart" icon="zap" href="/getting-started/quickstart">
+
   Get up and running with Documentation.AI in a few minutes.
+
+
+
+
+
 </Card>
 ```
 
 Rendered example:
 
 <Card title="Quickstart" href="/getting-started/quickstart" icon="zap" horizontal="false">
+
   Get up and running with Documentation.AI in a few minutes.
+
+
+
+
+
 </Card>
 
 ### Small card grid with Columns
@@ -147,30 +189,78 @@ Combine `<Card>` with `<Columns>` for a responsive feature or navigation grid. S
 
 ```jsx
 <Columns cols={3}>
+
   <Card title="Get started" icon="book-open" href="/getting-started/introduction">
+
     Learn the basics of your documentation project.
+
+
+
+
+
   </Card>
   <Card title="Write in the Web Editor" icon="monitor" href="/write-and-publish/web-editor">
+
     Edit content visually with rich components.
+
+
+
+
+
   </Card>
   <Card title="Write in code" icon="code" href="/write-and-publish/code-editor">
+
     Keep docs alongside your codebase using MDX.
+
+
+
+
+
   </Card>
+
+
+
+
+
 </Columns>
 ```
 
 <Columns cols="3">
+
   <Card title="Get started" href="/getting-started/introduction" icon="book-open" horizontal="false">
+
     Learn the basics of your documentation project.
+
+
+
+
+
   </Card>
 
   <Card title="Write in the Web Editor" href="/write-and-publish/web-editor" icon="monitor" horizontal="false">
+
     Edit content visually with rich components.
+
+
+
+
+
   </Card>
 
   <Card title="Write in code" href="/write-and-publish/code-editor" icon="code" horizontal="false">
+
     Keep docs alongside your codebase using MDX.
+
+
+
+
+
   </Card>
+
+
+
+
+
 </Columns>
 
 ### Horizontal layout
@@ -185,12 +275,24 @@ Use horizontal cards when you want a compact row-like treatment, for example in 
   cta="View on GitHub"
   horizontal={true}
 >
+
   Explore the source code and contribute to the project.
+
+
+
+
+
 </Card>
 ```
 
 <Card title="GitHub Repository" href="https://github.com/example/repo" icon="github" cta="View on GitHub" horizontal="true">
+
   Explore the source code and contribute to the project.
+
+
+
+
+
 </Card>
 
 ### Cards with images
@@ -201,10 +303,29 @@ Add an image to make a card stand out. For more image options, see [Images](/com
 <Card
   title="Deployment guide"
   icon="cloud"
-  href="/deployment-and-hosting/deploy-your-documentation"
+  href="#"
   image="https://example.com/deploy-guide-header.png"
 >
+
   Follow step-by-step instructions to ship your docs.
+
+
+
+
+
+</Card>
+````
+
+Rendered example:
+
+<Card title="Deployment guide" href="#" icon="cloud" image="https://example.com/deploy-guide-header.png" horizontal="false">
+
+  Follow step-by-step instructions to ship your docs.
+
+
+
+
+
 </Card>
 
 ## Advanced options
@@ -217,9 +338,15 @@ Cards use [Lucide](https://lucide.dev/icons) icon names in the `icon` prop. Use 
 
 ```jsx
 <Card title="Security" icon="shield" href="#security">
+
   Implement industry-standard security measures.
+
+
+
+
+
 </Card>
-````
+```
 
 Commonly used icon names include:
 
@@ -230,17 +357,41 @@ Commonly used icon names include:
 - `shield`, `bar-chart`, `github`, `rocket`
 
 <Columns cols="3">
+
   <Card title="Security" href="#security" icon="shield" horizontal="false">
+
     Implement industry-standard security measures.
+
+
+
+
+
   </Card>
 
   <Card title="Performance" href="/help/fix-performance-issues" icon="zap" horizontal="false">
+
     Optimize for speed and efficiency.
+
+
+
+
+
   </Card>
 
   <Card title="Analytics" href="/analytics-and-insights/user-analytics" icon="bar-chart" horizontal="false">
+
     Track metrics and user behavior.
+
+
+
+
+
   </Card>
+
+
+
+
+
 </Columns>
 
 ### Images
@@ -260,7 +411,13 @@ Use the `image` prop to render a header image above the card content:
   href="#database"
   image="https://example.com/database-header.png"
 >
+
   Master schema design, migrations, and performance tuning.
+
+
+
+
+
 </Card>
 ```
 
@@ -276,7 +433,13 @@ Use `target="_blank"` for external destinations that should open in a new tab:
   target="_blank"
   cta="Join now"
 >
+
   Connect with other users, ask questions, and share feedback.
+
+
+
+
+
 </Card>
 ```
 
@@ -303,7 +466,13 @@ Horizontal cards work best when:
   href="/help/contact-us"
   horizontal={true}
 >
+
   Reach out to our team for assistance.
+
+
+
+
+
 </Card>
 ```
 
@@ -312,34 +481,82 @@ Horizontal cards work best when:
 These attributes are available on the `<Card>` component.
 
 <ParamField path="title" param-type="string" required="true" deprecated="false">
+
   Card heading text displayed prominently at the top.
+
+
+
+
+
 </ParamField>
 
 <ParamField path="href" param-type="string" required="true" deprecated="false">
+
   Link destination URL. Can be relative (`/getting-started/quickstart`) or absolute (`https://example.com`).
+
+
+
+
+
 </ParamField>
 
 <ParamField path="icon" param-type="string" required="false" deprecated="false">
+
   Lucide icon name (without `Icon` suffix). Displays in the card header.
+
+
+
+
+
 </ParamField>
 
 <ParamField path="image" param-type="string" required="false" deprecated="false">
+
   Header image URL displayed above card content at full width.
+
+
+
+
+
 </ParamField>
 
 <ParamField path="cta" param-type="string" required="false" deprecated="false">
+
   Call-to-action text displayed as a link-style button, typically at the bottom of the card.
+
+
+
+
+
 </ParamField>
 
 <ParamField path="horizontal" param-type="boolean" required="false" deprecated="false">
+
   Use horizontal layout with icon beside content (`horizontal={true}`) instead of stacked layout.
+
+
+
+
+
 </ParamField>
 
 <ParamField path="target" param-type="string" required="false" deprecated="false">
+
   Link target: `_self` (same tab, default) or `_blank` (new tab).
+
+
+
+
+
 </ParamField>
 
 <Callout kind="success" collapsed="false">
+
   Pair cards with [Columns](/components/columns), [Headings and Text](/components/heading-and-text), and [Images](/components/images) to build clear, scannable sections that are easy to maintain in both the Web Editor and Code Editor.
+
+
+
+
+
 </Callout>
 
