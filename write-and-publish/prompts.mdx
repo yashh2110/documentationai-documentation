@@ -1,8 +1,6 @@
 ---
 title: Helpful Prompts
-description: >-
-  Ready-to-use AI prompts for writing exceptional technical documentation with
-  Documentation.AI
+description: Ready-to-use AI prompts for writing exceptional technical documentation with Documentation.AI
 ---
 Use these prompts with any AI assistant (ChatGPT, Claude, Gemini, etc.) to get expert help writing technical documentation. Copy the relevant prompt and paste it into your AI tool before asking documentation questions.
 
@@ -121,8 +119,8 @@ You are an AI assistant specialized in creating technical documentation using Do
 - String attributes use quotes: `kind="info"`, `cols="2"`, `tabs="JavaScript,Python"`
 
 **Layout patterns:**
-- Columns with Cards: Wrap Cards directly in `<Columns cols="2">`
-- Columns with plain content: Wrap content in `<div>` inside `<Columns cols="2">`
+- Columns with Cards: Wrap Cards directly in the Columns component with `cols="2"`
+- Columns with plain content: Wrap content in a div inside the Columns component with `cols="2"`
 - Cards always need `title` and `href` attributes
 - Card layouts: `horizontal={false}` (default, stacked) or `horizontal={true}` (side-by-side)
 
@@ -219,23 +217,38 @@ Single Callout component with different `kind` values:
 
 ```jsx
 <Callout kind="info">
+
   Supplementary information that supports the main content
+
+
 </Callout>
 
 <Callout kind="tip">
+
   Expert advice, shortcuts, or best practices
+
+
 </Callout>
 
 <Callout kind="alert">
+
   Critical information about potential issues or breaking changes
+
+
 </Callout>
 
 <Callout kind="danger">
+
   Warnings about destructive actions or data loss
+
+
 </Callout>
 
 <Callout kind="success">
+
   Positive confirmations or successful completions
+
+
 </Callout>
 ```
 
@@ -332,7 +345,9 @@ For procedures and sequential instructions:
 
 ```jsx
 <Steps>
+
   <Step title="Install dependencies" icon="download" title-type="p">
+
     Run the installation command to add required packages.
 
     ```bash
@@ -340,11 +355,17 @@ For procedures and sequential instructions:
     ```
 
     <Callout kind="success">
+
       Verify installation by running `npm list documentation-ai`.
+
+
     </Callout>
+
+
   </Step>
 
   <Step title="Configure environment" icon="settings" title-type="p">
+
     Create a `documentation.json` file with your site configuration.
 
     ```json
@@ -353,14 +374,19 @@ For procedures and sequential instructions:
       "initialRoute": "getting-started/introduction"
     }
     ```
+
+
   </Step>
 
   <Step title="Start development server" icon="play" title-type="p">
+
     Launch the local development server.
 
     ```bash
     npm run dev
     ```
+
+
   </Step>
 </Steps>
 ```
@@ -371,25 +397,35 @@ For alternative content:
 
 ```jsx
 <Tabs>
+
   <Tab title="macOS" icon="apple">
+
     ```bash
     brew install documentation-ai
     npm install -g doc-ai-cli
     ```
+
+
   </Tab>
 
   <Tab title="Windows" icon="monitor">
+
     ```powershell
     winget install documentation-ai
     npm install -g doc-ai-cli
     ```
+
+
   </Tab>
 
   <Tab title="Linux" icon="terminal">
+
     ```bash
     sudo apt install documentation-ai
     npm install -g doc-ai-cli
     ```
+
+
   </Tab>
 </Tabs>
 ```
@@ -400,14 +436,19 @@ For collapsible content:
 
 ```jsx
 <ExpandableGroup>
+
   <Expandable title="Troubleshooting connection issues" default-open="false">
+
     - Ensure your API key is valid and not expired
     - Check firewall settings allow outbound connections
     - Verify you're using the correct API endpoint
     - Try increasing the timeout value in your configuration
+
+
   </Expandable>
 
   <Expandable title="Advanced configuration options" default-open="false">
+
     ```javascript
     const advancedConfig = {
       retryAttempts: 3,
@@ -415,6 +456,8 @@ For collapsible content:
       logging: { level: 'debug', format: 'json' }
     };
     ```
+
+
   </Expandable>
 </ExpandableGroup>
 ```
@@ -425,7 +468,10 @@ For navigation and highlights:
 
 ```jsx
 <Card title="Getting started guide" href="/getting-started/quickstart" icon="rocket" horizontal="false">
+
   Complete walkthrough from installation to your first deployment in under 10 minutes.
+
+
 </Card>
 ```
 
@@ -433,13 +479,22 @@ Cards in columns:
 
 ```jsx
 <Columns cols="2">
+
   <Card title="Components" href="/components/heading-and-text" icon="component" horizontal="false">
+
     Learn about all available Documentation.AI components for rich content.
+
+
   </Card>
 
   <Card title="API Reference" href="/api-documentation-and-playground/openapi-import" icon="code" horizontal="false">
+
     Import and organize your API documentation with OpenAPI support.
+
+
   </Card>
+
+
 </Columns>
 ```
 
@@ -449,19 +504,31 @@ Parameter fields:
 
 ```jsx
 <ParamField path="doc_id" param-type="string" required="true" deprecated="false">
+
   Unique identifier for the documentation page. Must be a valid slug format (lowercase, hyphens only).
+
+
 </ParamField>
 
 <ParamField query="version" param-type="string" required="false" deprecated="false">
+
   API version to use for the request. Defaults to the latest stable version if not specified.
+
+
 </ParamField>
 
 <ParamField header="Authorization" param-type="string" required="true" deprecated="false">
+
   Bearer token for API authentication. Format: `Bearer YOUR_API_KEY`
+
+
 </ParamField>
 
 <ParamField body="title" param-type="string" required="true" deprecated="false">
+
   Page title displayed in navigation and browser tabs. Maximum 100 characters.
+
+
 </ParamField>
 ```
 
@@ -469,25 +536,43 @@ Response fields:
 
 ```jsx
 <ResponseField name="doc_id" field-type="string" required="true" deprecated="false">
+
   Unique identifier assigned to the newly created documentation page.
+
+
 </ResponseField>
 
 <ResponseField name="published_at" field-type="string" required="false" deprecated="false">
+
   ISO 8601 formatted timestamp of when the page was published.
+
+
 </ResponseField>
 
 <ResponseField name="metadata" field-type="object" required="false" deprecated="false">
+
   Additional metadata associated with the documentation page.
 
   <Expandable title="Metadata properties" default-open="false">
+
     <ResponseField name="author" field-type="string" required="false" deprecated="false">
+
       Username or email of the page author.
+
+
     </ResponseField>
 
     <ResponseField name="tags" field-type="array" required="false" deprecated="false">
+
       Array of tag strings for categorization and search.
+
+
     </ResponseField>
+
+
   </Expandable>
+
+
 </ResponseField>
 ```
 
@@ -511,13 +596,16 @@ For changelogs:
 
 ```jsx
 <Update label="2025-01-15" description="v2.0.0" tags={["Breaking Change"]}>
+
   ### Major update
 
   - New authentication system with OAuth 2.0 support
   - Redesigned dashboard with improved performance
   - Breaking: Old API endpoints deprecated, use v2 endpoints
 
-  **Migration guide:** Follow the [v2 migration guide](/api/migration-v2) to update your integration.
+  **Migration guide:** Follow the [v2 migration guide](/api-documentation-and-playground/versioning-and-deprecation-policy) to update your integration.
+
+
 </Update>
 ```
 
@@ -538,12 +626,15 @@ With plain content:
 
 ```jsx
 <Columns cols="2">
+
   <div>
     First column content
   </div>
   <div>
     Second column content
   </div>
+
+
 </Columns>
 ```
 
@@ -551,17 +642,29 @@ With Cards:
 
 ```jsx
 <Columns cols="3">
+
   <Card title="Fast Setup" href="#" icon="zap" horizontal="false">
+
     Get started in minutes with zero configuration.
+
+
   </Card>
 
   <Card title="Full Control" href="#" icon="settings" horizontal="false">
+
     Customize every aspect of your documentation.
+
+
   </Card>
 
   <Card title="Team Ready" href="#" icon="users" horizontal="false">
+
     Built for collaboration and scale.
+
+
   </Card>
+
+
 </Columns>
 ```
 
