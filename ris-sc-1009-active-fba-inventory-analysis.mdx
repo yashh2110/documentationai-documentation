@@ -1,0 +1,170 @@
+---
+title: Active FBA Inventory Analysis
+description: >-
+  Identifies active Amazon FBA products, checks Prime template assignment, and
+  shows pricing and fulfillment configuration.
+---
+## Overview
+
+The **RIS-SC-1009 – Active FBA Inventory Analysis** script provides a detailed overview of Amazon FBA products, their Prime eligibility, and pricing information.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  Find FBA products, check Prime eligibility, and display their price.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Identifies active FBA listings on Amazon
+
+- Checks assignment to Prime templates
+
+- Displays product price and fulfillment configuration
+
+- Helps ensure FBA listing compliance and health
+
+## When It Runs
+
+Used for Amazon monitoring and FBA listing audits.
+
+**Typically runs:**
+
+- Manual execution for FBA audits
+
+- Prime eligibility checks
+
+- Listing setup validation
+
+## Parameters
+
+<ParamField path="Source" param-type="string" required="true" deprecated="false">
+  Amazon channel source.
+</ParamField>
+
+<ParamField path="Subsource" param-type="string" required="true" deprecated="false">
+  Amazon account name.
+</ParamField>
+
+<ParamField path="FBALocationName" param-type="string" required="true" deprecated="false">
+  FBA warehouse location name.
+</ParamField>
+
+<ParamField path="PrimeTemplate1" param-type="string" required="false" deprecated="false">
+  First Prime template.
+</ParamField>
+
+<ParamField path="PrimeTemplate2" param-type="string" required="false" deprecated="false">
+  Second Prime template.
+</ParamField>
+
+<ParamField path="PrimeTemplate3" param-type="string" required="false" deprecated="false">
+  Third Prime template.
+</ParamField>
+
+**Example:**\
+Subsource `(Your Subsource)` with multiple Prime templates.
+
+<Callout kind="info" collapsed="false">
+  The script checks Amazon listings to identify FBA items and verifies their Prime template setup.
+</Callout>
+
+## Process Flow Step-by-Step
+
+<Steps>
+  <Step title="Set Parameters" icon="settings" title-type="p">
+    Define source as Amazon and specify subsource account.
+  </Step>
+
+  <Step title="Get Base SKU Data" icon="list" title-type="p">
+    Retrieve Amazon SKU and ASIN.
+  </Step>
+
+  <Step title="Identify FBA Products" icon="tag" title-type="p">
+    Check if item is marked as FBA and assign a flag for FBA status.
+  </Step>
+
+  <Step title="Check Prime Templates" icon="shield-check" title-type="p">
+    Verify if item is assigned to any provided Prime templates and set flags for each template.
+  </Step>
+
+  <Step title="Get Product Price" icon="dollar-sign" title-type="p">
+    Fetch listing price from item price table. Mark missing price as possibly deleted.
+  </Step>
+
+  <Step title="Apply Filters" icon="filter" title-type="p">
+    Include only FBA products and ensure at least one Prime template is assigned.
+  </Step>
+
+  <Step title="Sort Results" icon="sort-asc" title-type="p">
+    Order results by Amazon SKU.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  Report showing:
+
+  - Amazon SKU
+
+  - ASIN
+
+  - FBA status
+
+  - Prime template assignment
+
+  - Product price
+
+  Provides a clear overview of FBA and Prime configuration.
+</Callout>
+
+## Usefulness
+
+- Audits FBA listings
+
+- Ensures Prime eligibility
+
+- Identifies missing template assignments
+
+- Supports listing health checks
+
+- Improves Amazon compliance
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Works only for Amazon channel
+
+  - Depends on correct FBA and template configuration
+
+  - Missing price may indicate inactive or deleted listing
+
+  - Requires accurate parameter setup
+
+  - Read-only script with no data changes
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Amazon Listing Audit Example" default-open="false">
+  Scenario: Manager reviews FBA products and their Prime status
+
+  **Processing:** Identify active FBA SKUs and check Prime template assignment
+
+  **Result:**
+
+  - SKU1 → FBA Yes, Prime Yes, Price 12
+
+  - SKU2 → FBA Yes, Prime No, Price 10
+
+  **Insight:** SKU2 is missing Prime template and requires configuration.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Helps ensure Amazon FBA listings are properly configured for Prime eligibility, enabling better visibility, improved listing performance, and compliance with fulfillment standards.
+</Callout>
+

@@ -1,0 +1,197 @@
+---
+title: Amazon MFN Sales Analysis
+description: >-
+  Analyzes Amazon Merchant Fulfilled Network (MFN) sales over the last 3 months,
+  identifies FBA and Prime-enabled ASINs, and provides pricing, units sold,
+  order count, and stock insights.
+---
+## Overview
+
+The **RIS-SC-1039 – Amazon MFN Sales Analysis** script helps analysts evaluate Amazon FBM (Merchant Fulfilled Network) performance, while also checking for FBA and Prime-enabled listings.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  Understand MFN sales performance, compare FBM with FBA/Prime, and analyze pricing, sales volume, and stock levels.
+</Callout>
+
+---
+
+## Purpose
+
+This script:
+
+- Filters Amazon orders for the last 3 months
+
+- Excludes FBA warehouse orders
+
+- Maps SKUs to ASINs
+
+- Identifies FBA and Prime flags for listings
+
+- Retrieves price and stock data
+
+- Aggregates units sold, orders, and revenue
+
+---
+
+## When It Runs
+
+Used for sales performance analysis, inventory planning, and marketplace strategy reviews.
+
+**Typically runs:**
+
+- Manually executed by analysts
+
+- During monthly Amazon performance reviews
+
+- While comparing FBM vs FBA strategy
+
+- For pricing, inventory, and fulfillment planning
+
+---
+
+## Parameters
+
+<ParamField path="@Source" param-type="string" required="true" deprecated="false">
+  Marketplace source to filter orders .
+</ParamField>
+
+<ParamField path="@Subsource" param-type="string" required="true" deprecated="false">
+  Amazon channel or subsource .
+</ParamField>
+
+<ParamField path="@FBALocationName" param-type="string" required="true" deprecated="false">
+  Warehouse location to exclude FBA orders .
+</ParamField>
+
+<ParamField path="@PrimeTemplate" param-type="string" required="true" deprecated="false">
+  Shipping template name used to flag Prime listings .
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Analysts can modify these parameters to run the report for different Amazon subsources, FBA locations, or Prime templates.
+</Callout>
+
+---
+
+## Simple Explanation
+
+The script pulls Amazon MFN orders from the last 3 months, filters out FBA orders, maps SKUs to ASINs, flags listings as FBA or Prime, adds price and stock information, and produces a detailed sales performance report.
+
+---
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Set Filters" icon="filter" title-type="p">
+    Use the Order table to filter by Source (@Source) and Subsource (@Subsource).
+  </Step>
+
+  <Step title="Apply Date Filter" icon="calendar" title-type="p">
+    Include only orders processed in the last 3 months.
+  </Step>
+
+  <Step title="Filter MFN Orders" icon="x-circle" title-type="p">
+    Exclude FBA warehouse orders using @FBALocationName.
+  </Step>
+
+  <Step title="Map SKU to ASIN" icon="link" title-type="p">
+    Use Stock\_ChannelSKU to map internal SKUs to Amazon ASINs.
+  </Step>
+
+  <Step title="Identify FBA Listings" icon="star" title-type="p">
+    Use item\_additional to detect FBA flag for each ASIN.
+  </Step>
+
+  <Step title="Identify Prime Listings" icon="star" title-type="p">
+    Use download.item with ShippingGroupName matching @PrimeTemplate to flag Prime listings.
+  </Step>
+
+  <Step title="Fetch Price Data" icon="dollar-sign" title-type="p">
+    Retrieve Amazon price from item\_price table.
+  </Step>
+
+  <Step title="Fetch Stock Data" icon="box" title-type="p">
+    Retrieve stock levels from StockLevel for the default warehouse.
+  </Step>
+
+  <Step title="Aggregate Sales Data" icon="bar-chart" title-type="p">
+    Calculate total units sold, number of orders, and revenue for each SKU/ASIN.
+  </Step>
+
+  <Step title="Execute Query" icon="play" title-type="p">
+    Combine all data to generate the final MFN sales performance report.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  The report contains:
+
+  - SKU and ASIN
+
+  - Product price
+
+  - Units sold and order count
+
+  - Total sales (FBM)
+
+  - FBA and Prime flags
+
+  - Current stock levels
+
+  Only MFN orders from the selected subsource are included.
+</Callout>
+
+---
+
+## Usefulness
+
+- **FBM vs FBA Strategy** – Identify products suitable for FBA migration
+
+- **Prime Optimization** – Detect non-Prime high-performing SKUs
+
+- **Inventory Planning** – Align stock levels with sales demand
+
+- **Pricing Analysis** – Evaluate price versus performance
+
+---
+
+## Example Scenario
+
+<Expandable title="High Demand Product Not Prime or FBA" default-open="false">
+  **Scenario:** SKU ABC123 is selling well over the past 3 months.
+
+  - Units Sold: 500
+
+  - FBA: No
+
+  - Prime: No
+
+  - Stock: 10
+
+  **Insight:**\
+  High demand product but not Prime/FBA. Low stock → risk of stockout.
+
+  **Action:**
+
+  - Move product to FBA
+
+  - Enable Prime shipping
+
+  - Increase inventory
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By combining MFN sales, stock, pricing, and FBA/Prime flags, this script provides a complete view of Amazon FBM performance, enabling better decisions for fulfillment strategy, inventory planning, and revenue optimization.
+</Callout>
+
+---
+

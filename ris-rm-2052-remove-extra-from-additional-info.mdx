@@ -1,0 +1,152 @@
+---
+title: Remove Extra from Additional Info
+description: >-
+  Removes unwanted "product_extras" entries from the Additional Info section of
+  order items, cleaning up unnecessary options for order processing.
+---
+## Overview
+
+The **RIS-RM-2052 – Remove Extra from Additional Info** macro scans order items and removes unwanted "product\_extras" entries.
+
+It ensures orders are clean, preventing unnecessary additional options from affecting processing.
+
+<Callout kind="tip" collapsed="false">
+  Make sure property naming ("product\_extras") is correct before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Finds product\_extras in Additional Info
+
+- Removes unwanted entries
+
+- Cleans order item data
+
+- Preserves essential order details
+
+👉 In short:\
+Automatically remove unnecessary product extras from orders.
+
+## When It Runs
+
+Used for order cleanup and data standardization
+
+Typically runs:
+
+- Manual execution
+
+- Bulk cleanup of open orders
+
+- Before picking and packing
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="false" deprecated="false">
+  None – runs automatically on all open orders.
+</ParamField>
+
+## How It Works
+
+<Steps>
+  <Step title="Start Macro" icon="play-circle" title-type="p">
+    Log start message and fetch all open orders using GetOpenOrders.
+  </Step>
+
+  <Step title="Loop Through Orders" icon="list" title-type="p">
+    For each open order, fetch full details using GetOrder.
+  </Step>
+
+  <Step title="Identify Unwanted Additional Info" icon="search" title-type="p">
+    For each item, check if AdditionalInfo.Property equals product\_extras.\
+    Filter items containing this property.
+  </Step>
+
+  <Step title="Remove product_extras" icon="trash" title-type="p">
+    For each matching item:
+
+    - Get pkOptionId of the extra field
+
+    - Call UpdateAdditionalInfo with DeleteEntry = true
+
+    - Use Property as Product\_Extras
+  </Step>
+
+  <Step title="Repeat for All Orders" icon="repeat" title-type="p">
+    Continue processing for all open orders to remove all matching entries.
+  </Step>
+
+  <Step title="Logging" icon="check-circle" title-type="p">
+    Log macro start, completion, and any errors.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - All product\_extras entries removed from order items
+
+  - Orders cleaned from unnecessary additional data
+
+  - Core order and item data remain intact
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Preventing unwanted extras from affecting processing
+
+- Improving data accuracy
+
+- Simplifying picking and packing
+
+- Avoiding confusion from additional options
+
+- Standardizing order data
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Runs on all open orders; use carefully
+
+  - Does not affect essential item data
+
+  - Relies on correct property naming "product\_extras"
+
+  - Deletion is permanent and cannot be reversed automatically
+
+  - Performance may vary with large order volumes
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Remove product_extras Example" default-open="false">
+  Before:
+
+  - Item A Additional Info:
+
+    - Color = Red
+
+    - Size = M
+
+    - product\_extras = Gift Wrap
+
+  After:
+
+  - Item A Additional Info:
+
+    - Color = Red
+
+    - Size = M
+
+    - product\_extras entry removed
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Cleaning unnecessary product extras ensures consistent order data, reduces errors in picking and packing, and improves overall fulfillment efficiency.
+</Callout>
+

@@ -1,0 +1,149 @@
+---
+title: Set Cheapest Shipping Price
+description: >-
+  Automatically select and apply the most cost-effective or suitable shipping
+  method for each order.
+---
+## Overview
+
+The **RIS-RM-1004 – Set Cheapest Shipping Price** macro automatically determines and applies the most suitable shipping method for each order.
+
+It evaluates available shipping options in real-time and selects the best option based on cost efficiency or predefined business rules.
+
+<Callout kind="tip" collapsed="false">
+  Ensure shipping integrations are properly configured to retrieve accurate real-time quotes.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Retrieves available shipping options
+
+- Evaluates them based on cost or business rules
+
+- Applies the most suitable shipping method
+
+👉 In short:\
+Automatically choose the best (usually cheapest) shipping option.
+
+## When It Runs
+
+Used for shipping optimization & automation
+
+Typically runs:
+
+- Manually triggered
+
+- During order processing (before label generation)
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of orders to be processed.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  No additional parameters are required.\
+  The macro automatically determines the optimal shipping option.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Evaluate Orders" icon="search" title-type="p">
+    Retrieve order details such as weight, destination, and current shipping method.
+  </Step>
+
+  <Step title="Retrieve Integrations" icon="settings" title-type="p">
+    Identify all configured shipping providers.
+  </Step>
+
+  <Step title="Get Shipping Quotes" icon="activity" title-type="p">
+    Request real-time shipping rates for each order.
+  </Step>
+
+  <Step title="Apply Selection Logic" icon="filter" title-type="p">
+    ✔ If business rules exist → prioritise preferred services\
+    ✔ Otherwise → select the most cost-effective option
+  </Step>
+
+  <Step title="Apply Shipping Method" icon="truck" title-type="p">
+    Update order with selected shipping service and cost.
+  </Step>
+
+  <Step title="Track Changes" icon="database" title-type="p">
+    Store previous and updated shipping details for auditing.
+  </Step>
+
+  <Step title="Handle Exceptions" icon="alert-circle" title-type="p">
+    If no suitable option is found → flag order for manual review.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Orders assigned optimal shipping method
+
+  - Shipping costs minimized
+
+  - Orders ready for label generation
+
+  - Exceptions clearly identified
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Reducing shipping costs
+
+- Eliminating manual selection effort
+
+- Speeding up order processing
+
+- Ensuring consistent shipping decisions
+
+- Improving visibility of problematic orders
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Requires properly configured shipping integrations
+
+  - Depends on accurate order data (weight, address, etc.)
+
+  - Orders are flagged if no quotes are returned
+
+  - Supports custom business priority rules
+
+  - Does not modify or split order items
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Cheapest Shipping Selection Example" default-open="false">
+  An order requires shipping to a customer.
+
+  👉 The macro:
+
+  - Retrieves multiple shipping quotes
+
+  - Compares available options
+
+  - Selects the cheapest or preferred service
+
+  - Updates the order
+
+  Result: Cost-effective shipping method applied automatically.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By combining real-time shipping data with intelligent selection logic, this macro ensures cost-efficient and consistent shipping decisions across all orders.
+</Callout>
+
+##
+

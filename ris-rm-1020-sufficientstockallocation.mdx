@@ -1,0 +1,144 @@
+---
+title: Sufficient Stock Allocation
+description: >-
+  Automatically verify stock availability in a target fulfilment location and
+  move eligible orders to that location for efficient processing.
+---
+## Overview
+
+The **RIS-RM-1020 – SufficientStockAllocation** macro ensures that orders are routed to the correct fulfilment location based on stock availability.
+
+It checks whether all items in an order are fully available in a predefined warehouse (**FC Location**) and moves eligible orders from the **Default** location.
+
+<Callout kind="tip" collapsed="false">
+  Ensure both "FC Location" and "Default" locations are correctly configured before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Checks stock availability in a target location  
+- Identifies fully fulfilable orders  
+- Moves eligible orders to the correct warehouse  
+- Prevents partial fulfilment issues  
+
+👉 In short:  
+Move orders to a warehouse only if all items are in stock.
+
+## When It Runs
+
+Used for smart order routing and fulfilment optimization
+
+Typically runs:
+
+- Manually triggered (on selected orders)  
+- During order allocation workflows  
+- Before picking and dispatch  
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of order IDs to process.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Note:  
+  - Source location: **Default**  
+  - Target location: **FC Location**  
+  - Locations must exist in the system
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Fetch Locations" icon="map-pin" title-type="p">
+    Retrieve all stock locations and identify:
+    - FC Location (target)  
+    - Default location (current)
+  </Step>
+
+  <Step title="Get FC Inventory" icon="box" title-type="p">
+    Fetch all stock items and availability for FC Location.
+  </Step>
+
+  <Step title="Process Orders" icon="list" title-type="p">
+    Loop through each OrderId and retrieve order details.
+  </Step>
+
+  <Step title="Validate Order" icon="check-circle" title-type="p">
+    Ensure:
+    - Order is open/active  
+    - Order is currently in Default location  
+  </Step>
+
+  <Step title="Check Stock Availability" icon="search" title-type="p">
+    For each item:
+    - Match SKU with FC inventory  
+    - Compare required vs available quantity  
+    - If any item is insufficient → reject order
+  </Step>
+
+  <Step title="Identify Eligible Orders" icon="filter" title-type="p">
+    Mark orders where all items have sufficient stock.
+  </Step>
+
+  <Step title="Move Orders" icon="arrow-right-circle" title-type="p">
+    Transfer eligible orders from Default to FC Location.
+  </Step>
+
+  <Step title="Log Results" icon="file-text" title-type="p">
+    Record execution details including moved and rejected orders.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Orders with sufficient stock are identified  
+  - Eligible orders moved to FC Location  
+  - Only fully fulfilable orders are transferred  
+  - Execution results logged for tracking  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Ensuring accurate warehouse allocation  
+- Preventing partial fulfilment issues  
+- Automating order routing  
+- Improving picking and dispatch efficiency  
+- Optimizing inventory utilization  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Works only if FC Location exists  
+  - Checks stock only in FC Location  
+  - Orders must be in Default location  
+  - Requires full stock availability (no partial movement)  
+  - Uses available stock (not total stock)  
+  - No fallback if item not found in FC inventory  
+  - Processes only selected orders  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Route Orders to Fulfilment Warehouse" default-open="false">
+  Orders are currently assigned to the Default location.
+
+  👉 The macro:
+
+  - Checks stock availability in FC Location  
+  - Identifies fully fulfilable orders  
+  - Moves them to FC Location  
+
+  Result: Orders are routed to the correct warehouse for efficient fulfilment.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Validating stock availability before order movement ensures accurate warehouse allocation, reduces fulfilment delays, and improves operational efficiency.
+</Callout>

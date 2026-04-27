@@ -1,0 +1,130 @@
+---
+title: Invoicing policies
+description: >-
+  Businesses can decide whether to invoice customers at the time of order
+  confirmation or after delivery. Odoo provides flexible invoicing policies to
+  support both approaches based on operational needs.
+---
+Businesses may require different invoicing approaches depending on how they manage orders and deliveries. In some cases, billing happens immediately after an order is confirmed, while in others it is more accurate to invoice based on what has actually been delivered.
+
+To support these scenarios, the **Sales** app provides two invoicing policies:\
+<a href="https://www.odoo.com/documentation/19.0/applications/sales/sales/invoicing/invoicing_policy.html#invoice-on-order" target="_blank" rel="noopener noreferrer">**Invoice what is ordered**</a> and\
+<a href="https://www.odoo.com/documentation/19.0/applications/sales/sales/invoicing/invoicing_policy.html#invoice-on-delivery" target="_blank" rel="noopener noreferrer">**Invoice what is delivered**</a>.
+
+- **Invoice what is ordered**: Customers are billed as soon as the sales order is confirmed.
+
+- **Invoice what is delivered**: Customers are billed only after products or services have been delivered.
+
+The delivery-based method is especially useful for industries dealing with bulk goods or variable quantities, where the final delivered amount may differ from the original order. When a delivery is validated, inventory levels are automatically updated.
+
+## **Configure invoicing policy**
+
+To set the invoicing method:
+
+- Go to **Sales app ‣ Configuration ‣ Settings**
+
+- Scroll to the **Invoicing** section
+
+- Select one of the following:
+
+  - **Invoice what is ordered**
+
+  - **Invoice what is delivered**
+
+- Click **Save**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/invoicing-policy-setting.png" width="768" height="256" alt="Choosing an invoicing policy in the Sales app." />
+
+The selected option is automatically applied to newly created products. For existing products, the policy must be updated manually.
+
+**Important**
+
+When **Invoice what is delivered** is enabled, the **Automatic Invoice** feature cannot be used. Invoices can only be generated after delivery validation.
+
+## **Changing the invoicing policy for existing products**
+
+To update the invoicing policy for a product:
+
+- Navigate to **Sales app ‣ Products ‣ Products**
+
+- Open the desired product
+
+- In the **General Information** tab, locate **Invoicing Policy**
+
+- Select the preferred option from the dropdown
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/invoicing-policy-general-info-tab.png" width="588" height="561" alt="How to change invoicing policy on a product form in the Sales app." />
+
+## **Invoicing based on ordered quantities**
+
+This is the default behavior in the **Sales** app. Once a quotation is confirmed and becomes a sales order, the invoice can be generated immediately.
+
+This method is simple and works well when delivery does not affect billing.
+
+### **Workflow: ordered quantities**
+
+1. Ensure the product is set to **Ordered quantities**
+
+2. Create and confirm a quotation
+
+3. Click **Create Invoice** on the sales order
+
+4. Select the invoice type and generate a draft
+
+5. Confirm the invoice and proceed with payment
+
+### **Example**
+
+A small handmade jewelry business manages its own stock and shipping process. Since fulfillment is straightforward, invoices are issued immediately after order confirmation.
+
+When a customer orders a necklace:
+
+- The quotation is confirmed
+
+- The invoice is generated and sent
+
+- Payment is received
+
+- The product is shipped afterward
+
+## **Invoicing based on delivered quantities**
+
+With this method, invoicing depends on actual delivery. Customers are billed only for the quantity that has been delivered, which is useful when orders are fulfilled in parts or quantities vary.
+
+Odoo tracks both delivered and invoiced quantities directly within the sales order. Partial deliveries are supported, and remaining quantities can be fulfilled later using backorders.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/invoicing-policy-order-lines.png" width="683" height="533" alt="How to see delivered and invoiced quantities on Odoo Sales." />
+
+### **Workflow: delivered quantities**
+
+1. Set the product invoicing policy to **Delivered quantities**
+
+2. Create and confirm a sales order
+
+3. Complete the delivery process
+
+4. Validate the delivery using the **Delivery** smart button
+
+5. Return to the sales order
+
+6. Click **Create Invoice** to generate the invoice
+
+Once at least part of the order is delivered, invoicing becomes available.
+
+**Warning**
+
+If you attempt to create an invoice before confirming delivery, the system will display an error.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/invoicing-policy-error-message.png" width="768" height="314" alt="If Delivered Quantities invoicing policy is chosen, ensure a quantity has been delivered." />
+
+### **Example**
+
+A supplier receives an order for 50 units of a product, but only 40 are available at the time of shipment.
+
+- 40 units are delivered and invoiced
+
+- The remaining 10 units are delivered later
+
+- A second invoice is created for the remaining quantity
+
+This ensures accurate billing based on actual deliveries.

@@ -1,0 +1,102 @@
+---
+title: Receipt printers
+description: >-
+  Receipt printers can be connected to Odoo Point of Sale to automatically print
+  receipts for completed transactions once properly configured.
+---
+## **Supported printers**
+
+**Important**
+
+Epson printers are highly recommended for use with Odoo.
+
+The following printer types are supported:
+
+- **Network printers (ePOS protocol)**\
+  Work without IoT (e.g., Epson TM-m30 iii models 112 or 152)
+
+- **ePOS USB printers**\
+  Require connection through an <a href="https://www.odoo.com/documentation/19.0/applications/general/iot/connect.html" target="_blank" rel="noopener noreferrer">**IoT system**</a>
+
+- **ESC/POS printers**\
+  Must be connected via an <a href="https://www.odoo.com/documentation/19.0/applications/general/iot/connect.html" target="_blank" rel="noopener noreferrer">**IoT system**</a> (USB or network)
+
+**Note**
+
+Bluetooth printers are **not supported** by Odoo.
+
+## **Configuration**
+
+To set up a receipt printer:
+
+1. Connect the printer to a power source
+
+2. Connect it to the network (Wi-Fi or Ethernet)
+
+3. Turn it on
+
+The printer will automatically print a ticket displaying its IP address. Keep this information for setup.
+
+### **Connect printer to POS**
+
+1. Go to **Point of Sale ‣ Configuration ‣ Settings**
+
+2. Scroll to **Connected Devices**
+
+3. Enable **ePos Printers**
+
+4. Enter the printer’s IP address
+
+5. Click **Save**
+
+### **Enable secure communication**
+
+To allow POS to communicate with the printer:
+
+- Enable <a href="https://www.odoo.com/documentation/19.0/applications/sales/point_of_sale/hardware_network/pos_lna.html" target="_blank" rel="noopener noreferrer">**Local Network Access (LNA)**</a>
+
+**or**
+
+- Configure a <a href="https://www.odoo.com/documentation/19.0/applications/sales/point_of_sale/hardware_network/epos_ssc.html#pos-epos-ssc-certificate" target="_blank" rel="noopener noreferrer">**self-signed certificate**</a>
+
+**Directly supported ePOS printers**
+
+The following models are fully tested and recommended:
+
+- **Epson TM-m30 i / ii / iii** (Wi-Fi or Ethernet)
+
+Other Epson printers supporting the **ePOS protocol** may also work.
+
+**Important**
+
+- The printer must support **HTTP mode**
+
+- When using <a href="https://www.odoo.com/documentation/19.0/applications/sales/point_of_sale/hardware_network/pos_lna.html" target="_blank" rel="noopener noreferrer">**LNA**</a>, the printer must have a **static IP address**
+
+## **Printers requiring IoT**
+
+The following models require an IoT system:
+
+- Epson TM-T20 series
+
+- Epson TM-T88 series
+
+- Epson TM-U220 series
+
+## **Troubleshooting**
+
+If issues occur, check the following:
+
+- **Indicator lights**: Use blinking patterns to diagnose problems
+
+- **No IP ticket printed**: Verify network connection (Wi-Fi or cable)
+
+- **Blank receipt**: Check paper roll orientation
+
+- **Connection failure**:
+
+  - Confirm the IP address in Odoo matches the printer
+
+  - Ensure the printer has a static IP assigned
+
+This ensures reliable communication between Odoo POS and your receipt printer.

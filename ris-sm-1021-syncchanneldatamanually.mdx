@@ -1,0 +1,141 @@
+---
+title: Sync Channel Data Manually
+description: >-
+  Manually trigger channel listing synchronization from external sales platforms
+  by calling Linnworks API for selected channels.
+---
+## Overview
+
+The **RIS-SM-1021 – SyncChannelDataManually** macro allows manual triggering of channel data synchronization, specifically for downloading product listings.
+
+It is useful when automatic sync fails or when an on-demand refresh of channel listings is required.
+
+<Callout kind="tip" collapsed="false">
+  Ensure valid channel IDs, source names, and session authorization are configured before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Triggers listing download from external channels  
+- Supports multiple channels in a single execution  
+- Uses direct API calls for synchronization  
+- Provides manual control over channel data  
+
+👉 In short:  
+Manually sync product listings from external sales channels.
+
+## When It Runs
+
+Used for channel synchronization and troubleshooting
+
+Typically runs:
+
+- Manually triggered  
+- When automatic sync fails  
+- When immediate data refresh is required  
+
+## Parameters
+
+<ParamField path="channelIds" param-type="string" required="true" deprecated="false">
+  Comma-separated list of channel IDs.
+</ParamField>
+
+<ParamField path="sourceNames" param-type="string" required="true" deprecated="false">
+  Comma-separated list of channel source names.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Example:  
+  channelIds = "1,2"  
+  sourceNames = "ebay,amazon"  
+
+  Meaning:  
+  Each channelId corresponds to the respective sourceName by index.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Prepare Input Data" icon="settings" title-type="p">
+    Split comma-separated channelIds and sourceNames into structured lists.
+  </Step>
+
+  <Step title="Loop Through Channels" icon="repeat" title-type="p">
+    Iterate through each channel and map channelId with corresponding sourceName.
+  </Step>
+
+  <Step title="Prepare API Request" icon="code" title-type="p">
+    Configure API endpoint, method (POST), and headers including authorization.
+  </Step>
+
+  <Step title="Build Request Payload" icon="edit" title-type="p">
+    Prepare request body with:
+    - channelId  
+    - source  
+    - propertyName = DownloadListings  
+    - functionName = DownloadListings  
+  </Step>
+
+  <Step title="Execute API Call" icon="send" title-type="p">
+    Send HTTP POST request to Linnworks API and wait for response.
+  </Step>
+
+  <Step title="Repeat for All Channels" icon="layers" title-type="p">
+    Perform synchronization for each provided channel.
+  </Step>
+
+  <Step title="Log Execution" icon="file-text" title-type="p">
+    Track execution process (response logging currently disabled).
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Channel listing download triggered successfully  
+  - Listings synced from external platforms  
+  - Multiple channels processed in one run  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Manually controlling channel synchronization  
+- Fixing delayed or failed listing updates  
+- Supporting multi-channel operations  
+- Reducing dependency on UI-based sync  
+- Improving data consistency across platforms  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - channelIds and sourceNames must align correctly  
+  - Supports only listing download (DownloadListings)  
+  - No validation for mismatched parameter lengths  
+  - No retry mechanism for failed API calls  
+  - Requires valid Linnworks session token  
+  - API response logging is currently disabled  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Manual Channel Sync Trigger" default-open="false">
+  Listings from a sales channel are outdated due to sync failure.
+
+  👉 The macro:
+
+  - Accepts channel IDs and source names  
+  - Triggers DownloadListings via API  
+  - Refreshes listing data  
+
+  Result: Channel listings are updated without waiting for automatic sync.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Direct API-triggered synchronization ensures reliable control over channel data updates, improving consistency and reducing delays across integrated sales platforms.
+</Callout>

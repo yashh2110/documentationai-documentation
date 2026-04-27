@@ -1,0 +1,137 @@
+---
+title: Mark Order Process Shipping Label Printed
+description: >-
+  Automatically process orders after a defined time interval once their shipping
+  label has been printed, ensuring controlled and accurate workflow execution.
+---
+## Overview
+
+The **RIS-SM-1016 – MarkOrderProcessShippingLabelPrinted** macro automates order processing based on shipping label activity.
+
+It monitors when a label is printed and processes the order only after a specified delay, ensuring proper workflow sequencing.
+
+<Callout kind="tip" collapsed="false">
+  Schedule this macro for best results to maintain continuous and automated order processing.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Detects orders with printed shipping labels  
+- Applies a time-based delay  
+- Processes eligible orders automatically  
+- Ensures workflow accuracy  
+
+👉 In short:  
+Process orders automatically after label printing and a defined delay.
+
+## When It Runs
+
+Used for post-shipping automation
+
+Typically runs:
+
+- Scheduled (recommended)  
+- Manually triggered (if required)  
+- After shipping label generation  
+
+## Parameters
+
+<ParamField path="minutes" param-type="number" required="true" deprecated="false">
+  Time delay (in minutes) after label printing before processing the order.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Example:  
+  minutes = 30  
+
+  Meaning:  
+  Orders will be processed 30 minutes after label printing.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Fetch Open Orders" icon="download" title-type="p">
+    Retrieve all open orders from the system.
+  </Step>
+
+  <Step title="Filter Eligible Orders" icon="filter" title-type="p">
+    Select orders where:
+    - Shipping label is printed  
+    - No label errors exist  
+  </Step>
+
+  <Step title="Retrieve Audit Logs" icon="file-text" title-type="p">
+    Fetch audit trail data in batches (50 orders per batch).
+  </Step>
+
+  <Step title="Identify Label Print Event" icon="search" title-type="p">
+    Locate audit event: SHIPPING_LABEL_  
+    Extract the label print timestamp.
+  </Step>
+
+  <Step title="Validate Time Condition" icon="clock" title-type="p">
+    Calculate time difference:  
+    Current Time − Label Printed Time  
+    If greater than configured minutes → eligible for processing.
+  </Step>
+
+  <Step title="Process Orders" icon="check-circle" title-type="p">
+    Send eligible orders for batch processing and mark them as processed.
+  </Step>
+
+  <Step title="Handle Failures" icon="alert-circle" title-type="p">
+    Log any orders that fail during processing.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Orders processed automatically after delay  
+  - Only label-printed orders are considered  
+  - Controlled and accurate workflow execution  
+  - Failures logged for review  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Eliminating manual order processing  
+- Ensuring consistent shipping workflows  
+- Preventing premature order processing  
+- Improving warehouse efficiency  
+- Automating post-label operations  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Works only for orders where LabelPrinted = true  
+  - Relies on audit event SHIPPING_LABEL_  
+  - No null check for label print timestamp (may cause errors)  
+  - Processes all eligible open orders (performance impact possible)  
+  - Uses batch size of 50 due to API limits  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Auto Process Orders After Label Printing" default-open="false">
+  Orders have shipping labels printed but should not be processed immediately.
+
+  👉 The macro:
+
+  - Detects label print event  
+  - Waits for defined time (e.g., 30 minutes)  
+  - Processes eligible orders automatically  
+
+  Result: Orders are processed at the right time without manual intervention.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Combining audit trail tracking with time-based automation ensures orders are processed only when ready, improving accuracy and preventing premature workflow execution.
+</Callout>

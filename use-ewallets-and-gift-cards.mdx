@@ -1,0 +1,189 @@
+---
+title: Use eWallets and gift cards
+description: >-
+  Odoo allows customers to pay using eWallet balances and gift cards, both
+  online and in physical stores. These tools help manage prepaid credits and
+  improve customer flexibility during checkout.
+
+
+  To enable this feature, go to Sales app ‣ Configuration ‣ Settings and
+  activate Discounts, Loyalty & Gift Card under the Pricing section. Then,
+  navigate to Sales app ‣ Products ‣ Gift cards & eWallet to create programs.
+---
+## **eWallets**
+
+eWallets allow customers to store prepaid credit in their account, which can later be used as a payment method in eCommerce or Point of Sale (PoS). They can also be used to consolidate balances from multiple gift cards.
+
+Before setting up an eWallet program, you must first create a **top-up product**. A top-up represents a fixed credit amount that a customer purchases and adds to their eWallet balance.
+
+**Example**
+
+A $50 top-up product adds $50 in credit to the customer’s eWallet after purchase.
+
+### **Create a top-up product**
+
+1. Go to **Sales app ‣ Products ‣ Products**.
+
+2. Click **Create** and configure:
+
+- **Product Name**: e.g., `$50 Top-Up`
+
+- **Can be Sold**: enabled
+
+- **Product Type**: Service
+
+- **Invoicing Policy**: Prepaid/Fixed Price
+
+- **Create on Order**: Nothing
+
+- **Sales Price**: set the desired amount
+
+**Note**
+
+To offer multiple top-up values, create separate products with different prices.
+
+### **Create an eWallet program**
+
+Go to **Sales app ‣ Products ‣ Gift cards & eWallet** and click **Create**, then configure:
+
+- **Program Name**
+
+- **Program Type**: eWallet
+
+- **eWallet Products**: select your top-up product(s)
+
+- **Email Template**: choose or create one
+
+- **Currency**
+
+- **Company**
+
+- **Available On**: select where it can be used
+
+- **Website / Point of Sale**: optional filters
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/ewallet-configuration.png" width="768" height="518" alt="eWallet program configuration page" />
+
+### **Generate and manage eWallets**
+
+After saving the program:
+
+1. Click **Generate eWallet**.
+
+2. Select **Customers** or **Customer Tags**.
+
+3. Set the **eWallet value**.
+
+4. Optionally define an expiration date.
+
+Generated eWallets are available via the **eWallets** smart button.
+
+From there, you can:
+
+- **Send** them by email
+
+- **Share** them via a link
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/ewallet-share.png" width="768" height="130" alt="eWallets send and share buttons" />
+
+You can edit:
+
+- Expiration date
+
+- Assigned customer
+
+- Balance
+
+**Note**
+
+The eWallet **code cannot be modified, deleted, or duplicated**.
+
+## **Gift cards**
+
+Gift cards function similarly to eWallets but are typically purchased as standalone prepaid products and used directly at checkout.
+
+### **Create a gift card product**
+
+Before creating a program, define the gift card as a product:
+
+1. Go to **Sales app ‣ Products ‣ Products**.
+
+2. Click **Create** and configure:
+
+- **Product Name**
+
+- **Can be Sold**: enabled
+
+- **Product Type**: Service
+
+- **Invoicing Policy**: Prepaid/Fixed Price
+
+- **Create on Order**: Nothing
+
+- **Sales Price**: set the card value
+
+**Note**
+
+Create multiple products if you want different gift card values.
+
+### **Create a gift card program**
+
+Go to **Sales app ‣ Products ‣ Gift cards & eWallet** and click **Create**, then set:
+
+- **Program Name**
+
+- **Program Type**: Gift Card
+
+- **Gift Card Products**
+
+- **Email Template** (default or custom)
+
+- **Print Report**: Gift Card
+
+- **Currency**
+
+- **Company**
+
+- **Available On**
+
+- **Website / Point of Sale**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/giftcard-configuration.png" width="768" height="568" alt="Gift card program configuration page" />
+
+### **Generate and distribute gift cards**
+
+After configuration:
+
+1. Click **Generate Gift Cards**.
+
+2. Choose:
+
+   - **Anonymous Customers** (set quantity), or
+
+   - **Selected Customers / Tags**
+
+3. Define the **Gift Card value**
+
+4. Set an optional expiration date
+
+Access generated cards using the **Gift Cards** smart button.
+
+From there, you can:
+
+- **Send** via email
+
+- **Share** via link
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/giftcard-share.png" width="768" height="133" alt="Gift cards send and share buttons" />
+
+You can update:
+
+- Expiration date
+
+- Customer
+
+- Balance
+
+**Note**
+
+Gift card **codes are fixed and cannot be edited, removed, or duplicated**.

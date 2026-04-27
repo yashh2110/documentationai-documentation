@@ -1,0 +1,104 @@
+---
+title: Online payment order confirmation
+description: >-
+  Allow customers to confirm sales orders through secure online payments in
+  Odoo, improving speed and reducing manual follow-ups.
+---
+The Odoo *Sales* application enables customers to confirm quotations instantly by completing an online payment. Once the payment is successfully processed, the order is automatically validated, and the assigned salesperson is notified.
+
+This approach streamlines the sales process by combining confirmation and payment into a single step.
+
+## **Activate online payments**
+
+To allow customers to confirm orders using online payment, the feature must first be enabled.
+
+- Navigate to **Sales app ‣ Configuration ‣ Settings**
+
+- Scroll to **Quotations & Orders**
+
+- Enable the **Online Payment** option
+
+- Click **Save**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/online-payment-setting.png" width="729" height="437" alt="The online payment setting in the Odoo Sales application." />
+
+> **Info**
+>
+> Once activated, online payment can be configured globally and then selectively applied to quotations or templates.
+
+Beneath this option, the **Default Quotation Validity** field allows you to define how long quotations remain valid by default.
+
+To enable online payment on a specific quotation:
+
+- Open the quotation
+
+- Go to the **Other Info** tab
+
+- Enable the **Payment** option under **Online confirmation**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/online-payment-option-quotation.png" width="731" height="627" alt="The online payment setting on a standard quotation in Odoo Sales." />
+
+To apply it on quotation templates:
+
+- Open or create a template
+
+- Enable **Payment** under **Online confirmation**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/online-payment-option-quotation-template.png" width="731" height="495" alt="The online payment setting on quotation template forms in Odoo Sales." />
+
+> **Tip**
+>
+> Enable online payment directly in quotation templates to standardize your sales process and avoid manual configuration for each quote.
+
+## **Payment providers**
+
+After enabling online payments, a **Payment Providers** link becomes available in the settings.
+
+This page allows you to:
+
+- Enable different payment gateways
+
+- Configure payment methods
+
+- Control availability and visibility
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/payment-providers-page.png" width="733" height="337" alt="Payment providers page in Odoo Sales." />
+
+**See also**
+
+**Online payments**
+
+> **Info**
+>
+> Only configured and published payment providers will be visible to customers during checkout.
+
+## **Register a payment**
+
+When customers access a quotation via the portal, they can confirm it by clicking **Accept & Pay**.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/accept-and-pay-button.png" width="726" height="275" alt="The accept and pay button on an online quotation in Odoo Sales." />
+
+This opens a **Validate Order** window, where available payment methods are displayed under the **Pay with** section.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/validate-order-pay-with.png" width="692" height="631" alt="How to register a payment on a validate order pop-up window in Odoo Sales." />
+
+> **Note**
+>
+> Only active and published payment methods appear in this step.
+
+After selecting a payment method, the customer clicks **Pay** to complete the transaction.
+
+Once completed:
+
+- The quotation is automatically confirmed
+
+- The salesperson receives a notification
+
+- The order progresses to the next stage
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/payment-confirmation-notification-chatter.png" width="505" height="428" alt="Sample of notification that appears in the chatter when an online payment is made." />
+
+> **Tip**
+>
+> Combining online payment with online signature provides a fully automated confirmation flow, reducing delays and manual intervention.
+

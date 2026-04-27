@@ -1,0 +1,196 @@
+---
+title: Sales & Stock Summary Report (Date-wise SKU Performance)
+description: >-
+  Provides a combined view of sales performance and stock position per SKU,
+  including sold quantity, revenue, cost, stock levels, and category insights.
+---
+
+## Overview
+
+The **Sales & Stock Summary Report** combines order data with inventory data to give a complete picture of SKU performance.
+
+It shows how much was sold, how much it cost, and what stock remains—making it ideal for operational and financial analysis.
+
+<Callout kind="tip" collapsed="false">
+  This report merges sales and inventory data, helping you track both performance and stock position in one place.
+</Callout>
+
+---
+
+## Purpose
+
+This report:
+
+- Tracks SKU-level sales performance  
+- Calculates revenue and cost of goods sold  
+- Displays current stock levels and value  
+- Provides category and source-level insights  
+
+👉 In short:  
+See sales, cost, and stock together for better decision-making.
+
+---
+
+## When It Runs
+
+Executed on-demand (SQL report)  
+
+Typically used:
+
+- Daily/weekly sales analysis  
+- Inventory planning  
+- Profitability tracking  
+- Stock monitoring  
+- Category performance analysis  
+
+---
+
+## Parameters
+
+<ParamField path="FromDate" param-type="date" required="true">
+  Start date for the report.
+</ParamField>
+
+<ParamField path="ToDate" param-type="date" required="true">
+  End date for the report.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  The report converts dates to GMT timezone and includes the full end date.
+</Callout>
+
+---
+
+## How It Works
+
+<Steps>
+  <Step title="Filter Paid Orders" icon="filter" title-type="p">
+    Selects orders with valid statuses (Paid/Processed) within the date range.
+  </Step>
+
+  <Step title="Convert Timezone" icon="clock" title-type="p">
+    Converts order date from UTC to GMT for accurate reporting.
+  </Step>
+
+  <Step title="Fetch Order Lines" icon="list" title-type="p">
+    Retrieves SKU-level order details including quantity, price, and cost.
+  </Step>
+
+  <Step title="Exclude Composite Items" icon="slash" title-type="p">
+    Filters out composite (bundle) items to avoid duplication.
+  </Step>
+
+  <Step title="Map SKU Categories" icon="tag" title-type="p">
+    Links each SKU to its product category.
+  </Step>
+
+  <Step title="Fetch Latest Stock Data" icon="database" title-type="p">
+    Retrieves the latest stock level and stock value from StockChange.
+  </Step>
+
+  <Step title="Get Stock Level Details" icon="layers" title-type="p">
+    Fetches:
+    - Minimum stock level  
+    - Quantity in order book  
+    - Available stock  
+  </Step>
+
+  <Step title="Calculate Sales Metrics" icon="bar-chart" title-type="p">
+    Computes:
+    - Sold Quantity  
+    - Sales Value (Qty × Price)  
+    - Stock Value Sold (Qty × Cost)  
+  </Step>
+
+  <Step title="Aggregate Results" icon="grid" title-type="p">
+    Groups data by date, source, and SKU.
+  </Step>
+
+  <Step title="Sort Output" icon="arrow-down" title-type="p">
+    Orders results by date, source, and SKU.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - SKU-wise sales performance  
+
+  - Sold quantity and revenue  
+
+  - Cost of goods sold  
+
+  - Current stock level and value  
+
+  - Available and minimum stock levels  
+
+  - Category and source insights  
+
+  - Currency information  
+</Callout>
+
+---
+
+## Usefulness
+
+This report is highly beneficial for:
+
+- Sales and inventory analysis  
+- Profitability tracking (Revenue vs Cost)  
+- Stock planning and replenishment  
+- Identifying fast/slow-moving products  
+- Category-level performance insights  
+
+---
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Only non-composite SKUs are included  
+
+  - Timezone conversion is applied (UTC → GMT)  
+
+  - Stock values are based on latest StockChange record  
+
+  - Postage is taken at order level (may not distribute per SKU)  
+
+  - StockAvailable = Quantity - InOrderBook  
+
+  - Missing stock values fallback to PurchasePrice calculation  
+
+  - Multiple locations are not separated in this report  
+</Callout>
+
+---
+
+## Example Scenario
+
+<Expandable title="Sales and Stock Analysis Example" default-open="false">
+  Scenario:
+
+  - SKU A sold → 10 units  
+  - Selling price → £20  
+  - Purchase cost → £12  
+  - Current stock → 50 units  
+
+  👉 The report shows:
+
+  - Sold Quantity → 10  
+  - Sold Value → £200  
+  - Stock Value Sold → £120  
+  - Stock Level → 50  
+  - Stock Value → Based on latest valuation  
+
+  Insight:  
+  You can instantly see revenue, cost, and remaining stock in one view.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This report bridges the gap between sales and inventory by combining transactional data with real-time stock information. It enables smarter decisions by showing not just what was sold, but also its cost impact and current stock position.
+</Callout>

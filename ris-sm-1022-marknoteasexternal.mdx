@@ -1,0 +1,130 @@
+---
+title: Mark Note As External
+description: >-
+  Convert internal order notes into external notes for specific orders by
+  updating note visibility using predefined filters.
+---
+## Overview
+
+The **RIS-SM-1022 – MarkNoteAsExternal** macro updates order notes by converting internal (hidden) notes into external (visible) notes.
+
+It operates on filtered orders and ensures that important notes become accessible to external systems or users.
+
+<Callout kind="tip" collapsed="false">
+  Use this macro carefully, as it converts all internal notes to external without selective filtering.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Retrieves order notes  
+- Identifies internal notes  
+- Converts them into external notes  
+- Updates note visibility automatically  
+
+👉 In short:  
+Make internal notes visible externally.
+
+## When It Runs
+
+Used for note visibility correction
+
+Typically runs:
+
+- Manually triggered  
+- During order correction workflows  
+- When external visibility of notes is required  
+
+## Parameters
+
+<Callout kind="info" collapsed="false">
+  No input parameters required  
+
+  Note:  
+  The macro uses predefined filters:
+  - Source = **BIGCOMMERCE**  
+  - Specific Location ID (hardcoded in code)  
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Fetch Open Orders" icon="download" title-type="p">
+    Retrieve open orders from a specific location.
+  </Step>
+
+  <Step title="Filter Orders" icon="filter" title-type="p">
+    Select orders where:
+    - Source = BIGCOMMERCE  
+  </Step>
+
+  <Step title="Retrieve Notes" icon="file-text" title-type="p">
+    Fetch all notes associated with the selected order.
+  </Step>
+
+  <Step title="Identify Internal Notes" icon="search" title-type="p">
+    Check for notes where Internal = true.
+  </Step>
+
+  <Step title="Convert to External" icon="edit" title-type="p">
+    Update notes by setting:
+    - Internal = false  
+  </Step>
+
+  <Step title="Save Updates" icon="save" title-type="p">
+    Save updated notes back to the order using the API.
+  </Step>
+
+  <Step title="Log Execution" icon="file-text" title-type="p">
+    Track execution progress and updates.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Internal notes converted to external notes  
+  - Notes become visible to external systems/users  
+  - Targeted orders updated successfully  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Fixing incorrectly marked internal notes  
+- Improving communication transparency  
+- Making notes visible to customers or sales channels  
+- Supporting manual data correction workflows  
+- Enhancing operational visibility  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Works only for filtered orders (Source & Location based)  
+  - Converts all internal notes (no selective filtering)  
+  - No validation of note content  
+  - Overwrites existing note visibility  
+  - Uses hardcoded filters (not dynamic)  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Convert Internal Notes to External" default-open="false">
+  Some orders contain important notes marked as internal.
+
+  👉 The macro:
+
+  - Retrieves order notes  
+  - Identifies internal ones  
+  - Converts them to external  
+
+  Result: Notes become visible to external users and systems.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Converting internal notes to external improves visibility and communication but should be used carefully to avoid exposing sensitive information.
+</Callout>

@@ -1,0 +1,187 @@
+---
+title: Tradeplace To Linnworks Sync
+description: >-
+  Syncs product availability from Linnworks to TradePlace, retrieves confirmed
+  stock, and uploads a CSV via FTP automatically for supplier validation.
+---
+## Overview
+
+The **RIS-RM-2176 – Tradeplace To Linnworks Sync&#x20;**&#x6D;acro fetches product data from Linnworks based on supplier and extended properties, sends availability requests to TradePlace, retrieves confirmed stock quantities, generates a CSV file, and uploads it to an FTP server.
+
+<Callout kind="tip" collapsed="false">
+  Automates supplier stock confirmation and FTP export for seamless integration.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Fetches product data from Linnworks by supplier name
+
+- Sends XML availability requests to TradePlace API
+
+- Receives confirmed quantities
+
+- Generates CSV from updated DataTable
+
+- Uploads the CSV to an FTP server
+
+👉 In short:\
+Syncs product availability from Linnworks → TradePlace → FTP automatically.
+
+## When It Runs
+
+Typically used:
+
+- Scheduled or manual execution
+
+- Before order processing
+
+- During stock validation workflows
+
+- On daily/hourly automation
+
+- When checking supplier availability
+
+- Before sending orders to suppliers
+
+## Parameters
+
+<ParamField path="tradePlaceEndpoint" param-type="string" required="true" deprecated="false">
+  TradePlace API URL
+</ParamField>
+
+<ParamField path="maximumQtyToCheckAvailability" param-type="string" required="true" deprecated="false">
+  Maximum quantity to check availability per item
+</ParamField>
+
+<ParamField path="tradePlaceUsername" param-type="string" required="true" deprecated="false">
+  TradePlace API username
+</ParamField>
+
+<ParamField path="tradePlacePassword" param-type="string" required="true" deprecated="false">
+  TradePlace API password
+</ParamField>
+
+<ParamField path="toEmail" param-type="string" required="true" deprecated="false">
+  Receiver email in TradePlace XML
+</ParamField>
+
+<ParamField path="fromEmail" param-type="string" required="true" deprecated="false">
+  Sender email in TradePlace XML
+</ParamField>
+
+<ParamField path="forwarderEmail" param-type="string" required="true" deprecated="false">
+  Forwarder email in TradePlace XML
+</ParamField>
+
+<ParamField path="replyToEmail" param-type="string" required="true" deprecated="false">
+  Reply-to email in TradePlace XML
+</ParamField>
+
+<ParamField path="FTPServer" param-type="string" required="true" deprecated="false">
+  FTP server address
+</ParamField>
+
+<ParamField path="FTPUser" param-type="string" required="true" deprecated="false">
+  FTP username
+</ParamField>
+
+<ParamField path="FTPPassword" param-type="string" required="true" deprecated="false">
+  FTP password
+</ParamField>
+
+<ParamField path="FTPPort" param-type="int" required="true" deprecated="false">
+  FTP port number
+</ParamField>
+
+<ParamField path="FTPSSL" param-type="bool" required="true" deprecated="false">
+  Enable/disable FTP SSL
+</ParamField>
+
+<ParamField path="FTPUploadFolder" param-type="string" required="true" deprecated="false">
+  FTP destination folder
+</ParamField>
+
+<ParamField path="FTPuploadFileName" param-type="string" required="true" deprecated="false">
+  CSV file name to upload
+</ParamField>
+
+<ParamField path="supplierName" param-type="string" required="true" deprecated="false">
+  Supplier name filter for Linnworks data
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Note: Parameters control API communication, supplier filtering, and FTP upload.
+</Callout>
+
+## Simple Explanation
+
+This macro retrieves products from Linnworks, sends them to TradePlace for stock confirmation, updates the DataTable with confirmed quantities, generates a CSV file, and uploads it to FTP automatically.
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Initialize Macro" icon="play-circle" title-type="p">
+    Log start and initialize variables.
+  </Step>
+
+  <Step title="Fetch Linnworks Data" icon="database" title-type="p">
+    Execute custom script query filtering by supplierName and store results in a DataTable.
+  </Step>
+
+  <Step title="Build TradePlace XML Request" icon="file-code" title-type="p">
+    Construct XML request with item EANs, requested quantities, and customer info.
+  </Step>
+
+  <Step title="Send XML Request" icon="send" title-type="p">
+    Authenticate and POST XML to TradePlace API endpoint.
+  </Step>
+
+  <Step title="Parse Response XML" icon="file-text" title-type="p">
+    Extract confirmed quantities and update DataTable.
+  </Step>
+
+  <Step title="Generate CSV" icon="file-csv" title-type="p">
+    Convert DataTable to CSV and save locally.
+  </Step>
+
+  <Step title="Upload CSV to FTP" icon="upload" title-type="p">
+    Use FTP proxy to upload CSV to configured FTP server.
+  </Step>
+
+  <Step title="Logging & Error Handling" icon="alert-triangle" title-type="p">
+    Log errors, skipped items, and macro completion.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  CSV file uploaded via FTP with confirmed stock quantities:
+</Callout>
+
+## Usefulness
+
+- Supplier Integration – Fetches real-time supplier stock
+
+- Automation – Eliminates manual stock checks
+
+- FTP Export – Provides ready-to-use CSV for downstream processes
+
+- Data Accuracy – Ensures correct quantities per item and supplier
+
+## Example Scenario
+
+<Expandable title="Supplier Stock Sync Example" default-open="false">
+  **Scenario:** Need to validate supplier stock before processing orders.\
+  **Action:** Fetch products → Send availability request → Parse response → Generate CSV → Upload via FTP.\
+  **Result:** Accurate stock data available for order processing.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Automating supplier stock sync ensures real-time availability validation, reduces errors, and maintains system-wide inventory accuracy.
+</Callout>
+

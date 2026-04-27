@@ -1,0 +1,127 @@
+---
+title: Multi-Shipment Tracking Report
+description: >-
+  Retrieves package-level tracking details for orders, identifies multiple shipments
+  per order, and provides carrier and service information for detailed tracking.
+---
+## Overview
+
+The **RIS-SC-1032 – Multi-Shipment Tracking Report** script helps analysts and support teams track orders shipped in multiple packages.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  Shows detailed tracking information for each package when an order is split into multiple shipments.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Retrieves package-level tracking for orders  
+- Identifies multiple shipments per order  
+- Includes carrier and service information  
+
+---
+
+## When It Runs
+
+Used for shipment tracking, customer support, and operational audits.
+
+**Typically runs:**
+
+- Manually executed by analysts or support teams  
+- During shipment tracking audits  
+- For customer support queries  
+- While investigating missing tracking numbers  
+- For multi-package shipment analysis  
+
+---
+
+## Parameters
+
+<ParamField path="None" param-type="fixed" required="false" deprecated="false">
+  No parameters; the script uses existing shipment data.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  The script does not filter records and returns all eligible shipments.
+</Callout>
+
+---
+
+## Simple Explanation
+
+The script links shipment packages to orders, retrieves tracking numbers, shows carrier and service details, and highlights multiple shipments per order.
+
+---
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Link Shipment to Order Items" icon="link" title-type="p">
+    Connect shipment data with order items for proper association.
+  </Step>
+
+  <Step title="Link to Order" icon="list" title-type="p">
+    Retrieve order ID and associated carrier information.
+  </Step>
+
+  <Step title="Get Package Tracking" icon="tag" title-type="p">
+    Fetch tracking numbers for each shipment package.
+  </Step>
+
+  <Step title="Get Carrier Details" icon="map-pin" title-type="p">
+    Resolve shipping carrier and service names.
+  </Step>
+
+  <Step title="Exclude Internal Shipments" icon="x-circle" title-type="p">
+    Remove shipments without valid external carriers to ensure relevance.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+The script generates a report containing:
+
+- Order ID  
+- Tracking number(s)  
+- Carrier  
+- Shipping service  
+
+Multiple tracking numbers per order are shown when applicable.
+</Callout>
+
+---
+
+## Usefulness
+
+- **Multi-Package Tracking** – Tracks orders split into multiple shipments  
+- **Customer Support** – Provides accurate tracking information  
+- **Shipment Visibility** – Enables package-level monitoring  
+- **Carrier Validation** – Ensures shipments use valid carriers  
+
+---
+
+## Example Scenario
+
+<Expandable title="Multi-Package Order Tracking Example" default-open="false">
+**Scenario:** Order shipped in multiple packages  
+
+- Order 5001 has two packages  
+- Tracking TRK001 for the first package  
+- Tracking TRK002 for the second package  
+
+**Insight:**  
+One order can have multiple tracking numbers, allowing each package to be tracked individually.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+By providing package-level tracking details, this script improves shipment visibility, enhances customer communication, and ensures accurate tracking for multi-package orders.
+</Callout>

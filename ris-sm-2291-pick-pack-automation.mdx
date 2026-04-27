@@ -1,0 +1,190 @@
+---
+title: 'Pick & Pack Automation '
+description: >-
+  Automates warehouse document generation by retrieving orders, creating Packing
+  List and Pick List PDFs, and uploading them to an SFTP server for seamless
+  fulfilment operations.
+---
+## Overview
+
+The **RIS-SM-2291 – Pick & Pack Automation&#x20;**&#x6D;acro streamlines warehouse operations by generating essential picking and packing documents and delivering them directly to an SFTP server.
+
+It ensures that warehouse teams always have the required documents ready without manual effort.
+
+<Callout kind="tip" collapsed="false">
+  Ensure the correct ViewName and LocationName are configured before running the macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Retrieves orders from a specific view
+
+- Generates Packing List and Pick List PDFs
+
+- Uploads files to an SFTP server
+
+👉 In short:\
+Fetch orders → generate PDFs → upload to SFTP.
+
+## When It Runs
+
+Used for warehouse document automation
+
+Typically runs:
+
+- Manually or via scheduler
+
+- During daily warehouse operations
+
+- Before picking and packing
+
+- For specified fulfilment workflows
+
+- During document export processes
+
+## Parameters
+
+<ParamField path="ViewName" param-type="string" required="true" deprecated="false">
+  Linnworks order view name.
+</ParamField>
+
+<ParamField path="LocationName" param-type="string" required="true" deprecated="false">
+  Stock location to filter orders.
+</ParamField>
+
+<ParamField path="SFTP_server" param-type="string" required="true" deprecated="false">
+  SFTP server address.
+</ParamField>
+
+<ParamField path="SFTP_user" param-type="string" required="true" deprecated="false">
+  SFTP username.
+</ParamField>
+
+<ParamField path="SFTP_password" param-type="string" required="true" deprecated="false">
+  SFTP password.
+</ParamField>
+
+<ParamField path="SFTP_fullPath" param-type="string" required="true" deprecated="false">
+  Destination folder path on SFTP server.
+</ParamField>
+
+<ParamField path="SFTP_port" param-type="int" required="true" deprecated="false">
+  SFTP port number.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Both ViewName and LocationName must match existing configurations for successful execution.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Validate Location" icon="map-pin" title-type="p">
+    Confirms that the provided stock location exists in the system.
+  </Step>
+
+  <Step title="Validate View" icon="check-circle" title-type="p">
+    Retrieves available views and validates the provided ViewName.
+  </Step>
+
+  <Step title="Fetch Orders" icon="download" title-type="p">
+    Retrieves open orders from the selected view and filters them by location.
+  </Step>
+
+  <Step title="Generate Packing List" icon="file-text" title-type="p">
+    Creates a Packing List PDF using predefined templates.
+  </Step>
+
+  <Step title="Generate Pick List" icon="list" title-type="p">
+    Generates a Pick List PDF for warehouse picking operations.
+  </Step>
+
+  <Step title="Prepare Files" icon="folder" title-type="p">
+    Formats file names and prepares SFTP destination paths.
+  </Step>
+
+  <Step title="Upload to SFTP" icon="upload" title-type="p">
+    Sends generated PDFs to the SFTP server using API integration.
+  </Step>
+
+  <Step title="Logging & Validation" icon="file-text" title-type="p">
+    Logs success, failures, and ensures traceability of operations.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Packing List PDF generated
+
+  - Pick List PDF generated
+
+  - Files uploaded to SFTP server
+
+  - Orders ready for warehouse processing
+
+  - Full logging for traceability
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Warehouse automation
+
+- Faster picking and packing workflows
+
+- Reducing manual document handling
+
+- Ensuring consistent document formats
+
+- Seamless SFTP integration
+
+- Improving operational efficiency
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - ViewName must exist in Linnworks
+
+  - LocationName must be valid
+
+  - Incorrect SFTP details will cause upload failure
+
+  - Files are generated per execution, not per order
+
+  - Logging should be monitored for failures
+</Callout>
+
+## Example Scenario
+
+<Expandable title=" Daily Processing Example" default-open="false">
+  Scenario:
+
+  - View: Daily Orders
+
+  - Location: Main Warehouse
+
+  👉 The macro:
+
+  - Fetches all relevant orders
+
+  - Generates Packing List and Pick List PDFs
+
+  - Uploads both files to SFTP
+
+  Result:
+
+  - specified-PackingList.pdf → Uploaded
+
+  - specified-PickList.pdf → Uploaded
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By combining order retrieval, document generation, and SFTP upload into a single automated flow, this macro eliminates manual work, reduces errors, and ensures smooth warehouse operations.
+</Callout>
+

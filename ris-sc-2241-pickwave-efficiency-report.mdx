@@ -1,0 +1,137 @@
+---
+title: Pickwave Efficiency Report
+description: >-
+  Evaluate the performance of each pickwave by analyzing time taken, number of
+  items, and orders handled to measure warehouse efficiency.
+---
+## Overview
+
+The **RIS-SC-2241 – Pickwave Efficiency Report&#x20;**&#x70;rovides a detailed breakdown of each picking batch (pickwave), helping identify efficiency, workload distribution, and operational performance.
+
+<Callout kind="tip" collapsed="false">
+  Use date filters to focus on specific operational periods for better insights into pickwave performance.
+</Callout>
+
+## Purpose
+
+This report:
+
+- Evaluates efficiency per pickwave
+
+- Tracks time taken for each batch
+
+- Measures items and orders processed
+
+- Identifies bottlenecks in picking operations
+
+👉 In short:\
+Analyze pickwave → measure time & work → evaluate efficiency.
+
+## When It Runs
+
+Typically executed:
+
+- Daily warehouse performance reviews
+
+- Pickwave efficiency monitoring
+
+- Identifying delays or bottlenecks
+
+- Operations analysis
+
+- Process improvement planning
+
+- Manually or via scheduled reports
+
+## Parameters
+
+<ParamField path="@fromDate" param-type="DateTime" required="false" deprecated="false">
+  Start date filter for the report.
+</ParamField>
+
+<ParamField path="@toDate" param-type="DateTime" required="false" deprecated="false">
+  End date filter for the report.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  If both parameters are NULL, the report returns all available data.
+</Callout>
+
+## Simple Explanation
+
+The report analyzes each pickwave to determine how much work was done, how long it took, and who handled it.
+
+## Step-by-Step Flow
+
+<Steps>
+  <Step title="Get Completed Pickwaves" icon="check-circle" title-type="p">
+    Fetch only completed pickwaves and calculate total time taken.
+  </Step>
+
+  <Step title="Get Item Details" icon="list" title-type="p">
+    Calculate:
+  </Step>
+
+  <Step title="Get Order List" icon="file-text" title-type="p">
+    Retrieve all order IDs within each pickwave and combine into a single list.
+  </Step>
+
+  <Step title="Combine All Data" icon="shuffle" title-type="p">
+    Merge pickwave details, item data, order data, and user information.
+  </Step>
+
+  <Step title="Prepare Final Output" icon="bar-chart" title-type="p">
+    For each pickwave, display:
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Detailed efficiency report per pickwave
+
+  - Clear visibility of time, items, and orders
+
+  - Insights into warehouse batch performance
+</Callout>
+
+## Usefulness
+
+- **Identify Slow Pickwaves** – Detect batches taking too long
+
+- **Workload Analysis** – Compare small vs large pickwaves
+
+- **User Tracking** – Identify who handled each wave
+
+- **Process Improvement** – Optimize picking strategies
+
+- **Better Planning** – Create balanced pickwaves
+
+## Example Scenario
+
+<Expandable title="Pickwave Efficiency Analysis" default-open="false">
+  Some pickwaves are taking longer than expected.\
+  The report:
+
+  - Analyzes time taken per pickwave
+
+  - Shows items and orders handled
+
+  - Displays responsible user
+
+  Result:
+
+  - Identifies slow or heavy pickwaves
+
+  - Helps balance workload
+
+  - Improves overall warehouse efficiency
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This report follows a clear structure: Pickwave → Items & Orders → Time Taken → Efficiency Analysis.\
+  It helps prevent oversized pickwaves, slow operations, unbalanced workloads, and lack of batch-level visibility.
+</Callout>
+

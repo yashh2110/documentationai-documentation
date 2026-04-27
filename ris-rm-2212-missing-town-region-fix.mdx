@@ -1,0 +1,142 @@
+---
+title: Missing Town & Region Fix
+description: >-
+  Checks orders for missing Town (City) or Region (State) values and
+  automatically fills them using a default region to ensure address
+  completeness.
+---
+## Overview
+
+The **RIS-RM-2212 – Missing Town & Region Fix** macro validates orders for missing address fields and fills them using a default region, ensuring smooth order processing.
+
+<Callout kind="tip" collapsed="false">
+  Ensure a valid default RegionName is provided before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Checks for missing Town (City) and Region (State) values
+
+- Fills missing fields using a default region
+
+- Updates order addresses for processing
+
+👉 In short:\
+Detect missing Town/Region → fill with default → update order.
+
+## When It Runs
+
+Typically executed:
+
+- After order import
+
+- Before shipping label generation
+
+- During order validation
+
+- When address errors are detected
+
+- Before sending orders to couriers
+
+- Manually or via automation workflows
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of order IDs to process.
+</ParamField>
+
+<ParamField path="RegionName" param-type="string" required="true" deprecated="false">
+  Default region to use for missing Town/Region fields.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Both OrderIds and RegionName must be provided for the macro to function correctly.
+</Callout>
+
+## Simple Explanation
+
+The macro checks each order for missing Town or Region fields and fills them with a default region, ensuring addresses are valid for shipping and processing.
+
+## Step-by-Step Flow
+
+<Steps>
+  <Step title="Validate Input" icon="alert-circle" title-type="p">
+    Ensure OrderIds and RegionName are provided.\
+    Stop execution if any input is missing.
+  </Step>
+
+  <Step title="Loop Through Orders" icon="list" title-type="p">
+    Process each order individually.
+  </Step>
+
+  <Step title="Fetch Order Details" icon="download" title-type="p">
+    Retrieve shipping and billing address information for the order.
+  </Step>
+
+  <Step title="Check Address Completeness" icon="search" title-type="p">
+    If Town and Region already exist → skip order.
+  </Step>
+
+  <Step title="Fill Missing Values" icon="edit" title-type="p">
+    If missing:
+  </Step>
+
+  <Step title="Update Billing Address" icon="home" title-type="p">
+    Apply the same logic to the billing address.
+  </Step>
+
+  <Step title="Save Updated Data" icon="check-circle" title-type="p">
+    Update the order with corrected address details.
+  </Step>
+
+  <Step title="Logging" icon="file-text" title-type="p">
+    Track updated, skipped, and failed orders for audit purposes.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - All orders have valid Town and Region values
+
+  - Addresses are complete and ready for processing
+</Callout>
+
+## Usefulness
+
+- **Prevents Shipping Errors** – Ensures complete address for couriers
+
+- **Automation** – Eliminates manual corrections
+
+- **Improves Data Quality** – Standardized address fields
+
+- **Avoids Delays** – Orders processed without blockage
+
+- **System Compliance** – Meets validation requirements
+
+## Example Scenario
+
+<Expandable title="Missing Address Data from Channel" default-open="false">
+  Orders imported without city/state.\
+  The macro automatically:
+
+  - Detects missing Town or Region fields
+
+  - Fills missing values with the default region
+
+  - Updates order address information
+
+  Result:
+
+  - Orders become valid and ready for shipping
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Automatically fixing missing address fields ensures smooth order processing, prevents courier issues, reduces manual effort, and maintains consistent and reliable customer data.
+</Callout>
+

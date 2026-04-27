@@ -1,0 +1,139 @@
+---
+title: Sales Analysis
+description: >-
+  Analyzes sales performance over the last 6 months, groups products by category, ranks SKUs
+  based on sales, and provides stock insights for inventory and business decisions.
+---
+## Overview
+
+The **RIS-SC-1029 – Top 500 Categories: 6-Month Sales Analysis** script helps analysts identify top-selling products and categories, evaluate sales trends, and align inventory with demand.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  Determine best-selling products and categories over the last 6 months to support planning and forecasting.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Analyzes sales data from the last 6 months  
+- Groups SKUs by category  
+- Ranks products based on sales performance  
+- Provides current stock and suggested minimum stock level insights  
+
+---
+
+## When It Runs
+
+Used for business analysis, inventory planning, and category performance reviews.
+
+**Typically runs:**
+
+- Manually executed by analysts  
+- During monthly or quarterly sales reviews  
+- For inventory planning and forecasting  
+- While identifying best-selling products  
+
+---
+
+## Parameters
+
+<ParamField path="None" param-type="fixed" required="false" deprecated="false">
+  Uses automatic 6-month date logic; no manual input required.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  The script dynamically calculates the last 6 months from the current date for analysis.
+</Callout>
+
+---
+
+## Simple Explanation
+
+The script checks sales for the last 6 months, groups products by category, ranks SKUs based on units sold, and compares sales with current stock levels to provide actionable insights for inventory management.
+
+---
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Filter Last 6 Months Orders" icon="calendar" title-type="p">
+    Include only orders processed within the last 6 months.
+  </Step>
+
+  <Step title="Link SKUs with Orders" icon="link" title-type="p">
+    Combine product, order, and quantity data for analysis.
+  </Step>
+
+  <Step title="Get Product Category" icon="tag" title-type="p">
+    Group SKUs based on their category from extended properties.
+  </Step>
+
+  <Step title="Exclude Unwanted Data" icon="alert-circle" title-type="p">
+    Remove composite child items and exclude internal fulfillment data.
+  </Step>
+
+  <Step title="Fetch Current Stock Level" icon="warehouse" title-type="p">
+    Retrieve stock quantities from default warehouse location.
+  </Step>
+
+  <Step title="Calculate Metrics" icon="calculator" title-type="p">
+    - Total units sold  
+    - Number of orders  
+    - Total revenue  
+    - Suggested minimum stock level
+  </Step>
+
+  <Step title="Rank SKUs Within Category" icon="award" title-type="p">
+    Rank products based on units sold within each category.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+The script generates a report containing:
+
+- Category  
+- SKU  
+- Rank within category  
+- Units sold  
+- Order count  
+- Revenue  
+- Current stock  
+- Suggested minimum stock level
+</Callout>
+
+---
+
+## Usefulness
+
+- **Top Product Identification** – Find best-selling SKUs  
+- **Inventory Planning** – Compare stock with demand  
+- **Category Performance Analysis** – Understand revenue drivers  
+- **Reorder Strategy** – Use minimum stock level for restocking decisions  
+
+---
+
+## Example Scenario
+
+<Expandable title="6-Month Sales Analysis Example" default-open="false">
+**Scenario:** Inventory planning for next quarter  
+
+**Observations:**  
+- SKU A sold 600 units, current stock 50 → needs urgent restocking  
+- SKU B sold 100 units, current stock 200 → overstocked, may require discounting  
+
+**Insight:** High-demand SKUs should be prioritized, while excess inventory can be optimized.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+By combining long-term sales trends with current inventory levels, this script enables smarter forecasting, improves stock management, and helps businesses focus on high-performing products while reducing excess inventory.
+</Callout>

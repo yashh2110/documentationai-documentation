@@ -1,0 +1,139 @@
+---
+title: Missing Phone Number and Email
+description: >-
+  Automatically update missing customer phone numbers and email addresses in
+  selected orders using predefined default values.
+---
+## Overview
+
+The **RIS-RM-1013 – Missing Phone Number and Email** macro ensures that all selected orders contain essential customer contact details.
+
+It identifies orders with missing phone numbers or email addresses and automatically fills them using predefined default values, improving data completeness and order processing reliability.
+
+<Callout kind="tip" collapsed="false">
+  Ensure default phone number and email address are properly configured before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Checks for missing phone numbers in orders  
+- Checks for missing email addresses  
+- Applies predefined default values where required  
+- Updates order contact information  
+
+👉 In short:  
+Ensure all selected orders have complete customer contact details.
+
+## When It Runs
+
+Used for order data validation and correction
+
+Typically runs:
+
+- Manually triggered (on selected orders)  
+- During order validation  
+- Before dispatch processing  
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of order IDs to process.
+</ParamField>
+
+<ParamField path="DefaultPhoneNumber" param-type="string" required="true" deprecated="false">
+  Default phone number applied when missing.
+</ParamField>
+
+<ParamField path="DefaultEmailAddress" param-type="string" required="true" deprecated="false">
+  Default email address applied when missing.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Example:  
+  OrderIds = 1001,1002,1003  
+
+  Meaning:  
+  Only these specific orders will be processed.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Fetch Orders" icon="download" title-type="p">
+    Retrieve orders based on the provided OrderIds.
+  </Step>
+
+  <Step title="Validate Phone Number" icon="phone" title-type="p">
+    Check if the phone number is missing or contains invalid placeholder values (e.g., "Phone number: N/A").
+  </Step>
+
+  <Step title="Apply Default Phone" icon="edit" title-type="p">
+    Replace missing or invalid phone numbers with the default phone number.
+  </Step>
+
+  <Step title="Validate Email Address" icon="mail" title-type="p">
+    Check if the email address field is empty.
+  </Step>
+
+  <Step title="Apply Default Email" icon="edit" title-type="p">
+    Replace missing email addresses with the default email address.
+  </Step>
+
+  <Step title="Update Order" icon="save" title-type="p">
+    Save updated customer contact details using the API.
+  </Step>
+
+  <Step title="Log Results" icon="file-text" title-type="p">
+    Record execution details, including updates and any errors.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Missing phone numbers are populated automatically  
+  - Missing email addresses are filled  
+  - Orders updated with valid contact information  
+  - Execution process logged for tracking  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Preventing shipping issues due to missing contact details  
+- Ensuring courier compliance requirements are met  
+- Reducing manual data correction efforts  
+- Improving order processing accuracy  
+- Maintaining consistent customer data  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Processes only orders specified in OrderIds  
+  - Updates fields only when values are missing  
+  - Does not validate format of phone or email  
+  - Default values must be configured correctly  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Fix Missing Contact Details Before Dispatch" default-open="false">
+  Some orders are missing customer phone numbers and email addresses.
+
+  👉 The macro:
+
+  - Checks each selected order  
+  - Applies default values where data is missing  
+  - Updates the order automatically  
+
+  Result: Orders are ready for dispatch with complete contact information.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Ensuring complete customer contact details in every order improves delivery success rates, avoids courier rejections, and eliminates delays caused by incomplete data.
+</Callout>

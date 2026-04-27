@@ -1,0 +1,200 @@
+---
+title: Down payments
+description: >-
+  A down payment allows customers to pay a portion of the total order amount in
+  advance, with the remaining balance settled later. Odoo Sales supports
+  flexible down payment options to suit different business scenarios.
+---
+A down payment is an upfront amount paid by a customer at the time of confirming a sale. The remaining balance is paid later, based on agreed terms. This approach helps businesses secure commitment from customers before delivering products or services.
+
+In the **Sales** app, down payments can be configured either as a percentage of the total order or as a fixed amount, depending on the agreement with the customer.
+
+## **Create invoices**
+
+Once a quotation is confirmed and converted into a sales order, invoicing options become available through the **Create Invoice** button.
+
+Clicking this button opens the **Create invoice(s)** pop-up window.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/create-invoices-popup-form.png" width="800" height="245" alt="Create invoice(s) pop-up form that appears in Odoo Sales." />
+
+**Note**
+
+Invoices are initially created in draft mode, allowing review and adjustments before final confirmation.
+
+Within the **Create invoice(s)** window, you can choose from three options:
+
+- **Regular invoice**
+
+- **Down payment (percentage)**
+
+- **Down payment (fixed amount)**
+
+## **Request a down payment**
+
+To request an advance payment:
+
+1. Open the **Create invoice(s)** pop-up
+
+2. Select either:
+
+   - **Down payment (percentage)**, or
+
+   - **Down payment (fixed amount)**
+
+3. Enter the desired amount in the **Down Payment Amount** field
+
+4. Click **Create Draft Invoice**
+
+This generates a draft invoice displaying the down payment under a dedicated **Down Payments** section.
+
+**Important**
+
+If an **Invalid Operation** error appears, verify that the <a href="https://www.odoo.com/documentation/19.0/applications/sales/sales/invoicing/invoicing_policy.html" target="_blank" rel="noopener noreferrer">**invoicing policy**</a> is correctly configured. Some policies require delivery confirmation before invoicing is allowed.
+
+## **Example: 50% down payment**
+
+**Note**
+
+This example assumes:
+
+- A 50% down payment
+
+- Product invoicing policy set to **Ordered quantities**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/cabinet-product-details.png" width="768" height="409" alt="Cabinet with doors product form showcasing various details and fields." />
+
+### **Step-by-step process**
+
+1. Go to **Sales app ‣ New**
+
+2. Add a **Customer**
+
+3. Add a product (e.g., *Cabinet with Doors*)
+
+4. Click **Confirm** to create a sales order
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/cabinet-sales-orders-confirmed.png" width="768" height="346" alt="Cabinet with doors sales order that's been confirmed in the Odoo Sales application." />
+
+1. Click **Create Invoice**
+
+2. Select **Down payment (percentage)**
+
+3. Enter `50` in the **Down Payment** field
+
+**Note**
+
+The income account used for down payments can be modified. You can also define a default down payment account at the product category level.
+
+1. Click **Create Draft Invoice**
+
+The system generates a draft invoice showing the down payment.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/draft-invoice-sample.png" width="768" height="285" alt="A sample draft invoice with down payment mentioned in Odoo Sales." />
+
+1. Click **Confirm** to post the invoice
+
+2. Click **Pay** to register the payment
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/register-payment-pop-up-window.png" width="768" height="236" alt="Showcase of the Pay pop-up window with create payment button." />
+
+After payment, the invoice status updates to **In Payment** or **Paid**, depending on configuration.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/customer-invoice-green-payment-banner.png" width="768" height="281" alt="Customer Invoice with a green Paid banner located in the upper-right corner." />
+
+Back on the sales order, the down payment appears under the **Order Lines** tab.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/down-payments-section-order-lines.png" width="768" height="377" alt="The down payments section in the order lines tab of a sales order." />
+
+### **Final invoice for remaining amount**
+
+To invoice the remaining balance:
+
+1. Click **Create Invoice** again
+
+2. Select **Regular Invoice**
+
+The system automatically calculates the remaining amount after deducting the down payment.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/create-invoices-pop-up-already-invoiced.png" width="768" height="236" alt="The deduct down payment option on the Create invoice(s) pop up in Odoo Sales." />
+
+1. Click **Create Draft Invoice**
+
+2. Confirm and process payment
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/second-register-payment-popup.png" width="768" height="230" alt="The second Pay pop-up form in Odoo sales." />
+
+Once completed, the order reflects full payment across all invoices.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/final-sales-order.png" width="768" height="424" alt="The second down payment invoice with Paid banner in Odoo Sales." />
+
+## **Important considerations**
+
+If a down payment is used with products invoiced based on **Delivered quantities**, certain limitations apply:
+
+- If the down payment exceeds the value of delivered goods, it cannot be deducted immediately
+
+- Odoo does not allow negative invoice totals
+
+- A **Credit Note** may be created to balance the transaction
+
+To process such scenarios properly:
+
+- Install the **Inventory** app, or
+
+- Manually update delivered quantities on the sales order
+
+## **Example: 100% down payment**
+
+A 100% down payment follows a similar process, but requires fewer steps.
+
+**Note**
+
+A 100% down payment is not the same as completing the full invoicing cycle. The system still expects a final invoice step.
+
+### **Steps**
+
+1. Create a quotation and add a product (e.g., *Solar Panel Installation*)
+
+2. Confirm the quotation
+
+3. Click **Create Invoice**
+
+4. Select **Down payment (percentage)**
+
+5. Enter `100` as the value
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/100p-down-payment-percentage.png" width="760" height="231" alt="The Down payment (percentage) option selected with 100% set as the Down Payment." />
+
+1. Click **Create Draft Invoice**
+
+2. Confirm and register payment
+
+Once completed, the down payment is fully processed.
+
+## **Modify income account for down payments**
+
+**Important**
+
+To adjust the income account, the **Accounting** app must be installed.
+
+### **Steps**
+
+1. Go to **Sales app ‣ Orders ‣ Orders**
+
+2. Open the relevant order
+
+3. Click the **Invoices** smart button
+
+4. Open the invoice
+
+5. In the **Account** column, select a different account
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/income-account.png" width="768" height="631" alt="The Search:Account form with existing accounts displayed and a button to create a new account." />
+
+You can either:
+
+- Select an existing account, or
+
+- Create a new one using the **New** button
+
+This allows you to align down payment accounting with your financial structure.

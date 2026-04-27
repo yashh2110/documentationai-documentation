@@ -1,0 +1,187 @@
+---
+title: Shopify External Reference Update
+description: >-
+  Extracts the Note value from Shopify order XML and maps it to the External
+  Reference field while maintaining a backup and preventing duplicate updates.
+---
+## Overview
+
+The **RIS-RM-2317 – Shopify External Reference Update** macro automates the mapping of Shopify order notes into the External Reference field in Linnworks.
+
+It ensures data consistency by extracting values from XML, backing up existing data, and preventing duplicate updates.
+
+<Callout kind="tip" collapsed="false">
+  Ensure Shopify XML contains a valid \<Note> node before running this macro.
+</Callout>
+
+---
+
+## Purpose
+
+This macro:
+
+- Extracts Note value from Shopify XML
+
+- Updates External Reference field
+
+- Backs up existing values
+
+- Prevents duplicate updates
+
+👉 In short:\
+Move Shopify Note → External Reference safely.
+
+---
+
+## When It Runs
+
+Executed on-demand or via automation
+
+Typically used:
+
+- Shopify order processing
+
+- Data cleanup workflows
+
+- Before shipping or reporting
+
+- When external references are required
+
+---
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of order GUIDs to process.
+</ParamField>
+
+<ParamField path="SubSource" param-type="string" required="false" deprecated="false">
+  Order source filter (e.g., Shopify).
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Only orders matching the provided SubSource will be processed.
+</Callout>
+
+---
+
+## How It Works
+
+<Steps>
+  <Step title="Fetch Order" icon="database" title-type="p">
+    Retrieve order using OrderId. Skip if not found.
+  </Step>
+
+  <Step title="Validate SubSource" icon="filter" title-type="p">
+    Check if order matches required source (e.g., Shopify). Skip if not matched.
+  </Step>
+
+  <Step title="Retrieve XML" icon="file-text" title-type="p">
+    Fetch order XML and ensure it is valid.
+  </Step>
+
+  <Step title="Parse Note Value" icon="search" title-type="p">
+    Extract value from \<Note> node. Handle missing or invalid XML cases.
+  </Step>
+
+  <Step title="Clean Data" icon="edit" title-type="p">
+    Trim spaces and limit value to 100 characters.
+  </Step>
+
+  <Step title="Compare Existing Value" icon="repeat" title-type="p">
+    Check if External Reference already matches extracted value. Skip if unchanged.
+  </Step>
+
+  <Step title="Backup Existing Value" icon="save" title-type="p">
+    Save old External Reference into order notes (if exists). Avoid duplicate backups.
+  </Step>
+
+  <Step title="Update External Reference" icon="check-circle" title-type="p">
+    Set new ExternalReferenceNum and save changes.
+  </Step>
+
+  <Step title="Logging" icon="file-text" title-type="p">
+    Record skipped orders, updates, and errors for traceability.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - External Reference updated from Shopify XML
+
+  - Existing values safely backed up
+
+  - Duplicate updates prevented
+
+  - Clean and standardized reference data
+
+  - Full audit trail maintained
+</Callout>
+
+---
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Automating Shopify data mapping
+
+- Ensuring accurate external references
+
+- Preventing manual entry errors
+
+- Maintaining data history and traceability
+
+- Supporting downstream integrations
+
+---
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Works only if XML contains valid \<Note> node
+
+  - External Reference is limited to 100 characters
+
+  - Orders not matching SubSource are skipped
+
+  - Duplicate values are not updated again
+
+  - Backup notes are added only when needed
+
+  - Invalid XML will result in skipped processing
+</Callout>
+
+---
+
+## Example Scenario
+
+<Expandable title="Shopify Note Mapping Example" default-open="false">
+  Shopify XML contains:
+
+  \<Note>REF-98765\</Note>
+
+  👉 Before:
+  External Reference → Empty
+
+  👉 After:
+  External Reference → REF-98765
+
+  If an old value existed, it is stored in order notes.
+
+  Result: Reference data is captured automatically with full traceability.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This macro enables seamless XML-to-field mapping between Shopify and Linnworks.\
+  By combining validation, comparison, and backup logic, it ensures reliable data updates,
+  prevents duplication, and preserves historical values for audit and tracking.
+</Callout>
+

@@ -1,0 +1,212 @@
+---
+title: ' Open POs / Partial POs / Delivered Value Data'
+description: >-
+  Provides a summary of delivered and partially delivered purchase orders,
+  including supplier details, delivery status, and accurate delivered value with
+  tax breakdown.
+---
+## Overview
+
+The **RIS-SC-PO- Open POs / Partial POs / Delivered Value Data** tracks purchase orders that have been fully or partially delivered.
+
+It aggregates delivered quantities and calculates financial values proportionally based on delivered units.
+
+<Callout kind="tip" collapsed="false">
+  This report calculates delivered value proportionally, ensuring accurate financial reporting even for partially delivered POs.
+</Callout>
+
+---
+
+## Purpose
+
+This report:
+
+- Tracks delivered and partially delivered purchase orders
+
+- Calculates delivered quantity and financial values
+
+- Provides supplier-level insights
+
+- Supports reconciliation and audit processes
+
+👉 In short:\
+See what has been delivered, how much value was received, and from which supplier.
+
+---
+
+## When It Runs
+
+Executed on-demand (SQL report)
+
+Typically used:
+
+- Procurement tracking
+
+- Delivery validation
+
+- Financial reconciliation
+
+- Supplier performance monitoring
+
+---
+
+## Parameters
+
+<ParamField path="SupplierName" param-type="string" required="false" deprecated="false">
+  Filter by supplier name. Use "All" to include all suppliers.
+</ParamField>
+
+<ParamField path="DeliveredDateStart" param-type="datetime" required="false" deprecated="false">
+  Start date for delivered purchase orders.
+</ParamField>
+
+<ParamField path="DeliveredDateEnd" param-type="datetime" required="false" deprecated="false">
+  End date for delivered purchase orders.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  All parameters are optional and allow flexible filtering of purchase order data.
+</Callout>
+
+---
+
+## How It Works
+
+<Steps>
+  <Step title="Fetch Purchase Orders" icon="database" title-type="p">
+    Retrieves purchase orders along with supplier details and delivery dates.
+  </Step>
+
+  <Step title="Join Supplier Data" icon="users" title-type="p">
+    Links each purchase order with its corresponding supplier information.
+  </Step>
+
+  <Step title="Join Item-Level Data" icon="list" title-type="p">
+    Retrieves line-level purchase item data including quantity, cost, and tax.
+  </Step>
+
+  <Step title="Filter Records" icon="filter" title-type="p">
+    Applies filters based on:
+
+    - Supplier name
+
+    - Delivered date range
+
+    - PO status (Delivered / Partial)
+  </Step>
+
+  <Step title="Calculate Delivered Quantity" icon="hash" title-type="p">
+    Sums delivered quantities across all PO items.
+  </Step>
+
+  <Step title="Calculate Delivered Value (Excl Tax)" icon="dollar-sign" title-type="p">
+    Calculates proportional delivered value excluding tax:
+    (Delivered ÷ Ordered) × (Cost - Tax)
+  </Step>
+
+  <Step title="Calculate Delivered Tax" icon="percent" title-type="p">
+    Calculates proportional tax based on delivered quantity.
+  </Step>
+
+  <Step title="Group Data" icon="layers" title-type="p">
+    Aggregates results by PO and supplier.
+  </Step>
+
+  <Step title="Sort Output" icon="arrow-down" title-type="p">
+    Orders results by supplier, reference, and delivery date.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Delivered and partial purchase orders listed
+
+  - Supplier details included
+
+  - Delivered quantities calculated
+
+  - Accurate delivered value (excl tax) computed
+
+  - Delivered tax calculated proportionally
+
+  - Data ready for financial and operational analysis
+</Callout>
+
+---
+
+## Usefulness
+
+This report is highly beneficial for:
+
+- Financial reconciliation of delivered goods
+
+- Tracking partial deliveries accurately
+
+- Monitoring supplier performance
+
+- Auditing procurement transactions
+
+- Ensuring correct cost and tax allocation
+
+---
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Only POs with status Delivered or Partial are included
+
+  - Delivered value is calculated proportionally (not full PO value)
+
+  - If ordered quantity is zero, value calculation defaults to 0
+
+  - Tax and cost are derived from PurchaseItem level
+
+  - Date filters apply to DateOfDelivery
+
+  - Supplier filter must match exact name unless using "All"
+</Callout>
+
+---
+
+## Example Scenario
+
+<Expandable title="Partial Delivery Value Calculation Example" default-open="false">
+  Purchase Order:
+
+  - Quantity Ordered → 100 units
+
+  - Delivered → 40 units
+
+  - Total Cost → £1000
+
+  - Tax → £200
+
+  👉 The report calculates:
+
+  - Delivered Value Excl Tax → (40/100) × (1000 - 200) = £320
+
+  - Delivered Tax → (40/100) × 200 = £80
+
+  Result:
+
+  - Total Units Delivered → 40
+
+  - Delivered Value Excl Tax → £320
+
+  - Delivered Tax → £80
+
+  Insight:\
+  Financial values reflect only the delivered portion, not the full PO.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  The most powerful aspect of this report is proportional value calculation based on delivered quantities. This ensures precise financial tracking for partial deliveries without overstating costs or tax—making it highly reliable for audits and reconciliation.
+</Callout>
+

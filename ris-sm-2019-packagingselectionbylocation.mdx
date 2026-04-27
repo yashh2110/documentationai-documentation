@@ -1,0 +1,130 @@
+---
+title: Packaging Selection by Location
+description: >-
+  Automatically assign packaging groups and types to orders based on fulfilment
+  location, ensuring consistent and efficient warehouse operations.
+---
+
+## Overview
+The **RIS-SM-2019 – PackagingSelectionByLocation** macro automates packaging assignment by mapping fulfilment locations to predefined packaging configurations. It ensures that each order is assigned the correct packaging group and type based on where it will be fulfilled.
+
+<Callout kind="tip" collapsed="false">
+Ensure packaging groups and location mappings are properly configured in Linnworks before running this macro.
+</Callout>
+
+## Purpose
+This macro:  
+- Identifies fulfilment location of orders  
+- Assigns packaging group and type  
+- Applies dimensions and weight  
+- Triggers further automation via Rules Engine  
+
+👉 In short: Assign correct packaging based on fulfilment location.
+
+## When It Runs
+Used for packaging automation and fulfilment optimization.  
+
+**Typically runs:**  
+- Scheduled execution (recommended)  
+- Manually triggered  
+- Before packing or shipping stage  
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="false" deprecated="false">
+  List of order IDs to process. Optional—if not provided, the macro processes all open orders from predefined fulfilment locations.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Note:  
+  - No manual configuration required  
+  - Packaging logic is fully automated based on system data  
+  - Predefined fulfilment locations used: Germany FC, Oregon FC, Australia FC, Canada FC, X-Sailfish PDX
+</Callout>
+
+## How It Works
+<Steps>
+  <Step title="Identify Locations" icon="map-pin" title-type="p">
+    Filter orders belonging to predefined fulfilment centers.
+  </Step>
+
+  <Step title="Fetch Configurations" icon="settings" title-type="p">
+    Retrieve packaging groups and match them with stock locations.
+  </Step>
+
+  <Step title="Retrieve Open Orders" icon="download" title-type="p">
+    Fetch open orders for each location and exclude already processed ones.
+  </Step>
+
+  <Step title="Get Packaging Data" icon="box" title-type="p">
+    Retrieve weight and dimension data required for packaging calculation.
+  </Step>
+
+  <Step title="Assign Packaging" icon="package" title-type="p">
+    Map location to packaging group and assign default packaging type.
+  </Step>
+
+  <Step title="Apply Packaging Settings" icon="edit" title-type="p">
+    Set:  
+    - Packaging group  
+    - Packaging type  
+    - Dimensions  
+    - Weight  
+    - Auto split enabled
+  </Step>
+
+  <Step title="Track Processed Orders" icon="check-circle" title-type="p">
+    Maintain list of processed orders to avoid duplication.
+  </Step>
+
+  <Step title="Assign Identifier" icon="tag" title-type="p">
+    Add identifier "Packaging Macro Triggered" to processed orders.
+  </Step>
+
+  <Step title="Execute Rules Engine" icon="zap" title-type="p">
+    Trigger additional automation rules if configured.
+  </Step>
+</Steps>
+
+## Final Result
+<Callout kind="success" collapsed="false">
+- Packaging assigned based on fulfilment location  
+- Dimensions and weight applied automatically  
+- Orders marked as processed  
+- Additional automation rules executed
+</Callout>
+
+## Usefulness
+This macro is highly beneficial for:  
+- Automating packaging selection  
+- Ensuring consistency across warehouses  
+- Reducing manual errors  
+- Improving fulfilment speed  
+- Supporting scalable warehouse operations  
+
+## Important Notes
+<Callout kind="warning" collapsed="false">
+- Works only for predefined locations  
+- Packaging groups must exist in the system  
+- Uses default packaging type (no advanced logic)  
+- Orders with identifier are skipped  
+- Rules engine execution depends on configuration  
+- Texas FC is handled but not included in initial filter
+</Callout>
+
+## Example Scenario
+<Expandable title="Assign Packaging Based on Warehouse" default-open="false">
+Orders are assigned to different fulfilment centers.
+
+👉 The macro:  
+- Identifies order location  
+- Assigns corresponding packaging group  
+- Applies packaging settings automatically  
+
+**Result:** Orders are packed using correct configurations without manual intervention.
+</Expandable>
+
+## Key Insight
+<Callout kind="tip" collapsed="false">
+Mapping fulfilment locations to packaging rules standardizes operations, reduces manual effort, and enables efficient scaling across multiple warehouses.
+</Callout>

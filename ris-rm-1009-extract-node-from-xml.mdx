@@ -1,0 +1,160 @@
+---
+title: Extract Node from XML
+description: >-
+  Extract specific values from order XML data and store them as order notes for
+  better visibility and processing.
+---
+## Overview
+
+The **RIS-RM-1009 – Extract Node from XML** macro extracts specific values from an order’s XML data and stores them as order notes.
+
+It enables visibility of important XML-based information by converting structured data into readable and actionable notes.
+
+<Callout kind="tip" collapsed="false">
+  Ensure XML structure, node path, and node value are correctly defined to avoid extraction failures.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Reads order XML data
+
+- Extracts values using defined paths
+
+- Stores extracted values as order notes
+
+👉 In short:\
+Convert XML data into visible order notes.
+
+## When It Runs
+
+Used for data extraction & integration workflows
+
+Typically runs:
+
+- Manually triggered
+
+- Via workflow when XML data is available
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of orders to process.
+</ParamField>
+
+<ParamField path="nodepath" param-type="string" required="true" deprecated="false">
+  XML path used to locate the parent node (e.g., Order//Items//Item).
+</ParamField>
+
+<ParamField path="nodevalue" param-type="string" required="true" deprecated="false">
+  Child node name from which value is extracted (e.g., SKU).
+</ParamField>
+
+<ParamField path="IsSingleNode" param-type="boolean" required="true" deprecated="false">
+  True for single node extraction, False for multiple node extraction.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Example:\
+  nodepath = Order//Items//Item\
+  nodevalue = SKU
+
+  Parameters must align accurately with XML structure.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Read Parameters" icon="list" title-type="p">
+    Load input parameters and iterate through orders.
+  </Step>
+
+  <Step title="Retrieve XML" icon="download" title-type="p">
+    Fetch XML data for each order using API.
+  </Step>
+
+  <Step title="Parse XML" icon="code" title-type="p">
+    Load XML into parser for navigation.
+  </Step>
+
+  <Step title="Build XPath" icon="git-branch" title-type="p">
+    Construct dynamic XPath using nodepath (with local-name() support).
+  </Step>
+
+  <Step title="Extract Values" icon="search" title-type="p">
+    ✔ Single node → extract one value\
+    ✔ Multiple nodes → iterate and extract all values
+  </Step>
+
+  <Step title="Create Notes" icon="file-text" title-type="p">
+    Create order notes for each extracted value.
+  </Step>
+
+  <Step title="Save Notes" icon="save" title-type="p">
+    Mark notes as external and save to the order.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - XML values extracted successfully
+
+  - Values stored as order notes
+
+  - Supports both single and multiple node extraction
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Extracting embedded XML data (e.g., SKUs, IDs, references)
+
+- Supporting marketplace integrations
+
+- Automating data capture
+
+- Improving visibility of hidden order data
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Works only if XML data exists in the order
+
+  - nodepath must match XML structure exactly
+
+  - nodevalue must be a valid child node
+
+  - No note is created if no match is found
+
+  - Errors are logged without interrupting execution
+
+  - Notes are saved as external (visible)
+</Callout>
+
+## Example Scenario
+
+<Expandable title="XML Extraction Example" default-open="false">
+  An order contains XML data with item SKUs.
+
+  👉 The macro:
+
+  - Uses nodepath = Order//Items//Item
+
+  - Extracts nodevalue = SKU
+
+  - Creates notes for each SKU
+
+  Result: All SKUs are visible as order notes.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Converting structured XML data into accessible order notes bridges the gap between raw system data and operational visibility.
+</Callout>
+
+##
+

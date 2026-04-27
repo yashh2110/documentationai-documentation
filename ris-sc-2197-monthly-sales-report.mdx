@@ -1,0 +1,126 @@
+---
+title: Monthly Sales Report
+description: >-
+  Retrieves item-level sales data for selected channels, filters orders within a
+  date range,  and calculates quantity sold and revenue.
+---
+## Overview
+
+The **RIS-SC-2197 – Monthly Sales Report Script** automates the creation of monthly sales reports for selected sales channels, giving insight into product performance, revenue, and order activity.
+
+<Callout kind="tip" collapsed="false">
+  Provides clear visibility into product-level sales and revenue for better business decision-making.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Collects item-level sales data from specific channels
+
+- Filters orders within a chosen date range
+
+- Calculates total quantity sold and revenue per item
+
+👉 In short:\
+Generates a monthly sales report showing how much each product sold and earned.
+
+## When It Runs
+
+Typically used:
+
+- Manually executed by users or analysts
+
+- During monthly sales reporting
+
+- For business performance tracking
+
+- For revenue analysis
+
+- During channel comparison
+
+- For inventory planning
+
+## Simple Explanation
+
+The script takes orders from specific channels, filters them by date, calculates quantity sold and revenue for each item, and produces a structured report.
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Set Date Range" icon="calendar" title-type="p">
+    Define the reporting period using a start and end date.
+  </Step>
+
+  <Step title="Filter Orders" icon="filter" title-type="p">
+    Select orders only from Magento and BigCommerce within the specified date range.
+  </Step>
+
+  <Step title="Join Tables" icon="layers" title-type="p">
+    Combine Order, OrderItem, and StockItem data to get complete item-level details.
+  </Step>
+
+  <Step title="Exclude Composite Items" icon="x-circle" title-type="p">
+    Ignore parent or bundle items to focus only on individual SKUs.
+  </Step>
+
+  <Step title="Calculate Quantity Sold" icon="hash" title-type="p">
+    Sum the quantity sold for each item.
+  </Step>
+
+  <Step title="Calculate Revenue" icon="dollar-sign" title-type="p">
+    Multiply unit price by quantity sold to get total revenue per item.
+  </Step>
+
+  <Step title="Group Data" icon="grid" title-type="p">
+    Group results by item number, order reference, and composite flag.
+  </Step>
+
+  <Step title="Execute Query" icon="play-circle" title-type="p">
+    Generate the final dataset with calculated values.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  The script generates a monthly sales report showing for each product:
+
+  - Item number
+
+  - Associated order references
+
+  - Total quantity sold
+
+  - Total revenue earned
+
+  - Whether the item is a composite product\
+    The output provides clear insight into product performance and sales trends.
+</Callout>
+
+## Usefulness
+
+- **Sales Analysis** – Track how individual products are performing
+
+- **Channel Insights** – Compare performance between Magento and BigCommerce
+
+- **Revenue Tracking** – Monitor earnings per item
+
+- **Inventory Planning** – Identify fast-moving products
+
+- **Business Reporting** – Support monthly performance reviews
+
+## Example Scenario
+
+<Expandable title="Monthly Sales Review Example" default-open="false">
+  The business wants a report for January.\
+  The script filters orders within January, calculates quantity sold and revenue per product.\
+  Result: Top-selling items and total revenue become visible for decision-making.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By filtering orders by date and channel and calculating item-level sales, this script provides accurate insights into product performance, helping businesses optimize inventory, pricing, and sales strategy.
+</Callout>
+

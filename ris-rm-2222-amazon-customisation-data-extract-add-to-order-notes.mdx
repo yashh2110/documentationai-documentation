@@ -1,0 +1,157 @@
+---
+title: Amazon Customisation Data Extract & Add to Order Notes
+description: >-
+  Extract product personalization details from Amazon order XML and add them as
+  structured notes to orders for easy visibility and processing.
+---
+## Overview
+
+The **RIS-RM-2222 – Amazon Customisation Data Extract & Add to Order Notes** macro extracts customization details from Amazon order XML and converts them into readable order notes for warehouse and processing teams.
+
+<Callout kind="tip" collapsed="false">
+  Ensure correct XML node paths are provided to accurately extract customization data.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Reads customization data from Amazon XML
+
+- Extracts personalization details (text, options, etc.)
+
+- Formats the extracted data
+
+- Adds it to order notes
+
+- Prevents duplicate note creation
+
+👉 In short:\
+Read XML → extract customization → format → add as order notes.
+
+## When It Runs
+
+Typically executed:
+
+- After Amazon order import
+
+- Before picking and packing
+
+- For personalized/custom product handling
+
+- During printing/customization workflows
+
+- When orders include names, text, or design options
+
+- Manually or via automation workflows
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of order IDs to process.
+</ParamField>
+
+<ParamField path="xmlnodelist" param-type="string" required="true" deprecated="false">
+  XML node paths used to extract customization data.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Both OrderIds and xmlnodelist must be provided for proper execution.
+</Callout>
+
+## Simple Explanation
+
+The macro reads Amazon XML, finds customization details via a URL, extracts relevant values, and saves them as formatted notes in the order.
+
+## Step-by-Step Flow
+
+<Steps>
+  <Step title="Start Processing Orders" icon="play-circle" title-type="p">
+    Take OrderIds and process each order one by one.
+  </Step>
+
+  <Step title="Check Existing Notes" icon="search" title-type="p">
+    Verify if customization note already exists to prevent duplication.
+  </Step>
+
+  <Step title="Fetch Order & XML" icon="download" title-type="p">
+    Retrieve order details and Amazon XML data.
+  </Step>
+
+  <Step title="Find Customization URL" icon="link" title-type="p">
+    Locate personalization link inside XML which contains customization data.
+  </Step>
+
+  <Step title="Call External API" icon="globe" title-type="p">
+    Send request using the URL and receive customization XML response.
+  </Step>
+
+  <Step title="Extract Required Data" icon="filter" title-type="p">
+    Read nodes based on xmlnodelist and extract:
+  </Step>
+
+  <Step title="Handle Special Cases" icon="settings" title-type="p">
+
+  </Step>
+
+  <Step title="Prepare Final Note" icon="edit" title-type="p">
+    Format extracted data as:&#x20;
+    Name (SKU) → Value
+  </Step>
+
+  <Step title="Save Order Notes" icon="check-circle" title-type="p">
+    Add or update notes in the order with identifier:
+    "Add Note From AmazonXMLDataExtract macro".
+  </Step>
+
+  <Step title="Logging" icon="file-text" title-type="p">
+    Log URLs, extracted values, errors, and execution details.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Customization details available in order notes
+
+  - No need to manually check XML or external links
+
+  - Orders ready for accurate processing
+</Callout>
+
+## Usefulness
+
+- **Automation** – Eliminates manual XML checking
+
+- **Better Visibility** – All customization data in one place
+
+- **Accuracy** – Ensures correct personalization details
+
+- **Time Saving** – No need to open external customization links
+
+## Example Scenario
+
+<Expandable title="Amazon Personalized Product Orders" default-open="false">
+  Customization details are hidden inside XML and difficult to access.\
+  The macro automatically:
+
+  - Extracts customization data
+
+  - Converts it into readable notes
+
+  - Adds notes to the order
+
+  Result:
+
+  - Warehouse team easily understands requirements
+
+  - Faster and error-free processing
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This macro follows a clear flow: Order → Read XML → Fetch Customization → Extract Data → Add Notes.\
+  It prevents missing personalization details, incorrect customization, manual XML checking, processing delays, and warehouse confusion.
+</Callout>
+

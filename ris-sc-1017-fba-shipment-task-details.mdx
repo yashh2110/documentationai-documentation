@@ -1,0 +1,157 @@
+---
+title: FBA Shipment Task Details
+description: >-
+  Converts an FBA shipment into a structured task list with parent and subtasks
+  for each item, assigning responsibility and followers.
+---
+## Overview
+
+The **RIS-SC-1017 – FBA Shipment Task Details** script transforms FBA shipment data into a clear task hierarchy. It generates a main task for the shipment and subtasks for each item, assigning team members for execution and tracking.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  Convert an FBA shipment into a task list so warehouse staff can track and execute it efficiently.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Creates a parent task for each FBA shipment
+
+- Generates subtasks for every item in the transfer
+
+- Assigns assignee and followers for accountability
+
+- Tracks individual item quantities for operational clarity
+
+## When It Runs
+
+Manually executed by users or warehouse staff.
+
+**Typically used:**
+
+- During FBA shipment preparation
+
+- Assigning tasks to warehouse team members
+
+- Tracking and monitoring shipment execution
+
+## Parameters
+
+<ParamField path="transferId" param-type="string" required="true" deprecated="false">
+  Transfer reference number for the FBA shipment
+</ParamField>
+
+<ParamField path="followers" param-type="string" required="false" deprecated="false">
+  List of users to notify about tasks
+</ParamField>
+
+<ParamField path="assignee" param-type="string" required="true" deprecated="false">
+  Person responsible for completing the tasks
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  These parameters define which shipment to process and who will handle and monitor the tasks.
+</Callout>
+
+<Callout kind="info" collapsed="false">
+  The script links shipment data with inventory information to build tasks per item.
+</Callout>
+
+## Process Flow Step-by-Step
+
+<Steps>
+  <Step title="Set Parameters" icon="settings" title-type="p">
+    Define transfer ID, assignee, and followers for task creation.
+  </Step>
+
+  <Step title="Create Parent Task" icon="folder" title-type="p">
+    Generate a main task using the transfer ID. Set due date and assign users.
+  </Step>
+
+  <Step title="Create Subtasks" icon="list" title-type="p">
+    For each item in the shipment, create a subtask showing quantity and SKU. Link subtasks to the parent task.
+  </Step>
+
+  <Step title="Combine Tasks" icon="layers" title-type="p">
+    Merge parent task and all subtasks into a single dataset.
+  </Step>
+
+  <Step title="Set Task Hierarchy" icon="hierarchy" title-type="p">
+    Parent task has no parent reference; subtasks are linked to the main shipment task.
+  </Step>
+
+  <Step title="Sort Output" icon="sort-ascending" title-type="p">
+    Ensure parent task appears first, followed by subtasks for clarity.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  Structured task list containing:
+
+  - Task Name
+
+  - Due Date
+
+  - Assignee
+
+  - Parent Task Reference
+
+  **Example structure:**
+
+  - FBA123 → Main Task
+
+  - 10 x ITEM1 → Subtask under FBA123
+
+  - 5 x ITEM2 → Subtask under FBA123
+</Callout>
+
+## Usefulness
+
+- **Task Automation** – Automatically creates tasks from shipment data
+
+- **Team Coordination** – Clearly assigns responsibility for each item
+
+- **Shipment Tracking** – Track each item individually for operational control
+
+- **Operational Efficiency** – Eliminates manual creation of shipment tasks
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Works only for FBA shipments defined in Warehouse\_Transfer
+
+  - Requires accurate transfer ID and assignee details
+
+  - Followers list ensures notifications but does not assign task responsibility
+</Callout>
+
+## Example Scenario
+
+<Expandable title="FBA Shipment Example" default-open="false">
+  A warehouse prepares a shipment with **transfer ID FBA123**.
+
+  Items included:
+
+  - 10 units of SKU1
+
+  - 5 units of SKU2
+
+  **Result:**
+
+  - Main task created for FBA123
+
+  - Subtasks created for each item with quantities
+
+  **Insight:** Team can track and complete each item efficiently.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Transforming shipment data into a task hierarchy improves visibility, enhances team coordination, and ensures accurate execution of FBA operations.
+</Callout>
+

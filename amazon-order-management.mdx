@@ -1,0 +1,199 @@
+---
+title: Amazon order management
+description: >-
+  Amazon orders are automatically imported into Odoo at regular intervals,
+  ensuring your sales data stays up to date without manual intervention.
+---
+## **Order synchronization**
+
+Amazon orders are synchronized based on status updates. Only orders that have changed since the last sync are retrieved, whether the update happens in Amazon or Odoo.
+
+- For *FBA* (Fulfilled by Amazon): only **Shipped** and **Cancelled** orders are imported
+
+- For *FBM* (Fulfilled by Merchant): only **Unshipped** and **Cancelled** orders are imported
+
+Each synchronized order generates:
+
+- A **sales order**
+
+- A **customer record** (if not already موجود in the system)
+
+**Note**\
+If an order is cancelled on Amazon after being synced, the corresponding sales order in Odoo is automatically cancelled as well.
+
+## **Force synchronization**
+
+If you need to sync an order that hasn’t changed status:
+
+1. Enable <a href="https://www.odoo.com/documentation/19.0/applications/general/developer_mode.html#developer-mode" target="_blank" rel="noopener noreferrer">**developer mode**</a>
+
+2. Navigate to **Amazon Accounts**
+
+3. Adjust the **Last Order Sync** date under **Orders Follow-up**
+
+4. Save the changes
+
+Make sure to set a date earlier than the last known update of the order you want to retrieve.
+
+**Tip**\
+To trigger an immediate sync:
+
+- Click **Sync Orders** for orders
+
+- Click **Sync Pickings** for deliveries
+
+## **Manage deliveries in FBM**
+
+When an FBM order is imported:
+
+- A **picking** is created in the *Inventory* app
+
+- A **sales order** and **customer** are also generated
+
+You can choose to:
+
+- Deliver all items at once
+
+- Or process partial deliveries using backorders
+
+Once a delivery is validated, Odoo notifies Amazon, which then informs the customer.
+
+**Important**\
+Amazon requires a **tracking number** for every shipment.
+
+- If the carrier does not provide one automatically, it must be entered manually
+
+- This rule applies across all Amazon marketplaces
+
+**Tip**\
+If your carrier is not available in Odoo:
+
+- Create a carrier with the same name (e.g., `easyship`)
+
+- Avoid typos—Amazon matches names strictly
+
+- You can also create a carrier like `Self Delivery` for manual shipping
+
+Even with manual delivery, a tracking reference is still required, as it is included in customer notifications.
+
+### **Handle delivery synchronization errors**
+
+Sometimes Amazon may reject shipment updates.
+
+In such cases:
+
+- Odoo sends an email with error details
+
+- A **Synchronization with Amazon failed** tag is added to affected shipments
+
+To resolve:
+
+- Fix the issue in Odoo or Amazon
+
+- Click **Retry Amazon Sync** to resend the data
+
+**Note**\
+If Amazon does not specify which shipments failed, Odoo marks all uncertain shipments as failed. Once confirmation is received, their status updates to **Synchronized with Amazon**.
+
+To speed up recovery:
+
+- Use **Sync Orders**
+
+- Or click **Recover Order** and enter the Amazon order reference
+
+## **Track deliveries in FBA**
+
+For FBA orders:
+
+- Odoo records a **stock move** for each order line in the *Inventory* app
+
+- These can be viewed via **Inventory ‣ Reporting ‣ Moves History**
+
+Stock movement is automatically handled based on Amazon’s fulfillment updates.
+
+When sending stock to Amazon:
+
+- Create a manual delivery order from your warehouse to the Amazon location
+
+**Tip**\
+To monitor Amazon stock in Odoo:
+
+- Perform inventory adjustments after replenishment
+
+- Use reordering rules for automated restocking
+
+The Amazon stock location can be configured from the Amazon account settings.
+
+By default, all accounts share the same Amazon location, but it’s possible to track stock per marketplace.
+
+To do this:
+
+1. Remove the marketplace from the synchronized list
+
+2. Create a separate account configuration
+
+3. Keep only the desired marketplace
+
+4. Assign a different stock location
+
+## **Invoice and register payments**
+
+### **Issue invoices**
+
+Amazon does not share customer email addresses, so invoices cannot be sent directly from Odoo.
+
+However:
+
+- You can manually upload invoices to Amazon
+
+- For B2B transactions, VAT numbers must be retrieved manually before invoicing
+
+### **Register payments**
+
+Since payments are processed by Amazon:
+
+- Create a dedicated journal (e.g., `Amazon Payments`)
+
+- Use a dedicated intermediary account
+
+Because Amazon pays in bulk (typically monthly):
+
+1. Select all related invoices
+
+2. Use the correct journal
+
+3. Choose **Batch Deposit** as the payment method
+
+4. Validate via **Actions → Create batch payment**
+
+**Tip**\
+The same process can be applied to Amazon-related vendor bills (e.g., commissions).
+
+When the payout is received:
+
+- Reconcile it against the intermediary account using bank statements
+
+## **Analyze Amazon sales in reporting**
+
+Each Amazon account is linked to a **sales team** in the **Order Follow-up** tab.
+
+This enables tracking of sales performance and reporting.
+
+By default:
+
+- One sales team is shared across accounts
+
+You can assign different teams to separate reporting by account.
+
+**Tip**\
+To analyze performance by marketplace:
+
+1. Remove the marketplace from the current account
+
+2. Create a duplicate account configuration
+
+3. Keep only the desired marketplace
+
+4. Assign a different sales team
+
+This allows more granular reporting and performance tracking.

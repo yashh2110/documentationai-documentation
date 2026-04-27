@@ -1,0 +1,96 @@
+---
+title: Online signatures for order confirmations
+description: >-
+  Enable customers to confirm sales orders using electronic signatures in Odoo.
+  This feature speeds up approvals and improves the overall sales workflow.
+---
+The Odoo **Sales** application allows customers to confirm quotations directly through an online signature. Once the document is signed, the order is instantly validated, and the assigned salesperson is notified in real time.
+
+This process removes the need for manual confirmations and helps accelerate the sales cycle.
+
+## **Activate online signatures**
+
+To allow customers to sign quotations digitally, the *Online Signature* feature must first be enabled.
+
+- Go to **Sales app ‣ Configuration ‣ Settings**
+
+- Scroll to **Quotations & Orders**
+
+- Enable the **Online Signature** option
+
+- Click **Save**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/signature-setting.png" width="608" height="119" alt="The Online Signature feature option in the Settings of the Odoo Sales application." />
+
+> **Info**
+>
+> Once enabled, this feature can be applied both globally and at the individual quotation or template level.
+
+
+
+> **Note**
+>
+> In quotation templates, the signature option appears as **Signature** under the **Online confirmation** section.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/signature-feature-quotation-template.png" width="730" height="473" alt="The Online confirmation signature option found on every quotation template in Odoo." />
+
+> **Note**
+>
+> On individual quotations, the signature setting is available under the **Other Info** tab.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/signature-other-info-tab.png" width="718" height="605" alt="The online signature feature option in the Other Info tab of a quotation form in Odoo." />
+
+## **Order confirmations with online signatures**
+
+When customers access a quotation through the portal, they are presented with a **Sign & Pay** option.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/sign-and-pay-button.png" width="731" height="336" alt="The Sign and Pay button present on online quotations in Odoo Sales." />
+
+Clicking this button opens a confirmation window where the customer can review and sign the document.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/validate-order-popup.png" width="546" height="557" alt="The Validate Order pop-up window for online signatures in Odoo Sales." />
+
+Customers can choose from three signature methods:
+
+- **Auto**: Automatically generates a signature based on their name
+
+- **Draw**: Allows them to manually draw their signature
+
+- **Load**: Uploads an existing signature file
+
+After selecting a method, the customer clicks **Accept & Sign** to confirm the order.
+
+> **Tip**
+>
+> Offering multiple signature options improves usability across devices, especially for mobile users.
+
+If online payment is enabled, payment options are shown immediately after signing.
+
+> **Info**
+>
+> Once signed (and paid, if required), the quotation is automatically converted into a confirmed sales order. If the **Inventory** app is installed, a delivery order is also generated.
+
+## **View online signatures in Developer Mode**
+
+Signed documents can be reviewed internally when developer mode is enabled.
+
+- Navigate to **Sales app ‣ Orders ‣ Orders**
+
+- Open a confirmed order
+
+- Access the **Customer Signature** tab
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/customer-signature-tab.png" width="707" height="426" alt="The Customer Signature tab on a sales order when in Developer Mode." />
+
+This section displays:
+
+- The customer’s signature
+
+- The name of the signer
+
+- The exact date and time of signing
+
+> **Tip**
+>
+> Use this feature for audit trails and legal validation, especially when dealing with contracts or high-value transactions.
+

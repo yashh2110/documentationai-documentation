@@ -1,0 +1,840 @@
+---
+title: 'Service 2: Prompt-Gen — Technical Deep Dive'
+---
+**Service Folder:** `Prompt-Gen/`\
+**Short Description:** A lightweight FastAPI microservice that receives a garment image URL plus classification metadata and returns a deterministic, LLM-generated retouch instruction prompt. Supports both OpenAI (gpt-5-mini, gpt-4.1-mini) and Google Gemini (gemini-2.5-flash-lite) as backends.
+
+---
+
+## Table of Contents
+
+1. [Service Overview](#1-service-overview)
+
+2. [Purpose and Responsibility](#2-purpose-and-responsibility)
+
+3. [Tech Stack and Dependencies](#3-tech-stack-and-dependencies)
+
+4. [Startup and Entry Points](#4-startup-and-entry-points)
+
+5. [Folder Structure Explanation](#5-folder-structure-explanation)
+
+6. [Core Modules](#6-core-modules)
+
+7. [API Endpoints](#7-api-endpoints)
+
+8. [Request/Response Contracts](#8-requestresponse-contracts)
+
+9. [Parameter Traceability](#9-parameter-traceability)
+
+10. [Business Logic Flow](#10-business-logic-flow)
+
+11. [AI/Image Processing Logic](#11-aiimage-processing-logic)
+
+12. [Database/Storage/Queue Usage](#12-databasestoragequeue-usage)
+
+13. [External Integrations](#13-external-integrations)
+
+14. [Error Handling and Logging](#14-error-handling-and-logging)
+
+15. [File-by-File Explanation](#15-file-by-file-explanation)
+
+16. [Critical Code Deep Dive](#16-critical-code-deep-dive)
+
+17. [Risks and Technical Debt](#17-risks-and-technical-debt)
+
+18. [Recommendations](#18-recommendations)
+
+19. [Junior Developer Summary](#19-junior-developer-summary)
+
+20. [Needs Verification / Unknowns](#20-needs-verification--unknowns)
+
+---
+
+## 1. Service Overview
+
+Prompt-Gen is a **pure transformation service**: it takes in an image and structured garment information, and returns one string — an AI-generated, deterministic image retouch instruction. It has no database, no queue, no storage — it is stateless.
+
+Its role in the larger system: the AI-Tagging service calls it after attribute extraction is complete. The returned prompt is assembled into an enhance profile and stored in S3. Later, the AI-Image-Enhancer service reads that prompt from S3 and uses it to guide the FAL.ai image enhancement model.
+
+The service exposes a single generation endpoint protected by an API key, and a health endpoint. It runs on port 8000.
+
+---
+
+## 2. Purpose and Responsibility
+
+| Responsibility                           | Details                                                                                    |
+| ---------------------------------------- | ------------------------------------------------------------------------------------------ |
+| Receive garment metadata + image URL     | HTTP POST body                                                                             |
+| Select LLM backend                       | Based on `model` field (`gpt-*` → OpenAI, `gemini-*` → Gemini)                             |
+| Download image (Gemini path)             | `httpx.get(image_url)` — not done for OpenAI (URL passed inline)                           |
+| Build deterministic system prompt        | `_build_llm_instructions()` — encodes orientation, fabric, description rules               |
+| Strip front-view details for back images | `_strip_front_details()` removes front-only tokens from garment description                |
+| Inject extra denim instructions          | When `fabric_type == "denim"`, adds texture/distress preservation rule                     |
+| Call LLM                                 | Either `client.responses.create()` (OpenAI) or `client.models.generate_content()` (Gemini) |
+| Return prompt string                     | Plain `{"prompt": "..."}` response                                                         |
+| Authenticate callers                     | `X-API-Key` header checked against `PROMPT_GEN_API_KEY` env var                            |
+
+**What this service is NOT responsible for:**
+
+- Storing the prompt anywhere (that's AI-Tagging's job)
+
+- Managing jobs, queues, or images
+
+- Enhancing images (that's the Image-Enhancer's job)
+
+---
+
+## 3. Tech Stack and Dependencies
+
+| Component        | Technology         | Notes                                         |
+| ---------------- | ------------------ | --------------------------------------------- |
+| HTTP Framework   | FastAPI            | Async-capable, used synchronously here        |
+| ASGI Server      | uvicorn            | `uvicorn server:app --port 8000`              |
+| Data Validation  | Pydantic BaseModel | One request model: `PromptRequest`            |
+| OpenAI Client    | `openai` SDK       | Uses **Responses API** not Chat Completions   |
+| Gemini Client    | `google-genai` SDK | Direct bytes injection with resolution config |
+| Async HTTP       | `httpx`            | Used only for image download on Gemini path   |
+| Env loading      | `python-dotenv`    | Loads `.env` from `server.py`'s directory     |
+| Config constants | `config.py`        | Model defaults, allowed models, detail level  |
+
+**No pinned versions** in `requirements.txt` — all packages installed at latest available.
+
+---
+
+## 4. Startup and Entry Points
+
+**Entry file:** `Prompt-Gen/server.py`
+
+```bash
+uvicorn server:app --port 8000
+```
+
+At module load (`server.py`):
+
+1. `load_dotenv(Path(__file__).resolve().parent / ".env")` — explicitly loads `.env` from the Prompt-Gen directory (not CWD)
+
+2. FastAPI app instantiated
+
+3. `PromptRequest` model defined
+
+4. `verify_api_key` dependency function defined
+
+5. Two route handlers registered
+
+At `prompt_gen.py` module load:
+
+1. `load_dotenv()` — implicit, loads from CWD
+
+2. `_openai_client = None` — lazy init
+
+3. `_gemini_client = None` — lazy init
+
+**Important:** Neither LLM client is created at startup. They are created **on first request** via lazy initialization. This means startup is fast but the first request to each backend will be slower due to client construction.
+
+**Critical startup requirement:**
+
+- For OpenAI calls: `OPENAI_API_KEY` must be set in environment at time of first OpenAI request
+
+- For Gemini calls: `GEMINI_API_KEY` must be set in `.env` file (read at client construction time) — missing key causes `KeyError` (not a graceful error)
+
+- For any request: `PROMPT_GEN_API_KEY` must be set, otherwise the endpoint returns 401 for all calls
+
+---
+
+## 5. Folder Structure Explanation
+
+```
+Prompt-Gen/
+│
+├── server.py        # FastAPI entry point — routes, auth, endpoint handlers
+├── prompt_gen.py    # Core logic — LLM dispatch, prompt construction, model routing
+├── config.py        # Model defaults and allowed models list (no classes, no functions)
+│
+├── requirements.txt # Python dependencies (all unpinned)
+└── README.md        # Usage docs, model comparison table, architecture overview
+```
+
+This is intentionally minimal. The whole service is three Python files. No database, no queue, no worker — pure HTTP-in, string-out.
+
+---
+
+## 6. Core Modules
+
+| Module          | Role                                                      |
+| --------------- | --------------------------------------------------------- |
+| `server.py`     | HTTP layer: auth, routing, request/response handling      |
+| `prompt_gen.py` | Business logic: prompt construction, LLM backend dispatch |
+| `config.py`     | Static config: model names, defaults, allowed list        |
+
+**Dependency direction:** `server.py` → `prompt_gen.py` → `config.py`\
+`config.py` has no imports. `prompt_gen.py` imports from `config`. `server.py` imports from both.
+
+---
+
+## 7. API Endpoints
+
+### 7.1 `POST /generate-prompt`
+
+| Property     | Value                                  |
+| ------------ | -------------------------------------- |
+| Method       | `POST`                                 |
+| Path         | `/generate-prompt`                     |
+| Handler file | `server.py` → `generate_prompt()`      |
+| Auth         | `X-API-Key` header required            |
+| Purpose      | Generate a retouch prompt for an image |
+
+**Allowed models (from&#x20;****`config.py`****):**
+
+- `gpt-5-mini` (default)
+
+- `gpt-4.1-mini`
+
+- `gemini-2.5-flash-lite`
+
+---
+
+### 7.2 `GET /health`
+
+| Property     | Value                    |
+| ------------ | ------------------------ |
+| Method       | `GET`                    |
+| Path         | `/health`                |
+| Handler file | `server.py` → `health()` |
+| Auth         | None                     |
+| Purpose      | Liveness check           |
+
+**Response:**
+
+```json
+{"status": "healthy"}
+```
+
+---
+
+## 8. Request/Response Contracts
+
+### `POST /generate-prompt`
+
+**Request Headers:**
+
+```
+X-API-Key: <PROMPT_GEN_API_KEY value>
+Content-Type: application/json
+```
+
+**Request Body (****`PromptRequest`****&#x20;Pydantic model):**
+
+| Field          | Type          | Required | Default                          | Description                                                             |
+| -------------- | ------------- | -------- | -------------------------------- | ----------------------------------------------------------------------- |
+| `image_url`    | `str`         | Yes      | —                                | Full URL to the garment image (S3, CDN, etc.)                           |
+| `orientation`  | `str`         | Yes      | —                                | `"front"` or `"back"` — controls which instructions are injected        |
+| `item_type`    | `str`         | Yes      | —                                | Garment description string (e.g. `"Slim fit cotton crew-neck T-shirt"`) |
+| `fabric_type`  | `str`         | Yes      | —                                | Material type (e.g. `"denim"`, `"cotton"`) — triggers special handling  |
+| `model`        | `str \| None` | No       | `DEFAULT_MODEL` (`"gpt-5-mini"`) | Which LLM to use                                                        |
+| `input_detail` | `str \| None` | No       | `DEFAULT_INPUT_DETAIL` (`"low"`) | Image resolution hint for the LLM                                       |
+
+**Successful Response (200):**
+
+```json
+{
+  "prompt": "Lay this navy slim-fit denim jacket perfectly flat, centered on the white background. Straighten..."
+}
+```
+
+**Error Responses:**
+
+| Code | Condition                           | Body                                                         |
+| ---- | ----------------------------------- | ------------------------------------------------------------ |
+| 401  | `PROMPT_GEN_API_KEY` not configured | `{"detail": "API key not configured on server"}`             |
+| 401  | Wrong API key                       | `{"detail": "Invalid API key"}`                              |
+| 400  | Model not in `ALLOWED_MODELS`       | `{"detail": "Model 'xyz' is not allowed. Choose from: ..."}` |
+| 500  | Any LLM or internal exception       | `{"detail": "<error message string>"}`                       |
+
+---
+
+## 9. Parameter Traceability
+
+| Parameter      | Type          | Enters    | Validated                        | Transformed                                        | Consumed By                                                                                                                    | In Output                               |
+| -------------- | ------------- | --------- | -------------------------------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------- |
+| `image_url`    | `str`         | POST body | None (Pydantic type only)        | `space_escape()` replaces spaces with `%20`        | `_call_openai()` as URL in image content part, OR `httpx.get()` + bytes in Gemini path                                         | Not returned                            |
+| `orientation`  | `str`         | POST body | None                             | Lowercased at `_build_llm_instructions()`          | `_strip_front_details()` gating, injected into prompt instructions                                                             | Not returned (only affects prompt text) |
+| `item_type`    | `str`         | POST body | None                             | Re-named to `garment_description` in function call | `_build_llm_instructions()` embeds it in LLM instructions; if `back` orientation: may be truncated by `_strip_front_details()` | Not returned                            |
+| `fabric_type`  | `str`         | POST body | None                             | Lowercased at denim check                          | `_build_llm_instructions()` conditionally injects extra denim preservation text                                                | Not returned                            |
+| `model`        | `str \| None` | POST body | Checked against `ALLOWED_MODELS` | Falls back to `DEFAULT_MODEL` if None              | Routes to `_call_openai()` vs `_call_gemini()`                                                                                 | Not returned                            |
+| `input_detail` | `str \| None` | POST body | None                             | Falls back to `DEFAULT_INPUT_DETAIL` if None       | OpenAI: `detail` field in image content; Gemini: `MediaResolution` enum mapping                                                | Not returned                            |
+
+**Risk —&#x20;****`orientation`****&#x20;not validated:**\
+Only `"front"` and `"back"` are meaningful, but any string is accepted. An unrecognized orientation (e.g., `"side"`) would not trigger the back-view stripping and would generate a generic front-style prompt. No error is raised.
+
+**Risk —&#x20;****`item_type`****&#x20;(garment\_description) not validated:**\
+Any string content is accepted and directly injected into the LLM prompt. A malicious or malformed string could theoretically influence the LLM's output (prompt injection risk at the LLM layer, not the HTTP layer).
+
+---
+
+## 10. Business Logic Flow
+
+### Full Execution Path
+
+```
+Client POST /generate-prompt
+│
+├── FastAPI dependency: verify_api_key
+│   ├── Read PROMPT_GEN_API_KEY env var
+│   ├── If missing: raise 401 "API key not configured on server"
+│   └── If header X-API-Key doesn't match: raise 401 "Invalid API key"
+│
+├── Pydantic: parse PromptRequest
+│
+├── generate_prompt() handler:
+│   ├── model = req.model or DEFAULT_MODEL  ("gpt-5-mini")
+│   ├── Validate model in ALLOWED_MODELS
+│   │   └── If not: raise 400
+│   │
+│   ├── call request_llm_enhance_prompt(
+│   │       image_url=req.image_url,
+│   │       orientation=req.orientation,
+│   │       fabric_type=req.fabric_type,
+│   │       garment_description=req.item_type,
+│   │       model=model,
+│   │       input_detail=req.input_detail
+│   │   )
+│   │
+│   └── Catch all exceptions → re-raise as HTTP 500
+│
+└── request_llm_enhance_prompt() in prompt_gen.py:
+    ├── input_detail = input_detail or DEFAULT_INPUT_DETAIL
+    ├── image_url = space_escape(image_url)        # URL-encode spaces
+    ├── prompt = _build_llm_instructions(orientation, fabric_type, garment_description)
+    │   ├── [if fabric_type.lower() == "denim"]
+    │   │   extra_denim = "Preserve original denim texture..."
+    │   ├── [if orientation.lower() == "back"]
+    │   │   garment_description = _strip_front_details(garment_description)
+    │   └── return multi-line f-string instructions
+    │
+    ├── [if model.startswith("gemini")]
+    │   ├── httpx.get(image_url) → raw image bytes
+    │   ├── Infer MIME type from URL extension
+    │   ├── Map input_detail → MediaResolution enum
+    │   ├── _get_gemini_client() → lazy singleton
+    │   └── client.models.generate_content(model, [image_bytes, prompt], config)
+    │       └── return response.text
+    │
+    └── [else → OpenAI]
+        ├── _get_openai_client() → lazy singleton
+        ├── [if model.startswith("gpt-5")] add reasoning={effort: "minimal"}
+        └── client.responses.create(model, input=[{role:user, content:[text+image]}])
+            └── return response.output_text
+```
+
+---
+
+## 11. AI/Image Processing Logic
+
+### The Deterministic Prompt Template (`_build_llm_instructions`)
+
+This function is the intellectual core of the service. It generates a **template prompt** that instructs the LLM to behave as a "deterministic retouch-prompt generator, not a conversational assistant."
+
+The key insight: the output (a retouch prompt) is not free-form creative writing. It must follow a strict structure that the downstream Image-Enhancer and FAL.ai model expect. The template enforces this by:
+
+1. **Setting the role:** "You are a deterministic retouch-prompt generator, not a conversational assistant."
+
+2. **Providing a fill-in template** with `{{double braces}}` placeholders where the LLM fills in observed specifics from the image
+
+3. **Stating rules:** output only the final prompt, no explanations, no rephrasing, proof for clarity
+
+**Template sections (confirmed by code):**
+
+- Straighten and flatten the garment
+
+- Center it on the background
+
+- Reduce background wrinkles (but preserve garment drape)
+
+- Preserve exact color and lighting
+
+- Preserve all permanent details (hardware, labels, stitching, wear)
+
+- \[If denim]: Preserve original denim texture, fade and distress patterns, whiskering
+
+**Why deterministic?** The downstream FAL.ai enhancement model uses this prompt to guide its diffusion process. If the prompt is unpredictable or too creative, the enhancement results are inconsistent. The job is to describe the garment accurately, not to rewrite it creatively.
+
+---
+
+### Back-View Stripping (`_strip_front_details`)
+
+**Problem:** The garment description stored in AI-Tagging results describes the full garment, including front-specific details like "V-neck", "front zip", "double-breasted closure". When generating a back-view retouch prompt, these front-view features must NOT be mentioned — the LLM would try to include them in the back image, causing the enhancer to add wrong details.
+
+**Solution:**
+
+```python
+front_tokens = ["Neck", "Zip", "Front", "Breasted", "Wrap"]
+```
+
+The function scans the garment description for these tokens (case-insensitive). It finds the **rightmost** match position and truncates everything up to and including that token. What remains is the back-relevant portion of the description.
+
+**Example:**
+
+- Input: `"Slim-fit cotton T-shirt, V-neck, short sleeves, ribbed hem"`
+
+- `"Neck"` found at position 30 (end of "V-neck")
+
+- After stripping: `", short sleeves, ribbed hem"` → stripped leading comma → `"short sleeves, ribbed hem"`
+
+- The V-neck mention is gone from the back-view prompt
+
+**Limitation (Risk):** The "rightmost end" approach is a heuristic. If a garment description mentions front features in an unusual order (e.g., "cotton, short sleeves, V-neck front opening"), it works fine. But if a feature appears multiple times or in an unexpected context, the truncation point could be wrong.
+
+---
+
+### OpenAI Responses API (`_call_openai`)
+
+**Why Responses API, not Chat Completions?**\
+The Responses API is the newer OpenAI API that supports vision + reasoning models in a unified interface. The code uses `client.responses.create()` with an `input` array structure rather than `messages`.
+
+For `gpt-5-*` models, it adds:
+
+```python
+kwargs["reasoning"] = {"effort": "minimal"}
+```
+
+This is a reasoning-model-specific parameter that uses less inference compute for straightforward tasks. The comment in `config.py` notes the quality benchmark still achieves 92.6 score with this setting.
+
+**Image is passed as URL** (not downloaded bytes) on the OpenAI path. The OpenAI SDK fetches it server-side. This means the image URL must be publicly accessible at the time OpenAI processes the request.
+
+---
+
+### Gemini Direct Bytes (`_call_gemini`)
+
+**Why download image bytes for Gemini?**\
+The Gemini API via `google-genai` SDK sends images as inline bytes (`Part.from_bytes()`), not as URLs. The image must be downloaded first.
+
+**MIME type inference heuristic:**
+
+```python
+# Extract extension from URL path
+extension = url_path.split(".")[-1].lower()
+mime_map = {
+    "jpg": "image/jpeg", "jpeg": "image/jpeg",
+    "png": "image/png", "webp": "image/webp"
+}
+mime_type = mime_map.get(extension, "image/jpeg")  # Default: JPEG
+```
+
+**Watch out for:** The code explicitly comments that it ignores HTTP `Content-Type` headers because "S3 often returns `binary/octet-stream`". The extension-based inference is correct for well-named S3 objects but will silently fall back to JPEG for URLs like presigned URLs with query strings or CDN URLs without extensions.
+
+---
+
+## 12. Database/Storage/Queue Usage
+
+**None.** This service is entirely stateless.
+
+- No database reads or writes
+
+- No S3 reads or writes
+
+- No SQS operations
+
+- No file I/O
+
+- No in-memory cache
+
+Every request is fully independent. This makes horizontal scaling trivial.
+
+---
+
+## 13. External Integrations
+
+### OpenAI Responses API
+
+| Property         | Value                                                |
+| ---------------- | ---------------------------------------------------- |
+| SDK              | `openai` Python package                              |
+| API method       | `client.responses.create()`                          |
+| Auth             | `OPENAI_API_KEY` env var (auto-read by SDK)          |
+| Image passing    | URL inline in content part                           |
+| Models supported | `gpt-5-mini` (default), `gpt-4.1-mini`               |
+| Special config   | `reasoning={effort: "minimal"}` for `gpt-5-*` models |
+
+### Google Gemini API
+
+| Property          | Value                                                         |
+| ----------------- | ------------------------------------------------------------- |
+| SDK               | `google-genai` Python package                                 |
+| API method        | `client.models.generate_content()`                            |
+| Auth              | `GEMINI_API_KEY` env var (explicit in `_get_gemini_client()`) |
+| Image passing     | Inline bytes via `types.Part.from_bytes()`                    |
+| Models supported  | `gemini-2.5-flash-lite`                                       |
+| Resolution config | `types.GenerateContentConfig(media_resolution=...)`           |
+
+### Image Hosting (implicit dependency)
+
+For Gemini calls, the image at `image_url` must be downloadable via `httpx.get()` at request time.\
+For OpenAI calls, the image URL must be publicly fetchable by OpenAI's servers.
+
+If the image is in a private S3 bucket without presigned URL, it will fail for OpenAI (server-side fetch) but work for Gemini (client-side `httpx.get()` — assuming the server has network access to S3).
+
+---
+
+## 14. Error Handling and Logging
+
+### Authentication Errors (in `verify_api_key`)
+
+```python
+if not api_key_env:
+    raise HTTPException(401, "API key not configured on server")
+if x_api_key != api_key_env:
+    raise HTTPException(401, "Invalid API key")
+```
+
+No logging of failed authentication attempts. This is a security observability gap — failed auth attempts should be logged for intrusion detection.
+
+### Validation Errors (in `generate_prompt`)
+
+```python
+if model not in ALLOWED_MODELS:
+    raise HTTPException(400, f"Model '{model}' is not allowed. Choose from: {', '.join(ALLOWED_MODELS)}")
+```
+
+### LLM Errors (in `generate_prompt`)
+
+```python
+try:
+    prompt = request_llm_enhance_prompt(...)
+    return {"prompt": prompt}
+except Exception as e:
+    raise HTTPException(500, detail=str(e))
+```
+
+**Every exception** from the LLM or image download becomes an HTTP 500 with the raw exception message as the `detail` field. This means Python exception messages (which may include stack details, file paths, or SDK internal info) are returned to callers.
+
+**Watch out for:** The raw `str(e)` in 500 responses can leak internal information (API key names in SDK errors, internal file paths). This should be sanitized for production.
+
+### No Logging
+
+There are no `logging.info()` or `logging.error()` calls in either `server.py` or `prompt_gen.py`. That means:
+
+- No request logging (cannot trace which images were processed and when)
+
+- No error logging to files
+
+- No performance tracking (no latency recorded)
+
+- All visibility is through uvicorn's access log only (HTTP method + status code, but no request body details)
+
+This is a significant observability gap.
+
+---
+
+## 15. File-by-File Explanation
+
+### `Prompt-Gen/config.py`
+
+**Purpose:** Static configuration constants shared by `server.py` and `prompt_gen.py`.
+
+```python
+DEFAULT_MODEL = "gpt-5-mini"
+ALLOWED_MODELS = ["gpt-4.1-mini", "gpt-5-mini", "gemini-2.5-flash-lite"]
+DEFAULT_INPUT_DETAIL = "low"
+```
+
+**The comments in this file are unusually detailed for a config file.** They explain the quality/cost/latency tradeoffs of each model based on benchmarking:
+
+- `gpt-5-mini` at `"low"` detail: 92.6 quality, $0.000739/request, 4.5s median latency → **recommended**
+
+- `gpt-4.1-mini`: dominated by `gpt-5-mini` on every metric → discouraged
+
+- `gemini-2.5-flash-lite`: viable only with `"high"` resolution (at `"low"` loses 11 quality points)
+
+**Why this matters:** The default `input_detail = "low"` is intentional for cost reasons. If Gemini is selected, callers should override `input_detail` to `"high"` — the service does not enforce this, but the README notes it.
+
+**No functions, no classes, no imports.** Pure constants file.
+
+---
+
+### `Prompt-Gen/prompt_gen.py`
+
+**Purpose:** All LLM-calling logic, image URL manipulation, and prompt construction.
+
+**Key design decisions:**
+
+1. **Lazy singletons** — LLM clients are not created until first use, allowing fast server startup
+
+2. **Backend routing by model name prefix** — clean, but fragile if a model name's prefix changes
+
+3. **Stateless** — no instance variables, no session state; each request is fully independent
+
+4. **`_build_llm_instructions`****&#x20;is deterministic** — given the same inputs, always produces the same prompt. This ensures that re-running a generation on the same garment produces a consistent result (minus LLM randomness)
+
+**Function responsibilities:**
+
+| Function                                                    | What it does                                                                  |
+| ----------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| `space_escape(url)`                                         | URL-encodes spaces — prevents broken URLs for images with spaces in filenames |
+| `_strip_front_details(desc)`                                | Removes front-specific tokens from garment description for back-view prompts  |
+| `_get_openai_client()`                                      | Returns (or creates) the OpenAI singleton                                     |
+| `_get_gemini_client()`                                      | Returns (or creates) the Gemini singleton                                     |
+| `_build_llm_instructions(orientation, fabric, description)` | Constructs the deterministic meta-prompt                                      |
+| `_call_openai(model, prompt, image_url, detail, mode)`      | Sends request to OpenAI Responses API                                         |
+| `_call_gemini(model, prompt, image_url, detail, mode)`      | Downloads image, sends request to Gemini                                      |
+| `request_llm_enhance_prompt(...)`                           | Public API: orchestrates the above                                            |
+
+---
+
+### `Prompt-Gen/server.py`
+
+**Purpose:** HTTP layer only. Thin wrapper that:
+
+1. Loads env vars
+
+2. Validates auth
+
+3. Validates model
+
+4. Calls `prompt_gen.request_llm_enhance_prompt()`
+
+5. Returns result or 500
+
+**`PromptRequest`****&#x20;field naming note:** The request field is `item_type` but it is passed to `request_llm_enhance_prompt` as `garment_description`. This rename is the only transformation at the HTTP layer. It creates a a slight impedance mismatch between what callers see (field named `item_type`) and what the internal code sees (`garment_description`). \[Likely intentional for backward compatibility — Needs Verification]
+
+---
+
+## 16. Critical Code Deep Dive
+
+### `_build_llm_instructions` (in `prompt_gen.py`)
+
+This is the most important function for output quality. Line-by-line walk-through:
+
+```python
+def _build_llm_instructions(orientation: str, fabric_type: str, garment_description: str) -> str:
+    
+    # ── DENIM SPECIAL HANDLING ──────────────────────────────────────────
+    extra_denim_instructions = ""
+    if fabric_type.lower() == "denim":
+        extra_denim_instructions = (
+            "Preserve original denim texture exactly: "
+            "fade and distress patterns, whiskering, and any fabric wear. "
+            "Do not smooth, clean, or alter the denim appearance."
+        )
+    # Why: denim texture is a selling feature. Without this instruction,
+    # the image enhancer might "correct" denim distressing as image artifacts.
+
+    # ── BACK VIEW STRIPPING ─────────────────────────────────────────────
+    if orientation.lower() == "back":
+        garment_description = _strip_front_details(garment_description)
+    # Why: prevents the LLM from generating prompts that reference 
+    # front-only features (collar, zip, neckline) in a back-view context.
+
+    # ── MAIN PROMPT TEMPLATE ────────────────────────────────────────────
+    return f"""You are a deterministic retouch-prompt generator, not a conversational assistant.
+
+Your task: generate exactly one image enhancement prompt for the following garment:
+{garment_description}
+
+The prompt must instruct the image enhancement model to:
+1. Lay this garment perfectly flat, centered on the plain background
+2. Straighten and align the garment symmetrically  
+3. Remove any temporary background wrinkles while preserving natural garment drape
+4. Preserve the exact original colour, brightness, and white balance with no shifts
+5. Preserve all permanent garment details: hardware, labels, stitching, all wear marks
+{extra_denim_instructions}
+
+Rules:
+- Output ONLY the final enhancement prompt. No explanations. No alternatives.
+- Do not invent or add features not visible in the image.
+- Proof the output for clarity before returning.
+"""
+```
+
+**Why template with&#x20;****`{{double-brace}}`****&#x20;placeholders (from README description)?**\
+The README mentions the LLM fills in observed specifics. The actual code passes the garment description as context but the template itself gives the LLM structure to work within. The LLM is meant to produce a specific, descriptive instruction — not a generic one.
+
+---
+
+### `verify_api_key` (in `server.py`)
+
+```python
+def verify_api_key(x_api_key: str = Header()):
+    api_key_env = os.getenv("PROMPT_GEN_API_KEY")
+    
+    if not api_key_env:
+        raise HTTPException(
+            status_code=401,
+            detail="API key not configured on server"
+        )
+    
+    if x_api_key != api_key_env:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid API key"
+        )
+```
+
+**How it works:**
+
+- FastAPI's `Header()` dependency auto-reads the `X-Api-Key` header (FastAPI converts `x_api_key` param name → `X-Api-Key` header format)
+
+- The function is used as a FastAPI `Depends` — it runs before the route handler
+
+- If it raises, the route handler never executes
+
+**Watch out for:** Timing attack risk. The comparison `x_api_key != api_key_env` is a plain string comparison, not a constant-time comparison. For a low-traffic internal service this is generally acceptable, but for high-traffic external APIs, use `hmac.compare_digest()` instead.
+
+---
+
+### `_call_gemini` (in `prompt_gen.py`) — complete walk-through
+
+```python
+def _call_gemini(model, prompt, image_url, input_detail, output_mode="string"):
+    
+    # Step 1: Download the image onto this server's memory
+    response = httpx.get(image_url)
+    response.raise_for_status()            # Raises on 4xx/5xx
+    image_bytes = response.content         # Raw bytes
+    
+    # Step 2: Infer MIME type from URL extension (not from Content-Type header)
+    parsed = urlparse(image_url)
+    path = parsed.path                     # e.g. "/images/product123.jpg"
+    ext = path.rsplit(".", 1)[-1].lower()  # "jpg"
+    mime_map = {"jpg": "image/jpeg", "jpeg": "image/jpeg",
+                "png": "image/png", "webp": "image/webp"}
+    mime_type = mime_map.get(ext, "image/jpeg")  # Fallback: JPEG
+    
+    # Step 3: Map detail string to Gemini resolution enum
+    resolution_map = {
+        "low":  types.MediaResolution.MEDIA_RESOLUTION_LOW,
+        "high": types.MediaResolution.MEDIA_RESOLUTION_HIGH,
+        "auto": types.MediaResolution.MEDIA_RESOLUTION_UNSPECIFIED,
+    }
+    resolution = resolution_map.get(input_detail, types.MediaResolution.MEDIA_RESOLUTION_LOW)
+    
+    # Step 4: Build Gemini request config
+    config = types.GenerateContentConfig(media_resolution=resolution)
+    
+    # Step 5: Get (or create) Gemini client
+    client = _get_gemini_client()  # Lazy singleton
+    
+    # Step 6: Call Gemini with image bytes + prompt
+    response = client.models.generate_content(
+        model,
+        contents=[
+            types.Part.from_bytes(data=image_bytes, mime_type=mime_type),
+            prompt
+        ],
+        config=config
+    )
+    
+    # Step 7: Return text or raw response depending on output_mode
+    if output_mode == "response":
+        return response
+    return response.text
+```
+
+**Risk:** No timeout on `httpx.get(image_url)`. If the image server is slow or unresponsive, this call will block indefinitely (httpx has no default timeout). The entire request will hang.
+
+**Risk:** If the image URL requires authentication (e.g., private S3 URL), the download will fail with a 403. The `raise_for_status()` will surface this as an HTTP 500 to the caller.
+
+---
+
+## 17. Risks and Technical Debt
+
+### High Severity
+
+| Risk                                                                         | Location                               | Impact                                                                |
+| ---------------------------------------------------------------------------- | -------------------------------------- | --------------------------------------------------------------------- |
+| **No logging**                                                               | `server.py`, `prompt_gen.py`           | Cannot trace requests, debug failures, or monitor performance         |
+| **Raw exception detail in 500 response**                                     | `server.py` `generate_prompt()`        | Leaks internal error messages, SDK details, paths to callers          |
+| **No timeout on&#x20;****`httpx.get(image_url)`**                            | `prompt_gen.py` `_call_gemini()`       | Request hangs indefinitely if image server is slow                    |
+| **`GEMINI_API_KEY`****&#x20;raises&#x20;****`KeyError`****&#x20;if missing** | `prompt_gen.py` `_get_gemini_client()` | Unhandled exception crashes the request with no helpful error message |
+
+### Medium Severity
+
+| Risk                                                  | Location                         | Impact                                                                  |
+| ----------------------------------------------------- | -------------------------------- | ----------------------------------------------------------------------- |
+| **No logging of failed auth attempts**                | `server.py` `verify_api_key()`   | Cannot detect brute-force or unauthorized access attempts               |
+| **Plain string comparison for API key**               | `server.py` `verify_api_key()`   | Timing attack theoretically possible                                    |
+| **`orientation`****&#x20;not validated**              | `server.py` → `prompt_gen.py`    | Unrecognized orientations silently get front-style prompts              |
+| **`item_type`****&#x20;→ LLM unsanitized**            | `prompt_gen.py`                  | Prompt injection could alter LLM behavior                               |
+| **MIME type inferred from URL path**                  | `prompt_gen.py` `_call_gemini()` | Fails for presigned URLs or CDN URLs without extensions                 |
+| **No version pinning in&#x20;****`requirements.txt`** | `requirements.txt`               | Breaking changes in OpenAI/Gemini SDKs could break the service silently |
+
+### Low Severity
+
+| Risk                                                                              | Location                                 | Impact                                                                                                                |
+| --------------------------------------------------------------------------------- | ---------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| **Lazy LLM client creation**                                                      | `prompt_gen.py`                          | First request to each backend is slower than subsequent ones                                                          |
+| **`_openai_client`****&#x20;/&#x20;****`_gemini_client`****&#x20;module globals** | `prompt_gen.py`                          | Not thread-safe for concurrent modifications (but creation is idempotent, so in practice safe)                        |
+| **Back-strip heuristic relies on hardcoded token list**                           | `prompt_gen.py` `_strip_front_details()` | New garment types with different front-feature vocabulary will not be stripped correctly                              |
+| **README mismatch**                                                               | `README.md`                              | Server port listed as `8000` in README matches code — consistent, but README might not match future deployment config |
+
+---
+
+## 18. Recommendations
+
+1. **Add structured logging** — log every request: `image_url` (hashed for privacy), `orientation`, `model`, latency, outcome (success/error), and error details
+
+2. **Add timeout to&#x20;****`httpx.get()`** — `httpx.get(image_url, timeout=30)` to prevent hanging requests
+
+3. **Sanitize 500 error messages** — return generic "Internal server error" to callers; log full traceback internally
+
+4. **Use&#x20;****`hmac.compare_digest()`****&#x20;for API key comparison** — prevents timing attacks
+
+5. **Validate&#x20;****`orientation`** — accept only `"front"` and `"back"`; raise HTTP 400 for anything else
+
+6. **Add&#x20;****`input_detail`****&#x20;recommendation enforcement** — if `model == "gemini-2.5-flash-lite"` and `input_detail == "low"`, either automatically set to `"high"` or warn the caller (per config.py's own benchmark comments)
+
+7. **Pin dependency versions** — use `pip freeze` output or define minimum compatible versions
+
+8. **Add request ID tracking** — inject a request ID header (or generate one) so multi-service traces can be correlated
+
+9. **Handle&#x20;****`KeyError`****&#x20;for&#x20;****`GEMINI_API_KEY`** — wrap `os.environ["GEMINI_API_KEY"]` in a try/except that raises a descriptive `HTTPException(500, "GEMINI_API_KEY not configured")`
+
+10. **Consider caching**: for the same `(image_url, orientation, fabric_type, item_type, model)` tuple, the result is deterministic. Caching could reduce LLM API costs for re-processed images.
+
+---
+
+## 19. Junior Developer Summary
+
+### What does this service do in plain English?
+
+Imagine you're writing instructions for a photo editor: "Take this jacket, lay it flat, preserve all the hardware, make sure the color doesn't shift." That's exactly what this service generates — but automatically, using AI.
+
+When a garment has been identified (by the AI-Tagging service), someone needs to write instructions for the image enhancer about what to preserve and how to position the garment. Writing these manually for thousands of products is impossible. This service automates it.
+
+You give it:
+
+- The garment image URL
+
+- Whether it's the front or back view
+
+- What type of garment it is
+
+- What fabric it's made of
+
+It returns a single string: the retouch instruction that the image enhancer will follow.
+
+### Key things to know as a junior developer
+
+- The service is **stateless**: it doesn't remember anything between requests. Each call is independent.
+
+- There are **two supported AI backends**: OpenAI (default) and Gemini. Which one runs depends on the `model` field in the request.
+
+- The **`X-API-Key`****&#x20;header** must be present on every request to `/generate-prompt`. Requests without it get a 401 error.
+
+- **The&#x20;****`.env`****&#x20;file** must contain `PROMPT_GEN_API_KEY`, `OPENAI_API_KEY`, and/or `GEMINI_API_KEY` depending on which models you want to use.
+
+- Start the server with: `uvicorn server:app --port 8000` from the `Prompt-Gen/` directory.
+
+- If you get a 500 error, the error message in the response will tell you what went wrong (be aware this leaks internal details — not ideal for production).
+
+---
+
+## 20. Needs Verification / Unknowns
+
+| Item                                        | Uncertainty                                                                                                                                                                      | Suggested Action                                                            |
+| ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| `item_type` vs `garment_description` rename | `item_type` in HTTP request becomes `garment_description` in internal function — unclear if this was a planned separation or naming drift                                        | Align naming across the HTTP layer and internal functions                   |
+| `output_mode="response"` usage              | Both `_call_openai` and `_call_gemini` support `output_mode="response"` which returns the raw SDK response object — but `generate_prompt()` always calls with default `"string"` | Confirm whether `output_mode="response"` is used anywhere or can be removed |
+| `input_detail` mapping for unknown values   | `_call_gemini` uses `.get()` with fallback to `MEDIA_RESOLUTION_LOW` — but `_call_openai` passes `detail` directly; unclear if OpenAI rejects unknown detail values              | Test with `input_detail="medium"` to confirm behavior                       |
+| Model prefix routing logic                  | `model.startswith("gemini")` routes to Gemini; all else routes to OpenAI — if a future model named `"gemini-openai-proxy"` exists, routing could be ambiguous                    | Consider explicit model-to-backend mapping dict instead of prefix matching  |
+| Response format compatibility               | The service returns `{"prompt": "..."}` — downstream AI-Tagging `enhance_profile.py` reads `response.json()["prompt"]` — this contract must not change                           | Document this JSON contract explicitly                                      |
+

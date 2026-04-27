@@ -1,0 +1,277 @@
+---
+title: Monitor Unfulfilled Marketplace Orders
+description: Detects and alerts on marketplace orders that remain in Open Orders beyond SLA thresholds using time-based filtering and idempotent tagging.
+---
+
+## Overview
+
+The **Monitor Unfulfilled Marketplace Orders** macro is a scheduled batch monitoring system designed to detect orders that remain in the **Open Orders** state beyond defined SLA thresholds.
+
+### What are “Open Orders”?
+
+**Open Orders** are orders that have been imported into Linnworks but are **not yet processed, dispatched, or completed**.  
+These typically require action from warehouse or operations teams.
+
+### Order Lifecycle
+
+Orders are expected to move from **Open → Processed → Dispatched** within defined SLAs.  
+This macro highlights orders that are stuck in the **Open** stage beyond acceptable time limits.
+
+---
+
+## Purpose
+
+This macro provides a proactive monitoring layer that:
+
+- Detects SLA-breaching marketplace orders  
+- Filters orders by source and subsource  
+- Sends structured email alerts with CSV attachments  
+- Prevents duplicate alerts using identifier tagging  
+- Enables operations teams to take timely action  
+
+---
+
+## Detection Logic
+
+An order is flagged when:
+
+> **Order Age (UTC Now - ReceivedDate) ≥ minimumOrderAgeHours**
+
+### Key Conditions
+
+- **Timestamp Used:** `ReceivedDate` (order creation time)  
+- **Timezone:** UTC  
+- **State Filter:** Only Open Orders  
+- **Idempotency:** Orders already tagged are excluded  
+
+---
+
+## System Scope
+
+### In Scope
+
+- Open Orders monitoring  
+- Time-based SLA evaluation  
+- Email notification with CSV export  
+- Identifier-based idempotency  
+
+### Out of Scope
+
+- Order fulfillment actions  
+- Order modification  
+- Real-time event processing  
+
+---
+
+## Architecture Overview
+
+| Component | Type | Description |
+|----------|------|-------------|
+| Execution Model | Scheduled / Manual | Cron-based macro execution |
+| Processing Model | Batch | Iterates through orders per location |
+| Scope | Multi-location | Processes all stock locations |
+| Alerting | Email (SMTP) | HTML + CSV attachment |
+| Idempotency | Identifier Tagging | Prevents duplicate alerts |
+
+---
+
+## Execution Flow
+
+1. Validate input parameters  
+2. Load all stock locations  
+3. Apply date + identifier filters  
+4. Fetch open orders per location  
+5. Apply source and subsource filtering  
+6. Prepare email (HTML + CSV)  
+7. Send notification  
+8. Tag processed orders  
+
+---
+
+## Filtering Strategy
+
+### Time-Based Filtering
+
+Orders are filtered using:
+
+> **ReceivedDate ≤ (UTC Now - minimumOrderAgeHours)**
+
+This ensures only orders older than the SLA threshold are considered.
+
+### Identifier Exclusion
+
+Orders already processed are excluded using:
+
+> **Orders NOT containing `identifierTag`**
+
+This prevents duplicate alerts for the same order.
+
+---
+
+## Source Filtering
+
+Optional filtering allows control over which orders are monitored:
+
+- **includedSources** → Only include specific marketplaces (e.g., Amazon, eBay)  
+- **excludedChannelSubsource** → Exclude specific subsources  
+
+If no values are provided:
+- All sources are included  
+- No subsources are excluded  
+
+---
+
+## Notification System
+
+### Email Content
+
+- HTML summary (top 10 orders)  
+- Includes:
+  - Order Number  
+  - Channel  
+  - Location  
+  - Order Date  
+  - Order Age (hours)  
+  - Customer Name  
+
+### CSV Attachment
+
+Contains full dataset:
+
+- Order Number  
+- Channel & Subsource  
+- Location  
+- Order Date  
+- Order Age  
+- Customer  
+
+---
+
+## What Happens After Alert?
+
+- Email is sent to configured recipients  
+- All alerted orders are tagged with `identifierTag`  
+- Tagged orders are excluded from future runs  
+- No duplicate alerts are generated  
+
+---
+
+## Who Should Act?
+
+- **Operations Team** → Review delayed orders and prioritise processing  
+- **Warehouse Team** → Pick, pack, and dispatch pending orders  
+- **Support Team** → Investigate customer-impacting delays  
+
+---
+
+## Idempotency Mechanism
+
+To avoid duplicate alerts:
+
+- Orders are tagged after successful email delivery  
+- Future runs exclude tagged orders  
+
+---
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+|----------|------|----------|-------------|
+| minimumOrderAgeHours | int | Yes | SLA threshold in hours |
+| excludedChannelSubsource | string | No | Subsources to exclude |
+| includedSources | string | No | Sources to include |
+| recipientNames | string | No | Display names for recipients |
+| recipientEmails | string | Yes | Email addresses |
+| identifierTag | string | Yes | Idempotency identifier |
+
+> **Note:** Multiple recipients are supported. Provide email addresses as a comma-separated list (e.g., `user1@example.com, user2@example.com`).  
+> If `recipientNames` is provided, it must match the number of email addresses in the same order.
+
+## Validation Rules
+
+- `minimumOrderAgeHours > 0`  
+- At least one valid email must be provided  
+- Emails are deduplicated and validated  
+- `identifierTag` must not be empty  
+- Recipient names must match email count (if provided)  
+
+---
+
+## Scalability Considerations
+
+- Processes orders per location  
+- Supports large datasets using batch retrieval  
+- Suitable for medium to high order volumes  
+
+---
+
+## Observability
+
+### Logs Captured
+
+- Execution start/end  
+- Locations processed  
+- Orders fetched and filtered  
+- Email delivery status  
+- Identifier assignment  
+
+### Metrics Enabled
+
+- Total orders scanned  
+- Orders breaching SLA  
+- Alerts generated  
+
+---
+
+## Execution Strategy
+
+### Recommended Schedule
+
+Run every:
+
+- **15 minutes** → High-volume environments  
+- **30 minutes** → Standard operations  
+
+---
+
+## Example Scenario
+
+### Threshold: 24 hours
+
+| Order | Age | Result |
+|------|-----|--------|
+| A | 30h | Alerted |
+| B | 10h | Ignored |
+| C | 26h | Alerted |
+
+**Outcome:**
+
+- Email sent with Order A & C  
+- Orders tagged  
+- No duplicate alerts in future runs  
+
+---
+
+## Key Insight
+
+This macro implements a **time-based monitoring mechanism** for identifying delayed orders in the fulfillment pipeline.
+
+By combining:
+
+- Open state filtering  
+- SLA-based time evaluation  
+- Identifier-based idempotency  
+
+…it ensures accurate, non-duplicative alerting with minimal manual effort.
+
+---
+
+## Summary
+
+- Detects delayed marketplace orders  
+- Enforces SLA monitoring  
+- Sends structured alerts with full visibility  
+- Prevents duplicate notifications  
+- Enables faster operational response  
+
+---

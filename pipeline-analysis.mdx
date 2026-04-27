@@ -1,0 +1,255 @@
+---
+title: Pipeline Analysis
+description: >-
+  Analyze your CRM pipeline to track lead progress, measure performance, and
+  gain insights into sales effectiveness using reports and filters.
+---
+The *CRM* application helps track how leads and opportunities move through different stages — from initial contact to a successful deal (**Won**) or closure without conversion (**Lost**).
+
+Once your pipeline is structured, the **Pipeline Analysis** page provides powerful tools to evaluate performance, monitor trends, and understand how effectively your team is managing opportunities.
+
+To open this view, go to:\
+**CRM app ‣ Reporting ‣ Pipeline**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/reporting-tab-and-pipeline-view.png" width="370" height="232" alt="Open the CRM app and click on the Reporting tab along the top, then click Pipeline." />
+
+## **Understanding the Pipeline Analysis page**
+
+When you land on the **Pipeline Analysis** page, a graph is displayed by default. It typically shows data from the past year, with each bar representing the number of leads in a specific stage. Colors differentiate the time period when leads reached those stages.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/pipeline-analysis-page.png" width="933" height="353" alt="The default state of the Pipeline Analysis page is a graph, with many options to change it." />
+
+This page includes several interactive tools that allow you to customize how data is displayed and analyzed.
+
+### **Key interface elements**
+
+- **Actions (⚙️ icon)**\
+  Found near the page title, this menu allows you to:
+
+  - Add the report to dashboards
+
+  - Insert it into spreadsheets
+
+  - Link it to internal knowledge articles
+
+- **Search bar**\
+  Displays active filters and grouping rules. You can:
+
+  - Type to search or apply filters
+
+  - Use the dropdown icon to access advanced options
+
+- **View controls (top-right)**\
+  Switch between different formats:
+
+  - **Graph** (default visual charts)
+
+  - **Pivot** (data tables)
+
+  - **Cohort** (time-based analysis)
+
+  - **List** (record-level view)
+
+## **Chart and data visualization options**
+
+Depending on the selected view, different tools become available:
+
+### **Graph view options**
+
+- **Bar, Line, Pie charts**: Change how data is visualized
+
+- **Stacked**: Combine values into a single bar
+
+- **Ascending / Descending**: Sort data order
+
+### **Pivot view options**
+
+- **Flip Axis**: Swap rows and columns
+
+- **Expand All**: Open grouped data
+
+- **Download xlsx**: Export data to Excel
+
+## **Using search and filters**
+
+The analysis can be refined using filters and grouping options.
+
+Click the dropdown icon next to the search bar to access all available settings.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/search-panel-filters-and-group-by-options.png" width="933" height="289" alt="Clicking on the down arrow next to the search bar opens a menu of filters for the analysis." />
+
+### **Available filters**
+
+You can filter records based on:
+
+- Assigned user (**My Pipeline**)
+
+- Lead type (**Leads** or **Opportunities**)
+
+- Status (**Active**, **Inactive**, **Won**, **Lost**)
+
+- Date ranges (**Created On**, **Expected Closing**, **Date Closed**)
+
+- Archived records
+
+You can also build custom filters for more precise control.
+
+### **Create custom filters**
+
+Custom filters allow more advanced conditions:
+
+1. Click the dropdown icon next to the search bar
+
+2. Select **Add Custom Filter**
+
+3. Define your rule using:
+
+   - Field (e.g., Stage, Country, Active)
+
+   - Condition (e.g., is, is not, greater than)
+
+   - Value
+
+You can:
+
+- Add multiple rules
+
+- Combine conditions (AND/OR logic)
+
+- Duplicate or delete rules
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/custom-filter-add-branch.png" width="768" height="494" alt="The add branch feature allows the creation of more complex all or any statements for rules." />
+
+### **Create custom groupings**
+
+Grouping helps organize data for better insights.
+
+To add:
+
+1. Open the dropdown menu
+
+2. Click **Add Custom Group**
+
+3. Select one or more grouping fields
+
+You can remove groups anytime from the search bar.
+
+## **Measurement options**
+
+By default, the system counts the number of leads. However, you can switch to other metrics using the **Measures** menu:
+
+- Days to Assign / Close / Convert
+
+- Expected Revenue or MRR
+
+- Recurring Revenue
+
+- Closing delays
+
+These metrics help evaluate performance beyond simple counts.
+
+## **Switching between views**
+
+You can display the same data in multiple formats:
+
+- **Graph view**: Best for quick visual comparisons
+
+- **Pivot view**: Ideal for detailed analysis
+
+- **Cohort view**: Useful for time-based tracking
+
+- **List view**: Shows individual records
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/graph-view.png" width="635" height="61" alt="The Graph View displays the analysis as a Bar Chart, Line Chart, or Pie Chart." />
+
+**Tip**\
+For clearer comparisons in bar charts, try disabling the **Stacked** option.
+
+## **Creating reports**
+
+With filters and groupings, you can generate meaningful reports tailored to your business needs.
+
+### **Win/Loss analysis**
+
+A common use case is comparing successful vs unsuccessful opportunities over time.
+
+This type of report helps identify:
+
+- High-performing sales reps
+
+- Effective marketing channels
+
+- Conversion trends
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/search-criteria-for-basic-win-loss.png" width="838" height="44" alt="The search criteria for win/loss reports is Created On, Stage, and Active is in true false." />
+
+#### **Steps to create a win/loss report**
+
+1. Go to **CRM app ‣ Reporting ‣ Pipeline**
+
+2. Open the filter dropdown
+
+3. Group results by **Stage**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/filters-for-basic-win-loss-report.png" width="933" height="513" alt="The Search menu containing the filters for a basic win/loss report." />
+
+1. Add a custom filter:
+
+   - Include both active and inactive records
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/add-custom-active-filter.png" width="803" height="347" alt="The Add Custom Filter menu showing two rules: (1) Active is set, and (2) Active is not set." />
+
+The result displays all opportunities, grouped by stage, showing both won and lost deals.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/basic-win-loss-report.png" width="933" height="497" alt="A basic win/loss report showing all leads whether won or lost grouped by stage." />
+
+### **Customizing reports**
+
+You can further refine reports by:
+
+- Adjusting date ranges (e.g., last 30 days)
+
+- Grouping by:
+
+  - Salesperson
+
+  - Sales team
+
+  - Source or marketing channel
+
+- Adding filters like **Lost Reason** or **Last Stage Update**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/search-panel-filters-and-group-by-options.png" width="933" height="289" alt="The Search menu open and the Won and Lost filters highlighted." />
+
+## **Save and share reports**
+
+Once your report is ready, you can save it for future use or share it with your team.
+
+### **Save a report**
+
+1. Click the dropdown next to the search bar
+
+2. Select **Save current search**
+
+3. Enter a name
+
+Optional:
+
+- Set as default view
+
+- Share with other users
+
+1. Click **Save**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/save-to-favorites.png" width="199" height="207" alt="Under the Favorites heading, click Save current search and save the report for later." />
+
+Saved reports appear under **Favorites** and update automatically with new data.
+
+You can also:
+
+- Add reports to dashboards
+
+- Export them to spreadsheets
+
+- Share insights across teams
+

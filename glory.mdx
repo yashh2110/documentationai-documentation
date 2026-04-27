@@ -1,0 +1,149 @@
+---
+title: Glory
+description: Glory cash machines enable the automation of cash transactions.
+---
+**Important**
+
+- Odoo supports the Glory CI-5, CI-10, and CI-10X models.
+
+- The Glory machine must run firmware version ISP-K05H/B v18.40 or later.
+
+- Versions starting with ISP-K35 are **not supported**.
+
+**Note**
+
+- The integration with the Glory cash machine only supports basic functions, such as cash transactions and cash count checks.
+
+- Tasks like filling and emptying the machine must be performed directly through the cash machine interface.
+
+## Configuration
+
+### Cash machine settings
+
+1. Power on the cash machine, which briefly displays its IP address at the bottom of the screen. Note it down for later.
+
+   Note:
+   The IP address should be formatted as `###.###.#.##` (e.g., `192.168.0.25`).
+
+2. Navigate to the cash machine’s homepage by entering its IP address as the URL in HTTPS (e.g., `https://192.168.0.25`), and log in with your Glory credentials.
+
+3. As long as the certificate is not imported, a warning page appears when trying to access the machine’s homepage.\
+   Bypass it by clicking **Advanced** → **Proceed to \[IP address] (unsafe)**.
+
+4. From the Glory homepage, go to **Host Configuration** and ensure the **Network** setting is set to **MANUAL** (static IP).
+
+5. Navigate to **SSL Configuration → HTTPS Server Setting**.
+
+   - Open terminal and check OpenSSL:
+
+     ```bash
+     openssl
+     ```
+
+   - If not installed, install from:
+     [https://openssl-library.org/source/](https://openssl-library.org/source/)
+
+   - Generate certificate:
+
+     ```bash
+     openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -sha256 -days 3650 -nodes -subj "/CN=192.168.0.25" -addext "subjectAltName = IP:192.168.0.25"
+     ```
+
+   Important:
+   The SSL certificate must use the same static IP as the machine.
+
+6. Upload files in HTTPS settings:
+
+   - `cert.pem` → Certificate
+
+   - `key.pem` → Private Key
+
+7. Go to **WebApp Configuration** and enable:
+
+   - Nodejs Interface
+
+8. Additional setup:
+
+   - If multiple POS:
+
+     - Enable Session mode
+
+     - Enable Occupy mode
+
+   - If dedicated user:
+
+     - Enable User check
+
+9. Restart the machine.
+
+Note:
+This setup may require advanced technical knowledge. Contact a Glory integration partner if needed.
+
+## Import self-signed certificates
+
+For long-term usage, import certificates into the POS device.
+
+<Tabs>
+  <Tab title="Windows OS">
+    Windows manages certificates, which means that self-signed certificates must be imported from the certification files rather than the browser. To do so:
+
+    1. Open the Windows File Explorer and locate the downloaded certification files.
+
+    2. Right-click on the certification files and select Install Certificate.
+
+    3. Specify the certificate location and select the installation scope: either the Current User only or all users (Local Machine). Then, click Next.
+
+    4. On the Certificate Store screen, tick Place all certificates in the following store, click Browse…, and select Trusted Root Certification Authorities.
+
+    5. Click Finish and accept the pop-up security window.
+
+    6. Restart the computer to make sure that the changes are applied.
+  </Tab>
+
+  <Tab title="Linux OS">
+    When using Google Chrome:
+
+    1. Open the web browser.
+
+    2. Navigate to Settings → Privacy and security → Security → Manage certificates.
+
+    3. Go to the Authorities tab, click Import, and select the exported certification files.
+
+    4. Accept all warnings and click OK.
+
+    5. Restart the web browser.
+
+    When using Mozilla Firefox:
+
+    1. Open the web browser.
+
+    2. Navigate to Settings → Privacy & Security → Security → View Certificates… → Import.
+
+    3. Select the exported certification files.
+
+    4. Tick the checkboxes and validate.
+
+    5. Restart the web browser.
+  </Tab>
+</Tabs>
+
+## Payment method
+
+1. Install POS Glory Cash Machines module
+
+2. Configure payment method:
+
+   - Go to Point of Sale → Configuration → Payment Methods
+
+   - Create or edit Cash method
+
+   - Select POS
+
+   - Integration → Cash Machine (Glory)
+
+   - Enter Cash Machine IP
+
+   If User check enabled:
+
+   - Enter Username and Password
+

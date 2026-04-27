@@ -1,0 +1,98 @@
+---
+title: Convert leads into opportunities
+description: >-
+  Leads act as an initial qualification stage in the CRM pipeline before
+  becoming opportunities. This process allows teams to evaluate potential deals
+  before assigning them and moving them forward in the sales cycle.
+---
+In the CRM pipeline, *Leads* serve as the first step in evaluating potential deals before turning them into *Opportunities*. This stage allows your team to assess quality, gather information, and determine whether a lead is worth pursuing before assigning it to a salesperson.
+
+## **Configuration**
+
+To enable the *Leads* feature:
+
+1. Go to **CRM app ‣ Configuration ‣ Settings**
+
+2. Enable the **Leads** option
+
+3. Click **Save**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/convert-leads-leads-setting.png" width="768" height="85" alt="Leads setting on CRM configuration page." />
+
+Once activated, a **Leads** menu will appear in the top navigation bar of the CRM interface.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/convert-leads-leads-menu.png" width="488" height="51" alt="Leads menu on CRM application." />
+
+By default, this feature is enabled for all sales teams. If needed, you can disable it for a specific team:
+
+- Navigate to **CRM app ‣ Configuration ‣ Sales Teams**
+
+- Select the desired team
+
+- Uncheck the **Leads** option
+
+- Save your changes
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/convert-leads-leads-button.png" width="482" height="285" alt="Leads menu on CRM application." />
+
+## **Convert a lead into an opportunity**
+
+To convert a lead:
+
+1. Go to **CRM app ‣ Leads**
+
+2. Open the lead you want to convert
+
+**Warning**
+
+If a lead has a probability set to 100%, attempting to convert it will trigger an error.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/100-percent-lead-error.png" width="786" height="150" alt="The error message that appears when attempting to convert a 100% probability lead into an opportunity." />
+
+Click the **Convert to Opportunity** button at the top of the record.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/convert-leads-convert-opp-button.png" width="558" height="261" alt="Create opportunity button on a lead record." />
+
+A conversion window will open. In this window:
+
+- Select **Convert to opportunity** under **Conversion Action**
+
+- Assign a **Salesperson** (optional)
+
+- Choose a **Sales Team** (auto-filled if a salesperson is selected)
+
+If the lead is already assigned, these fields will be pre-filled.
+
+### **Customer options**
+
+Under the **Customer** section, you can choose how the opportunity is linked:
+
+- **Create a new customer**\
+  Use this option to generate a new customer record from the lead details
+
+- **Link to an existing customer**\
+  Select an existing contact from the list to associate with this opportunity
+
+Once everything is set, click **Create Opportunity**.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/convert-leads-conversion-action.png" width="527" height="501" alt="Create opportunity pop-up." />
+
+To access the converted opportunity, go to **CRM app ‣ My Pipeline**.
+
+## **Merge with existing leads or opportunities**
+
+If a **Similar Leads** smart button appears, it indicates that a matching record already exists in the system. Before converting, it’s recommended to review these matches.
+
+> <Image src="https://www.odoo.com/documentation/19.0/_images/similar-leads-smart-button.png" width="768" height="196" alt="Close up of a lead with emphasis on the Similar Leads smart button." />
+
+Click the smart button to compare records and decide whether merging is appropriate.
+
+To merge during conversion:
+
+1. Click **Convert to Opportunity**
+
+2. Select **Merge with existing opportunities** under **Conversion Action**
+
+This will display a list of similar records available for merging.
+
+During the merge process, the system combines data into the earliest created record, and the final result will always be treated as an opportunity.

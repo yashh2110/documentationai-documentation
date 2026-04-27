@@ -1,0 +1,170 @@
+---
+title: Open Orders Report (Excluding Unpaid)
+description: >-
+  Generate and email a report of open orders (excluding unpaid), grouped by date
+  and postal service, with totals and CSV attachment.
+---
+## Overview
+
+The **RIS-SM-2267 – Open Orders Report (Excluding Unpaid)** macro automates reporting of pending orders by generating a structured summary and sending it via email with a CSV attachment.
+
+<Callout kind="tip" collapsed="false">
+  Schedule this macro daily to maintain consistent visibility of pending orders and workload.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Retrieves open orders excluding unpaid
+
+- Groups data by date and courier
+
+- Calculates totals and breakdowns
+
+- Sends report via email with CSV attachment
+
+👉 In short:\
+Fetch data → group → calculate → generate report → email.
+
+## When It Runs
+
+Typically executed:
+
+- Daily scheduled reporting
+
+- Before warehouse processing
+
+- Operations monitoring
+
+- Management reporting
+
+- Pending workload tracking
+
+- Manually or via automation
+
+## Parameters
+
+<ParamField path="toemail" param-type="string" required="true" deprecated="false">
+  Recipient email address(es).
+</ParamField>
+
+<ParamField path="emailCC" param-type="string" required="false" deprecated="false">
+  CC email address(es).
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Example:\
+  toemail = "[ops@company.com](mailto:ops@company.com)"\
+  emailCC = "[manager@company.com](mailto:manager@company.com)"
+</Callout>
+
+## Simple Explanation
+
+The macro retrieves open orders, groups them by date and courier, calculates totals, generates a CSV report, and emails it to stakeholders.
+
+## Step-by-Step Flow
+
+<Steps>
+  <Step title="Start Macro" icon="play" title-type="p">
+    Log macro start and initialize execution.
+  </Step>
+
+  <Step title="Define Date Range" icon="calendar" title-type="p">
+    Set:
+  </Step>
+
+  <Step title="Execute SQL Query" icon="database" title-type="p">
+    Fetch open orders:
+
+    Group by date and postal service using pivot.
+  </Step>
+
+  <Step title="Process Data" icon="shuffle" title-type="p">
+    Convert:
+  </Step>
+
+  <Step title="Calculate Totals" icon="bar-chart" title-type="p">
+    Compute:
+  </Step>
+
+  <Step title="Generate CSV File" icon="file" title-type="p">
+    Create file:
+  </Step>
+
+  <Step title="Prepare Email Body" icon="mail" title-type="p">
+    Include:
+  </Step>
+
+  <Step title="Send Email" icon="send" title-type="p">
+    Send via SMTP:
+
+    Attach CSV file and send to recipients.
+  </Step>
+
+  <Step title="Cleanup" icon="trash" title-type="p">
+    Delete temporary CSV file after sending email.
+  </Step>
+
+  <Step title="Logging" icon="file-text" title-type="p">
+    Log data retrieval, file creation, email status, and errors.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Open order summary report generated
+
+  - CSV file created and attached
+
+  - Date-wise and courier-wise breakdown
+
+  - Email sent to stakeholders
+</Callout>
+
+## Usefulness
+
+- **Real-Time Visibility** – Track pending orders easily
+
+- **Better Planning** – Prioritize workload effectively
+
+- **Automation** – Remove manual reporting effort
+
+- **Data Insights** – Analyze courier and date trends
+
+- **Email Distribution** – Share reports instantly
+
+## Example Scenario
+
+<Expandable title="Daily Open Orders Reporting" default-open="false">
+  Need a daily report of open orders excluding unpaid.
+
+  The macro:
+
+  - Fetches last 30 days of open orders
+
+  - Groups by courier and date
+
+  - Calculates totals
+
+  - Emails report
+
+  Result:
+
+  - Team receives daily insights
+
+  - Faster decision-making
+
+  - Improved workload management
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This macro follows a complete reporting flow:\
+  Fetch Data → Transform → Calculate Totals → Generate Report → Send Email.
+
+  It prevents manual errors, lack of visibility, delayed decisions, untracked orders, and poor operational insights.
+</Callout>
+

@@ -1,0 +1,155 @@
+---
+title: Send Open Order Print to Virtual Printer
+description: >-
+  Automatically print invoices for open orders by applying template mapping
+  based on shipping service and sending them to a virtual printer.
+---
+## Overview
+
+The **RIS-SM-1026 – SendOpenOrderPrintToVirtualPrinter** macro automates invoice printing by sending order documents directly to a configured virtual printer.
+
+It filters eligible orders, selects the correct invoice template based on shipping service, and prints invoices without manual intervention.
+
+<Callout kind="tip" collapsed="false">
+  Ensure the virtual printer is online and invoice templates are correctly configured before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Filters orders using identifiers  
+- Maps shipping services to invoice templates  
+- Sends invoices to a virtual printer  
+- Automates document printing  
+
+👉 In short:  
+Automatically print invoices for selected orders.
+
+## When It Runs
+
+Used for invoice printing automation
+
+Typically runs:
+
+- Scheduled execution  
+- Manually triggered  
+- After order import or processing  
+
+## Parameters
+
+<ParamField path="virtualPrinterName" param-type="string" required="true" deprecated="false">
+  Name of the virtual printer.
+</ParamField>
+
+<ParamField path="identifier" param-type="string" required="true" deprecated="false">
+  Order identifiers used to filter eligible orders.
+</ParamField>
+
+<ParamField path="shippingServiceNames" param-type="string" required="true" deprecated="false">
+  Shipping services used for template mapping.
+</ParamField>
+
+<ParamField path="invoiceTemplates" param-type="string" required="true" deprecated="false">
+  Invoice templates mapped to shipping services.
+</ParamField>
+
+<ParamField path="defualtInvoiceTemplate" param-type="string" required="true" deprecated="false">
+  Default invoice template if no match is found.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Example:  
+  Identifier → "Express,Priority"  
+  Shipping Service → "Royal Mail,DPD"  
+  Templates → "RM Invoice,DPD Invoice"  
+
+  Meaning:  
+  Each shipping service is mapped to a corresponding invoice template.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Fetch Open Orders" icon="download" title-type="p">
+    Retrieve open orders from the last 8 days.
+  </Step>
+
+  <Step title="Filter Eligible Orders" icon="filter" title-type="p">
+    Select orders that:
+    - Do not have shipping labels printed  
+    - Match the provided identifiers  
+  </Step>
+
+  <Step title="Retrieve Printers & Templates" icon="printer" title-type="p">
+    Fetch available invoice templates and virtual printers.  
+    Validate that the target printer is online.
+  </Step>
+
+  <Step title="Process Orders" icon="list" title-type="p">
+    Loop through each filtered order.
+  </Step>
+
+  <Step title="Map Template" icon="layers" title-type="p">
+    Match order shipping service with configured list and assign template.  
+    Use default template if no match is found.
+  </Step>
+
+  <Step title="Print Invoice" icon="print" title-type="p">
+    Generate invoice PDF and send it to the virtual printer.
+  </Step>
+
+  <Step title="Log Results" icon="file-text" title-type="p">
+    Record successful prints and log any failures.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Orders filtered and processed automatically  
+  - Correct invoice templates applied  
+  - Invoices printed via virtual printer  
+  - Execution logs available  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Automating invoice printing workflows  
+- Reducing manual printing effort  
+- Ensuring correct template usage  
+- Improving warehouse efficiency  
+- Supporting high-volume order processing  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Works only if the virtual printer is online  
+  - Template names must match exactly  
+  - Identifier must exist on orders  
+  - Processes only orders from the last 8 days  
+  - Uses default template if no match is found  
+  - Does not print if template is missing  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Auto Print Invoices Based on Shipping Service" default-open="false">
+  Orders are tagged with identifiers and have different shipping services.
+
+  👉 The macro:
+
+  - Filters eligible orders  
+  - Maps shipping services to templates  
+  - Sends invoices to virtual printer  
+
+  Result: Invoices are printed automatically with correct templates.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By combining intelligent filtering, template mapping, and automated printing, this macro ensures fast, accurate, and scalable invoice processing in warehouse operations.
+</Callout>

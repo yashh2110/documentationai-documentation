@@ -1,0 +1,148 @@
+---
+title: Excel to CSV Convert
+description: >-
+  Automatically convert files between Excel and CSV formats with FTP-based file
+  transfer and management.
+---
+## Overview
+
+The **RIS-SM-2007 – Excel to CSV Convert&#x20;**&#x6D;acro automates file conversion between Excel and CSV formats while managing file transfers via an FTP server.
+
+It downloads files, processes conversions, organizes outputs, and uploads results back to designated FTP folders.
+
+<Callout kind="tip" collapsed="false">
+  Ensure FTP folders (raw, processed, failed) are properly configured before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Downloads files from FTP
+
+- Converts Excel ↔ CSV formats
+
+- Uploads processed files back to FTP
+
+👉 In short:\
+Automate file conversion and FTP file handling.
+
+## When It Runs
+
+Used for file processing & system integration
+
+Typically runs:
+
+- Scheduled execution (automated processing)
+
+- Manually for batch conversions
+
+## Parameters
+
+<Callout kind="info" collapsed="false">
+  No input parameters required.\
+  The macro processes files based on predefined FTP directory configuration.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Connect to FTP" icon="link" title-type="p">
+    Access FTP server and retrieve files from source folder (e.g., raw-files).
+  </Step>
+
+  <Step title="Download Files" icon="download" title-type="p">
+    Download files locally and remove them from FTP source location.
+  </Step>
+
+  <Step title="Prepare Directories" icon="folder" title-type="p">
+    Create folders for raw, processed, and failed files.
+  </Step>
+
+  <Step title="Convert Files" icon="refresh-cw" title-type="p">
+    Convert based on file type:
+
+    - CSV → Excel (.xlsx)
+
+    - Excel → CSV (.csv)
+  </Step>
+
+  <Step title="Handle Errors" icon="alert-circle" title-type="p">
+    Move failed conversions to designated local folder.
+  </Step>
+
+  <Step title="Upload Processed Files" icon="upload" title-type="p">
+    Upload successful files to processed-files folder on FTP.
+  </Step>
+
+  <Step title="Upload Failed Files" icon="x-circle" title-type="p">
+    Upload failed files to failed-files folder for review.
+  </Step>
+
+  <Step title="Cleanup" icon="trash" title-type="p">
+    Remove temporary local files and directories.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Files converted automatically between Excel and CSV
+
+  - Processed files uploaded to FTP
+
+  - Failed files separated for review
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Automating file format conversion
+
+- Eliminating manual file handling
+
+- Maintaining structured FTP workflows
+
+- Supporting external integrations
+
+- Reducing operational errors
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Processes only files in configured FTP source folder
+
+  - Files are removed from FTP after download
+
+  - Supports both CSV → Excel and Excel → CSV
+
+  - Failed files are stored separately
+
+  - Requires proper FTP configuration
+</Callout>
+
+## Example Scenario
+
+<Expandable title="File Conversion Example" default-open="false">
+  Files are uploaded to FTP in CSV and Excel formats.
+
+  👉 The macro:
+
+  - Downloads files from FTP
+
+  - Converts CSV → Excel and Excel → CSV
+
+  - Uploads processed files to designated folders
+
+  - Moves failed files for review
+
+  Result: Files are correctly converted and organized automatically.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Automating file conversion and FTP handling ensures reliable data exchange, reduces manual work, and improves integration efficiency across systems.
+</Callout>
+

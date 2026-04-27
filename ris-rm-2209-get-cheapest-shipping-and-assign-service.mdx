@@ -1,0 +1,148 @@
+---
+title: Get Cheapest Shipping and Assign Service
+description: >-
+  Retrieve live shipping quotes from multiple couriers, compare services, and
+  assign the most cost-effective shipping method to orders.
+---
+## Overview
+
+The **RIS-RM-2209 – Get Cheapest Shipping and Assign Service** macro selects the optimal shipping method for each order by retrieving live quotes from available couriers and applying business logic to assign the best option.
+
+<Callout kind="tip" collapsed="false">
+  Ensure all courier integrations are configured and active before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Retrieves live shipping quotes
+
+- Compares available courier services
+
+- Assigns the most cost-effective or suitable shipping method
+
+- Logs changes for audit purposes
+
+👉 In short:\
+Get cheapest shipping quote → select optimal service → assign to order → log changes.
+
+## When It Runs
+
+Used for shipping cost optimization and courier selection automation
+
+Typically runs:
+
+- During order processing
+
+- Before shipping label generation
+
+- After order import
+
+- Manually triggered or via automation workflows
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of order IDs to process.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Provide valid OrderIds to ensure the macro can fetch details and assign shipping correctly.
+</Callout>
+
+## Simple Explanation
+
+The macro checks all shipping options for an order, selects the cheapest or most suitable based on predefined rules, assigns it, and records the updates for auditing.
+
+## Step-by-Step Flow
+
+<Steps>
+  <Step title="Loop Through Orders" icon="list" title-type="p">
+    Processes each order individually using the provided OrderIds.
+  </Step>
+
+  <Step title="Fetch Order Details" icon="download" title-type="p">
+    Retrieve complete order information and log the order number.
+  </Step>
+
+  <Step title="Get Shipping Providers" icon="truck" title-type="p">
+    Fetch all active courier integrations.
+    Examples: Amazon Shipping, DPD, EVRi, Royal Mail.
+  </Step>
+
+  <Step title="Get Shipping Quotes" icon="search" title-type="p">
+    Request live shipping quotes including:
+    service name, cost, and delivery time.
+  </Step>
+
+  <Step title="Apply Selection Logic" icon="filter" title-type="p">
+
+  </Step>
+
+  <Step title="Assign Shipping Service" icon="check-circle" title-type="p">
+    Apply the selected shipping method to the order.
+  </Step>
+
+  <Step title="Save Audit Data" icon="file-text" title-type="p">
+    Store old and new shipping methods, and cost changes for tracking.
+  </Step>
+
+  <Step title="Handle Missing Quotes" icon="alert-circle" title-type="p">
+    If no shipping quote is available, assign identifier "Check Order".
+  </Step>
+
+  <Step title="Identifier Handling" icon="tag" title-type="p">
+    Create and assign identifiers for orders needing review.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Orders updated with optimized shipping service
+
+  - Cost-effective courier selection applied
+
+  - Audit trail maintained for all changes
+</Callout>
+
+## Usefulness
+
+- **Cost Optimization** – Automatically selects the cheapest shipping
+
+- **Automation** – Reduces manual courier selection
+
+- **Smart Decision Making** – Applies business rules for each order
+
+- **Error Handling** – Flags orders needing review
+
+- **Efficiency** – Speeds up order processing
+
+## Example Scenario
+
+<Expandable title="Multi-Courier Shipping Optimization" default-open="false">
+  Multiple courier options are available for each order.\
+  The macro automatically:
+
+  - Fetches live quotes
+
+  - Applies selection rules
+
+  - Assigns the best option
+
+  Result:
+
+  - Reduced shipping costs
+
+  - Faster order processing
+
+  - Clear audit tracking
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By combining real-time shipping quotes with intelligent selection rules, this macro ensures optimal courier assignment, reduces costs, improves efficiency, and minimizes manual errors in shipping.
+</Callout>
+

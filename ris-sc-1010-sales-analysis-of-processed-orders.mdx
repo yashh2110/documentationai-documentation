@@ -1,0 +1,171 @@
+---
+title: Sales Analysis of Processed Orders
+description: >-
+  Analyzes recent sales performance of products, calculates key metrics, and
+  compares with current stock levels for replenishment planning.
+---
+## Overview
+
+The **RIS-SC-1010 – Sales Analysis of Processed Orders** script provides insight into product sales and stock levels over the last 3 days.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  Shows which products are selling the most and whether current stock is sufficient.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Reviews processed orders for the last 3 days
+
+- Groups products by category (pCategory)
+
+- Calculates units sold, order count, and total sales value
+
+- Compares sales performance with current stock
+
+- Suggests minimum stock levels for replenishment
+
+## When It Runs
+
+Used manually by warehouse managers or analysts.
+
+**Typically runs:**
+
+- Stock replenishment planning
+
+- Fast-moving product identification
+
+- Short-term sales performance analysis
+
+## Parameters
+
+<ParamField path="None" param-type="none" required="false" deprecated="false">
+  No manual input required. The script automatically considers the last 3 days of processed orders.
+</ParamField>
+
+## Tables Used
+
+- **StockItem** → Product/SKU details
+
+- **OrderItem** → Quantity sold per order
+
+- **Order** → Filters processed orders
+
+- **StockItem\_ExtendedProperties** → Product category (pCategory)
+
+- **ItemLocation** → Bin/rack location
+
+- **StockLevel / StockLocation** → Current stock levels
+
+<Callout kind="info" collapsed="false">
+  The script reviews recent sales, groups products by category, and compares sales performance with available stock.
+</Callout>
+
+## Process Flow Step-by-Step
+
+<Steps>
+  <Step title="Filter Recent Orders" icon="filter" title-type="p">
+    Include only orders processed in the last 3 days.
+  </Step>
+
+  <Step title="Exclude Unwanted Items" icon="x-circle" title-type="p">
+    Remove composite (bundle) items and exclude Amazon FBA items.
+  </Step>
+
+  <Step title="Identify Product Category" icon="tag" title-type="p">
+    Use pCategory to group items.
+  </Step>
+
+  <Step title="Calculate Sales Metrics" icon="dollar-sign" title-type="p">
+    For each SKU:
+
+    - Units Sold – Total quantity sold
+
+    - Order Count – Number of orders
+
+    - Total Sales Value – Revenue generated
+  </Step>
+
+  <Step title="Estimate Minimum Stock Level" icon="box" title-type="p">
+    Calculate Total Sold ÷ 2. Suggest maintaining at least 50% of recent sales as stock.
+  </Step>
+
+  <Step title="Fetch Current Stock" icon="layers" title-type="p">
+    Retrieve stock from the default location.
+  </Step>
+
+  <Step title="Rank Products" icon="award" title-type="p">
+    Rank products within each category based on sales performance.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  Report showing:
+
+  - Category
+
+  - SKU
+
+  - Current Stock Level
+
+  - Estimated Minimum Stock
+
+  - Units Sold
+
+  - Order Count
+
+  - Total Sales Value
+
+  - Bin Location
+
+  Provides actionable insights for replenishment and inventory management.
+</Callout>
+
+## Usefulness
+
+- **Top Seller Identification** – Easily spot best-performing products
+
+- **Stock Planning** – Prevent stock shortages
+
+- **Category Performance Analysis** – Understand demand trends
+
+- **Warehouse Efficiency** – Includes bin location for faster picking
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Works on processed orders from the last 3 days
+
+  - Excludes composite and FBA items
+
+  - Depends on accurate product category and stock data
+
+  - Large datasets may impact performance
+
+  - Read-only script with no data modifications
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Restocking Decision Example" default-open="false">
+  Scenario: Warehouse manager wants to check recent sales and stock availability
+
+  **Processing:** Review last 3 days of processed orders
+
+  **Result:**
+
+  - SKU ITEM1 → Sold 20, Current Stock 5, Min Level 10
+
+  **Insight:** ITEM1 is understocked and requires urgent replenishment.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By combining recent sales data with current stock levels, this script enables smarter inventory decisions, reduces stockouts, and improves overall supply chain efficiency.
+</Callout>
+

@@ -1,0 +1,441 @@
+---
+title: 'Linnworks to Linnworks — Order Integration '
+description: >-
+  Comprehensive documentation explaining automated order transfer between
+  multiple Linnworks systems, including workflows, routing logic, automation,
+  and operational behavior.
+---
+# Executive Summary
+
+This system enables automated transfer of orders between multiple Linnworks systems.
+
+It is designed to support businesses that operate across multiple Linnworks accounts, regions, or environments, ensuring that orders are routed correctly without manual effort.
+
+The system acts as an internal distribution engine within Linnworks environments.
+
+---
+
+# 1. Overview
+
+This system connects multiple Linnworks accounts and enables automated order movement between them.
+
+It ensures that:
+
+- Orders from one Linnworks account are transferred to another
+
+- Orders are routed based on business rules
+
+- Data consistency is maintained across systems
+
+- Operations run without manual intervention
+
+---
+
+# 2. Problem Definition
+
+Without this system:
+
+- Orders must be manually recreated in another system
+
+- High risk of duplicate or missing orders
+
+- Delays in processing and fulfillment
+
+- Increased operational complexity
+
+- Difficult to manage multi-account operations
+
+This system solves these issues through automation.
+
+---
+
+# 3. System Purpose
+
+The system is designed to:
+
+- Automatically detect orders in one system
+
+- Transfer them to another Linnworks system
+
+- Maintain consistent order structure
+
+- Support multi-account workflows
+
+- Reduce manual workload
+
+---
+
+# 4. System Architecture
+
+## 4.1 Core Components
+
+### Source Linnworks System
+
+- Where the order is initially created
+
+- Acts as the origin of data
+
+### Target Linnworks System
+
+- Receives transferred orders
+
+- Processes fulfillment
+
+### Integration Layer
+
+- Handles transformation and routing
+
+- Manages communication between systems
+
+---
+
+## 4.2 Internal Structure
+
+### Detection Layer
+
+- Identifies new or unprocessed orders
+
+### Validation Layer
+
+- Ensures order data is complete and correct
+
+### Transformation Layer
+
+- Converts order format for target system
+
+### Routing Layer
+
+- Determines destination system
+
+### Transfer Layer
+
+- Sends order to target system
+
+### Logging Layer
+
+- Tracks operations and failures
+
+---
+
+# 5. Trigger Logic
+
+## Event-Based
+
+- New order created
+
+- Order updated
+
+---
+
+## Scheduled
+
+- Periodic order checks
+
+- Retry failed transfers
+
+---
+
+## Manual
+
+- Reprocess failed orders
+
+- Force synchronization
+
+---
+
+# 6. Order Transfer Flow
+
+## Step-by-Step Process
+
+1. Order is created in source system
+
+2. System detects new order
+
+3. Order data is validated
+
+4. Data is transformed
+
+5. Routing rules determine destination
+
+6. Order is transferred
+
+7. Status is updated and tracked
+
+---
+
+## Routing Logic
+
+Orders may be routed based on:
+
+- Region
+
+- Client
+
+- Product type
+
+- Business rules
+
+---
+
+## Key Insight
+
+Correct routing is essential. Errors in routing can lead to fulfillment issues or incorrect processing.
+
+---
+
+# 7. Data Transformation
+
+## Purpose
+
+Ensures compatibility between systems.
+
+---
+
+## Data Processed
+
+- Customer details
+
+- Product information
+
+- Quantity and pricing
+
+- Shipping details
+
+---
+
+## Importance
+
+- Prevents rejection by target system
+
+- Maintains consistency
+
+- Reduces errors
+
+---
+
+# 8. Automation Layer
+
+## Overview
+
+The system runs using background processes.
+
+---
+
+## Automated Tasks
+
+- Order detection
+
+- Order transfer
+
+- Retry processing
+
+---
+
+## Behavior
+
+- Processes in batches
+
+- Handles high volumes
+
+- Runs continuously
+
+---
+
+# 9. Error Handling
+
+## Common Issues
+
+- Missing order data
+
+- Incorrect product mapping
+
+- Target system unavailable
+
+- Duplicate orders
+
+---
+
+## Error Flow
+
+1. Error occurs
+
+2. Logged
+
+3. Retry attempted
+
+4. Stops after limit
+
+5. Requires manual fix
+
+---
+
+# 10. Observability
+
+## Monitoring
+
+- Order transfer status
+
+- Success and failure rates
+
+- Job execution
+
+---
+
+## Logging
+
+- Tracks all operations
+
+- Stores error details
+
+---
+
+## Alerts
+
+- Triggered for repeated failures
+
+---
+
+# 11. Scalability Considerations
+
+## Challenges
+
+- High order volume
+
+- Multiple destination systems
+
+- Complex routing
+
+---
+
+## Solutions
+
+- Batch processing
+
+- Asynchronous execution
+
+- Background jobs
+
+---
+
+# 12. Performance Considerations
+
+- Avoid duplicate transfers
+
+- Optimize data processing
+
+- Reduce unnecessary operations
+
+---
+
+# 13. Security
+
+- Secure system-to-system communication
+
+- Controlled access
+
+- Authentication mechanisms
+
+---
+
+# 14. Data Flow
+
+1. Order created in source system
+
+2. System detects order
+
+3. Data validated
+
+4. Data transformed
+
+5. Routed to target system
+
+6. Order transferred
+
+7. Status updated
+
+---
+
+# 15. Dependencies and Risks
+
+## External Dependencies
+
+- Target system availability
+
+- Network stability
+
+---
+
+## Internal Risks
+
+- Incorrect routing rules
+
+- Data inconsistency
+
+- Duplicate processing
+
+---
+
+## Mitigation
+
+- Retry logic
+
+- Monitoring
+
+- Manual intervention
+
+---
+
+---
+
+# 16. Key Insights
+
+- Routing logic is critical
+
+- Data quality ensures success
+
+- Automation reduces workload
+
+- Monitoring ensures stability
+
+---
+
+# 17. Business Impact
+
+## Operational
+
+- Faster order movement
+
+- Reduced manual effort
+
+## Customer
+
+- Faster fulfillment
+
+- Improved accuracy
+
+## Financial
+
+- Lower operational cost
+
+- Improved efficiency
+
+---
+
+# 18. Summary
+
+This system acts as an internal order transfer engine between multiple Linnworks systems.
+
+It ensures seamless movement of orders across accounts.
+
+---
+
+# 19. Final Result
+
+- Reliable order transfer
+
+- Scalable operations
+
+- Reduced errors
+
+- Improved efficiency
+

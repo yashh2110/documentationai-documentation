@@ -1,0 +1,207 @@
+---
+title: Warehouse Transfer (WT) / PO Linked Report
+description: >-
+  Provides complete visibility of warehouse transfers by linking Warehouse Transfers,
+  Purchase Orders, and stock movements, enabling full inventory traceability.
+---
+
+## Overview
+
+The **RIS-SC-2313 – Warehouse Transfer (WT) / PO Linked Report** connects warehouse transfers with purchase orders and stock movement data to provide full visibility of inventory flow.
+
+It enables tracking of stock from **supplier → warehouse → transfer destination** with cost and tax insights.
+
+<Callout kind="tip" collapsed="false">
+  This report uses StockChange-based linking logic to connect Purchase Orders with Transfers, even without direct relationships.
+</Callout>
+
+---
+
+## Purpose
+
+This report:
+
+- Links Warehouse Transfers (WT) with Purchase Orders (PO)  
+- Tracks stock movement across warehouses  
+- Provides supplier, cost, and tax details  
+- Shows quantity flow and outstanding stock  
+
+👉 In short:  
+Track complete inventory movement with financial details.
+
+---
+
+## When It Runs
+
+Executed as an on-demand SQL report  
+
+Typically used:
+
+- Stock reconciliation  
+- Warehouse transfer tracking  
+- Audit and finance validation  
+- Inventory movement analysis  
+
+---
+
+## Parameters
+
+<ParamField path="@TransferStatus" param-type="string" required="false">
+  Filter by transfer status (e.g., Pending, Delivered, ALL).
+</ParamField>
+
+<ParamField path="@SourceWH" param-type="string" required="false">
+  Filter by source warehouse.
+</ParamField>
+
+<ParamField path="@DestWH" param-type="string" required="false">
+  Filter by destination warehouse.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  All filters are optional and allow dynamic report customization.
+</Callout>
+
+---
+
+## Data Sources
+
+- warehouse_transfer → Transfer header details  
+- warehouse_transfer_item → Transfer line items  
+- warehouse_transfer_status → Transfer status  
+- StockItem → SKU and product details  
+- StockLocation → Warehouse information  
+- StockChange → Stock movement tracking  
+- Purchase → Purchase order details  
+- PurchaseItem → PO tax details  
+- ItemSupplier → Supplier SKU mapping  
+- Supplier → Supplier information  
+
+---
+
+## How It Works
+
+<Steps>
+  <Step title="Aggregate Purchase Data" icon="database" title-type="p">
+    Group PurchaseItem records to extract tax values and tax rates.
+  </Step>
+
+  <Step title="Fetch Transfer Details" icon="truck" title-type="p">
+    Retrieve transfer reference, warehouses, dates, and status.
+  </Step>
+
+  <Step title="Map Stock Movements" icon="shuffle" title-type="p">
+    Use StockChange table to track stock deductions and match transfer references.
+  </Step>
+
+  <Step title="Link Purchase Orders" icon="link" title-type="p">
+    Extract PO reference from StockChange source and match with Purchase data using string parsing.
+  </Step>
+
+  <Step title="Join Supplier & Item Data" icon="users" title-type="p">
+    Fetch supplier name, SKU mapping, barcode, and product details.
+  </Step>
+
+  <Step title="Calculate Quantities" icon="calculator" title-type="p">
+    Compute:
+    - Requested  
+    - Sent  
+    - Received  
+    - Outstanding (Requested - Received)
+  </Step>
+
+  <Step title="Calculate Costs & Tax" icon="dollar-sign" title-type="p">
+    Compute:
+    - Unit Cost  
+    - Line Cost  
+    - PO Total Cost  
+    - Tax values  
+  </Step>
+
+  <Step title="Apply Filters" icon="filter" title-type="p">
+    Apply dynamic filters for status, source warehouse, and destination warehouse.
+  </Step>
+
+  <Step title="Prepare Final Output" icon="file-text" title-type="p">
+    Sort and structure data by transfer reference and SKU.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Complete transfer details (source → destination)  
+
+  - Linked purchase order references  
+
+  - Supplier and SKU information  
+
+  - Quantity tracking (requested, sent, received, outstanding)  
+
+  - Cost and tax breakdown  
+
+  - Full inventory movement visibility  
+</Callout>
+
+---
+
+## Usefulness
+
+This report is highly beneficial for:
+
+- Inventory traceability across warehouses  
+- Financial and audit validation  
+- Stock reconciliation accuracy  
+- Supplier and PO tracking  
+- Identifying discrepancies in transfers  
+
+---
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - PO linking is based on StockChange data (not direct relation)  
+
+  - String parsing is used for PO reference extraction  
+
+  - Data accuracy depends on correct StockChange entries  
+
+  - Large datasets may impact performance  
+
+  - Filters should be used for better efficiency  
+
+  - Outstanding quantity is calculated dynamically  
+</Callout>
+
+---
+
+## Example Scenario
+
+<Expandable title="Inventory Movement Tracking Example" default-open="false">
+  Step 1: Purchase Order created from supplier  
+
+  Step 2: Stock received in Warehouse A  
+
+  Step 3: Transfer created from Warehouse A → Warehouse B  
+
+  👉 The report shows:
+
+  - PO reference  
+  - Supplier details  
+  - SKU and item data  
+  - Quantity sent vs received  
+  - Remaining (outstanding) quantity  
+  - Cost and tax values  
+
+  Result: Full visibility of inventory movement across warehouses.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  The most powerful feature of this report is dynamic PO linking using StockChange data and string extraction. This approach enables accurate backward tracking of inventory flow without requiring direct database relationships.
+</Callout>

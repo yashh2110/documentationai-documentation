@@ -1,0 +1,143 @@
+---
+title: Preparation display
+description: >-
+  The preparation display helps manage POS orders that require preparation,
+  allowing teams to track progress and streamline workflows in retail and
+  restaurant environments.
+---
+The **preparation display** is designed to organize and monitor orders that require preparation before delivery or pickup.
+
+It is useful in different scenarios:
+
+- **Retail**: Staff are notified after payment to prepare items for customer pickup
+
+- **Restaurants**: Orders are sent to the kitchen for meal preparation
+
+## **Configuration**
+
+### **Enable the feature**
+
+To activate the preparation display:
+
+1. Go to <a href="https://www.odoo.com/documentation/19.0/applications/sales/point_of_sale/use.html#pos-use-settings" target="_blank" rel="noopener noreferrer">**POS Settings**</a>
+
+2. Scroll to the **Preparation** section
+
+3. Enable **Preparation Display**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/preparation-setting.png" width="781" height="286" alt="Enable preparation display setting." />
+
+### **Create a preparation display**
+
+1. Go to **Point of Sale ‣ Orders ‣ Preparation Display**
+
+2. Click **New**
+
+3. Enter a name (e.g., `Kitchen`, `Bar`, `Pickup Counter`)
+
+### **Configure the display**
+
+Set up the following:
+
+- **Point of Sale**\
+  Select which POS sends orders to this display
+
+- **Product categories**\
+  Choose which categories should appear (e.g., Food, Drinks)
+
+- **Stages**\
+  Define preparation steps (e.g., *To Prepare*, *Ready*, *Completed*)
+
+For each stage:
+
+- Add a new line
+
+- Optionally assign a color
+
+- Set an **Alert timer (minutes)** to track delays
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/display-form.png" width="446" height="397" alt="Preparation display configuration." />
+
+**Note**
+
+To edit an existing display, click the (**⋮**) menu on the display card and select **Configure**.
+
+## **Overview**
+
+To view all preparation displays:
+
+- Go to **Point of Sale ‣ Orders ‣ Preparation Display**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/display-card.png" width="614" height="190" alt="Preparation display overview." />
+
+Each display shows:
+
+- Configured stages
+
+- Number of orders in progress
+
+- Average preparation time
+
+**Tip**
+
+Use the **Kitchen Display** app from the dashboard for quick access.
+
+## **Using the preparation display**
+
+Click **Preparation Screen** to open the staff interface.
+
+This view includes:
+
+### **Order tracking**
+
+- Orders grouped by stages (e.g., *To Prepare*, *Ready*)
+
+- Number of orders per stage
+
+### **Product grouping**
+
+- Items organized by POS categories (e.g., Drinks, Food)
+
+### **Order cards**
+
+Each order displays:
+
+- Order number and table (if applicable)
+
+- Current status with color indicators
+
+- Waiting time
+
+**Note**
+
+If preparation time exceeds the defined alert timer, the indicator turns red.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/preparation-display.png" width="867" height="343" alt="Preparation display interface." />
+
+### **Update order progress**
+
+- Click individual items to mark them as completed
+
+- Click the entire card to complete all items
+
+- Orders automatically move to the next stage
+
+If needed:
+
+- Click **Recall** to move the order back to the previous stage
+
+## **Customer display**
+
+You can also provide customers with order status updates.
+
+Click **Order Status Screen** to open the customer-facing display.
+
+This screen shows:
+
+- Orders **Ready** for pickup
+
+- Orders **In progress** (*Almost there*)
+
+**Note**
+
+Customers can find their order number on their receipt.

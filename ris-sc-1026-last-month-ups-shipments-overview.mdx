@@ -1,0 +1,159 @@
+---
+title: Last Month Shipments Overview
+description: >-
+  Retrieves shipments from the last month, captures package-level details such
+  as dimensions and weight, and extracts tracking information.
+---
+## Overview
+
+The **RIS-SC-1026 – Last Month Shipments Overview** script provides a complete view of recent shipments for the designated carrier, including package size, weight, and tracking information.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  It generates a detailed report of all shipments from the last month for the carrier, including dimensions, weight, and tracking numbers.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Retrieves designated shipments from the last month
+
+- Captures package-level details such as dimensions and weight
+
+- Extracts tracking information for each shipment
+
+---
+
+## When It Runs
+
+Used for monthly shipping reviews, carrier performance audits, and billing verification.
+
+**Typically runs:**
+
+- Manually executed by analysts
+
+- During monthly shipping reviews
+
+- For carrier performance analysis
+
+- While auditing shipment dimensions and weights
+
+- For billing verification with designated carrier
+
+---
+
+## Parameters
+
+<ParamField path="None" param-type="fixed" required="false" deprecated="false">
+  Uses automatic date logic for the last one month.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  The script always calculates data based on the current date using a one-month lookback.
+</Callout>
+
+---
+
+## Simple Explanation
+
+The script selects all designated carrier shipments from the last month, gathers packaging details (size and weight), and provides tracking information in a single consolidated report.
+
+---
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Filter UPS Shipments" icon="filter" title-type="p">
+    Select only shipments where the carrier matches the designated partner.
+  </Step>
+
+  <Step title="Apply Date Filter" icon="calendar" title-type="p">
+    Retrieve shipments processed in the last one month.
+  </Step>
+
+  <Step title="Join Packaging Details" icon="package" title-type="p">
+    Fetch dimensions and weight from packaging data.
+  </Step>
+
+  <Step title="Link Items and Packages" icon="link" title-type="p">
+    Connect items to shipping packages for detailed mapping.
+  </Step>
+
+  <Step title="Get Tracking Number" icon="map-pin" title-type="p">
+    Use package-level tracking if available; otherwise, use order-level tracking.
+  </Step>
+
+  <Step title="Select Output Fields" icon="layers" title-type="p">
+    Include order details, customer info, carrier, tracking, and package information.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  The script generates a report containing:
+
+  - Order ID
+
+  - Customer name
+
+  - Carrier
+
+  - Tracking number
+
+  - Package dimensions (depth, width, height)
+
+  - Weight
+
+  Only includes shipments from the designated carrier from the last one month.
+</Callout>
+
+---
+
+## Usefulness
+
+- **Shipping Cost Analysis** – Validate weight- and dimension-based charges
+
+- **Carrier Performance Review** – Analyze UPS shipment usage
+
+- **Operational Insights** – Improve packaging efficiency
+
+- **Audit and Billing Verification** – Cross-check data with carrier invoices
+
+---
+
+## Example Scenario
+
+<Expandable title="Monthly designated carrier Audit Example" default-open="false">
+  **Scenario:** Review all shipments for the past month for the designated carrier.
+
+  **Order 1001:**
+
+  - Weight: 2.5 kg
+
+  - Expected cost: 200
+
+  - Status: OK
+
+  **Order 1002:**
+
+  - Weight: 10 kg
+
+  - Expected cost: 800
+
+  - Status: Review
+
+  **Insight:** Helps detect incorrect weights, oversized packages, and cost discrepancies.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By combining shipment, packaging, and tracking data, this script provides a clear and detailed view of logistics performance, enabling accurate audits, cost control, and operational improvements.
+</Callout>
+

@@ -1,0 +1,123 @@
+---
+title: Set Percentage Order
+description: >-
+  Automatically reduce 100% discounted items in open orders by a specified
+  percentage to correct pricing and prevent revenue loss.
+---
+## Overview
+
+The **RIS-SM-2015 – SetPrecentageOrder** macro identifies items with a 100% discount across open orders and reduces the discount by a defined percentage.
+
+It enables bulk correction of pricing issues caused by unintended full discounts.
+
+<Callout kind="tip" collapsed="false">
+  Carefully review the percentage value before execution, as changes will affect all eligible open orders.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Identifies items with 100% discount  
+- Reduces discount by a specified percentage  
+- Updates item pricing across open orders  
+- Prevents incorrect free-item scenarios  
+
+👉 In short:  
+Reduce full discounts in bulk across open orders.
+
+## When It Runs
+
+Used for pricing correction and bulk updates
+
+Typically runs:
+
+- Manually triggered  
+- Scheduled for bulk correction processes  
+
+## Parameters
+
+<ParamField path="percentage" param-type="number" required="true" deprecated="false">
+  Amount of discount to reduce from 100%.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Example:  
+  percentage = 10  
+
+  Meaning:  
+  New discount applied = 90%
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Fetch Open Orders" icon="download" title-type="p">
+    Retrieve all open orders from the system.
+  </Step>
+
+  <Step title="Loop Through Orders" icon="repeat" title-type="p">
+    Process each order individually.
+  </Step>
+
+  <Step title="Identify Eligible Items" icon="filter" title-type="p">
+    Select items where discount is exactly 100%.
+  </Step>
+
+  <Step title="Calculate New Discount" icon="calculator" title-type="p">
+    Compute updated discount using:  
+    New Discount = 100 − percentage
+  </Step>
+
+  <Step title="Update Order Items" icon="save" title-type="p">
+    Apply updated discount values using the API.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Fully discounted items are corrected  
+  - Discounts reduced by specified percentage  
+  - Orders updated automatically  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Preventing accidental 100% discounts  
+- Recovering potential revenue loss  
+- Performing bulk discount corrections  
+- Maintaining accurate pricing  
+- Improving control over discounting  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Only affects items with exactly 100% discount  
+  - Does not validate if resulting discount goes below 0%  
+  - Runs on all open orders (may impact performance)  
+  - No detailed logging of updated items  
+  - Cost update logic exists but is currently inactive  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Bulk Discount Correction" default-open="false">
+  Multiple orders contain items mistakenly set to 100% discount.
+
+  👉 The macro:
+
+  - Identifies all such items  
+  - Applies reduced discount (e.g., 90%)  
+  - Updates pricing across all open orders  
+
+  Result: Pricing errors are corrected at scale, preventing revenue loss.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Bulk correction of full-discount items ensures pricing consistency, improves financial accuracy, and safeguards against unintended revenue leakage.
+</Callout>

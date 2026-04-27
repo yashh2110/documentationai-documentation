@@ -1,0 +1,124 @@
+---
+title: Saturday Service by Date
+description: Automatically assign Saturday delivery service based on order delivery date.
+---
+## Overview
+
+The **RIS-RM-1001 – Saturday Service by Date** macro automatically updates the shipping method for orders scheduled for Saturday delivery.
+
+It evaluates the delivery date of each order and ensures that qualifying orders are assigned the correct Saturday delivery service.
+
+<Callout kind="tip" collapsed="false">
+  Ensure that the correct serviceName is configured and available in Postal Services before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Checks the delivery date of orders
+
+- Identifies Saturday deliveries
+
+- Applies the correct shipping service automatically
+
+👉 In short:\
+If delivery date is Saturday → assign Saturday delivery service.
+
+## When It Runs
+
+Used for shipping automation & delivery standardization
+
+Typically runs:
+
+- Manually on selected orders
+
+- During order processing workflow
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of orders to be evaluated.
+</ParamField>
+
+<ParamField path="serviceName" param-type="string" required="true" deprecated="false">
+  Shipping service to be applied (e.g., Saturday Delivery Service).
+</ParamField>
+
+## How It Works
+
+<Steps>
+  <Step title="Fetch Orders" icon="download" title-type="p">
+    Retrieve all selected orders and process them individually.
+  </Step>
+
+  <Step title="Read Delivery Date" icon="calendar" title-type="p">
+    Access order details and extract the latest delivery date.
+  </Step>
+
+  <Step title="Validate Saturday Condition" icon="check-circle" title-type="p">
+    ✔ If delivery day is Saturday → proceed\
+    ❌ If not → skip the order
+  </Step>
+
+  <Step title="Apply Shipping Method" icon="truck" title-type="p">
+    Verify that the specified shipping service exists and apply it to the qualifying order.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Orders scheduled for Saturday delivery are automatically updated
+
+  - Correct shipping method is applied
+
+  - No manual intervention required
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Reducing manual effort in shipping selection
+
+- Ensuring consistent delivery method assignment
+
+- Minimising delivery errors
+
+- Improving order processing efficiency
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  This macro evaluates only the delivery date.
+
+  It does NOT validate:
+
+  - Item type
+
+  - DHL eligibility
+
+  - Shipping type (e.g., UK Next)
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Saturday Delivery Assignment Example" default-open="false">
+  An order has a delivery date that falls on a Saturday.
+
+  👉 The macro:
+
+  - Detects the Saturday delivery date
+
+  - Applies the configured Saturday delivery service
+
+  Result: Order is ready for correct weekend dispatch.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By focusing only on delivery date, this macro provides a simple and efficient way to ensure Saturday deliveries are always assigned the correct shipping method.
+</Callout>
+

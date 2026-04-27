@@ -1,0 +1,367 @@
+---
+title: ActiveAnts Integration – Detailed Documentation
+description: >-
+  Detailed, non-technical documentation for ActiveAnts integration covering authentication,
+  order handling, stock updates, scheduling, data flow, and error handling.
+---
+
+# 1. Overview
+
+This system connects your business system with the ActiveAnts warehouse.
+
+It automatically handles:
+- Sending orders to the warehouse
+- Receiving stock updates
+- Updating processed orders
+- Running scheduled background tasks
+
+The main goal is to reduce manual work and ensure accurate, real-time operations.
+
+---
+
+# 2. Key Concepts
+
+## 2.1 Warehouse Integration
+
+The warehouse (ActiveAnts) is responsible for:
+- Picking products
+- Packing orders
+- Shipping items
+
+The system ensures your business and warehouse stay in sync.
+
+---
+
+## 2.2 Automation
+
+Many processes run automatically in the background:
+- Fetching new orders
+- Updating stock
+- Processing completed orders
+
+---
+
+# 3. Authentication
+
+## Overview
+
+Authentication is required before any communication with the warehouse.
+
+---
+
+## Token Based Access
+
+### What happens
+
+- System requests a secure token
+- Token is used for all further communication
+- Token expires and needs refresh
+
+### Why it matters
+
+- Ensures secure communication
+- Prevents unauthorized access
+
+---
+
+## User Token Structure
+
+### Includes
+
+- User identity
+- Access permission
+- Expiry time
+
+---
+
+# 4. Order Management
+
+## 4.1 Open Orders
+
+### Purpose
+
+Fetch orders that are not yet processed.
+
+### Process
+
+Step 1  
+System checks for new orders  
+
+Step 2  
+Orders are collected  
+
+Step 3  
+Orders are prepared for warehouse  
+
+### Business Value
+
+- No order is missed  
+- Orders are processed faster  
+
+---
+
+## 4.2 Order Processing
+
+### Purpose
+
+Send orders to warehouse and track progress.
+
+### Process
+
+Step 1  
+Order is sent to warehouse  
+
+Step 2  
+Warehouse accepts order  
+
+Step 3  
+Warehouse processes order  
+
+---
+
+## 4.3 Processed Orders Update
+
+### Purpose
+
+Update system when warehouse completes orders.
+
+### Process
+
+Step 1  
+Warehouse sends update  
+
+Step 2  
+System receives update  
+
+Step 3  
+Order status is changed to completed  
+
+### Business Value
+
+- Accurate tracking  
+- Better customer updates  
+
+---
+
+## 4.4 Scheduled Order Fetching
+
+### Purpose
+
+Automatically check for new orders.
+
+### Process
+
+- Runs at fixed intervals  
+- Fetches new open orders  
+- Sends them for processing  
+
+### Business Value
+
+- Fully automated workflow  
+- Reduces manual checks  
+
+---
+
+# 5. Stock Management
+
+## 5.1 Stock Updates
+
+### Purpose
+
+Keep inventory accurate.
+
+### Process
+
+Step 1  
+System requests stock data  
+
+Step 2  
+Warehouse sends stock information  
+
+Step 3  
+System updates inventory  
+
+---
+
+## 5.2 Background Stock Sync
+
+### Purpose
+
+Automatically update stock without user action.
+
+### Process
+
+- Runs in background  
+- Updates regularly  
+
+### Business Value
+
+- Always up to date stock  
+- Prevents overselling  
+
+---
+
+# 6. System Workflows
+
+## 6.1 Order Flow
+
+1. Order created in system  
+2. Order fetched automatically  
+3. Order sent to warehouse  
+4. Warehouse processes order  
+5. System receives update  
+6. Order marked complete  
+
+---
+
+## 6.2 Stock Flow
+
+1. System requests stock  
+2. Warehouse sends stock data  
+3. Inventory updated  
+
+---
+
+# 7. Scheduling and Background Jobs
+
+## Overview
+
+Some processes run automatically using scheduling.
+
+---
+
+## Types of Jobs
+
+### Order Fetch Job
+
+- Fetches new orders  
+- Runs regularly  
+
+---
+
+### Stock Update Job
+
+- Updates inventory  
+- Runs in background  
+
+---
+
+### Process Update Job
+
+- Updates completed orders  
+
+---
+
+## Business Value
+
+- Reduces manual effort  
+- Ensures consistency  
+
+---
+
+# 8. Error Handling
+
+## Common Issues
+
+### Order Issues
+
+- Missing order data  
+- Failed transmission  
+
+### Stock Issues
+
+- Incorrect stock data  
+- Delayed updates  
+
+---
+
+## Handling Process
+
+Step 1  
+System detects error  
+
+Step 2  
+Error is logged  
+
+Step 3  
+Retry or manual fix  
+
+---
+
+# 9. Data Structure
+
+## User Login Data
+
+### Contains
+
+- Token  
+- User identification  
+- Access control  
+
+---
+
+## Order Data
+
+### Contains
+
+- Order ID  
+- Items  
+- Quantity  
+- Status  
+
+---
+
+## Stock Data
+
+### Contains
+
+- Product ID  
+- Available quantity  
+- Updated values  
+
+---
+
+# 10. Daily Operations Guide
+
+## Morning
+
+- Check system status  
+- Review open orders  
+
+---
+
+## During Day
+
+- Monitor processing  
+- Check stock updates  
+
+---
+
+## End of Day
+
+- Verify completed orders  
+- Review any errors  
+
+---
+
+# 11. Benefits
+
+- Automated operations  
+- Reduced manual work  
+- Accurate stock tracking  
+- Faster order processing  
+- Better coordination with warehouse  
+
+---
+
+# 12. Summary
+
+This system acts as a bridge between your business and the warehouse.
+
+It ensures:
+
+- Orders flow automatically  
+- Stock is always updated  
+- Processes run smoothly  
+
+The system is designed to improve efficiency and reduce operational errors.

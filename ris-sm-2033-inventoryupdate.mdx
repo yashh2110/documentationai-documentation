@@ -1,0 +1,162 @@
+---
+title: Inventory Batch Creation & Assignment
+description: >-
+  Create and assign inventory batches for stock items in Linnworks, including
+  batch number, quantity, location, and stock value for improved tracking.
+---
+## Overview
+
+The **RIS-SM-2033 – InventoryUpdate** macro is used to create inventory batches and assign stock quantities to specific warehouse locations in Linnworks.
+
+It defines batch-level details such as batch number, bin/rack, quantity, and stock value, enabling structured inventory tracking.
+
+<Callout kind="tip" collapsed="false">
+  Ensure StockItemId and LocationId are valid before running this macro to avoid failures.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Creates inventory batches  
+- Assigns stock to a specific location  
+- Defines quantity and stock value  
+- Links inventory with batch information  
+
+👉 In short:  
+Create batches and assign stock to locations.
+
+## When It Runs
+
+Used for inventory setup and batch tracking
+
+Typically runs:
+
+- Manual execution  
+- Scheduled execution (if automated batch creation is needed)  
+- During stock initialization or updates  
+
+## Parameters
+
+<Callout kind="info" collapsed="false">
+  Note:  
+  - This macro does not take dynamic parameters  
+  - All values are hardcoded inside the macro  
+</Callout>
+
+<ParamField path="StockItemId" param-type="string" required="true">
+  Target stock item to create batch for.
+</ParamField>
+
+<ParamField path="BatchNumber" param-type="string" required="true">
+  Unique identifier for the batch.
+</ParamField>
+
+<ParamField path="BinRack" param-type="string" required="true">
+  Storage bin or rack location in the warehouse.
+</ParamField>
+
+<ParamField path="Quantity" param-type="number" required="true">
+  Quantity of stock to assign in the batch.
+</ParamField>
+
+<ParamField path="StockValue" param-type="number" required="true">
+  Total value of the stock assigned to the batch.
+</ParamField>
+
+<ParamField path="LocationId" param-type="string" required="true">
+  Warehouse location where the batch will be created.
+</ParamField>
+
+## How It Works
+
+<Steps>
+  <Step title="Initialize Batch List" icon="list" title-type="p">
+    Create a collection to store batch data.
+  </Step>
+
+  <Step title="Create Batch Object" icon="box" title-type="p">
+    Define batch using StockItemId and BatchNumber.
+  </Step>
+
+  <Step title="Define Inventory Details" icon="edit" title-type="p">
+    Set batch attributes including:
+    - BinRack  
+    - Quantity  
+    - StockValue  
+    - LocationId  
+  </Step>
+
+  <Step title="Link Inventory to Batch" icon="link" title-type="p">
+    Attach inventory details to the batch object.
+  </Step>
+
+  <Step title="Prepare Batch Collection" icon="layers" title-type="p">
+    Add batch object to the batch list for processing.
+  </Step>
+
+  <Step title="Create Batch in Linnworks" icon="upload" title-type="p">
+    Call CreateBatches API to create and assign the batch.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Batch created successfully  
+
+  - Stock assigned to specified location  
+
+  - Quantity and stock value updated  
+
+  - Batch available for inventory tracking  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Enabling batch-level inventory tracking  
+- Improving warehouse organization  
+- Supporting bin/rack-based storage systems  
+- Tracking stock quantity and value  
+- Managing inventory more efficiently  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Uses hardcoded values (not dynamic)  
+
+  - StockItemId must exist in Linnworks  
+
+  - LocationId must be valid  
+
+  - No validation or error handling implemented  
+
+  - Expiry dates are not configured  
+
+  - BatchNumber should be unique  
+
+  - Not suitable for bulk operations  
+
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Create Inventory Batch" default-open="false">
+  A warehouse needs to assign stock to a specific batch.
+
+  👉 The macro:
+
+  - Creates a batch with BatchNumber "BATCH001"  
+  - Assigns 100 quantity to BinRack "A1"  
+  - Links it to a specific StockItemId and Location  
+
+  Result: Stock is organized under a batch and ready for tracking.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By structuring inventory into batches, this macro improves stock traceability and warehouse organization, but requires dynamic inputs and validation for scalable real-world usage.
+</Callout>

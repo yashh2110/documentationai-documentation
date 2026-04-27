@@ -1,0 +1,154 @@
+---
+title: Reduce Order Value (Order Value Adjustment - Part 1)
+description: >-
+  Temporarily reduces order value by replacing selling prices with purchase
+  prices, while securely storing original values for later restoration.
+---
+## Overview
+
+The **RIS-RM-2293 – Reduce Order Value** macro safely reduces order values for compliance or operational needs while preserving original pricing data for future recovery.
+
+It ensures a reversible and controlled pricing adjustment process.
+
+<Callout kind="tip" collapsed="false">
+  Always run the restore macro after processing to revert orders back to original values.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Backs up original order values
+
+- Replaces selling prices with purchase prices
+
+- Recalculates totals
+
+- Tags orders for restoration
+
+👉 In short:\
+Backup → reduce value → save → tag for restore.
+
+## When It Runs
+
+Used for temporary order value adjustments
+
+Typically runs:
+
+- Before exporting orders to suppliers
+
+- For low-value declarations
+
+- Before shipping label generation
+
+- During compliance workflows
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="GUID[]" required="true" deprecated="false">
+  List of order GUIDs to process.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Only specified orders are processed by this macro.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Start Execution" icon="play" title-type="p">
+    Logs execution start and processes each order.
+  </Step>
+
+  <Step title="Fetch Order" icon="download" title-type="p">
+    Retrieves full order details including items and totals.
+  </Step>
+
+  <Step title="Check Label Status" icon="check-circle" title-type="p">
+    Skips orders where shipping labels are already printed.
+  </Step>
+
+  <Step title="Backup Original Values" icon="save" title-type="p">
+    Stores total, tax, subtotal, and postage in extended properties.
+  </Step>
+
+  <Step title="Update Line Items" icon="edit" title-type="p">
+    Replaces selling price with purchase price for each item.
+  </Step>
+
+  <Step title="Recalculate Totals" icon="calculator" title-type="p">
+    Recomputes subtotal, tax, and total based on updated values.
+  </Step>
+
+  <Step title="Save Updated Order" icon="check" title-type="p">
+    Applies recalculated totals to the order.
+  </Step>
+
+  <Step title="Assign Identifier" icon="tag" title-type="p">
+    Adds "PriceReducedFlag" to mark order for restoration.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Order value reduced
+
+  - Original values securely stored
+
+  - Totals recalculated accurately
+
+  - Orders tagged for restoration
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Compliance with low declared value shipping
+
+- Temporary pricing adjustments
+
+- Preventing manual calculation errors
+
+- Maintaining audit and recovery capability
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Original values are stored in extended properties
+
+  - Orders with printed labels are skipped
+
+  - Must be followed by restore macro
+
+  - Incorrect usage may affect invoicing temporarily
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Order Value Reduction Example" default-open="false">
+  Scenario:
+
+  - Original Total: £100
+
+  👉 The macro:
+
+  - Replaces selling price with purchase price
+
+  - Recalculates totals
+
+  Result:
+
+  - Reduced Total: £60
+
+  - Original values for recovery
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This macro ensures a safe and reversible adjustment by backing up original values, enabling compliance without risking data loss.
+</Callout>
+
+---

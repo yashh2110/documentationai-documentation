@@ -1,0 +1,1043 @@
+---
+title: 'Service 1: AI-Tagging — Technical Deep Dive'
+---
+**Service Folder:** `AI-Tagging/`\
+**Short Description:** Receives garment image URLs and metadata from a client, queues a background processing job, runs a two-pass Google Gemini vision analysis to extract \~44 structured product attributes, optionally builds an AI enhancement profile, and stores all results in AWS DynamoDB.
+
+---
+
+## Table of Contents
+
+1. [Service Overview](#1-service-overview)
+
+2. [Purpose and Responsibility](#2-purpose-and-responsibility)
+
+3. [Tech Stack and Dependencies](#3-tech-stack-and-dependencies)
+
+4. [Startup and Entry Points](#4-startup-and-entry-points)
+
+5. [Folder Structure Explanation](#5-folder-structure-explanation)
+
+6. [Core Modules](#6-core-modules)
+
+7. [API Endpoints](#7-api-endpoints)
+
+8. [Request/Response Contracts](#8-requestresponse-contracts)
+
+9. [Parameter Traceability](#9-parameter-traceability)
+
+10. [Business Logic Flow](#10-business-logic-flow)
+
+11. [AI/Image Processing Logic](#11-aiimage-processing-logic)
+
+12. [Database/Storage/Queue Usage](#12-databasestoragequeue-usage)
+
+13. [External Integrations](#13-external-integrations)
+
+14. [Error Handling and Logging](#14-error-handling-and-logging)
+
+15. [File-by-File Explanation](#15-file-by-file-explanation)
+
+16. [Critical Code Deep Dive](#16-critical-code-deep-dive)
+
+17. [Risks and Technical Debt](#17-risks-and-technical-debt)
+
+18. [Recommendations](#18-recommendations)
+
+19. [Junior Developer Summary](#19-junior-developer-summary)
+
+20. [Needs Verification / Unknowns](#20-needs-verification--unknowns)
+
+---
+
+## 1. Service Overview
+
+The AI-Tagging service is the **entry point of the entire pipeline**. A client (e.g., an e-commerce platform) submits a garment's images and pre-known metadata (brand, category, gender, material, studio). The service:
+
+1. Stores the job in DynamoDB with `state=pending`
+
+2. Publishes the job to an AWS SQS queue
+
+3. Returns a `job_id` to the client immediately (async design — the client polls later)
+
+4. The worker process polls SQS, downloads images, constructs a visual grid, runs two sequential Gemini AI passes, validates the output against 44 allowed attribute schemas, optionally generates an enhancement profile (calling the Prompt-Gen service), writes the profile to S3, and finally stores the complete result back in DynamoDB
+
+This service runs as **two separate processes**: an HTTP API (`main_api.py`) and a background worker (`worker.py`).
+
+---
+
+## 2. Purpose and Responsibility
+
+| Responsibility                        | Details                                                                                                       |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| Receive garment metadata + image URLs | HTTP POST endpoint in `main_api.py`                                                                           |
+| Persist job state                     | DynamoDB table `GarmentJobs`                                                                                  |
+| Queue work                            | AWS SQS (normal + priority queues)                                                                            |
+| Priority escalation                   | Worker scans DynamoDB and re-queues high-priority jobs to a separate SQS queue                                |
+| Multi-image visual analysis           | Builds a 2×N image grid from middle images, uses first image and label image separately — feeds all to Gemini |
+| Attribute extraction (Pass 1)         | Gemini classifies eBay Category using a narrow prompt                                                         |
+| Attribute extraction (Pass 2)         | Gemini extracts all 44 attributes using category-specific valid values                                        |
+| Hallucination filtering               | `validate_response()` strips any attributes not in the known allowed sets                                     |
+| Enhancement profile generation        | Calls Prompt-Gen HTTP API, assembles LoRA configuration, writes JSON to S3                                    |
+| Result delivery                       | Client polls `GET /garment-tagging/query?uuid=` to retrieve the final JSON                                    |
+
+---
+
+## 3. Tech Stack and Dependencies
+
+| Component              | Technology                     | Version Constraint |
+| ---------------------- | ------------------------------ | ------------------ |
+| HTTP Framework         | FastAPI                        | unpinned           |
+| ASGI Server            | uvicorn                        | unpinned           |
+| Data Validation        | Pydantic (BaseModel)           | unpinned           |
+| AI Vision              | Google Gemini (`google-genai`) | unpinned           |
+| Image Processing       | Pillow                         | unpinned           |
+| AWS SDK                | boto3                          | unpinned           |
+| HTTP Client            | requests                       | unpinned           |
+| Config Loading         | python-decouple                | `>=3.8`            |
+| Env Loading            | python-dotenv                  | unpinned           |
+| Structured Concurrency | `concurrent.futures` (stdlib)  | —                  |
+
+**Why these choices:**
+
+- **FastAPI**: async-capable, auto-generates OpenAPI docs, Pydantic integration for request validation
+
+- **SQS**: decouples the HTTP API from slow AI processing; enables retry, priority queuing
+
+- **DynamoDB**: schemaless, fully managed — good for job-state tracking with variable result shapes
+
+- **Gemini**: replaced OpenAI (as noted in README); multimodal vision with JSON output mode
+
+---
+
+## 4. Startup and Entry Points
+
+### HTTP API Process
+
+**File:** `AI-Tagging/main_api.py`
+
+Started via systemd (`image_tagging.service`) or manually:
+
+```bash
+uvicorn main_api:app --host 0.0.0.0 --port 9000
+```
+
+At module load time:
+
+1. `load_dotenv()` reads `.env` from working directory
+
+2. `boto3.client("sqs", ...)` constructs SQS client using `AWS_ACCESS_KEY` + `AWS_SECRECT_KEY` env vars
+
+3. `boto3.Session(profile_name="local_aws")` constructs DynamoDB resource using a **named AWS profile** (not env-var creds)
+
+4. `dynamodb.Table("GarmentJobs")` gets the table handle
+
+5. Logging dual-handler setup (stdout + `worker.log` file)
+
+### Worker Process
+
+**File:** `AI-Tagging/worker.py`
+
+Started via systemd (`image_tagging_worker.service`) or manually:
+
+```bash
+python3 worker.py
+```
+
+At module load time:
+
+1. `load_gemini_keys()` reads `GEMINI_API_KEY1`, `GEMINI_API_KEY2`, ... until missing — builds key list
+
+2. `MAX_WORKERS = len(GEMINI_KEYS)` — concurrency level equals number of API keys
+
+3. `_SYSTEM_INSTRUCTION = get_system_instruction()` — calls `prompting.py` and caches the full Gemini system prompt string once
+
+4. AWS clients initialized (SQS + DynamoDB + S3) using explicit env-var credentials
+
+5. One `genai.Client` constructed per Gemini API key
+
+6. `if __name__ == "__main__"` guard runs `worker(clients)` — the infinite polling loop
+
+**Critical:** If no Gemini keys found → `RuntimeError` raised immediately. The service intentionally refuses to start without AI credentials.
+
+---
+
+## 5. Folder Structure Explanation
+
+```
+AI-Tagging/
+│
+├── main_api.py          # FastAPI HTTP server — 3 endpoints
+├── worker.py            # SQS consumer loop + Gemini AI pipeline
+├── enhance_profile.py   # Builds enhance profile; calls Prompt-Gen HTTP API
+├── prompting.py         # Prompt construction + validation rules (very large file)
+│
+├── requirements.txt     # Python dependencies
+├── run.cmd              # Windows dev startup + IAM policy reference
+├── start.sh             # Linux production startup with venv + systemctl
+├── README.md            # Architecture overview
+├── FLOW_LEGEND.txt      # 19-step numbered flow description
+│
+├── data/                # Empty directory — purpose unclear [Needs Verification]
+│
+├── evaluate/            # Integration test scaffolds (not production code)
+│   └── test_repos/
+│       ├── express/
+│       ├── fastapi/
+│       ├── flask/
+│       ├── gin/
+│       ├── httpx/
+│       └── nextjs/
+│
+└── systemd-files/
+    ├── image_tagging.service          # API process service unit
+    └── image_tagging_worker.service   # Worker process service unit
+```
+
+**Why two separate processes?**\
+The AI inference (Gemini calls) is slow (several seconds per job). Running it inline in the HTTP handler would block the request and cause timeouts. The SQS queue decouples them: the API responds immediately with a `job_id`, and the worker processes the job asynchronously.
+
+---
+
+## 6. Core Modules
+
+| Module               | Role                                                                                 |
+| -------------------- | ------------------------------------------------------------------------------------ |
+| `main_api.py`        | HTTP layer: request intake, DynamoDB write, SQS publish, status query                |
+| `worker.py`          | AI pipeline: SQS consume, image download, Gemini inference, result storage           |
+| `enhance_profile.py` | Post-tagging: build LoRA/prompt profile, call Prompt-Gen, write to S3                |
+| `prompting.py`       | Prompt engine: CONDITIONAL\_VALUES, 2-pass prompt construction, hallucination filter |
+
+---
+
+## 7. API Endpoints
+
+### 7.1 `POST /garment-tagging/upload`
+
+| Property     | Value                                      |
+| ------------ | ------------------------------------------ |
+| Method       | `POST`                                     |
+| Path         | `/garment-tagging/upload`                  |
+| Handler file | `main_api.py` → `garment_tagging_upload()` |
+| Auth         | None (no auth on HTTP layer)               |
+| Purpose      | Submit a new garment tagging job           |
+
+**Request Body (JSON):**
+
+```json
+{
+  "uuid": "string",
+  "image_url": ["https://...", "https://...", "..."],
+  "attribute": {
+    "brand": "Nike",
+    "category": "Clothing",
+    "gender": "Mens",
+    "material": "Cotton",
+    "studio": "studio-a"
+  }
+}
+```
+
+**Response (200 OK):**
+
+```json
+{
+  "status": true,
+  "data": {
+    "job_id": "the-uuid-you-sent",
+    "null_attributes": ["brand", "material"]
+  },
+  "info": "success!",
+  "message": ""
+}
+```
+
+**Response (500 — DynamoDB failure):**
+
+```json
+{
+  "status": false,
+  "data": {},
+  "info": "error!",
+  "message": "Failed to create job after retries"
+}
+```
+
+**Response (500 — SQS failure):**
+
+```json
+{"detail": "Failed to push job to queue: <error>"}
+```
+
+---
+
+### 7.2 `GET /garment-tagging/query`
+
+| Property     | Value                                  |
+| ------------ | -------------------------------------- |
+| Method       | `GET`                                  |
+| Path         | `/garment-tagging/query?uuid=<string>` |
+| Handler file | `main_api.py` → `job_status()`         |
+| Auth         | None                                   |
+| Purpose      | Poll for job result                    |
+
+**Query parameter:** `uuid` (string, required)
+
+**Response — still processing (200):**
+
+```json
+{"status": true, "data": {"state": "processing"}, "info": "...", "message": ""}
+```
+
+**Response — complete (200):** Returns the full result JSON as stored in DynamoDB. Structure:
+
+```json
+{
+  "status": true,
+  "data": {
+    "uuid": "...",
+    "tag": { /* 44 extracted attributes */ },
+    "measurements": { /* measurement fields */ },
+    "description": "...",
+    "status": true,
+    "processed_by_queue": "priority|normal"
+  },
+  "info": "success!",
+  "message": "",
+  "process_time": "..."
+}
+```
+
+**Response — not found (404):**
+
+```json
+{"status": false, "data": {}, "info": "not found!", "message": "Job not found"}
+```
+
+**Response — client error (400):**\
+Returned when `state == "error"` AND result message contains: `"Invalid image URL"`, `"HTTP 404"`, or `"HTTP 403"`.
+
+---
+
+### 7.3 `GET /garment-tagging/priority`
+
+| Property     | Value                                         |
+| ------------ | --------------------------------------------- |
+| Method       | `GET`                                         |
+| Path         | `/garment-tagging/priority?uuid=<string>`     |
+| Handler file | `main_api.py` → `set_priority()`              |
+| Auth         | None                                          |
+| Purpose      | Mark an existing pending job as high-priority |
+
+**Query parameter:** `uuid` (string, required)
+
+**Response (200):**
+
+```json
+{"status": true, "data": {}, "info": "success!", "message": "Job marked as priority!"}
+```
+
+**Response (404):** Job not found.
+
+**Why this matters:** The worker scans DynamoDB for `priority=True, state=pending` jobs and re-routes them to a dedicated `PRIORITY_SQS_QUEUE_URL`. Priority jobs jump to the front of the queue even if thousands of normal jobs are pending.
+
+---
+
+## 8. Request/Response Contracts
+
+### `GarmentUploadRequest` (Pydantic Model — `main_api.py`)
+
+| Field       | Type             | Required | Description                                                 |
+| ----------- | ---------------- | -------- | ----------------------------------------------------------- |
+| `uuid`      | `str`            | Yes      | Job identifier — client-generated; also becomes DynamoDB PK |
+| `image_url` | `List[str]`      | Yes      | Array of image URLs; first=front, last=label, middle=grid   |
+| `attribute` | `AttributeModel` | Yes      | Pre-known product metadata                                  |
+
+### `AttributeModel` (Pydantic Model — `main_api.py`)
+
+| Field      | Type            | Required | Notes                                                              |
+| ---------- | --------------- | -------- | ------------------------------------------------------------------ |
+| `brand`    | `Optional[str]` | No       | Brand name; sanitized (`'`, `'`, `"` stripped) before Gemini calls |
+| `category` | `Optional[str]` | No       | e.g. `"Clothing"`, `"Shoes"`, `"Bags & Accessories"`               |
+| `gender`   | `Optional[str]` | No       | e.g. `"Mens"`, `"Womens"`, `"Boys"`, etc.                          |
+| `material` | `Optional[str]` | No       | e.g. `"Cotton"`                                                    |
+| `studio`   | `str`           | Yes      | Studio identifier (non-optional)                                   |
+
+---
+
+## 9. Parameter Traceability
+
+| Parameter            | Type            | Enters System                  | Validated                                       | Transformed                                      | Stored                   | Passed To                                         | Output                                |
+| -------------------- | --------------- | ------------------------------ | ----------------------------------------------- | ------------------------------------------------ | ------------------------ | ------------------------------------------------- | ------------------------------------- |
+| `uuid`               | `str`           | `POST /upload` body            | Pydantic type check only                        | Used as DynamoDB PK                              | `DynamoDB.job_id`        | SQS, worker, query endpoint                       | `data.job_id`                         |
+| `image_url`          | `List[str]`     | `POST /upload` body            | `validate_image_url()` in worker                | Sliced: `[0]`=front, `[1:-1]`=grid, `[-1]`=label | SQS message body         | `process_ai()`, `download_and_load_image()`       | Not in final output                   |
+| `attribute.brand`    | `Optional[str]` | `POST /upload` body            | None                                            | `_sanitize_brand()` strips quotes                | SQS, DynamoDB            | Gemini prompt                                     | Not directly, used in prompt          |
+| `attribute.category` | `Optional[str]` | `POST /upload` body            | None                                            | Used as key into `CONDITIONAL_VALUES`            | SQS, DynamoDB            | `get_classification_prompt()`                     | Used for eBay category lookup         |
+| `attribute.gender`   | `Optional[str]` | `POST /upload` body            | None                                            | String key for nested lookup                     | SQS, DynamoDB            | `resolve_ebay_categories()`                       | Used for validation                   |
+| `ebay_category`      | `str`           | Pass 1 Gemini output           | `validate_response()` checks against known list | —                                                | DynamoDB (`tag` dict)    | `get_dynamic_prompt()`, `build_enhance_profile()` | In `data.tag`                         |
+| `orientation`        | `str`           | Hardcoded `"front"` / `"back"` | None                                            | Passed to Prompt-Gen                             | S3 key suffix            | `build_enhance_profile()`                         | S3 key: `prompts/{job_id}-front.json` |
+| `fabric_type`        | `str`           | Gemini output                  | `validate_response()`                           | Used for guidance lookup                         | `enhance_profile` result | `_get_guidance()`                                 | Affects `guidance_scale` values       |
+
+**Risk —&#x20;****`uuid`****&#x20;not validated for uniqueness:**\
+If a client sends the same `uuid` twice, `put_item` will overwrite the DynamoDB record on the second attempt (DynamoDB `put_item` does not enforce unique inserts without a ConditionExpression).
+
+---
+
+## 10. Business Logic Flow
+
+### Full Flow (Step by Step)
+
+```
+1. Client → POST /garment-tagging/upload
+   ├── Pydantic validates request body
+   ├── Computes null_attributes (fields in attribute where value is None)
+   ├── DynamoDB.put_item (job_id, state="pending", status=False, priority=False, data={...})
+   │   └── Retried once on failure
+   ├── SQS.send_message({job_id, data: {image_url, attribute}})
+   │   └── On failure: DynamoDB update state="error", raise HTTP 500
+   └── Returns {status: true, data: {job_id, null_attributes}}
+
+2. Worker polls SQS (infinite loop, 1s sleep between iterations)
+   ├── Phase A: Priority Promotion
+   │   ├── DynamoDB.scan for state=pending AND priority=true
+   │   ├── For each: conditional update state=pending→queued (race guard)
+   │   └── SQS.send_message to PRIORITY_SQS_QUEUE_URL
+   │
+   ├── Phase B: Consume Priority Queue
+   │   ├── SQS.receive_message (up to MAX_WORKERS messages, 5s long-poll)
+   │   ├── Check ApproximateReceiveCount > MAX_RETRY → poison pill → delete + mark error
+   │   ├── Submit process_and_ack to ThreadPoolExecutor
+   │   └── If any messages found → continue (skip normal queue this iteration)
+   │
+   └── Phase C: Consume Normal Queue (only if priority was empty)
+       └── Same as Phase B
+
+3. process_and_ack → process_job → process_item → process_ai
+   ├── DynamoDB.update_item state="processing"
+   ├── validate_image_url on all URLs (MIME type check)
+   ├── Download grid images (image_url[1:-1]) → make_image_grid → ./temp/{job_id}_grid.jpg
+   ├── Download first image → ./temp/{job_id}_first.jpg
+   ├── Download last image → ./temp/{job_id}_label.jpg
+   │
+   ├── Pass 1: _classify_ebay_category(grid, first, label, attributes)
+   │   ├── get_classification_prompt(input_attributes)
+   │   └── Gemini: response_mime_type="application/json", temp=0 → {"ebay Category": "..."}
+   │
+   ├── Pass 2: extract_attributes_gemini(grid, first, label, attributes)
+   │   ├── get_dynamic_prompt(input_attributes, ebay_category)
+   │   └── Gemini: full system_instruction + dynamic prompt → 44-key JSON
+   │
+   ├── _fix_response_keys: normalize key names (lowercase+strip → canonical)
+   ├── pop "item SubType" → rename to "item Type"
+   ├── validate_response: hard filter against CONDITIONAL_VALUES allowlists
+   │
+   ├── [if PROMPT_GEN_URL and PROMPT_S3_BUCKET set]
+   │   ├── build_enhance_profile(image_url[0], "front", ...)
+   │   │   └── POST Prompt-Gen /generate-prompt
+   │   ├── build_enhance_profile(image_url[1], "back", ...)
+   │   ├── S3.put_object prompts/{job_id}-front.json
+   │   └── S3.put_object prompts/{job_id}-back.json
+   │
+   ├── Pop "measurements" from result (stored separately in final_output)
+   ├── Build final_output dict
+   ├── DynamoDB.update_item state="complete", result=json.dumps(final_output)
+   └── SQS.delete_message
+
+4. Client → GET /garment-tagging/query?uuid=...
+   └── DynamoDB.get_item → return result JSON
+```
+
+---
+
+## 11. AI/Image Processing Logic
+
+### Image Grid Construction (`make_image_grid`)
+
+**File:** `worker.py` — method on `ProductAttributeExtractor`
+
+**Why this matters:** Gemini has a limited context window for images. Rather than sending all middle images individually, the code pastes them into a single 2-column grid image. This:
+
+- Reduces API calls (one image instead of N)
+
+- Allows Gemini to compare details across views in a single context
+
+- Keeps context window usage bounded
+
+**Step-by-step:**
+
+1. Each image is thumbnailed to `(1024, 1024)` max — preserving aspect ratio
+
+2. Images are pasted into a blank canvas, 2 per row
+
+3. Black 5px border lines are drawn between cells using `ImageDraw`
+
+4. Grid is saved to `./temp/{job_id}_grid.jpg`
+
+5. Returns the PIL Image object
+
+**Images used:**
+
+- `image_url[0]` → `first_image` (front view — sent as dedicated image to Gemini)
+
+- `image_url[1:-1]` → grid images (all middle views pasted into grid)
+
+- `image_url[-1]` → `label_image` (product label/tag — sent as dedicated image)
+
+**Why separate front and label?** The front image is the most information-rich view. The label image contains brand/composition text that Gemini reads directly. Sending them separately ensures Gemini gives them full attention rather than treating them as just one cell in a grid.
+
+---
+
+### Two-Pass Gemini Extraction
+
+#### Pass 1 — eBay Category Classification (`_classify_ebay_category`)
+
+**Why two passes?** eBay category determines which valid values apply to `fabric Fit`, `feature Type`, and `item Type`. If Pass 1 is wrong, Pass 2 gets wrong allowlists and produces garbage. Isolating the category decision to a minimal prompt with `temperature=0` maximizes accuracy at low cost.
+
+**Prompt:** Generated by `get_classification_prompt()` in `prompting.py`:
+
+- Embeds the known attribute values for gender and category
+
+- Returns only `{"ebay Category": "value"}` — nothing else
+
+- `response_mime_type="application/json"` forces structured output
+
+- Safety settings set to `BLOCK_NONE` on all harm categories (required for fashion content with denim/bodycon descriptions)
+
+**Grid retry:** If Pass 1 is blocked by Gemini's safety filter with the grid image present, the code retries without the grid image. \[Confirmed by code — `extract_attributes_gemini` has explicit fallback]
+
+#### Pass 2 — Full Attribute Extraction (`extract_attributes_gemini`)
+
+**Prompt:** Generated by `get_dynamic_prompt()`:
+
+- Uses `ebay_category` from Pass 1 to narrow the allowed value lists
+
+- Embeds per-category valid values for `fabric Fit`, `feature Type`, `item Type`
+
+- Uses full `system_instruction` (from `_SYSTEM_INSTRUCTION` — cached at startup)
+
+- Expects 44-key JSON response
+
+**Key Gemini call parameters:**
+
+```python
+client.models.generate_content(
+    model="gemini-2.5-flash-lite",
+    contents=[grid_image_part, first_image_part, label_image_part, prompt],
+    config=GenerateContentConfig(
+        system_instruction=_SYSTEM_INSTRUCTION,
+        response_mime_type="application/json",
+        temperature=0,
+        safety_settings=[ALL BLOCK_NONE]
+    )
+)
+```
+
+---
+
+### Key Normalization (`_fix_response_keys`)
+
+Gemini sometimes returns keys with slightly different casing or spacing (e.g. `"eBay Category"` vs `"ebay Category"`). `_fix_response_keys` normalizes by:
+
+1. Lower-casing and stripping spaces from returned keys
+
+2. Looking up the canonical key in `_KEY_LOOKUP` dict
+
+3. Replacing the malformed key with the canonical one
+
+This prevents silent data loss where a key exists but doesn't match the expected name.
+
+---
+
+### Hallucination Filter (`validate_response`)
+
+**File:** `prompting.py`
+
+This is a **hard post-processing filter**. After Gemini returns its JSON:
+
+1. Type coercion: ensures all expected-string fields are strings, all expected-list fields are lists
+
+2. Static string fields: if the returned value is not in the pre-defined allowed set → field cleared to `""`
+
+3. Static list fields: each element filtered to only include allowed values; disallowed ones removed
+
+4. eBay Category: validated against gender+category-specific nested list
+
+5. Category-keyed fields (`fabric Fit`, `feature Type`, `item Type`): validated per eBay category
+
+6. All `*confidence` fields: must be `"low"`, `"medium"`, `"high"`, or `""` (case-folded before check)
+
+**Hallucination log pattern:** Every cleared value is logged as `[HALLUCINATION]` with the field name and bad value.
+
+---
+
+### Retry and API Key Rotation (`retry_with_backoff_and_rotation`)
+
+**Why multiple API keys?** Gemini rate limits per API key. Having multiple keys allows the worker to rotate to a fresh key on `429 RESOURCE_EXHAUSTED` instead of waiting.
+
+**Retry behavior:**
+
+| Error                      | Action                                              |
+| -------------------------- | --------------------------------------------------- |
+| 429 / RESOURCE\_EXHAUSTED  | Rotate to next key, exponential backoff with jitter |
+| Empty/null Gemini response | Backoff + retry (same key)                          |
+| JSON parse error           | Short backoff + retry                               |
+| 502/503 / UNAVAILABLE      | Backoff + retry                                     |
+| 500 / INTERNAL             | Backoff + retry                                     |
+| `PermanentDownloadError`   | Re-raise immediately — no retry                     |
+| Unknown exception          | Re-raise immediately                                |
+
+**Max retries:** `len(all_clients) * 2` — each key tried twice before giving up.
+
+---
+
+## 12. Database/Storage/Queue Usage
+
+### DynamoDB Table: `GarmentJobs` (region: `eu-west-2`)
+
+| Field             | Type        | Description                                                 |
+| ----------------- | ----------- | ----------------------------------------------------------- |
+| `job_id`          | String (PK) | Client-provided UUID                                        |
+| `state`           | String      | `pending` → `queued` → `processing` → `complete` \| `error` |
+| `status`          | Boolean     | `false` until complete                                      |
+| `priority`        | Boolean     | `false` by default; set to `true` via priority endpoint     |
+| `data`            | Map         | `{image_url: [...], attribute: {...}}`                      |
+| `result`          | String      | `json.dumps(final_output)` — only present after completion  |
+| `null_attributes` | List        | Attribute fields that had null values in the request        |
+
+**Access patterns:**
+
+- `put_item` — on upload (once, with one retry)
+
+- `update_item` — state transitions (3 times per job: queued, processing, complete/error)
+
+- `get_item` — on query polling
+
+- `scan` — in worker for priority promotion (full table scan with FilterExpression)
+
+**Watch out for:** The worker does a `scan` on DynamoDB — this is a full table read every polling cycle. As the `GarmentJobs` table grows larger, this scan becomes increasingly expensive (both in cost and latency). There is no TTL configured on records from the code.
+
+**Note on DynamoDB client initialization:** `main_api.py` creates the DynamoDB client via `boto3.Session(profile_name="local_aws")` (named profile), while `worker.py` uses `boto3.Session(profile_name="local_aws")` as well. This requires the `local_aws` named profile to be configured on the server. The SQS and S3 clients in both files use explicit `AWS_ACCESS_KEY` + `AWS_SECRECT_KEY` env-var credentials.
+
+---
+
+### SQS Queues (region: `eu-west-2`, account: `711027389361`)
+
+| Queue    | URL                                    | Usage                               |
+| -------- | -------------------------------------- | ----------------------------------- |
+| Normal   | `...OpenAI-Clothes-Attribute`          | All new jobs land here              |
+| Priority | `...OpenAI-Clothes-Attribute-Priority` | Re-queued jobs with `priority=True` |
+
+**Message body structure:**
+
+```json
+{"job_id": "uuid-string", "data": {"image_url": ["url1", ...], "attribute": {"brand": "...", ...}}}
+```
+
+**Visibility timeout:** 300 seconds. If processing takes longer, the message becomes visible again and could be processed twice \[Risk].
+
+**Poison pill detection:** `ApproximateReceiveCount > MAX_RETRY (3)` → message is deleted and job marked `state=error`. This prevents infinite retry loops on consistently failing images.
+
+---
+
+### S3 Storage (for Enhance Profiles)
+
+**Bucket:** Value of `PROMPT_S3_BUCKET` env var (not hardcoded)
+
+**Key pattern:** `prompts/{job_id}-front.json`, `prompts/{job_id}-back.json`
+
+**Content:** Serialized enhance profile JSON (see Section 13 for schema)
+
+**When written:** After successful Gemini extraction, before DynamoDB final update
+
+**On failure:** Exception is caught and logged as a warning only — the job still completes without the enhance profile. This is a silent degradation.
+
+---
+
+### Temp Files (`./temp/` directory)
+
+- `./temp/{job_id}_grid.jpg` — image grid
+
+- `./temp/{job_id}_first.jpg` — front view
+
+- `./temp/{job_id}_label.jpg` — label view
+
+Cleaned up in a `finally` block via `remove_file()`. The `./temp/` directory must exist at startup — there is no code to create it automatically \[Risk].
+
+---
+
+## 13. External Integrations
+
+### Google Gemini API
+
+| Property        | Value                                       |
+| --------------- | ------------------------------------------- |
+| SDK             | `google-genai`                              |
+| Model           | `gemini-2.5-flash-lite`                     |
+| Auth            | Per-key `genai.Client(api_key=...)`         |
+| Call type       | Sync: `client.models.generate_content(...)` |
+| Image format    | PIL Image objects passed as inline bytes    |
+| Output format   | `response_mime_type="application/json"`     |
+| Safety settings | All harm categories set to `BLOCK_NONE`     |
+
+### Prompt-Gen Service (HTTP)
+
+Called from `enhance_profile.py`:
+
+```
+POST {PROMPT_GEN_URL}/generate-prompt
+Headers: X-API-Key: {PROMPT_GEN_API_KEY}
+Body: {image_url, orientation, item_type, fabric_type}
+Timeout: 30s
+```
+
+If `PROMPT_GEN_URL` or `PROMPT_S3_BUCKET` env vars are absent, the entire enhance-profile block is skipped silently.
+
+---
+
+## 14. Error Handling and Logging
+
+### Logging Setup
+
+Dual-handler logging to both stdout and `worker.log` file:
+
+```
+Format: "%(asctime)s - %(levelname)s - %(message)s"
+```
+
+**Logging in&#x20;****`main_api.py`****:**
+
+- Upload: logs received UUID and null attributes
+
+- DynamoDB failures: `ERROR` level
+
+- SQS failures: `ERROR` level
+
+**Logging in&#x20;****`worker.py`****:**
+
+- Job state transitions: `INFO`
+
+- Gemini retry/rotation: `WARNING` with key index and error type
+
+- `[HALLUCINATION]` fields: logged by `prompting.validate_response`
+
+- Enhance profile failures: `WARNING` (non-fatal)
+
+- Image download failures: `ERROR`
+
+- Temp file cleanup failures: `ERROR`
+
+### Error Categories
+
+| Error Type                           | Handling                                    | Retry?   |
+| ------------------------------------ | ------------------------------------------- | -------- |
+| DynamoDB transient failure on upload | One retry                                   | Yes (1x) |
+| SQS send failure on upload           | Mark error + HTTP 500                       | No       |
+| Image 404/403                        | `PermanentDownloadError` → job marked error | No       |
+| Image timeout/connection error       | `TransientDownloadError` after 3 retries    | Yes (3x) |
+| Gemini 429                           | Rotate key + exponential backoff            | Yes      |
+| Gemini JSON parse error              | Short backoff + retry                       | Yes      |
+| SQS poison pill                      | Delete message + mark error                 | No       |
+| Enhance profile failure              | Log warning + continue                      | No       |
+
+---
+
+## 15. File-by-File Explanation
+
+### `AI-Tagging/main_api.py`
+
+**Purpose:** HTTP request intake and job management.
+
+**Key Design Decisions:**
+
+- Uses FastAPI's `HTTPException` for structured error responses
+
+- `null_attributes` computation on server side (not delegated to worker) allows clients to know upfront which fields need AI inference
+
+- DynamoDB write uses `put_item` (not conditional write), meaning duplicate UUIDs silently overwrite
+
+- One retry on DynamoDB `put_item` — conservative, no exponential backoff
+
+**Risks:**
+
+- No authentication on any endpoint
+
+- `AWS_SECRECT_KEY` env var name is a typo (should be `AWS_SECRET_KEY`) — must match exactly in `.env` file
+
+- DynamoDB with named profile `local_aws` — will silently fail if profile not configured
+
+---
+
+### `AI-Tagging/worker.py`
+
+**Purpose:** Core AI processing loop. This is the most complex and critical file.
+
+**Key Design Decisions:**
+
+- `ThreadPoolExecutor` with `MAX_WORKERS = len(GEMINI_KEYS)` — parallelism tied to key count. This is clever: each thread gets its own API key, eliminating key contention between threads
+
+- `_SYSTEM_INSTRUCTION` cached at module load — avoids recalling `get_system_instruction()` (which runs `json.dumps()` on large data) on every request
+
+- Temp files written to disk (not kept in memory) — allows very large images without memory pressure
+
+- `process_and_ack` always deletes the SQS message even on error — prevents message redelivery causing infinite loops
+
+**Critical concern:** The `process_item` method pops `item SubType`, `item SubType confidence`, `item SubType alternatives` from the Gemini result and renames them to `item Type` etc. This means the final result's `item Type` field contains what Gemini returned as the **sub-type**, not its top-level type. \[Confirmed by code, but naming is confusing]
+
+---
+
+### `AI-Tagging/enhance_profile.py`
+
+**Purpose:** Bridge between AI-Tagging and Prompt-Gen services. Builds the full LoRA enhancement profile.
+
+**Key Design Decisions:**
+
+- `EBAY_TO_LORA` maps 57 eBay category strings to one of: `"tops"`, `"bottoms"`, `"dresses"`, `"outerwear"`, `"skirts"`, `"jumpsuits"`, or `None`
+
+- When `category_lora` is `None` (accessories, shoes, non-garments): only the general `mh-flatlay` LoRA is used at `scale_solo=0.6`
+
+- When a category-specific LoRA exists: both general LoRA (at lower `scale_paired=0.3`) and category LoRA (at `scale=0.3`) are stacked
+
+- Denim gets lower guidance scale (softer control) to preserve texture
+
+**LoRA URL note:** URLs are hardcoded S3 paths to `.safetensors` files. These will break silently if the S3 objects are moved or the bucket is changed. \[Risk]
+
+---
+
+### `AI-Tagging/prompting.py`
+
+**Purpose:** Centralized knowledge base for attribute rules and prompt construction.
+
+This file contains the entire **attribute taxonomy** of the product: all possible values for every attribute, organized by gender, category, and eBay category. It also contains the validation logic that acts as a final guardrail against Gemini hallucinations.
+
+**Key Design Decisions:**
+
+- `CONDITIONAL_VALUES` is a large nested dict defined at module level — loaded once, shared across all threads
+
+- `get_system_instruction()` calls `json.dumps()` on parts of `CONDITIONAL_VALUES` to embed them in the prompt — this is computed once at worker startup and cached in `_SYSTEM_INSTRUCTION`
+
+- The two-pass design (`get_classification_prompt` then `get_dynamic_prompt`) avoids sending all 57 eBay categories' valid values in every prompt (which would be enormous)
+
+- `validate_response` is intentionally strict: preferring empty fields over hallucinated values, because downstream display code handles empty values gracefully but cannot detect wrong values
+
+---
+
+## 16. Critical Code Deep Dive
+
+### Worker Main Loop (`worker()` function in `worker.py`)
+
+```python
+def worker(clients: List[genai.Client]):
+    with ThreadPoolExecutor(max_workers=len(clients)) as executor:
+        futures = set()
+        while True:
+            _reap_futures(futures)  # Clean up completed futures, log exceptions
+            
+            # ── PHASE A: PRIORITY PROMOTION ──────────────────────────────
+            # Scan DynamoDB for all jobs that are pending AND marked priority
+            scan_response = table.scan(
+                FilterExpression=Attr("state").eq("pending") & Attr("priority").eq(True)
+            )
+            for item in scan_response.get("Items", []):
+                try:
+                    # Atomic: only transition if still "pending" to prevent race with normal worker
+                    table.update_item(
+                        Key={"job_id": item["job_id"]},
+                        UpdateExpression="SET #st = :queued",
+                        ConditionExpression="#st = :pending",  # Race guard
+                        ...
+                    )
+                    # Move off normal queue → priority queue
+                    sqs.send_message(QueueUrl=PRIORITY_SQS_QUEUE_URL, 
+                                     MessageBody=json.dumps({job_id, data}))
+                except ClientError as e:
+                    if e.response["Error"]["Code"] == "ConditionalCheckFailedException":
+                        pass  # Another worker already picked it up — OK
+```
+
+**Why the ConditionExpression matters:** Without the condition check, two worker instances running simultaneously could both try to promote the same job. The condition `state = "pending"` ensures only one succeeds; the other gets `ConditionalCheckFailedException` and safely skips.
+
+```python
+            # ── PHASE B: CONSUME PRIORITY QUEUE ──────────────────────────
+            priority_msgs = sqs.receive_message(
+                QueueUrl=PRIORITY_SQS_QUEUE_URL,
+                MaxNumberOfMessages=MAX_WORKERS,  # Fill all thread slots with priority work
+                WaitTimeSeconds=5,                # Long-poll to reduce empty receive cost
+                VisibilityTimeout=VISIBILITY_TIMEOUT  # 300s — must exceed job processing time
+            )
+            messages = priority_msgs.get("Messages", [])
+            
+            for msg in messages:
+                approx_count = int(msg["Attributes"].get("ApproximateReceiveCount", 0))
+                if approx_count > MAX_RETRY:  # Poison pill detection
+                    sqs.delete_message(...)
+                    table.update_item(... state="error" ...)
+                    continue
+                
+                payload = json.loads(msg["Body"])
+                receipt = msg["ReceiptHandle"]
+                future = executor.submit(
+                    process_and_ack, client, payload, receipt,
+                    PRIORITY_SQS_QUEUE_URL, "priority", clients, client_index
+                )
+                futures.add(future)
+            
+            if messages:
+                continue  # Skip normal queue entirely if priority had work
+            
+            # ── PHASE C: CONSUME NORMAL QUEUE ────────────────────────────
+            # Same pattern as Phase B, using SQS_QUEUE_URL
+```
+
+**Key architectural insight:** This priority system is entirely polling-based, not push-based. The worker is always checking both queues in each loop iteration. Priority wins because:
+
+1. Priority jobs are promoted to a separate queue via DynamoDB scan
+
+2. The worker reads priority queue first and skips normal if it found work
+
+3. Result: whenever there's any priority work, it always runs before normal work
+
+---
+
+### Two-Pass Gemini Extraction (`extract_attributes_gemini`)
+
+```python
+def extract_attributes_gemini(self, grid_image, first_image, label_image, input_attributes):
+    # ── PASS 1: lightweight classification ──────────────────────────
+    ebay_category = self._classify_ebay_category(
+        grid_image, first_image, label_image, input_attributes
+    )
+    
+    # ── PASS 2: full attribute extraction ───────────────────────────
+    # Now that we know the eBay category, get the category-specific valid values
+    dynamic_prompt = get_dynamic_prompt(input_attributes, ebay_category)
+    
+    # Build image parts: grid + first + label
+    grid_part  = types.Part.from_bytes(grid_bytes,  mime_type="image/jpeg")
+    first_part = types.Part.from_bytes(first_bytes, mime_type="image/jpeg")
+    label_part = types.Part.from_bytes(label_bytes, mime_type="image/jpeg")
+    
+    response = self.gemini_client.models.generate_content(
+        model=self.model_name,
+        contents=[grid_part, first_part, label_part, dynamic_prompt],
+        config=GenerateContentConfig(
+            system_instruction=_SYSTEM_INSTRUCTION,  # Pre-cached at startup
+            response_mime_type="application/json",
+            temperature=0,
+            safety_settings=[all BLOCK_NONE]
+        )
+    )
+    
+    raw_data = json.loads(response.text)
+    return self._fix_response_keys(raw_data)
+```
+
+**Critical edge: safety filter retry**\
+If Gemini's safety filter blocks the response (`.candidates[0].finish_reason == "SAFETY"`), the code retries **without the grid image** (sending only first + label). This allows processing to continue even if the assembled grid triggers a false-positive safety filter. Without this fallback, many legitimate fashion items would fail processing permanently.
+
+---
+
+## 17. Risks and Technical Debt
+
+### High Severity
+
+| Risk                                                       | Location                         | Impact                                                                         |
+| ---------------------------------------------------------- | -------------------------------- | ------------------------------------------------------------------------------ |
+| **No auth on HTTP endpoints**                              | `main_api.py`                    | Any caller can submit jobs and poll results                                    |
+| **DynamoDB full-table scan in tight loop**                 | `worker.py` — priority promotion | As table grows, cost and latency increase significantly                        |
+| **Hardcoded SQS URLs with account ID**                     | `main_api.py`, `worker.py`       | Breaks on AWS account change; undiscoverable without searching both files      |
+| **`AWS_SECRECT_KEY`****&#x20;typo**                        | Both files                       | `.env` file must use the typo'd name — confusing for new developers            |
+| **`./temp/`****&#x20;directory not created automatically** | `worker.py`                      | Worker crashes at startup if directory doesn't exist                           |
+| **SQS VisibilityTimeout = 300s**                           | `worker.py`                      | If processing exceeds 5 min, message becomes visible again → double processing |
+
+### Medium Severity
+
+| Risk                                                     | Location             | Impact                                                                                                       |
+| -------------------------------------------------------- | -------------------- | ------------------------------------------------------------------------------------------------------------ |
+| **DynamoDB named profile vs env vars**                   | Both files           | Inconsistency: SQS uses env vars, DynamoDB uses named profile — breaks in different environments differently |
+| **LoRA URLs hardcoded in&#x20;****`enhance_profile.py`** | `enhance_profile.py` | S3 path changes → silent failures in image enhancement                                                       |
+| **Enhance profile failure silently swallowed**           | `worker.py`          | Image enhancer never gets its profile; no alert to caller                                                    |
+| **`./data/`****&#x20;directory purpose unknown**         | `AI-Tagging/data/`   | Could be stale/unused                                                                                        |
+| **No job TTL in DynamoDB**                               | `main_api.py`        | Table grows unboundedly; full-table scan cost increases over time                                            |
+| **No request ID on incoming jobs**                       | `main_api.py`        | Difficult to trace logs for a specific request across the two processes                                      |
+
+### Low Severity
+
+| Risk                                                               | Location    | Impact                                                                                    |
+| ------------------------------------------------------------------ | ----------- | ----------------------------------------------------------------------------------------- |
+| **`max_workers = 4`****&#x20;constant unused**                     | `worker.py` | `MAX_WORKERS = len(GEMINI_KEYS)` overrides it; dead code                                  |
+| **Gemini model name hardcoded in constructor default**             | `worker.py` | `model_name="gemini-2.5-flash-lite"` — upgrading model requires code change               |
+| **Item SubType rename**                                            | `worker.py` | `process_item` silently renames result fields — confusing without comments                |
+| **`validate_image_url`****&#x20;uses MIME type guessing from URL** | `worker.py` | `mimetypes.guess_type` on a URL — unreliable for CDN or presigned URLs without extensions |
+
+---
+
+## 18. Recommendations
+
+1. **Add API authentication** — even simple Bearer token or API key validation on the upload endpoint
+
+2. **Replace DynamoDB scan with a GSI** — create a Global Secondary Index on `(priority, state)` to replace the full table scan with a targeted query
+
+3. **Add DynamoDB TTL** — set a TTL attribute (e.g., 30-day expiry) to prevent unbounded table growth
+
+4. **Fix the env var typo** — rename `AWS_SECRECT_KEY` to `AWS_SECRET_KEY` in code and update all `.env` files
+
+5. **Unify AWS credential approach** — use either named profiles OR env vars consistently, not both
+
+6. **Auto-create&#x20;****`./temp/`****&#x20;directory** — add `os.makedirs("./temp", exist_ok=True)` early in `worker.py` startup
+
+7. **Extend VisibilityTimeout dynamically** — use SQS `ChangeMessageVisibility` mid-processing to handle slow jobs
+
+8. **Alert on enhance profile failure** — currently silent; at minimum log at ERROR level and expose in job result
+
+9. **Pin dependency versions** — `requirements.txt` has no pinned versions; add version pinning for reproducible builds
+
+10. **Extract hardcoded constants** — SQS URLs, DynamoDB table name, S3 key patterns should be env vars
+
+---
+
+## 19. Junior Developer Summary
+
+### What does this service do in plain English?
+
+Think of it as a **smart product cataloguer**. When an e-commerce company gets a new piece of clothing, they send its images to this service. The service:
+
+1. **Takes a ticket number** (`job_id`) — like a claim ticket at a dry cleaner
+
+2. **Puts the job in a queue** — so the store doesn't wait for the AI to finish
+
+3. **In the background:** downloads all the garment images, lays them out in a grid (so the AI can see multiple angles at once), then asks Google's Gemini AI: "What kind of garment is this?" first, and then "Give me all 44 product attributes" using the right list of valid values for that specific garment type
+
+4. **Cleans the AI's answer** — removes any made-up values (Gemini sometimes invents attribute values, this code deletes those)
+
+5. **Stores the result** back in the database
+
+6. **Client comes back** later and asks "Is my job done?" — the service returns the extracted attributes
+
+### Key things to know as a junior developer
+
+- The service runs as **two separate programs**: the API (port 9000) and the worker. You need to start both.
+
+- The worker reads from **SQS** (a message queue). You need AWS credentials working correctly.
+
+- The DynamoDB client uses a **named AWS profile** (`local_aws`). Run `aws configure --profile local_aws` if you're setting up a new machine.
+
+- The Gemini API keys are numbered: `GEMINI_API_KEY1`, `GEMINI_API_KEY2`, etc. Add more keys to increase how many jobs run in parallel.
+
+- The `./temp/` folder must exist before you start the worker — create it manually if needed.
+
+- If a job shows `state: error` in the result, check the `worker.log` file for details.
+
+---
+
+## 20. Needs Verification / Unknowns
+
+| Item                                   | Uncertainty                                                                                        | Suggested Action                                                                                    |
+| -------------------------------------- | -------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `AI-Tagging/data/` directory           | Purpose unknown — appears empty                                                                    | Check git history or ask team                                                                       |
+| `evaluate/test_repos/`                 | Contains framework stubs (express, flask, gin, etc.) but no clear integration with tagging service | Confirm if these are API contract tests or leftover code                                            |
+| Who generates UUIDs                    | Client sends `uuid` in request body — no server-side UUID generation                               | Confirm client is responsible for UUID uniqueness                                                   |
+| DynamoDB `put_item` overwrite behavior | No ConditionExpression to prevent duplicate UUID overwrite                                         | Verify whether this is intentional or a bug                                                         |
+| S3 bucket for enhance profiles         | Set via `PROMPT_S3_BUCKET` env var — actual bucket name and region not confirmed in code           | Confirm bucket exists and has correct IAM permissions                                               |
+| `process_item` item SubType rename     | Renames `item SubType` → `item Type` — implies the Gemini pass 2 output has two "type" levels      | Verify the intent and whether the original `item Type` field from Gemini is intentionally discarded |
+| `processed_by_queue` field in result   | Set to `"priority"` or `"normal"` — passed as `queue_name` arg                                     | Confirm this is used by downstream consumers                                                        |
+

@@ -1,0 +1,135 @@
+---
+title: Packaging Selection by Location (Rules Engine)
+description: >-
+  Dynamically assign and recalculate order packaging based on fulfilment
+  location using Rules Engine for accurate dimensions and weight.
+---
+## Overview
+
+The **RIS-RM-2020 – PackagingSelectionByLocationRulesEngine** macro automates packaging selection and recalculation based on fulfilment location.
+
+It ensures that each order is assigned the correct packaging group and that dimensions and weight are recalculated accurately for shipping.
+
+<Callout kind="tip" collapsed="false">
+  Ensure packaging groups and location mappings are correctly configured before executing this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Identifies fulfilment location  
+- Assigns appropriate packaging group  
+- Recalculates dimensions and weight  
+- Ensures accurate packaging output  
+
+👉 In short:  
+Automatically assign and recalculate packaging based on location.
+
+## When It Runs
+
+Used for advanced packaging automation
+
+Typically runs:
+
+- Triggered via Rules Engine  
+- On selected orders  
+- During order processing or packing stage  
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of order IDs to process.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Note:  
+  - No manual configuration required  
+  - Packaging logic is fully automated based on system data  
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Fetch Configurations" icon="settings" title-type="p">
+    Retrieve packaging groups and stock locations.
+  </Step>
+
+  <Step title="Process Orders" icon="list" title-type="p">
+    Loop through each OrderId and fetch full order details.
+  </Step>
+
+  <Step title="Identify Location" icon="map-pin" title-type="p">
+    Determine fulfilment location for each order.
+  </Step>
+
+  <Step title="Map Packaging Group" icon="layers" title-type="p">
+    Assign packaging group based on predefined location mappings.
+  </Step>
+
+  <Step title="Get Packaging Data" icon="box" title-type="p">
+    Retrieve packaging calculation data including weight and dimensions.
+  </Step>
+
+  <Step title="Build Packaging Structure" icon="package" title-type="p">
+    Create packaging request with items, dimensions, weight, and group.
+  </Step>
+
+  <Step title="Recalculate Packaging" icon="refresh-cw" title-type="p">
+    Apply recalculation logic to update packaging details.
+  </Step>
+
+  <Step title="Log Results" icon="file-text" title-type="p">
+    Log updated packaging details including dimensions and weight.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Packaging assigned based on location  
+  - Dimensions and weight recalculated accurately  
+  - Orders ready for shipping  
+  - Packaging consistency maintained  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Automating packaging selection and calculation  
+- Ensuring location-specific packaging rules  
+- Improving shipping accuracy  
+- Reducing manual effort  
+- Supporting complex fulfilment workflows  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Works only if packaging groups exist in Linnworks  
+  - Uses default packaging type within each group  
+  - Duplicate condition for Australia FC exists in logic  
+  - Depends on exact location naming  
+  - Recalculation may override manual packaging changes  
+  - JSON conversion is used only for logging/debugging  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Dynamic Packaging Based on Location" default-open="false">
+  Orders are processed from different fulfilment locations.
+
+  👉 The macro:
+
+  - Identifies the location  
+  - Assigns corresponding packaging group  
+  - Recalculates packaging dimensions and weight  
+
+  Result: Orders are accurately packaged and ready for shipping.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Combining location-based rules with dynamic recalculation ensures precise packaging decisions, improves shipping accuracy, and enables scalable warehouse automation.
+</Callout>

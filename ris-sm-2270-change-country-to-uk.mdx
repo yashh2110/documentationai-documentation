@@ -1,0 +1,139 @@
+---
+title: 'Change Country to UK '
+description: >-
+  Normalize orders by converting country "Jersey" to "United Kingdom" for
+  shipping and billing addresses, ensuring correct CountryId mapping and courier
+  compatibility.
+---
+## Overview
+
+The **RIS-SM-2270 – Change Country to UK&#x20;**&#x20;macro standardizes address data by converting orders with country set as "Jersey" into "United Kingdom".
+
+<Callout kind="tip" collapsed="false">
+  Use this macro before shipping label generation to avoid courier and tax issues caused by Jersey being treated as a separate country.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Identifies orders with country "Jersey"
+
+- Converts them to "United Kingdom"
+
+- Updates both shipping and billing addresses
+
+- Applies correct CountryId mapping
+
+👉 In short:\
+Detect Jersey → convert to UK → update → save.
+
+## When It Runs
+
+Typically executed:
+
+- After order import
+
+- Before shipping label generation
+
+- For UK-based fulfillment
+
+- During data cleanup
+
+- When sales channels send Jersey separately
+
+- Manually or via automation
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="GUID[]" required="false" deprecated="false">
+  Optional list of orders to process.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Note: Even if OrderIds are provided, the macro processes open orders from the last 45 days.
+</Callout>
+
+## Simple Explanation
+
+The macro scans open orders, detects those with country set to "Jersey", converts them to "United Kingdom", updates the CountryId, and saves the changes.
+
+## Step-by-Step Flow
+
+<Steps>
+  <Step title="Start Macro" icon="play" title-type="p">
+    Log macro start and initialize execution.
+  </Step>
+
+  <Step title="Apply Date Filter" icon="calendar" title-type="p">
+    Fetch open orders from the last 45 days.
+  </Step>
+
+  <Step title="Get UK Country Reference" icon="globe" title-type="p">
+    Retrieve "United Kingdom" and its corresponding CountryId.
+  </Step>
+
+  <Step title="Loop Through Orders" icon="list" title-type="p">
+    Process each order individually.
+  </Step>
+
+  <Step title="Check Shipping Address" icon="truck" title-type="p">
+    If shipping country = "Jersey":
+  </Step>
+
+  <Step title="Check Billing Address" icon="file-text" title-type="p">
+    If billing country = "Jersey":
+  </Step>
+
+  <Step title="Save Changes" icon="save" title-type="p">
+    Save order only if updates were made.
+  </Step>
+
+  <Step title="Logging" icon="file-text" title-type="p">
+    Log updated orders, skipped cases, and errors.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Country updated from Jersey to United Kingdom
+
+  - Shipping and billing addresses standardized
+
+  - Correct CountryId applied
+</Callout>
+
+## Usefulness
+
+- **Courier Compatibility** – Works with systems treating Jersey as UK
+
+- **Data Standardization** – Ensures consistent country values
+
+- **Automation** – Eliminates manual correction
+
+- **Error Prevention** – Avoids shipping and tax issues
+
+## Example Scenario
+
+<Expandable title="Order Normalization" default-open="false">
+  Orders are received with country set as Jersey, causing processing issues.
+
+  The macro:
+
+  - Detects Jersey
+
+  - Converts it to United Kingdom
+
+  - Updates the system
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This macro follows a simple flow:\
+  Order → Detect Jersey → Convert to UK → Update → Save.
+
+  It prevents incorrect shipping zones, courier failures, inconsistent country data, and tax-related issues.
+</Callout>
+

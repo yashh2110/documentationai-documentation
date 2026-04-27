@@ -1,0 +1,167 @@
+---
+title: Split Order Based on Item Extended Property (EP)
+description: >-
+  Automatically split orders based on item-level Extended Property (EP) values to group items and improve fulfillment accuracy.
+---
+
+## Overview
+
+The **RIS-RM-2043 – Split Order Based on Item EP** macro automates order splitting by evaluating item-level Extended Property (EP) values (e.g., type, category, supplier flag).  
+
+It groups items based on EP and creates separate orders for each group, ensuring logical organization for warehouse picking and routing.
+
+<Callout kind="tip" collapsed="false">
+  Ensure item EPs are correctly configured in inventory before executing this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Reads item-level EP values  
+- Groups items according to EP  
+- Splits orders into multiple orders based on grouping  
+- Adds notes for missing or unrecognized EP values  
+
+👉 In short:  
+Group items by EP → split orders automatically → flag missing EP.
+
+## When It Runs
+
+Used for order processing and fulfillment automation  
+
+Typically runs:
+
+- During order processing  
+- Manual execution  
+- Before warehouse picking  
+- During order routing  
+- Supplier-based or category-based splitting  
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of orders to process.
+</ParamField>
+
+<ParamField path="extendedPropertyType" param-type="string" required="true" deprecated="false">
+  Type of EP (Inventory, Order, etc.).
+</ParamField>
+
+<ParamField path="extendedPropertyName" param-type="string" required="true" deprecated="false">
+  Name of the EP to evaluate.
+</ParamField>
+
+<ParamField path="EPValue1" param-type="string" required="true" deprecated="false">
+  First valid EP value to group items.
+</ParamField>
+
+<ParamField path="EPValue2" param-type="string" required="false" deprecated="false">
+  Second valid EP value to group items.
+</ParamField>
+
+## How It Works
+
+<Steps>
+  <Step title="Start Macro" icon="play-circle" title-type="p">
+    Loop through all provided Order IDs and process each order.
+  </Step>
+
+  <Step title="Fetch Order and Items" icon="download" title-type="p">
+    Retrieve full order details and extract all order items.
+  </Step>
+
+  <Step title="Read Item Extended Property" icon="search" title-type="p">
+    For each item: fetch EP using `extendedPropertyName` and `extendedPropertyType`.  
+    Assign value:
+    - If EP matches `EPValue1` or `EPValue2` → assign that value  
+    - Otherwise → assign `"notFound"`.
+  </Step>
+
+  <Step title="Group Items" icon="layers" title-type="p">
+    Create item groups:
+    - Group 1 → `EPValue1`  
+    - Group 2 → `EPValue2`  
+    - Group 3 → `notFound`.
+  </Step>
+
+  <Step title="Decide Split Behavior" icon="alert-circle" title-type="p">
+    Cases:
+    - Only one group → no split required; if group = notFound → add note  
+    - Two valid groups → split into 2 orders  
+    - Multiple groups → split into multiple orders (one per group)
+  </Step>
+
+  <Step title="Perform Order Split" icon="split" title-type="p">
+    Create `OrderSplit` objects including Quantity, Cost, Weight, RowId.  
+    Execute split to generate new orders.
+  </Step>
+
+  <Step title="Handle Missing EP After Split" icon="edit" title-type="p">
+    Check each new order; if any item has `"notFound"` → add note.
+  </Step>
+
+  <Step title="Add Order Notes" icon="file-text" title-type="p">
+    Add note: `"No exact EP was found in the items of this order"`.
+  </Step>
+
+  <Step title="Logging" icon="check-circle" title-type="p">
+    Log:
+    - Orders processed  
+    - Split results (new order numbers)  
+    - Notes added  
+    - Errors
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Orders split based on item EP values  
+  - Items grouped into logical orders  
+  - Orders with missing EP flagged via notes  
+  - Improved fulfillment accuracy
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Supplier-based order splitting  
+- Supporting warehouse routing logic  
+- Improving picking efficiency  
+- Preventing mixed-category orders  
+- Enhancing automation workflows  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Depends on correct EP configuration in inventory  
+  - Handles missing EP values using fallback (`notFound`)  
+  - Splitting increases order count (may affect workflows)  
+  - Notes help identify data issues  
+  - Works best with consistent EP values  
+  - Performance impact for large/multi-item orders
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Split Orders Based on Item EP" default-open="false">
+  Order contains:  
+  - Item A → EP = Fragile  
+  - Item B → EP = Standard  
+
+  👉 The macro:
+
+  - Reads EP values of each item  
+  - Groups items based on EP  
+  - Splits order automatically  
+
+  Result: Order 1 → Fragile items, Order 2 → Standard items.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Intelligent order segmentation using item-level metadata allows automated routing, supplier handling, and fulfillment with greater efficiency and accuracy.
+</Callout>

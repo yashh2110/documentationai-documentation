@@ -1,0 +1,182 @@
+---
+title: Order Move to Stock Available Location (Multi-Location Auto-Move Logic)
+description: >-
+  Automatically checks stock across multiple warehouses, selects the best
+  location with full availability, and moves orders accordingly to optimize
+  fulfilment.
+---
+## Overview
+
+The **RIS-SM-2289 – Order Move to Stock Available Location** macro intelligently routes orders to the most suitable warehouse by checking stock availability across all locations.
+
+It ensures orders are fulfilled from the correct location without manual intervention.
+
+<Callout kind="tip" collapsed="false">
+  Configure priority locations if specific warehouses should be preferred during selection.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Checks stock across all locations
+
+- Identifies the best fulfilment warehouse
+
+- Moves orders automatically
+
+- Ensures full stock availability before movement
+
+👉 In short:\
+Check stock → find best location → move order.
+
+## When It Runs
+
+Used for warehouse routing and fulfilment optimization
+
+Typically runs:
+
+- After order import
+
+- Before picking and packing
+
+- In multi-warehouse environments
+
+- During automated fulfilment workflows
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="GUID[]" required="true" deprecated="false">
+  List of orders to process.
+</ParamField>
+
+<ParamField path="PriorityLocations" param-type="string" required="false" deprecated="false">
+  Optional list of preferred warehouse locations.
+</ParamField>
+
+<ParamField path="ReprintLabels" param-type="bool" required="false" deprecated="false">
+  If enabled, clears existing labels and forces reprinting.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  If PriorityLocations are not provided, the macro automatically selects the best available location.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Start Execution" icon="play" title-type="p">
+    Logs macro start and validates input orders.
+  </Step>
+
+  <Step title="Load Locations" icon="map" title-type="p">
+    Retrieves all warehouse locations and applies priority logic if provided.
+  </Step>
+
+  <Step title="Process Orders" icon="list" title-type="p">
+    Iterates through each order and skips already processed or invalid ones.
+  </Step>
+
+  <Step title="Check Stock Availability" icon="search" title-type="p">
+    Verifies stock for all items across each location.
+  </Step>
+
+  <Step title="Select Best Location" icon="target" title-type="p">
+    Identifies the location where full order stock is available.
+  </Step>
+
+  <Step title="Move Order" icon="truck" title-type="p">
+    Moves the order to the selected warehouse if different from current location.
+  </Step>
+
+  <Step title="Skip If Not Required" icon="skip-forward" title-type="p">
+    Keeps order in place if current location already has sufficient stock.
+  </Step>
+
+  <Step title="Reprint Labels (Optional)" icon="printer" title-type="p">
+    Clears and regenerates labels if ReprintLabels is enabled.
+  </Step>
+
+  <Step title="Mark as Processed" icon="check-circle" title-type="p">
+    Adds flags and notes to prevent duplicate processing.
+  </Step>
+
+  <Step title="Logging" icon="file-text" title-type="p">
+    Tracks moved orders, skipped cases, and errors.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Orders moved to optimal warehouse
+
+  - Stock availability ensured before fulfilment
+
+  - Manual routing eliminated
+
+  - Orders ready for faster processing
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Multi-warehouse management
+
+- Automated order routing
+
+- Reducing fulfilment delays
+
+- Preventing stock conflicts
+
+- Improving operational efficiency
+
+- Scaling warehouse operations
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Only moves orders if full stock is available in another location
+
+  - PriorityLocations influence selection logic
+
+  - Already processed orders are skipped
+
+  - Label reprint occurs only if enabled
+
+  - Incorrect configuration may lead to suboptimal routing
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Multi-Location Stock Routing Example" default-open="false">
+  Scenario:
+
+  - Order assigned to Warehouse A
+
+  - Stock unavailable in Warehouse A
+
+  - Stock available in Warehouse B
+
+  👉 The macro:
+
+  - Checks all locations
+
+  - Finds full stock in Warehouse B
+
+  - Moves order automatically
+
+  Result:
+
+  - Before → Incorrect warehouse
+
+  - After → Correct warehouse with stock
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By dynamically evaluating stock across all locations and routing orders accordingly, this macro ensures faster fulfilment, reduces manual effort, and optimizes inventory utilization across warehouses.
+</Callout>
+

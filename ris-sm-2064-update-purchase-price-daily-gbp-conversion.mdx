@@ -1,0 +1,197 @@
+---
+title: Update Purchase Price Daily (GBP Conversion)
+description: >-
+  Automatically updates inventory purchase prices based on Purchase Order costs,
+  converts all values into GBP, and ensures accurate financial reporting.
+---
+## Overview
+
+The **RIS-SM-2064 – Update Purchase Price Daily (GBP Conversion)** macro automatically updates inventory purchase prices from purchase orders and converts costs into GBP. It ensures standardized, accurate cost data across the system.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  Get PO cost → Convert to GBP → Update inventory purchase price → Mark PO as processed
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Reads purchase order costs
+
+- Converts them into GBP
+
+- Updates inventory purchase prices
+
+- Marks each purchase order as processed
+
+👉 Ensures consistent, multi-currency inventory costing automatically.
+
+## When It Runs
+
+Used for financial reporting and inventory accuracy.
+
+**Typically runs:**
+
+- Scheduled execution daily (recommended overnight)
+
+- During low system usage periods
+
+- In multi-currency supplier environments
+
+- To maintain accurate cost reporting
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="false" deprecated="false">
+  None. Fully automated scheduled macro.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Internal Configuration Settings:
+
+  - **BaseCurrency:** GBP → All costs converted to GBP
+
+  - **FetchPurchaseOrdersOfLastHours:** -365 → Fetch last 365 days of POs
+
+  - **EpName:** IsPurchasePriceUpdated → Prevent reprocessing
+
+  - **API Limit:** 250 per minute → Prevent API throttling
+</Callout>
+
+<Callout kind="info" collapsed="false">
+  The macro reads PO costs, converts them to GBP, updates inventory, and ensures each PO is processed only once.
+</Callout>
+
+## Process Flow Step-by-Step
+
+<Steps>
+  <Step title="Start Macro" icon="play" title-type="p">
+    Log start message and load currency conversion rates.
+  </Step>
+
+  <Step title="Get Currency Rates" icon="dollar-sign" title-type="p">
+    Call `GetCurrencyConversionRates` and store currency-to-rate mapping.
+  </Step>
+
+  <Step title="Fetch Purchase Orders" icon="download" title-type="p">
+    Retrieve purchase orders from the last 365 days. Extract PO ID and currency.
+  </Step>
+
+  <Step title="Skip Already Processed POs" icon="skip-forward" title-type="p">
+    Check extended property `IsPurchasePriceUpdated`. Skip if exists; otherwise continue.
+  </Step>
+
+  <Step title="Get Purchase Order Items" icon="list" title-type="p">
+    For each PO, fetch:
+
+    - StockItemId
+
+    - Cost
+
+    - Quantity
+  </Step>
+
+  <Step title="Convert Cost to GBP" icon="dollar-sign" title-type="p">
+    If PO currency is not GBP, convert using stored rate.
+  </Step>
+
+  <Step title="Normalize Cost Per Unit" icon="percent" title-type="p">
+    If quantity > 1, calculate unit cost = total cost ÷ quantity.
+  </Step>
+
+  <Step title="Update Inventory Purchase Price" icon="edit" title-type="p">
+    Call `UpdateInventoryItemField` to update purchase price in GBP.
+  </Step>
+
+  <Step title="Handle API Rate Limiting" icon="clock" title-type="p">
+    Limit updates to 250 per minute. Wait if exceeded before continuing.
+  </Step>
+
+  <Step title="Track Success" icon="check-circle" title-type="p">
+    Count successful updates. Skip marking PO if not all items updated.
+  </Step>
+
+  <Step title="Mark PO as Processed" icon="tag" title-type="p">
+    Add extended property:
+
+    - Name: IsPurchasePriceUpdated
+
+    - Value: True
+  </Step>
+
+  <Step title="Logging" icon="file-text" title-type="p">
+    Log currency conversions, updates, success/failure, extended property updates, and errors.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Inventory purchase prices updated in GBP
+
+  - Multi-currency costs normalized
+
+  - Each purchase order processed only once
+
+  - API limits handled safely
+
+  - Accurate cost data ready for reporting
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Supporting multi-currency environments
+
+- Ensuring accurate inventory costing
+
+- Automating updates with no manual effort
+
+- Preventing duplicate updates
+
+- Improving financial reporting and margin analysis
+
+- Safe execution with API rate control
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Processes only unprocessed purchase orders
+
+  - Depends on accurate currency conversion rates
+
+  - Handles large data volumes with API rate limiting
+
+  - Extended property prevents duplicate processing
+
+  - Best executed during scheduled low-load periods
+</Callout>
+
+## Example Scenario
+
+<Expandable title="PO Conversion and Update Example" default-open="false">
+  Purchase Order:
+
+  - Item A → Cost: 100 USD, Quantity: 2
+
+  Processing:
+
+  - Convert USD → GBP (assume total 80 GBP)
+
+  - Unit cost = 80 ÷ 2 = 40 GBP
+
+  **Final Result:**
+
+  - Inventory purchase price updated to 40 GBP
+
+  - Purchase order marked as processed
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Automating currency conversion and purchase price updates ensures consistent, accurate inventory costing—critical for businesses handling multiple currencies and high-volume purchase operations.
+</Callout>
+

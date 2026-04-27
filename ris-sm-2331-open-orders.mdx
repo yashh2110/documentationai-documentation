@@ -1,0 +1,191 @@
+---
+title: 'RIS-SM-2331 – Open Orders '
+description: >-
+  Monitors open orders across warehouses, identifies delayed orders based on a
+  defined threshold, and sends automated email alerts with detailed reports.
+---
+## Overview
+
+The **RIS-SM-2331 – Open Orders&#x20;**&#x20;macro monitors all open orders across warehouses and flags those that remain unprocessed beyond a configured time threshold.
+
+It automatically filters excluded channels, generates a CSV report, sends email alerts, and tags processed orders to prevent duplicate notifications.
+
+<Callout kind="tip" collapsed="false">
+  Configure excluded sales channels and threshold hours carefully to ensure alerts are accurate and actionable.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Monitors open orders across all warehouses
+
+- Detects delayed orders beyond the defined time threshold
+
+- Excludes orders from specified sales channels
+
+- Sends automated email alerts with CSV attachment
+
+- Marks processed orders to avoid duplicate alerts
+
+👉 In short:\
+Detect delayed orders → generate report → send alert → mark orders.
+
+## When It Runs
+
+Typically scheduled:
+
+- Hourly or daily
+
+- For monitoring open orders across warehouses
+
+- To detect delayed fulfilment
+
+- For proactive reporting and alerting
+
+## Parameters
+
+<ParamField path="identifierTag" param-type="string" required="true" deprecated="false">
+  Identifier used to mark processed orders.
+</ParamField>
+
+<ParamField path="excludeSource" param-type="string" required="false" deprecated="false">
+  Comma-separated list of sales channels to exclude (e.g., Amazon).
+</ParamField>
+
+<ParamField path="noOfHours" param-type="int" required="true" deprecated="false">
+  Threshold in hours to identify delayed orders.
+</ParamField>
+
+<ParamField path="emailHost" param-type="string" required="true" deprecated="false">
+  SMTP server host.
+</ParamField>
+
+<ParamField path="emailUsername" param-type="string" required="true" deprecated="false">
+  Sender email address.
+</ParamField>
+
+<ParamField path="emailPassword" param-type="string" required="true" deprecated="false">
+  Email password.
+</ParamField>
+
+<ParamField path="emailPort" param-type="int" required="true" deprecated="false">
+  SMTP port number.
+</ParamField>
+
+<ParamField path="emailRecipient" param-type="string" required="true" deprecated="false">
+  Comma-separated list of recipient email addresses.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Ensure email configuration is valid for alerts to be sent successfully.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Input Validation" icon="check-circle" title-type="p">
+    Validate threshold hours, excluded sources, and email configuration. Stop if invalid.
+  </Step>
+
+  <Step title="Fetch Locations" icon="map" title-type="p">
+    Retrieve all warehouse locations to prepare for order processing.
+  </Step>
+
+  <Step title="Apply Filters" icon="filter" title-type="p">
+    Select orders older than defined hours and exclude already processed orders. Apply date and status filters.
+  </Step>
+
+  <Step title="Fetch Open Orders" icon="list" title-type="p">
+    Loop through each location, retrieve open orders, and combine results.
+  </Step>
+
+  <Step title="Order Filtering" icon="search" title-type="p">
+    Remove excluded sources (e.g., Amazon), calculate order age, and keep only delayed orders.
+  </Step>
+
+  <Step title="Identifier Check" icon="tag" title-type="p">
+    Ensure identifier exists to prevent duplicate processing.
+  </Step>
+
+  <Step title="Email Preparation" icon="mail" title-type="p">
+    Generate CSV file with order data, create HTML email body, and include summary table.
+  </Step>
+
+  <Step title="Email Validation" icon="alert-circle" title-type="p">
+    Remove duplicate email addresses, validate format, and stop if invalid.
+  </Step>
+
+  <Step title="Send Email" icon="send" title-type="p">
+    Send alert email with order summary and CSV attachment. Log success or failure.
+  </Step>
+
+  <Step title="Mark Orders" icon="check" title-type="p">
+    Assign identifier to processed orders to prevent duplicate alerts.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Delayed open orders identified
+
+  - Email alert sent with summary and CSV report
+
+  - Orders tagged to avoid duplicate alerts
+
+  - Improved visibility of pending fulfilment
+</Callout>
+
+## Usefulness
+
+- **Proactive Monitoring** – Detects delayed orders early
+
+- **Automation** – Sends alerts without manual effort
+
+- **Improved Efficiency** – Reduces fulfilment delays
+
+- **Better Visibility** – Centralized reporting via email
+
+- **Error Prevention** – Avoids missed or stuck orders
+
+## Example Scenario
+
+<Expandable title="Delayed Order Alert Example" default-open="false">
+  Scenario:
+
+  Orders:
+
+  - Order 101 → 30 hours old (Shopify)
+
+  - Order 102 → 10 hours old
+
+  - Order 103 → 40 hours old (Amazon)
+
+  Configuration:
+
+  - Threshold = 24 hours
+
+  - Exclude = Amazon
+
+  Result:
+
+  - Order 101 included
+
+  - Order 103 excluded
+
+  - Order 102 ignored
+
+  Email sent with order details and CSV attachment
+
+  Insight:
+
+  - Only relevant delayed orders are reported automatically
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By combining time-based monitoring with automated email alerts, this macro ensures delayed orders are identified and reported on time, preventing fulfilment issues and improving operational efficiency.
+</Callout>
+

@@ -1,0 +1,133 @@
+---
+title: Stock Item Extended Properties Pivot
+description: >-
+  Transforms stock item extended properties from rows into columns for easier analysis.
+---
+## Overview
+
+The **RIS-SC-1035 – Stock Item Extended Properties Pivot** script helps analysts convert property data from rows into a column-based format, allowing all attributes for a SKU to appear in a single line.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  Convert row-based extended property data into a pivoted column view per SKU.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Retrieves extended properties of stock items  
+- Converts properties from rows to columns (pivot)  
+- Provides a single-line view of all attributes per SKU  
+- Dynamically adapts to new or updated properties  
+
+---
+
+## When It Runs
+
+Used for product audits, catalog comparison, and data cleanup.
+
+**Typically runs:**
+
+- Manually executed by analysts  
+- During product data audits  
+- While validating extended properties  
+- For catalog comparison  
+- During data cleanup or migration  
+
+---
+
+## Parameters
+
+<ParamField path="cols" param-type="string" required="false" deprecated="false">
+  Stores dynamic column names used for the pivot transformation.
+</ParamField>
+
+<ParamField path="query" param-type="string" required="false" deprecated="false">
+  Holds the dynamically generated pivot SQL query.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  The script is fully dynamic and automatically adapts to new properties without manual intervention.
+</Callout>
+
+---
+
+## Simple Explanation
+
+The script converts row-based property data for SKUs into columns, so each product’s attributes (like TSIN, Color, Size, Category) appear in a single line for easy analysis and comparison.
+
+---
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Generate Column List" icon="list" title-type="p">
+    Collect all unique property names from StockItem_ExtendedProperties.
+  </Step>
+
+  <Step title="Build Column String" icon="edit" title-type="p">
+    Format the property names into a column string suitable for pivot operation.
+  </Step>
+
+  <Step title="Prepare Base Data" icon="database" title-type="p">
+    Combine SKU, title, property name, and property value.
+  </Step>
+
+  <Step title="Filter Active Records" icon="filter" title-type="p">
+    Include only active and non-deleted SKUs.
+  </Step>
+
+  <Step title="Apply Pivot Transformation" icon="columns" title-type="p">
+    Convert property rows into columns for each SKU.
+  </Step>
+
+  <Step title="Execute Query" icon="play" title-type="p">
+    Run the dynamic SQL to generate the final pivoted output.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+The report contains:
+
+- SKU  
+- Product title  
+- All extended properties as individual columns  
+
+Each property is displayed in a separate column, providing a single-line view per SKU.
+</Callout>
+
+---
+
+## Usefulness
+
+- **Data Visibility** – View all attributes in one place  
+- **Catalog Comparison** – Easily compare multiple products  
+- **Data Validation** – Identify missing or inconsistent values  
+- **Dynamic Flexibility** – Automatically includes new properties  
+
+---
+
+## Example Scenario
+
+<Expandable title="Product Data Audit Example" default-open="false">
+**Scenario:** Product data audit  
+
+- SKU1 has TSIN but missing Color  
+- SKU2 has Color but missing TSIN  
+
+**Insight:**  
+Quickly identifies missing attributes and helps standardize product data.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+By transforming extended property data into a structured column format, this script improves visibility, simplifies analysis, and ensures better data quality across the product catalog.
+</Callout>

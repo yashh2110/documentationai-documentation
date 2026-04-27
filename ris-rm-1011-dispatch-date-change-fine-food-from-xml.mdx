@@ -1,0 +1,157 @@
+---
+title: Dispatch Date Change (from XML)
+description: >-
+  Automatically update dispatch date from XML data and assign identifier for
+  Magento orders.
+---
+## Overview
+
+The **RIS-RM-1011 – Dispatch Date Change (from XML)** macro updates the **Despatch By Date** of orders using XML data.
+
+It extracts the dispatch date from the order’s XML and applies a default value when the XML date is missing or invalid, ensuring accurate scheduling.
+
+<Callout kind="tip" collapsed="false">
+  Ensure XML structure contains the correct dispatch date node and default date is provided in valid DateTime format.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Extracts dispatch date from XML
+
+- Applies fallback date when required
+
+- Updates order dispatch date
+
+- Assigns tracking identifier
+
+👉 In short:\
+Automatically set dispatch date using XML data.
+
+## When It Runs
+
+Used for dispatch date automation
+
+Typically runs:
+
+- Manually on selected orders
+
+- Automatically for Magento workflows
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of orders to process.
+</ParamField>
+
+<ParamField path="DefualtDate" param-type="string" required="true" deprecated="false">
+  Fallback dispatch date if XML value is missing.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Example:\
+  If XML date is missing → DefualtDate = "2024-01-01"
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Fetch Orders" icon="download" title-type="p">
+    Iterate through orders using OrderIds.
+  </Step>
+
+  <Step title="Validate Source" icon="check-circle" title-type="p">
+    Process only orders where source is Magento.
+  </Step>
+
+  <Step title="Parse XML" icon="code" title-type="p">
+    Load order XML using XElement parser.
+  </Step>
+
+  <Step title="Locate Dispatch Date" icon="search" title-type="p">
+    Extract value from:
+    ExtensionAttributes → CustomExtensionData → custom\_dispatch\_date
+  </Step>
+
+  <Step title="Determine Date" icon="calendar" title-type="p">
+    ✔ Valid XML date → use it\
+    ❌ Missing → use DefualtDate\
+    ❌ Invalid → log and skip order
+  </Step>
+
+  <Step title="Update Order" icon="edit" title-type="p">
+    Set the Despatch By Date field.
+  </Step>
+
+  <Step title="Assign Identifier" icon="tag" title-type="p">
+    Create (if needed) and assign “Despatch By Date” identifier.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Dispatch dates updated automatically
+
+  - Default values applied where needed
+
+  - Orders tagged for tracking
+
+  - Only Magento orders processed
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Automating dispatch scheduling
+
+- Ensuring delivery timeline accuracy
+
+- Reducing manual intervention
+
+- Helping warehouse prioritisation
+
+- Improving order processing consistency
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Applies only to Magento orders
+
+  - XML node path must exist
+
+  - Invalid dates are skipped and logged
+
+  - Default date must be valid DateTime format
+
+  - Identifier is auto-created if missing
+
+  - Only Despatch By Date is updated
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Magento Dispatch Date Example" default-open="false">
+  A Magento order contains XML data.
+
+  👉 The macro:
+
+  - Extracts dispatch date from XML
+
+  - If missing → applies default date
+
+  - Updates order dispatch date
+
+  - Assigns identifier
+
+  Result: Order is ready with correct dispatch timeline automatically.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Using XML-driven dispatch updates ensures accurate scheduling, reduces manual errors, and enables seamless automation in order fulfilment workflows.
+</Callout>
+

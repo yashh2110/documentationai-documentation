@@ -1,0 +1,126 @@
+---
+title: Retrieve Linked SKUs and Replace
+description: >-
+  Identifies SKUs with a specific pattern, shows their linked channels, and
+  generates corrected SKUs by replacing part of the original name.
+---
+## Overview
+
+The **RIS-SC-1021 – Retrieve Linked SKUs and Replace** script helps you find SKUs with "CORG", check their channel usage, and suggest corrected SKUs by replacing "CORG" with "ORG".
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  It helps standardize SKUs starting with oz-sh-corg by showing existing channel links and suggesting a new name.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Finds internal SKUs starting with a specific pattern
+
+- Retrieves linked channel information including source, subsource, and listing ID
+
+- Suggests a corrected SKU format by replacing text in the original SKU
+
+## When It Runs
+
+Manually executed by users or analysts.
+
+**Typically used:**
+
+- During SKU renaming or migration
+
+- For data cleanup
+
+- While updating product naming standards
+
+## Parameters
+
+<ParamField path="None" param-type="string" required="false" deprecated="false">
+  No manual input is required. The script targets SKUs starting with oz-sh-corg using fixed logic.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Combines SKU and channel data to propose corrected SKU names safely.
+</Callout>
+
+## Process Flow Step-by-Step
+
+<Steps>
+  <Step title="Filter Target SKUs" icon="filter" title-type="p">
+    Select SKUs starting with oz-sh-corg.
+  </Step>
+
+  <Step title="Get Linked Channel Data" icon="link" title-type="p">
+    Retrieve channel SKU, source, subsource, and listing ID for each selected SKU.
+  </Step>
+
+  <Step title="Replace SKU Text" icon="edit" title-type="p">
+    Replace "CORG" with "ORG" in the original SKU to generate a new SKU.
+  </Step>
+
+  <Step title="Combine Results" icon="table" title-type="p">
+    Display old SKU, new SKU, and channel linkage details together for review.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  Report containing:
+
+  - Old SKU
+
+  - New SKU after replacement
+
+  - Channel SKU
+
+  - Source and Subsource
+
+  - Channel Reference ID
+</Callout>
+
+## Usefulness
+
+- **SKU Renaming** – Standardizes SKU naming
+
+- **Impact Analysis** – Shows where SKUs are used before updating
+
+- **Channel Safety** – Prevents breaking channel mappings
+
+- **Bulk Update Preparation** – Useful before mass SKU changes
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Only targets SKUs starting with oz-sh-corg
+
+  - Read-only report; no automatic updates
+
+  - Helps plan safe SKU renaming without affecting channel integrations
+</Callout>
+
+## Example Scenario
+
+<Expandable title="SKU Cleanup Example" default-open="false">
+  Old SKU: **oz-sh-corg-001**\
+  New required format: **oz-sh-org-001**
+
+  Report Result:
+
+  - Old SKU → oz-sh-corg-001
+
+  - New SKU → oz-sh-org-001
+
+  - Linked Channels → displays source, subsource, and listing ID
+
+  **Insight:** SKU is ready for renaming without affecting existing channel mappings.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By showing both existing channel links and proposed SKU changes, this script ensures safe and accurate SKU renaming while maintaining consistency across all sales channels.
+</Callout>
+

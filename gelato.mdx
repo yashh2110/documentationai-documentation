@@ -1,0 +1,192 @@
+---
+title: Gelato
+description: >-
+  Gelato is a global print-on-demand platform that integrates with Odoo to
+  automate product synchronization and order fulfillment.
+---
+Integrating Gelato with Odoo’s **Sales** and **eCommerce** apps allows you to:
+
+- Automatically send Odoo sales orders to Gelato for fulfillment
+
+- Create and manage Gelato products directly in Odoo, including variants and images
+
+- Configure shipping methods and receive real-time order updates through webhooks
+
+## **Configuration**
+
+**Important**
+
+The company details in Gelato (*Company name* and *Billing address*) must exactly match the company information configured in Odoo.\
+If they differ, orders will not be confirmed or sent for fulfillment.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/gelato-company.png" width="650" height="719" alt="Company information in Gelato." />
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/odoo-company.png" width="800" height="241" alt="Company information in Odoo." />
+
+### **Set up API keys and webhooks in Gelato**
+
+Before configuring Odoo, generate your API credentials and webhook settings in Gelato.
+
+- **API keys** allow Odoo to communicate with Gelato  
+- **Webhooks** provide real-time updates on order status and delivery  
+
+### API Key
+The API key acts as a secure authentication token for communication between Odoo and Gelato.
+
+To generate one:
+
+1. Log in to Gelato
+
+2. Go to **Developer → API Keys**
+
+3. Click **Add API Key**
+
+4. Enter a name and click **Create Key**
+
+5. Copy the key using **Copy to Clipboard**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/gelato-api-key.png" width="800" height="276" alt="Newly generated API key in the Gelato platform." />
+
+**Important**
+
+Store the API key immediately. It cannot be retrieved again once you leave or refresh the page. If lost, create a new key.
+
+### Webhook
+Webhooks notify Odoo whenever an order is processed, shipped, or updated in Gelato.
+
+To create a webhook:
+
+1. Navigate to **Developer → Webhooks**
+
+2. Click **Add Webhook**
+
+Configure the following fields:
+
+- **URL**: Your Odoo URL with `/gelato/webhook` appended
+
+  - Example: `https://yourdatabase.odoo.com/gelato/webhook`
+
+- **Events**: Select `order_status_updated`
+
+- **Method**: Choose **HTTP POST**
+
+- Enable authorization
+
+- **Header Name**: `signature`
+
+- Click **Generate Key** to create the header value
+
+- Click **Create**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/gelato-webhook.png" width="800" height="803" alt="Newly configured webhook in the Gelato platform." />
+
+**Tip**
+
+Save both your API key and webhook credentials in a secure place before leaving the page.
+
+### **Configure Gelato in Odoo**
+
+1. Go to **Sales app ‣ Configuration ‣ Settings**
+
+2. Scroll to the **Connectors** section
+
+3. Enable **Gelato**
+
+4. Enter your API key and webhook secret
+
+5. Click **Save**
+
+Once configured, Gelato becomes available for use in Odoo products.
+
+## **Synchronizing Gelato products with Odoo**
+
+It is recommended to create products in Gelato before syncing them to Odoo.
+
+To retrieve a product ID:
+
+1. Go to the **Templates** section in Gelato
+
+2. Select a product
+
+3. Open the menu (⋮) and click **Copy Template ID**
+
+### **Create a product in Odoo**
+
+1. Go to **Sales ‣ Products ‣ Products**
+
+2. Click **New**
+
+3. Enter the product name
+
+In the **Sales** tab:
+
+- Locate the **Gelato** section
+
+- Paste the **Template Reference**
+
+- Click **Synchronize**
+
+This will import variant options from Gelato.
+
+### **Configure product images**
+
+After synchronization:
+
+- Use the **Print Images** field to assign images
+
+- Set a default image
+
+- Upload images for each variant
+
+**Important**
+
+All Gelato products and their variants must have images configured before they can be ordered.
+
+### **Manage product variants**
+
+To edit variants:
+
+1. Open the product
+
+2. Go to the **Attributes & Variants** tab
+
+3. Click **Configure**
+
+Here you can adjust:
+
+- Variant images
+
+- Pricing
+
+- Delivery options
+
+## **Order Gelato products from Odoo**
+
+Once products are synced, they can be sold via:
+
+- Sales quotations
+
+- eCommerce store
+
+To add shipping:
+
+1. Open a sales order
+
+2. Click **Add Shipping**
+
+3. Select **Standard** or **Express Delivery**
+
+4. Click **Get Rate**
+
+When the order is confirmed:
+
+- It is automatically sent to Gelato
+
+- Gelato produces the item at the nearest facility
+
+- The order is shipped directly to the customer
+
+**Important**
+
+A single sales order can only contain Gelato products.\
+Combining Gelato and non-Gelato products in the same order is not supported.

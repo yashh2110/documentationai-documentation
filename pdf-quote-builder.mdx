@@ -1,0 +1,250 @@
+---
+title: PDF quote builder
+description: >
+  The PDF Quote Builder in Odoo Sales enables businesses to design fully
+  customized quotation PDFs with dynamic content, branding, and structured
+  layouts for a more professional customer experience.
+---
+The *PDF Quote Builder* feature in the **Sales** app allows you to generate visually rich and fully customized quotation PDFs. Instead of sending plain pricing details, you can present a polished document that highlights your brand, products, and key information.
+
+With this feature, you can combine headers, product sections, pricing details, and footers into a single structured document. It also supports dynamic fields, enabling automatic insertion of customer-specific or order-specific data.
+
+A well-designed quote not only improves clarity but also enhances the overall customer experience and strengthens your company’s professional image.
+
+**Note**
+
+For best results, edit PDF templates using Adobe tools. Properly defined form fields are required for Odoo to recognize and populate dynamic values.
+
+## **Configuration**
+
+Before using custom PDFs in quotations, the **PDF Quote Builder** feature must be enabled.
+
+To activate it:
+
+- Go to **Sales app ‣ Configuration ‣ Settings**
+
+- Scroll to the **Quotations & Orders** section
+
+- Enable **PDF Quote builder**
+
+- Click **Save**
+
+Once enabled, a **Headers/Footers** option becomes available for managing PDF templates.
+
+## **Add PDF as Header/Footer**
+
+**Important**
+
+Avoid using spaces in PDF form field names. Only use letters, numbers, hyphens (`-`), or underscores (`_`).
+
+You can upload custom PDFs to serve as headers or footers in your quotation documents. Multiple templates can be selected and combined when generating a quote.
+
+To add a PDF:
+
+1. Navigate to **Sales app ‣ Configuration**
+
+2. Open **Headers/Footers**
+
+3. Click **New** or **Upload**
+
+- **Upload**: Quickly add a PDF from your system
+
+- **New**: Create and configure a document manually
+
+After uploading, you can edit the document via the card or the **(⋮)** menu.
+
+### **Document setup**
+
+- The **Name** field is auto-filled after upload and can be edited
+
+- Use **Document Type** to choose:
+
+  - **Header**
+
+  - **Footer**
+
+- Optionally limit the document to specific **Quotation Templates**
+
+**Note**
+
+You can also attach PDFs directly within:
+
+**Sales app ‣ Configuration ‣ Quotation Templates → Quote Builder tab**
+
+Next to the file upload, you’ll find the **Configure dynamic fields** option.
+
+## **Dynamic text in PDFs**
+
+Dynamic fields allow Odoo to automatically populate values (like customer name, totals, or dates) directly into your PDF.
+
+These fields are created as form inputs inside the PDF template and mapped to Odoo data.
+
+### **Common dynamic fields**
+
+**Header/Footer fields:**
+
+- **name**: Quotation reference
+
+- **partner\_id\_\_name**: Customer name
+
+- **user\_id\_\_name**: Salesperson
+
+- **amount\_untaxed**: Untaxed total
+
+- **amount\_total**: Final total
+
+- **delivery\_date**: Delivery date
+
+- **validity\_date**: Expiry date
+
+- **client\_order\_ref**: Customer reference
+
+**Product-related fields:**
+
+- **description**: Product description
+
+- **quantity**: Quantity
+
+- **uom**: Unit of measure
+
+- **price\_unit**: Unit price
+
+- **discount**: Discount applied
+
+- **product\_sale\_price**: List price
+
+- **taxes**: Applied taxes
+
+- **tax\_excl\_price**: Price before tax
+
+- **tax\_incl\_price**: Price including tax
+
+After uploading a PDF, use **Configure dynamic fields** to map each form field to the correct data source.
+
+- Header/footer templates use the **sale\_order** model
+
+- Product documents use the **sale\_order\_line** model
+
+If no path is defined, the field can be used for manual input when preparing the quote.
+
+### **Example**
+
+Using common placeholders like **name** and **partner\_id\_\_name** ensures automatic population of key details such as quotation number and customer name.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/pdf-quote-builder-sample.png" width="630" height="407" alt="PDF quote being built using common dynamic placeholders." />
+
+Once your PDF is ready:
+
+- Save it locally
+
+- Upload it via **Headers/Footers**
+
+- It will appear as a selectable template
+
+**Note**
+
+Templates can be reordered using drag-and-drop in Kanban view.
+
+### **Advanced example**
+
+If your PDF includes a field like **invoice\_partner\_country**, you can map it as follows:
+
+- For headers/footers:\
+  `partner_invoice_id.country_id.name`
+
+- For product documents:\
+  `order_id.partner_invoice_id.country_id.name`
+
+**Tip**
+
+If a field like **custom\_note** is left without a mapping, it becomes editable during quote creation, allowing personalized content.
+
+## **Add PDF to product**
+
+You can also attach PDFs directly to products. These documents will automatically be included when the product is added to a quotation.
+
+To do this:
+
+- Go to **Sales app ‣ Products ‣ Products**
+
+- Open a product
+
+- Click the **Documents** smart button
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/documents-smart-button.png" width="1116" height="115" alt="The Documents smart button on a product form in Odoo Sales." />
+
+### **Upload product documents**
+
+From the Documents page:
+
+- Click **Upload** to add a file
+
+- Or click **New** to create a document entry
+
+Uploaded files can be edited from the document card or menu.
+
+### **PDF configuration options**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/document-form-uploaded-pdf.png" width="610" height="441" alt="A standard document form with an uploaded PDF in Odoo Sales." />
+
+- **Type**: File or URL (auto-set to File for PDFs)
+
+- **Visible at**:
+
+  - **On quotation**
+
+  - **On confirmed order**
+
+  - **Inside quote**
+
+#### **Visibility options explained**
+
+- **On quotation**: Available to the customer anytime
+
+- **On confirmed order**: Shared after order confirmation
+
+- **Inside quote**: Embedded directly into the generated PDF
+
+### **Example**
+
+When **Inside quote** is selected, the uploaded PDF appears within the final quotation document.
+
+> <Image src="https://www.odoo.com/documentation/19.0/_images/pdf-on-quote-sample.png" width="450" height="381" alt="Sample of an uploaded pdf with the on quote option chosen in Odoo Sales." />
+
+Dynamic field configuration is also available here. Remember, product PDFs use the **sale\_order\_line** model.
+
+### **Publish on website**
+
+Enable **Publish on Website** to display the document on the product page in your online store.
+
+### **Example**
+
+When enabled, the document appears under a **Documents** section on the product page.
+
+> <Image src="https://www.odoo.com/documentation/19.0/_images/show-product-page.png" width="600" height="366" alt="Showing a link to an uploaded document on a product page using Odoo Sales." />
+
+## **Generate PDF quote**
+
+Within a quotation:
+
+- Go to the **Quote Builder** tab
+
+- Select headers, footers, and additional documents
+
+- Fill in any dynamic or manual fields
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/quote-builder-headers.png" width="600" height="768" alt="Selectable quotation headers and footers under the Quote Builder section in a quotation." />
+
+Once the quotation is confirmed:
+
+1. Click **Actions**
+
+2. Select **Print → PDF Quote**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/drop-down-print-pdf.png" width="600" height="524" alt="Print PDF quote option on drop-down menu located on confirmed sales order in Odoo Sales." />
+
+The PDF is generated instantly and downloaded. It includes all configured elements such as headers, product documents, and pricing sections.
+
+**Note**
+
+You can download sample templates like `PDF quote builder examples` or a `sample quotation` to explore formatting and layout possibilities.

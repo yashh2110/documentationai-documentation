@@ -1,0 +1,139 @@
+---
+title: Product Commodity Codes
+description: >-
+  Retrieves product SKUs along with their commodity (HS) codes from extended
+  properties for active products.
+---
+## Overview
+
+The **RIS-SC-1008 – Product Commodity Codes** script provides a clean list of SKUs with their associated commodity codes for reporting and compliance.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  Check products and list their commodity codes.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Retrieves active product SKUs
+
+- Extracts commodity codes from extended properties
+
+- Filters only relevant SKUs (e.g., starting with BL-)
+
+- Provides a report for compliance and export documentation
+
+## When It Runs
+
+Used for reporting, tax, and customs compliance.
+
+**Typically runs:**
+
+- Manual execution for export documentation
+
+- For validating missing or incorrect commodity codes
+
+- During logistics or finance reporting
+
+## Parameters
+
+<ParamField path="None" param-type="fixed" required="false" deprecated="false">
+  Uses fixed filters only. No manual parameters required.
+</ParamField>
+
+**Fixed Filters:**
+
+- SKUs starting with `BL-`
+
+- Only active items
+
+- Only items with commodity codes
+
+<Callout kind="info" collapsed="false">
+  The script links products with their extended properties to extract commodity codes.
+</Callout>
+
+## Process Flow Step-by-Step
+
+<Steps>
+  <Step title="Get Product List" icon="list" title-type="p">
+    Retrieve all SKUs from StockItem.
+  </Step>
+
+  <Step title="Fetch Commodity Code" icon="tag" title-type="p">
+    Look for extended property with name `Commodity Code`.
+  </Step>
+
+  <Step title="Join Data" icon="link" title-type="p">
+    Join StockItem with extended properties, mapping each SKU to its commodity code.
+  </Step>
+
+  <Step title="Apply Filters" icon="filter" title-type="p">
+    - Exclude deleted or archived items
+
+    - Include only SKUs starting with BL-
+
+    - Ensure commodity code is not empty
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  Report showing:
+
+  - SKU
+
+  - Commodity Code
+
+  Provides a clean and compliant list of products with valid commodity codes.
+</Callout>
+
+## Usefulness
+
+- Supports export and customs compliance
+
+- Ensures correct classification of goods
+
+- Helps identify missing commodity codes
+
+- Useful for logistics, finance, and reporting teams
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Works only for SKUs starting with BL-
+
+  - Requires commodity code stored in extended properties
+
+  - Excludes inactive or archived products
+
+  - Read-only script with no data modification
+
+  - Depends on accurate data entry
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Export Shipment Preparation Example" default-open="false">
+  Scenario: Verify commodity codes before shipment
+
+  **Processing:** Retrieve SKUs and their commodity codes
+
+  **Result:**
+
+  - BL-001 → 620520
+
+  - BL-002 → 630790
+
+  **Insight:** All required products have valid codes; missing codes can be quickly identified.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Ensures products are properly classified with commodity codes, enabling businesses to stay compliant with international shipping regulations and avoid customs issues.
+</Callout>
+

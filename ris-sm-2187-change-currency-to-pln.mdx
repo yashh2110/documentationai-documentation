@@ -1,0 +1,100 @@
+---
+title: Change Currency to PLN
+description: >-
+  Updates the currency of selected orders to PLN (Polish Zloty), saves order totals, 
+  and logs the change in order notes for tracking.
+---
+## Overview
+
+The **RIS-SM-2187 – Change Currency to PLN Macro** automates currency conversion for orders, ensuring totals are correctly saved and changes are documented for audit purposes.
+
+<Callout kind="tip" collapsed="false">
+  Maintains financial consistency while reducing manual effort in currency updates.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Changes the currency of selected orders to PLN
+- Saves updated order totals
+- Adds an internal note for tracking
+
+👉 In short:\
+Converts order currency to PLN and keeps a record of the change.
+
+## When It Runs
+
+Typically used:
+
+- Manually executed or triggered via automation workflows  
+- After order import  
+- During finance or accounting processes  
+- For Polish market orders  
+- When currency correction is required  
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of order IDs to process.
+</ParamField>
+
+## Simple Explanation
+
+The macro takes selected orders, changes their currency to PLN, updates totals, and logs a note indicating what was changed for audit tracking.
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Fetch Orders" icon="search" title-type="p">
+    Retrieve each order from the system using its order ID.
+  </Step>
+
+  <Step title="Store Existing Currency" icon="dollar-sign" title-type="p">
+    Capture the current currency of the order for reference.
+  </Step>
+
+  <Step title="Update Currency" icon="refresh-cw" title-type="p">
+    Change the order currency to PLN – Polish Zloty.
+  </Step>
+
+  <Step title="Save Order Totals" icon="check-circle" title-type="p">
+    Ensure the updated totals reflect the new currency.
+  </Step>
+
+  <Step title="Update Notes" icon="edit" title-type="p">
+    Add a note to the order documenting that the currency was changed.
+  </Step>
+
+  <Step title="Error Handling" icon="alert-triangle" title-type="p">
+    Record any issues encountered and continue processing other orders.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  Orders are updated with PLN as the new currency, totals saved correctly, and internal notes added for tracking.
+</Callout>
+
+## Usefulness
+
+- **Currency Standardization** – Ensures all orders follow a single currency  
+- **Audit Tracking** – Maintains history of changes  
+- **Automation** – Eliminates manual updates  
+- **Finance Accuracy** – Supports accounting processes  
+- **Regional Support** – Enables Polish market operations  
+
+## Example Scenario
+
+<Expandable title="Polish Market Orders" default-open="false">
+  Orders are imported in different currencies.  
+  Macro converts all orders to PLN, saves totals, and adds notes for tracking.  
+  Result: Consistent currency simplifies processing and accounting.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Automating currency conversion and logging ensures consistent financial data, reduces manual effort, and provides a clear audit trail for all updates.
+</Callout>

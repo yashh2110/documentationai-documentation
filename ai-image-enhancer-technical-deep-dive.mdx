@@ -1,0 +1,975 @@
+---
+title: 'Service 3: AI-Image-Enhancer — Technical Deep Dive'
+---
+**Service Folder:** `AI-Image-Enhancer/`\
+**Short Description:** A FastAPI service that receives a garment image URL and an S3-stored enhancement profile (containing a prompt and optional LoRA configuration), optionally performs background removal, calls a fal.ai diffusion model to enhance the image, optionally applies LAB colour correction, resizes the result, and uploads the enhanced image to S3.
+
+---
+
+## Table of Contents
+
+1. [Service Overview](#1-service-overview)
+
+2. [Purpose and Responsibility](#2-purpose-and-responsibility)
+
+3. [Tech Stack and Dependencies](#3-tech-stack-and-dependencies)
+
+4. [Startup and Entry Points](#4-startup-and-entry-points)
+
+5. [Folder Structure Explanation](#5-folder-structure-explanation)
+
+6. [Core Modules](#6-core-modules)
+
+7. [API Endpoints](#7-api-endpoints)
+
+8. [Request/Response Contracts](#8-requestresponse-contracts)
+
+9. [Parameter Traceability](#9-parameter-traceability)
+
+10. [Business Logic Flow](#10-business-logic-flow)
+
+11. [AI/Image Processing Logic](#11-aiimage-processing-logic)
+
+12. [Database/Storage/Queue Usage](#12-databasestoragequeue-usage)
+
+13. [External Integrations](#13-external-integrations)
+
+14. [Error Handling and Logging](#14-error-handling-and-logging)
+
+15. [File-by-File Explanation](#15-file-by-file-explanation)
+
+16. [Critical Code Deep Dive](#16-critical-code-deep-dive)
+
+17. [Risks and Technical Debt](#17-risks-and-technical-debt)
+
+18. [Recommendations](#18-recommendations)
+
+19. [Junior Developer Summary](#19-junior-developer-summary)
+
+20. [Needs Verification / Unknowns](#20-needs-verification--unknowns)
+
+---
+
+## 1. Service Overview
+
+The AI-Image-Enhancer is the final stage of the pipeline. It receives:
+
+- A garment image URL (already background-removed or raw)
+
+- An S3 path pointing to a `.txt` prompt file or a `.json` enhance profile
+
+- Target output dimensions
+
+- Various model hyperparameters
+
+It then:
+
+1. Optionally calls an external background-removal API (hardcoded IP)
+
+2. Fetches the prompt or enhance profile from S3
+
+3. Submits the image + prompt to fal.ai (a diffusion model hosting platform)
+
+4. Polls for the result
+
+5. Optionally applies LAB colour correction to preserve the original garment colours
+
+6. Resizes the result to the target dimensions
+
+7. Uploads the final image to S3
+
+8. Returns the public S3 URL
+
+The service runs on port 9090, exposes 6 image enhancement endpoints (one per AI model), plus management and health endpoints.
+
+---
+
+## 2. Purpose and Responsibility
+
+| Responsibility                | Details                                                                               |
+| ----------------------------- | ------------------------------------------------------------------------------------- |
+| Background removal (optional) | Calls external API at `77.68.113.204:4000` (hardcoded)                                |
+| Prompt/profile fetching       | S3 `get_object` for `.txt` (raw prompt) or `.json` (enhance profile with LoRA config) |
+| In-memory prompt caching      | Module-level `prompt_cache` dict keyed by `{bucket}/{key}`                            |
+| FAL.ai model invocation       | Async submission via `fal_client.submit_async()`, poll with `handler.get()`           |
+| LoRA-specific invocation      | Separate pipeline for LoRA-stacked models (`process_lora_enhancement`)                |
+| LAB colour correction         | Optional post-processing using Reinhard transfer in OpenCV                            |
+| Image resizing                | Pillow LANCZOS resize to target `width × height`                                      |
+| S3 upload and verification    | `upload_fileobj` + `head_object` verification                                         |
+| Result URL construction       | Public HTTPS S3 URL                                                                   |
+| Cache management              | `GET /cache/prompts`, `DELETE /cache/prompts` endpoints                               |
+
+---
+
+## 3. Tech Stack and Dependencies
+
+| Component           | Technology                        | Notes                                                    |
+| ------------------- | --------------------------------- | -------------------------------------------------------- |
+| HTTP Framework      | FastAPI                           | Async-capable; all enhancement endpoints are `async def` |
+| ASGI Server         | uvicorn                           | Default port 9090 per Postman collection                 |
+| Data Validation     | Pydantic BaseModel                | `ImageEnhanceRequest` model                              |
+| AI Image Generation | `fal-client`                      | Python client for fal.ai's hosted diffusion models       |
+| Image Processing    | Pillow (PIL)                      | Resize + image format conversion                         |
+| Colour Correction   | OpenCV (`opencv-python-headless`) | LAB colour space operations (headless = no GUI)          |
+| Numerical           | NumPy                             | Used in `lab_colour_match.py` for array operations       |
+| AWS SDK             | boto3                             | S3 read (prompt/profile) and write (result image)        |
+| HTTP Client         | `requests`                        | Background removal API call, image download              |
+| Env loading         | `python-dotenv`                   | Reads `.env` from CWD                                    |
+
+**Why headless OpenCV?** `opencv-python-headless` is the server build without GUI/display dependencies. This is correct for a server environment and avoids unnecessary system libraries.
+
+---
+
+## 4. Startup and Entry Points
+
+**Entry file:** `AI-Image-Enhancer/app.py`
+
+```bash
+uvicorn app:app --port 9090
+```
+
+(Port derived from Postman collection; `requirements.txt` does not specify startup command)
+
+At module load (`app.py`):
+
+1. `load_dotenv()` — reads `.env` file
+
+2. Validates `FAL_KEY` env var — raises `ValueError` and aborts startup if missing
+
+3. `IS_BACKGROUND_REMOVAL = True` — hardcoded global flag
+
+4. `prompt_cache = {}` — in-memory dict initialized empty
+
+5. AWS S3 client constructed:
+
+   - If `SERVER == "true"`: `boto3.client("s3", aws_access_key_id=..., aws_secret_access_key=...)`
+
+   - Else: `boto3.Session(profile_name="rishvi").client("s3", ...)` — named profile `"rishvi"`
+
+6. FastAPI app instantiated
+
+7. All 10 route handlers registered
+
+**Critical startup requirement:** `FAL_KEY` must be set — the only hard startup guard in this service.
+
+---
+
+## 5. Folder Structure Explanation
+
+```
+AI-Image-Enhancer/
+│
+├── app.py                            # FastAPI entry — all 10 endpoints + pipeline logic
+├── lab_colour_match.py               # LAB colour transfer algorithm (OpenCV)
+│
+├── prompt/
+│   ├── front.txt                     # Static front-view garment enhancement rules
+│   └── back.txt                      # Static back-view garment enhancement rules
+│
+├── FLUX_Image_Enhancement_API.postman_collection.json  # API test collection
+├── Prompt-Gen_LoRA_Pipeline_Integration.md             # Integration architecture doc
+├── requirements.txt                  # Python dependencies
+├── README.md                         # Service overview
+│
+└── data/                             # Empty directory — purpose unclear [Needs Verification]
+```
+
+**No separate worker process.** All processing is synchronous within the HTTP request lifetime. The `await fal_client.submit_async()` / `handler.get()` pattern gives async concurrency, but from the client's perspective, the HTTP request blocks until the enhancement is complete.
+
+---
+
+## 6. Core Modules
+
+| Module                | Role                                                                |
+| --------------------- | ------------------------------------------------------------------- |
+| `app.py`              | Entry point, all API routes, all pipeline orchestration functions   |
+| `lab_colour_match.py` | Standalone colour correction utility — called from `app.py`         |
+| `prompt/front.txt`    | Static prompt for front-view garment enhancement (fallback content) |
+| `prompt/back.txt`     | Static prompt for back-view garment enhancement (fallback content)  |
+
+**Note:** The `.txt` prompt files in `prompt/` are static reference data. The **actual** prompts used at runtime are stored in S3 (either per-garment `.txt` or full `.json` enhance profiles). The local files may serve as development fallbacks or documentation only. \[Needs Verification]
+
+---
+
+## 7. API Endpoints
+
+### Enhancement Endpoints (all `POST`)
+
+| Path                                   | Handler                               | Model Used                          | Background Removal |
+| -------------------------------------- | ------------------------------------- | ----------------------------------- | ------------------ |
+| `/image-enhance/v1/flux-kontext-pro`   | `enhance_image_pro`                   | `fal-ai/flux-pro/kontext`           | YES                |
+| `/image-enhance/v1/flux-kontext-max`   | `enhance_image_max`                   | `fal-ai/flux-pro/kontext/max`       | YES                |
+| `/image-enhance/v1/gemine_flash_2.5`   | `enhance_image_by_gemine_flash`       | `fal-ai/gemini-25-flash-image/edit` | NO (commented out) |
+| `/image-enhance/v1/gemine_nano_banana` | `enhance_image_by_gemine_nano_banana` | `fal-ai/nano-banana/edit`           | YES                |
+| `/image-enhance/v1/flux-2`             | `enhance_image_flux_2`                | `fal-ai/flux-2/edit`                | YES                |
+| `/image-enhance/v1/flux-2-lora`        | `enhance_image_flux_2_lora`           | `fal-ai/flux-2/lora/edit`           | YES                |
+
+### Management Endpoints
+
+| Method   | Path             | Handler              | Description                          |
+| -------- | ---------------- | -------------------- | ------------------------------------ |
+| `GET`    | `/health`        | `health_check`       | Liveness check                       |
+| `GET`    | `/config`        | `get_config`         | Returns active configuration values  |
+| `GET`    | `/cache/prompts` | `get_cached_prompts` | Lists current in-memory prompt cache |
+| `DELETE` | `/cache/prompts` | `clear_prompt_cache` | Clears all cached prompts            |
+| `GET`    | `/`              | `root`               | Root endpoint (welcome message)      |
+
+---
+
+## 8. Request/Response Contracts
+
+### All Enhancement Endpoints — Request Body (`ImageEnhanceRequest`)
+
+| Field              | Type              | Required | Default | Description                                                    |
+| ------------------ | ----------------- | -------- | ------- | -------------------------------------------------------------- |
+| `url`              | `str`             | Yes      | —       | Source image URL (HTTP URL or `data:` URI)                     |
+| `bucketName`       | `str`             | Yes      | —       | S3 bucket for both prompt reading and result writing           |
+| `filePath`         | `str`             | Yes      | —       | S3 key where the result image will be stored                   |
+| `width`            | `Optional[int]`   | No       | `2116`  | Output image width in pixels                                   |
+| `height`           | `Optional[int]`   | No       | `2700`  | Output image height in pixels                                  |
+| `prompt`           | `str`             | Yes      | —       | S3 key of the `.txt` prompt file OR `.json` enhance profile    |
+| `guidance_scale`   | `Optional[float]` | No       | `3.5`   | FAL.ai model guidance scale (how closely to follow the prompt) |
+| `num_images`       | `Optional[int]`   | No       | `1`     | Forced to `1` internally regardless of input                   |
+| `safety_tolerance` | `Optional[str]`   | No       | `"2"`   | FAL.ai safety tolerance level                                  |
+| `aspect_ratio`     | `Optional[str]`   | No       | `None`  | FAL.ai aspect ratio override                                   |
+| `colour_match`     | `Optional[bool]`  | No       | `False` | Apply LAB colour correction after enhancement                  |
+
+**Sample Request:**
+
+```json
+{
+  "url": "https://test-rishvi.s3.eu-west-2.amazonaws.com/files/product123.jpg",
+  "bucketName": "test-rishvi",
+  "filePath": "EditedFiles/product123.jpeg",
+  "width": 2116,
+  "height": 2700,
+  "prompt": "enhance-profiles/job-abc123-front.json",
+  "guidance_scale": 3.5,
+  "safety_tolerance": "2",
+  "colour_match": true
+}
+```
+
+---
+
+### Enhancement Endpoints — Response (200 OK)
+
+```json
+{
+  "status": "success",
+  "message": "Image enhanced successfully",
+  "result_url": "https://test-rishvi.s3.eu-west-2.amazonaws.com/EditedFiles/product123.jpeg",
+  "original_url": "https://test-rishvi.s3.eu-west-2.amazonaws.com/files/product123.jpg",
+  "model_used": "fal-ai/flux-pro/kontext",
+  "final_dimensions": {"width": 2116, "height": 2700},
+  "processed_at": "2026-04-14T10:23:45.123456"
+}
+```
+
+### Error Responses
+
+| Code  | Condition                                                                                    |
+| ----- | -------------------------------------------------------------------------------------------- |
+| `400` | `prompt` field doesn't end with `.json` for LoRA endpoint; or `.json` profile has no `loras` |
+| `400` | S3 fetch fails for prompt or profile                                                         |
+| `500` | Background removal API call fails                                                            |
+| `500` | FAL.ai returns no images or no URL in result                                                 |
+| `500` | S3 upload fails                                                                              |
+| `500` | Image decode/download fails                                                                  |
+
+---
+
+### `/config` Response
+
+```json
+{
+  "is_background_removal": true,
+  "background_temp_bucket": "test-rishvi",
+  "models": {
+    "kontext_pro": "fal-ai/flux-pro/kontext",
+    "kontext_max": "fal-ai/flux-pro/kontext/max",
+    "gemine_flash": "fal-ai/gemini-25-flash-image/edit",
+    "nano_banana": "fal-ai/nano-banana/edit",
+    "flux_2": "fal-ai/flux-2/edit",
+    "flux_2_lora": "fal-ai/flux-2/lora/edit"
+  },
+  "defaults": {
+    "width": 2116,
+    "height": 2700,
+    "guidance_scale": 3.5,
+    "safety_tolerance": "2"
+  }
+}
+```
+
+---
+
+## 9. Parameter Traceability
+
+| Parameter        | Type                | Enters                  | Validated                      | Transformed                                                                                   | Stored               | Output                                             |
+| ---------------- | ------------------- | ----------------------- | ------------------------------ | --------------------------------------------------------------------------------------------- | -------------------- | -------------------------------------------------- |
+| `url`            | `str`               | POST body               | None                           | Background removal rewrites it: `replace("files", "EditedFiles").rsplit('.', 1)[0] + ".jpeg"` | Not stored           | `original_url` in response (the pre-rewrite value) |
+| `bucketName`     | `str`               | POST body               | None                           | Used as S3 bucket for both reads + writes                                                     | —                    | Not in response                                    |
+| `filePath`       | `str`               | POST body               | None                           | Prepended with `"public/"` not confirmed \[Needs Verification]                                | S3 key of result     | Not in response (S3 URL is constructed separately) |
+| `prompt`         | `str`               | POST body               | None                           | If ends with `.json`: `get_enhance_profile()`, else `get_prompt_from_s3_or_cache()`           | `prompt_cache` dict  | Not in response                                    |
+| `width`          | `Optional[int]`     | POST body               | None                           | Used as resize target `target_width=width`                                                    | —                    | `final_dimensions.width`                           |
+| `height`         | `Optional[int]`     | POST body               | None                           | Used as resize target `target_height=height`                                                  | —                    | `final_dimensions.height`                          |
+| `guidance_scale` | `Optional[float]`   | POST body               | None                           | Overridden by profile `guidance_scale` if `.json` profile                                     | FAL.ai argument      | Not in response                                    |
+| `colour_match`   | `Optional[bool]`    | POST body               | None                           | If `True`: download original, call `colour_match_bytes()`                                     | —                    | Not in response                                    |
+| `loras`          | `list` from profile | S3 enhance profile JSON | NoLoRAs → `HTTPException(400)` | Mapped to `[{path: url, scale: scale}]`                                                       | FAL.ai LoRA argument | Not in response                                    |
+| `lora_prompt`    | `str` from profile  | S3 enhance profile JSON | None                           | Used as `prompt` for LoRA endpoint instead of `profile["prompt"]`                             | FAL.ai argument      | Not in response                                    |
+
+---
+
+### Background Removal URL Rewrite — Critical Detail
+
+This is done in the endpoint handlers **before** calling the pipeline:
+
+```python
+request.url = request.url.replace("files", "EditedFiles").rsplit('.', 1)[0] + ".jpeg"
+```
+
+**What this does:**
+
+1. Replaces `"files"` with `"EditedFiles"` in the URL string
+
+2. Strips the file extension
+
+3. Appends `.jpeg`
+
+**Example:**
+
+- Input: `https://test-rishvi.s3.eu-west-2.amazonaws.com/files/product123.png`
+
+- After rewrite: `https://test-rishvi.s3.eu-west-2.amazonaws.com/EditedFiles/product123.jpeg`
+
+**Why:** The background removal API (external service at `77.68.113.204:4000`) Takes the image, removes the background, and stores the result at the `EditedFiles/` path in the same bucket. The URL rewrite tells the enhancement pipeline to pick up the background-removed version.
+
+**Risk:** This string replacement is fragile. If `"files"` appears anywhere else in the URL (e.g., as part of a domain name, query string, or folder structure), it will be replaced incorrectly. Example: `"https://files.example.com/..."` → `"https://EditedFiles.example.com/..."`.
+
+---
+
+## 10. Business Logic Flow
+
+### Standard Enhancement Flow (e.g., flux-kontext-pro)
+
+```
+Client POST /image-enhance/v1/flux-kontext-pro
+│
+├── FastAPI parses ImageEnhanceRequest via Pydantic
+│
+├── [if IS_BACKGROUND_REMOVAL == True]
+│   ├── call_background_removal_api(url, bucketName, width, height, "jpeg")
+│   │   └── requests.post("http://77.68.113.204:4000/api/image/upload-url-v4", 
+│   │                      json={url, bucketName, width, height, extension})
+│   │   └── Raises HTTP 500 on non-200 or request failure
+│   └── request.url = url.replace("files", "EditedFiles").rsplit('.')[0] + ".jpeg"
+│
+└── process_image_enhancement(request, model_name="fal-ai/flux-pro/kontext")
+    │
+    ├── [if request.prompt.endswith(".json")]
+    │   ├── get_enhance_profile(bucketName, prompt_s3_key)
+    │   │   └── s3_client.get_object → json.loads()
+    │   ├── prompt = profile["prompt"]
+    │   └── request.guidance_scale = profile.get("guidance_scale", request.guidance_scale)
+    │
+    ├── [else: .txt prompt]
+    │   └── get_prompt_from_s3_or_cache(bucketName, prompt_s3_key)
+    │       ├── Check prompt_cache["{bucket}/{key}"]
+    │       ├── On miss: s3_client.get_object → read text
+    │       └── Store in prompt_cache
+    │
+    ├── process_image_with_fal(prompt, image_url, request, model_name)
+    │   ├── Build arguments dict:
+    │   │   {prompt, guidance_scale, num_images=1, output_format="jpeg", sync_mode=False}
+    │   ├── Model-specific additions:
+    │   │   ├── GEMINE_FLASH / NANO_BANANA / FLUX_2: image_urls=[url]
+    │   │   ├── Others: image_url=url (singular)
+    │   │   └── FLUX_2: image_size={width:884, height:1128}
+    │   ├── Add safety_tolerance if set
+    │   ├── Add aspect_ratio if set
+    │   ├── await fal_client.submit_async(model_name, arguments=arguments)
+    │   ├── result = await handler.get()
+    │   ├── Extract result["images"][0]["url"]
+    │   └── decode_image_from_url_or_data_uri(result_image_url) → bytes
+    │
+    ├── [if request.colour_match == True]
+    │   ├── decode_image_from_url_or_data_uri(request.url) → original_bytes
+    │   ├── colour_match_bytes(original_bytes, processed_image_data) → corrected_bytes
+    │   └── On failure: log warning, use uncorrected bytes
+    │
+    └── upload_image_data_to_s3(image_data, bucketName, filePath, width, height)
+        ├── PIL open → resize LANCZOS → save JPEG quality 95 → BytesIO
+        ├── s3_client.upload_fileobj(..., ExtraArgs={ContentType: "image/jpeg", Metadata: {...}})
+        ├── s3_client.head_object (verify upload succeeded)
+        └── Returns: "https://{bucket}.s3.{region}.amazonaws.com/{key}"
+```
+
+### LoRA Enhancement Flow
+
+```
+Client POST /image-enhance/v1/flux-2-lora
+│
+├── Background removal (same as standard)
+│
+└── process_lora_enhancement(request)
+    │
+    ├── Guard: request.prompt MUST end with ".json" → HTTP 400 if not
+    │
+    ├── get_enhance_profile(bucketName, prompt_s3_key)
+    │
+    ├── loras = profile.get("loras", []) → HTTP 400 if empty
+    │
+    ├── prompt = profile["lora_prompt"]      ← NOTE: uses lora_prompt, NOT prompt
+    ├── guidance_scale = profile["guidance_scale_lora"]
+    │
+    ├── arguments = {
+    │     prompt, image_urls=[request.url],  ← Note: list form
+    │     guidance_scale, num_images=1,
+    │     output_format="jpeg", sync_mode=False,
+    │     loras=[{path: lora["url"], scale: lora["scale"]} for lora in loras],
+    │     image_size={width: 884, height: 1128}  ← Hardcoded
+    │   }
+    │
+    ├── await fal_client.submit_async(FAL_MODEL_FLUX_2_LORA, arguments=arguments)
+    ├── result = await handler.get()
+    ├── [optional colour_match]
+    └── upload_image_data_to_s3(...)
+```
+
+---
+
+## 11. AI/Image Processing Logic
+
+### fal.ai Integration
+
+fal.ai is a serverless GPU platform that hosts diffusion models via REST API. The Python `fal_client` SDK wraps the API.
+
+**Authentication:** `FAL_KEY` environment variable — the `fal_client` SDK reads this automatically.
+
+**Async submission pattern:**
+
+```python
+handler = await fal_client.submit_async(model_name, arguments=arguments)
+result = await handler.get()   # Blocks until model completes
+```
+
+This is "async" in the Python sense (doesn't block the event loop while waiting), but the HTTP request still blocks until `handler.get()` returns. If fal.ai is slow, the client's request will appear to hang.
+
+**`sync_mode=False`****:** Tells fal.ai to process asynchronously on their side (queue it, don't block their response). The `handler.get()` call then polls or subscribes to get the result.
+
+---
+
+### Model Differences (confirmed by code)
+
+| Model                        | `image_url` param style   | `image_size` param                   | LoRA support        |
+| ---------------------------- | ------------------------- | ------------------------------------ | ------------------- |
+| `flux-pro/kontext`           | Single: `image_url="..."` | Not sent                             | No                  |
+| `flux-pro/kontext/max`       | Single: `image_url="..."` | Not sent                             | No                  |
+| `gemini-25-flash-image/edit` | List: `image_urls=[...]`  | Not sent                             | No                  |
+| `nano-banana/edit`           | List: `image_urls=[...]`  | Not sent                             | No                  |
+| `flux-2/edit`                | List: `image_urls=[...]`  | `{width:884, height:1128}` hardcoded | No                  |
+| `flux-2/lora/edit`           | List: `image_urls=[...]`  | `{width:884, height:1128}` hardcoded | Yes (`loras=[...]`) |
+
+**Why different parameter shapes?** Different fal.ai models have different API contracts. The code branches on model name to build the correct argument dict.
+
+---
+
+### LAB Colour Matching (`colour_match_bytes`)
+
+**When used:** Only when `colour_match=True` in the request. Off by default.
+
+**Why needed:** Diffusion models like FLUX can shift the colour of the output image, sometimes significantly. If the enhancement prompt says "preserve original colour" but the model still shifts the white balance or saturation, the `colour_match` step corrects it by transferring the original image's colour statistics onto the enhanced output.
+
+**Algorithm:** Reinhard colour transfer in LAB colour space (see Section 16 for full algorithm deep dive).
+
+---
+
+### Image Resize (`upload_image_data_to_s3`)
+
+```python
+if target_width and target_height:
+    img = Image.open(BytesIO(image_data))
+    img = img.resize((target_width, target_height), Image.Resampling.LANCZOS)
+    buffer = BytesIO()
+    img.save(buffer, format="JPEG", quality=95)
+    image_data = buffer.getvalue()
+```
+
+**LANCZOS resampling:** High quality downscaling filter — preserves detail better than bilinear. Correct choice for product photography where fine texture must be preserved.
+
+**JPEG quality 95:** Near-lossless quality. Appropriate for product images that will be displayed on e-commerce sites.
+
+**Note:** The resize always converts to JPEG regardless of input format. This means PNG images (if any) lose transparency at this stage.
+
+---
+
+## 12. Database/Storage/Queue Usage
+
+### S3 (AWS Simple Storage Service)
+
+**Bucket:** `request.bucketName` — caller-provided per request
+
+**Reads:**
+
+- `s3_client.get_object(Bucket=bucketName, Key=prompt_s3_key)` — fetch prompt or enhance profile
+
+- The `"public/"` prefix is stripped from the `prompt` field: `s3_key = request.prompt.lstrip("/")` \[Confirmed by usage pattern — the `prompt` field contains the raw S3 key]
+
+**Writes:**
+
+- `s3_client.upload_fileobj(BytesIO(image_data), bucket, key, ExtraArgs={ContentType: "image/jpeg", Metadata: {processed-date, source, dimensions}})`
+
+**Verification after write:**
+
+- `s3_client.head_object(Bucket=bucket, Key=key)` — confirms the upload exists before returning success
+
+**Region:** `eu-west-2` (hardcoded constant `AWS_REGION`)
+
+**Auth:**
+
+- `SERVER=true` → explicit `aws_access_key_id` + `aws_secret_access_key` env vars
+
+- `SERVER=false` → `boto3.Session(profile_name="rishvi")` named profile
+
+**`BACKGROUND_TEMP_BUCKET = "test-rishvi"`****&#x20;hardcoded** — used for background removal staging.
+
+---
+
+### `prompt_cache` (In-Memory)
+
+```python
+prompt_cache: dict = {}    # Module-level, lives for the lifetime of the process
+```
+
+**Key:** `"{bucket}/{s3_key}"` — e.g. `"test-rishvi/prompts/job-abc123-front.txt"`
+
+**Value:** The prompt string (or extracted `"prompt"` field from JSON profile)
+
+**Cache behavior:**
+
+- **Hit:** Returns cached string immediately, no S3 call
+
+- **Miss:** Fetches from S3, caches result, returns string
+
+- **Eviction:** None — the cache grows indefinitely. There is no TTL, no size limit, no LRU eviction.
+
+- **Invalidation:** Manual via `DELETE /cache/prompts` endpoint (clears entire cache)
+
+**Risk:** If a prompt is updated in S3, the in-memory cache will serve the old version until manually cleared or the process restarts.
+
+**Note:** `.json` enhance profiles are **NOT cached**. Only `.txt` prompts and `.json` prompts (after extracting the `"prompt"` field string) are cached. The full profile dict (with `loras`, `guidance_scale`, etc.) is re-fetched from S3 on every request. \[Confirmed by code: `get_enhance_profile` has no caching, while `get_prompt_from_s3_or_cache` does]
+
+---
+
+### No Other Storage
+
+No DynamoDB, no SQS, no Redis, no local database. The service is stateless except for the in-memory prompt cache.
+
+---
+
+## 13. External Integrations
+
+### fal.ai (Primary AI Integration)
+
+| Property       | Value                                                            |
+| -------------- | ---------------------------------------------------------------- |
+| Client         | `fal_client` Python SDK                                          |
+| Auth           | `FAL_KEY` env var                                                |
+| Submission     | `await fal_client.submit_async(model_name, arguments=arguments)` |
+| Result polling | `await handler.get()`                                            |
+| Output         | `result["images"][0]["url"]` — URL to generated image            |
+| Models         | 6 models (see Section 7)                                         |
+
+### Background Removal Service (External API)
+
+| Property          | Value                                                           |
+| ----------------- | --------------------------------------------------------------- |
+| URL               | `http://77.68.113.204:4000/api/image/upload-url-v4` (hardcoded) |
+| Protocol          | HTTP POST                                                       |
+| Auth              | None (no auth headers)                                          |
+| Request body      | `{url, bucketName, width, height, extension}`                   |
+| Expected response | HTTP 200 with JSON body                                         |
+| Timeout           | **None set on&#x20;****`requests.post()`****&#x20;call**        |
+
+**This external service is the biggest operational risk in the system** — if it goes down or is unreachable, all enhancement endpoints with background removal enabled fail. There is no circuit breaker, no retry, no fallback.
+
+---
+
+## 14. Error Handling and Logging
+
+### Logging Setup
+
+```python
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
+logger = logging.getLogger(__name__)
+```
+
+Logs to stdout only. No file handler configured in `app.py`.
+
+### Error Handling by Function
+
+| Function                            | Error Raised             | Condition                               |
+| ----------------------------------- | ------------------------ | --------------------------------------- |
+| `call_background_removal_api`       | `HTTPException(500)`     | Non-200 response from external API      |
+| `call_background_removal_api`       | `HTTPException(500)`     | `requests.RequestException`             |
+| `call_background_removal_api`       | `HTTPException(500)`     | JSON parse failure                      |
+| `get_prompt_from_s3_or_cache`       | `HTTPException(400)`     | Any S3 failure                          |
+| `get_enhance_profile`               | `HTTPException(400)`     | Any S3 or JSON parse failure            |
+| `decode_image_from_url_or_data_uri` | `HTTPException(500)`     | base64 decode failure                   |
+| `decode_image_from_url_or_data_uri` | `HTTPException(500)`     | HTTP download failure                   |
+| `process_image_with_fal`            | `HTTPException(500)`     | FAL returns no images                   |
+| `process_image_with_fal`            | `HTTPException(500)`     | First image has no URL                  |
+| `upload_image_data_to_s3`           | `HTTPException(500)`     | Empty image data                        |
+| `upload_image_data_to_s3`           | `HTTPException(500)`     | Any upload failure                      |
+| `process_lora_enhancement`          | `HTTPException(400)`     | `prompt` doesn't end with `.json`       |
+| `process_lora_enhancement`          | `HTTPException(400)`     | Profile has no `loras` or empty `loras` |
+| Colour match failure                | **LOGGED and swallowed** | Any exception in `colour_match_bytes`   |
+
+**Watch out for:** The colour match failure is silently swallowed. If LAB colour matching fails (e.g., OpenCV decode error), the service returns the uncorrected image without any indication in the response.
+
+---
+
+## 15. File-by-File Explanation
+
+### `AI-Image-Enhancer/app.py`
+
+**Purpose:** The entire service is in this one file — routes, business logic, S3 integration, fal.ai integration, image processing utilities.
+
+**Length and complexity:** This file contains all global state, all helper functions, and all 10 route handlers. This is a single-file monolith pattern — convenient for a focused service, but harder to navigate and test.
+
+**Key design decisions:**
+
+- `IS_BACKGROUND_REMOVAL = True` is a global feature flag. Changing this requires code modification (no env var control).
+
+- The `gemine_flash_2.5` endpoint has background removal commented out — inconsistent with the flag.
+
+- `num_images` in the Pydantic model is always overridden to `1` in `process_image_with_fal`. Accepting it in the request body is misleading.
+
+- **Known bug:** The `enhance_image_by_gemine_nano_banana` handler contains a malformed comment inside an f-string that will cause a `SyntaxError` at parse time. **This means the entire module will fail to import and the service will not start.** \[Critical — confirmed by code structure]
+
+---
+
+### `AI-Image-Enhancer/lab_colour_match.py`
+
+**Purpose:** Standalone image processing utility. Implements the Reinhard (2001) colour transfer algorithm in LAB colour space.
+
+**No imports from&#x20;****`app.py`** — fully independent module. Could be used standalone or in tests.
+
+**Two functions:**
+
+1. `colour_match(original, retouched, preserve_luminance=True)` — operates on NumPy arrays (BGR format, like OpenCV uses)
+
+2. `colour_match_bytes(original_bytes, retouched_bytes, preserve_luminance=True)` — bytes-in, bytes-out wrapper
+
+---
+
+### `AI-Image-Enhancer/prompt/front.txt` and `back.txt`
+
+**Purpose:** Static reference prompts for front and back garment enhancement. These are detailed rule sets covering:
+
+- garment positioning (flat, symmetrical)
+
+- feature preservation (all hardware, labels, stitching, wear)
+
+- wrinkle handling
+
+- colour accuracy
+
+**These are not dynamically generated.** They represent a "baseline" or "maximum fidelity" enhancement instruction.
+
+**Note:** At runtime, the `prompt` field in enhancement requests points to S3 keys, not these local files. It is unclear whether these local files are ever used directly in the production pipeline. They may serve as the actual templates uploaded to S3, or they may be documentation/development references only. \[Needs Verification]
+
+---
+
+### `AI-Image-Enhancer/FLUX_Image_Enhancement_API.postman_collection.json`
+
+**Purpose:** Postman test collection for manual API testing. All requests target `http://localhost:9090`.
+
+Covers 9 of the 10 endpoints (the `/` root and `flux-2-lora` appear to be absent from the collection). Used for development/QA testing only.
+
+---
+
+## 16. Critical Code Deep Dive
+
+### `colour_match` Algorithm (`lab_colour_match.py`)
+
+This is the most algorithmically complex component. Full explanation:
+
+```python
+def colour_match(original: np.ndarray, retouched: np.ndarray, preserve_luminance: bool = True) -> np.ndarray:
+```
+
+**Input:** Two OpenCV images in BGR format (uint8, 0-255 range)\
+**Output:** The `retouched` image with colour statistics matched to `original`, in BGR format
+
+```python
+    # Step 1: Convert to LAB colour space (float32 for precision)
+    # LAB separates luminance (L) from colour (A=green-red, B=blue-yellow)
+    # This allows colour transfer without changing brightness
+    orig_lab = cv2.cvtColor(original.astype(np.float32), cv2.COLOR_BGR2LAB)
+    ret_lab  = cv2.cvtColor(retouched.astype(np.float32), cv2.COLOR_BGR2LAB)
+    
+    result = ret_lab.copy()
+    
+    # Step 2: Determine which channels to process
+    # preserve_luminance=True → skip channel 0 (L), only process A and B
+    # preserve_luminance=False → process all 3: L, A, B (changes brightness too)
+    start_channel = 1 if preserve_luminance else 0
+```
+
+**Why LAB?** In RGB, colour and brightness are entangled. If you shift red slightly, you also shift perceived brightness. LAB separates them: L is purely brightness, A and B are purely colour. By working in LAB, we can match only the colour (A+B channels) without touching the brightness (L channel). This is why `preserve_luminance=True` is the default and the recommended setting.
+
+```python
+    for ch in range(start_channel, 3):  # ch = 1, 2 (A and B channels)
+        
+        # Compute statistics of each channel in each image
+        orig_mean = orig_lab[:, :, ch].mean()
+        orig_std  = orig_lab[:, :, ch].std()
+        ret_mean  = ret_lab[:, :, ch].mean()
+        ret_std   = ret_lab[:, :, ch].std()
+        
+        # Guard: if the retouched image has no variance in this channel
+        # (e.g., a greyscale image would have std ≈ 0 in A and B)
+        # then skip to avoid division by zero
+        if ret_std < 1e-6:
+            continue
+        
+        # Reinhard transfer formula:
+        # 1. Normalize: subtract retouched mean, divide by retouched std
+        #    → centres the channel around 0 with std = 1
+        # 2. Scale: multiply by original std
+        #    → gives it the same spread as original
+        # 3. Shift: add original mean
+        #    → centres it around the original mean
+        result[:, :, ch] = (ret_lab[:, :, ch] - ret_mean) * (orig_std / ret_std) + orig_mean
+```
+
+**Why this formula?** Think of it like standardizing test scores. If school A has scores with mean 70 and std 10, and school B has scores with mean 80 and std 5:
+
+- To make school B's distribution look like school A's: `(B_score - 80) * (10/5) + 70`
+
+- This preserves relative ranking within school B but matches the absolute scale of school A
+
+Applied to colour: it preserves the colour relationships within the enhanced image (relative contrasts) while making the overall colour statistics match the original.
+
+```python
+    # Clip to valid LAB range and convert back to BGR
+    result = np.clip(result, 0, 255)
+    result = cv2.cvtColor(result, cv2.COLOR_LAB2BGR)
+    
+    return np.clip(result, 0, 255).astype(np.uint8)
+```
+
+---
+
+### `process_image_with_fal` (in `app.py`)
+
+```python
+async def process_image_with_fal(prompt, image_url, request, model_name) -> bytes:
+    
+    # Build base arguments common to all models
+    arguments = {
+        "prompt": prompt,
+        "guidance_scale": request.guidance_scale,
+        "num_images": 1,           # Forced to 1 regardless of request.num_images
+        "output_format": "jpeg",
+        "sync_mode": False,        # Async submission on fal.ai's side
+    }
+    
+    # Model-specific image parameter name
+    if model_name in (FAL_MODEL_GEMINE_FLASH, FAL_MODEL_NANO_BANANA, FAL_MODEL_FLUX_2):
+        arguments["image_urls"] = [image_url]   # These models take a list
+    else:
+        arguments["image_url"] = image_url      # FLUX kontext models take a single URL
+    
+    # FLUX-2 requires explicit image dimensions
+    if model_name == FAL_MODEL_FLUX_2:
+        arguments["image_size"] = {
+            "width": FLUX_2_DEFAULT_WIDTH,   # 884 — hardcoded
+            "height": FLUX_2_DEFAULT_HEIGHT  # 1128 — hardcoded
+        }
+    
+    # Optional parameters (only added if set)
+    if request.safety_tolerance:
+        arguments["safety_tolerance"] = request.safety_tolerance
+    
+    if request.aspect_ratio:
+        arguments["aspect_ratio"] = request.aspect_ratio
+    
+    # Submit to fal.ai asynchronously
+    handler = await fal_client.submit_async(model_name, arguments=arguments)
+    
+    # Wait for result (this blocks the async task until fal.ai completes)
+    result = await handler.get()
+    
+    # Extract image URL from result
+    images = result.get("images", [])
+    if not images:
+        raise HTTPException(500, "No images returned from FAL model")
+    
+    image_url_result = images[0].get("url")
+    if not image_url_result:
+        raise HTTPException(500, "No URL in first image from FAL model result")
+    
+    # Download the generated image
+    return decode_image_from_url_or_data_uri(image_url_result)
+```
+
+**Watch out for:** `sync_mode=False` means fal.ai processes asynchronously — but `handler.get()` is a polling/waiting call. The actual HTTP request to this service still waits for fal.ai to finish. Large images or complex prompts can hold the connection open for 30+ seconds.
+
+---
+
+### `get_prompt_from_s3_or_cache` (in `app.py`)
+
+```python
+def get_prompt_from_s3_or_cache(bucket_name: str, prompt_path: str) -> str:
+    cache_key = f"{bucket_name}/{prompt_path}"
+    
+    # ── CACHE HIT ──────────────────────────────────────────────────────
+    if cache_key in prompt_cache:
+        return prompt_cache[cache_key]
+    
+    # ── CACHE MISS ─────────────────────────────────────────────────────
+    try:
+        s3_key = prompt_path.lstrip("/")          # Remove leading slash if present
+        response = s3_client.get_object(Bucket=bucket_name, Key=s3_key)
+        content = response["Body"].read().decode("utf-8")
+        
+        # If it's a JSON file, extract just the "prompt" field
+        if prompt_path.endswith(".json"):
+            data = json.loads(content)
+            if isinstance(data, dict) and "prompt" in data:
+                content = data["prompt"]
+        
+        prompt_cache[cache_key] = content
+        return content
+        
+    except Exception as e:
+        raise HTTPException(400, f"Failed to retrieve prompt: {str(e)}")
+```
+
+**Note on JSON handling in this function:** This function handles `.json` files by extracting just the `"prompt"` string. But for the main enhancement pipeline, when `request.prompt.endswith(".json")`, the code calls `get_enhance_profile()` instead (which returns the full dict). The `get_prompt_from_s3_or_cache` function's JSON handling is a fallback path that is reached only if `.json` is stored as the prompt path in a non-LoRA endpoint. \[Confirmed by code flow in `process_image_enhancement`]
+
+---
+
+## 17. Risks and Technical Debt
+
+### Critical (Service Will Not Start)
+
+| Risk                                                                               | Location | Impact                                                                                                                                                      |
+| ---------------------------------------------------------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **SyntaxError in&#x20;****`enhance_image_by_gemine_nano_banana`****&#x20;handler** | `app.py` | A comment inside an f-string causes `SyntaxError`. Python cannot parse the module → the entire service fails to start. **Must be fixed before deployment.** |
+
+### High Severity
+
+| Risk                                                         | Location                               | Impact                                                                                                                |
+| ------------------------------------------------------------ | -------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| **Hardcoded background removal IP**                          | `app.py` `call_background_removal_api` | `http://77.68.113.204:4000` — if this server moves or goes down, all 5 enhanced endpoints fail with 500. No fallback. |
+| **No timeout on background removal API call**                | `app.py` `call_background_removal_api` | `requests.post(url, ...)` with no `timeout=` — hangs indefinitely if external service is slow                         |
+| **No timeout on FAL.ai result polling**                      | `app.py` `process_image_with_fal`      | `handler.get()` blocks until fal.ai responds — no timeout guard                                                       |
+| **`IS_BACKGROUND_REMOVAL = True`****&#x20;hardcoded**        | `app.py`                               | Cannot disable without code change — no env var control                                                               |
+| **Unbounded&#x20;****`prompt_cache`**                        | `app.py`                               | Cache grows forever with no eviction policy — memory leak in long-running process                                     |
+| **Named AWS profile&#x20;****`"rishvi"`****&#x20;hardcoded** | `app.py`                               | New server must have `"rishvi"` profile configured — confusing and environment-specific                               |
+
+### Medium Severity
+
+| Risk                                                                            | Location                             | Impact                                                                                                                                                                     |
+| ------------------------------------------------------------------------------- | ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **URL string replace —&#x20;****`"files"`****&#x20;→&#x20;****`"EditedFiles"`** | `app.py` endpoint handlers           | Regex-style string replacement is fragile — any URL with `"files"` anywhere gets mangled                                                                                   |
+| **`FLUX_2_DEFAULT_WIDTH/HEIGHT`****&#x20;hardcoded (884×1128)**                 | `app.py`                             | These override the caller's `width`/`height` for FLUX-2 model — callers get different dimensions than requested                                                            |
+| **No auth on any enhancement endpoint**                                         | `app.py`                             | Any client can submit expensive FAL.ai jobs at the operator's cost                                                                                                         |
+| **Colour match failure silently swallowed**                                     | `app.py` `process_image_enhancement` | Returns incorrect result without error indication                                                                                                                          |
+| **`BACKGROUND_TEMP_BUCKET = "test-rishvi"`****&#x20;hardcoded**                 | `app.py`                             | Production uses a bucket named "test-rishvi" — this naming suggests it was a dev bucket                                                                                    |
+| **S3 URL constructed by string concatenation**                                  | `app.py`                             | `https://{bucket}.s3.{region}.amazonaws.com/{key}` — S3 bucket names with dots break this format (path-style vs virtual-hosted)                                            |
+| **LoRA URLs hardcoded in&#x20;****`enhance_profile.py`**                        | `enhance_profile.py` in AI-Tagging   | From AI-Image-Enhancer's perspective: the LoRA `.safetensors` URLs are embedded in the S3 profile written by AI-Tagging — if those S3 objects are moved, enhancement fails |
+
+### Low Severity
+
+| Risk                                                                                         | Location                    | Impact                                                         |
+| -------------------------------------------------------------------------------------------- | --------------------------- | -------------------------------------------------------------- |
+| **`prompt/front.txt`****&#x20;and&#x20;****`prompt/back.txt`****&#x20;usage unclear**        | `AI-Image-Enhancer/prompt/` | May be dead code or documentation without active runtime usage |
+| **`data/`****&#x20;directory empty**                                                         | `AI-Image-Enhancer/data/`   | Unknown purpose                                                |
+| **`Prompt-Gen_LoRA_Pipeline_Integration.md`****&#x20;is architecture doc in service folder** | Misplaced documentation     | Confusion about where to find architectural context            |
+| **`num_images`****&#x20;accepted in request but always overridden**                          | `app.py`                    | Request field is misleading                                    |
+
+---
+
+## 18. Recommendations
+
+1. **Fix the SyntaxError immediately** — the `enhance_image_by_gemine_nano_banana` handler has a malformed f-string comment that prevents the module from loading
+
+2. **Move the background removal IP to an env var** — `BACKGROUND_REMOVAL_URL` — and add a timeout: `requests.post(url, json=body, timeout=30)`
+
+3. **Add an env var for&#x20;****`IS_BACKGROUND_REMOVAL`** — `BACKGROUND_REMOVAL_ENABLED=true` — to allow disabling without code changes
+
+4. **Add authentication** — at minimum, an `X-API-Key` header check similar to Prompt-Gen
+
+5. **Implement prompt cache eviction** — use Python's `functools.lru_cache` or a time-aware cache with bounded size
+
+6. **Move all hardcoded constants to env vars** — `BACKGROUND_TEMP_BUCKET`, `AWS_REGION`, `FLUX_2_DEFAULT_WIDTH/HEIGHT`, LoRA URLs
+
+7. **Fix the URL string replacement** — use a proper URL parser (`urllib.parse`) instead of string `.replace()`
+
+8. **Add FAL.ai call timeout** — wrap `handler.get()` with `asyncio.wait_for(handler.get(), timeout=120.0)`
+
+9. **Add request authentication** — all enhancement endpoints call paid fal.ai API; cost control requires auth
+
+10. **Log colour match failures at ERROR level** — currently swallowed silently; callers have no indication the post-processing step failed
+
+---
+
+## 19. Junior Developer Summary
+
+### What does this service do in plain English?
+
+Think of it as the **photo editing department**. After the AI-Tagging service has identified all the garment's attributes and the Prompt-Gen service has written the editing instructions, this service does the actual image editing.
+
+Here's what happens when you call it:
+
+1. It takes your garment image and removes the background (sending it to a background-removal tool)
+
+2. It reads the "editing instructions" (the prompt) from a file stored in S3
+
+3. It sends the image + instructions to a powerful AI model on fal.ai to generate an enhanced version
+
+4. Optionally, it corrects the colours to match the original (in case the AI changed them)
+
+5. It resizes the image to the right dimensions
+
+6. It saves the final image to S3
+
+7. It returns the URL where you can find the finished image
+
+### Key things to know as a junior developer
+
+- The service **requires&#x20;****`FAL_KEY`****&#x20;in&#x20;****`.env`** to start. Without it, it crashes immediately on startup.
+
+- There are **6 different AI models** to choose from. Each is a different "photo editor" with different strengths and slightly different API shapes. Use `flux-kontext-pro` as the default.
+
+- The **background removal service** must be running at `http://77.68.113.204:4000` for 5 of the 6 endpoints to work. If you don't have access to that service, disable background removal in the code (set `IS_BACKGROUND_REMOVAL = False`).
+
+- The `prompt` field in the request is not the actual text — it's the S3 path to a file containing the prompt. That file can be a `.txt` (raw text) or `.json` (full enhance profile with LoRA configuration).
+
+- **There is currently a bug (SyntaxError) in the code that prevents the service from starting.** Look for the `enhance_image_by_gemine_nano_banana` function and fix the comment inside the f-string.
+
+- Start the service with: `uvicorn app:app --port 9090` from the `AI-Image-Enhancer/` directory.
+
+---
+
+## 20. Needs Verification / Unknowns
+
+| Item                                                   | Uncertainty                                                                                               | Suggested Action                                                                                    |
+| ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| SyntaxError in nano\_banana handler                    | Confirmed by code pattern — a comment-like `#request.url = ...` inside an f-string will cause SyntaxError | Fix before any testing                                                                              |
+| `prompt/front.txt` and `prompt/back.txt` runtime usage | Local files exist but prompt field in requests points to S3 keys — unclear if local files are ever loaded | Confirm if these files are uploaded to S3 as the default prompts, or if they are documentation only |
+| `data/` directory purpose                              | Empty — no code reads from or writes to it                                                                | Check git history                                                                                   |
+| Background removal service identity                    | Hardcoded IP `77.68.113.204:4000` — unclear what software runs there or who maintains it                  | Document the service and add its URL to env var config                                              |
+| `filePath` S3 key prefix handling                      | The code does `s3_key = request.prompt.lstrip("/")` for prompts — is the same done for `filePath`?        | Trace `filePath` through `upload_image_data_to_s3` to confirm exact S3 key used                     |
+| AWS profile `"rishvi"`                                 | Named profile — production deployment must have this configured                                           | Confirm and document the AWS profile setup requirement                                              |
+| `Prompt-Gen_LoRA_Pipeline_Integration.md`              | Architecture doc inside Image-Enhancer folder — describes pipeline including AI-Tagging and Prompt-Gen    | Move to project root or dedicated docs folder                                                       |
+| `BACKGROUND_TEMP_BUCKET = "test-rishvi"` naming        | Production bucket named "test-rishvi" suggests dev origin                                                 | Confirm if this is intentional or should be renamed/env-var-ified                                   |
+

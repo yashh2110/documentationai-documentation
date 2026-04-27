@@ -1,0 +1,178 @@
+---
+title: Add Order Note Macro
+description: >-
+  Adds custom notes to orders in Linnworks, supporting internal/external
+  visibility and optional processing flags for efficient communication.
+---
+## Overview
+
+The **RIS-RM-2049 – Add Order Note Macro&#x20;**&#x6D;acro allows adding notes to selected orders.
+
+It supports internal and external notes and can optionally mark notes as processing-related for workflow tracking.
+
+<Callout kind="tip" collapsed="false">
+  Ensure note content and visibility flags are correctly set before executing this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Adds notes to orders
+
+- Determines visibility (internal or external)
+
+- Applies optional processing flag
+
+- Preserves existing notes
+
+👉 In short:\
+Attach notes to orders efficiently with correct type and visibility.
+
+## When It Runs
+
+Used for order review, exception handling, or communication purposes
+
+Typically runs:
+
+- Manual execution
+
+- During order review or processing
+
+- For customer or warehouse communication
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of orders to update.
+</ParamField>
+
+<ParamField path="OrderNote" param-type="string" required="true" deprecated="false">
+  Text content to be added as a note.
+</ParamField>
+
+<ParamField path="MarkExternal" param-type="boolean" required="false" deprecated="false">
+  TRUE = external note (customer-visible), FALSE = internal note.
+</ParamField>
+
+<ParamField path="MarkProcessing" param-type="boolean" required="false" deprecated="false">
+  TRUE = mark note as processing type, FALSE = regular note.
+</ParamField>
+
+## How It Works
+
+<Steps>
+  <Step title="Start Macro" icon="play-circle" title-type="p">
+    Log macro start and prepare date filters (last 50 days).\
+    ⚠️ Note: Some extra unused logic fetching specific orders does not affect execution.
+  </Step>
+
+  <Step title="Determine Note Type" icon="edit" title-type="p">
+    If MarkProcessing = TRUE → set NoteTypeId = 0\
+    Else → set NoteTypeId = null
+  </Step>
+
+  <Step title="Loop Through Orders" icon="list" title-type="p">
+    Iterate through each OrderId and fetch order details.
+  </Step>
+
+  <Step title="Create Order Note" icon="file-text" title-type="p">
+    If OrderNote is not null, create note with:
+
+    - Text from OrderNote parameter
+
+    - Visibility: TRUE → External, FALSE → Internal
+
+    - Processing flag based on MarkProcessing
+
+    - CreatedBy: "AddOrderNote Macro"
+
+    - Timestamp: current date
+  </Step>
+
+  <Step title="Save Note" icon="save" title-type="p">
+    Fetch existing notes using Api.Orders.GetOrderNotes()\
+    Append new note and save using Api.Orders.SetOrderNotes()
+  </Step>
+
+  <Step title="Logging" icon="check-circle" title-type="p">
+    Log macro start/end, order numbers processed, and note additions.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Notes added to selected orders
+
+  - Supports internal and external visibility
+
+  - Optional processing flag applied
+
+  - Existing notes remain intact
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Automating manual note entry
+
+- Ensuring consistent communication
+
+- Supporting warehouse instructions
+
+- Enabling customer-facing notes
+
+- Ideal for bulk order updates
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Does not overwrite existing notes
+
+  - Requires valid OrderNote input
+
+  - Processing flag depends on NoteTypeId logic
+
+  - External notes may be visible to customers/channels
+
+  - Unused code does not impact functionality
+
+  - Lightweight and fast execution
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Add Notes to Orders Example" default-open="false">
+  Input:
+
+  - OrderIds → \[1001, 1002]
+
+  - OrderNote → "Handle with care – fragile item"
+
+  - MarkExternal → TRUE
+
+  - MarkProcessing → FALSE
+
+  👉 The macro:
+
+  - Adds note to each order
+
+  - Sets visibility and processing flag accordingly
+
+  Result:
+
+  - Both orders receive note: 📝 "Handle with care – fragile item"
+
+  - 🌍 Visible externally (customer-facing)
+
+  - ❌ Not marked as processing note
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Standardizes and automates order note management, ensuring efficient internal and customer communication while reducing manual effort and maintaining consistency across bulk operations.
+</Callout>
+

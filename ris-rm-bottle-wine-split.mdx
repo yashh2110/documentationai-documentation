@@ -1,0 +1,160 @@
+---
+title: Bottle Wine Split Macro
+description: >-
+  Automatically split orders containing multiple bottles of wine into separate orders 
+  for each bottle type and assign them to respective warehouse locations.
+---
+## Overview
+
+The **RIS-RM-2005 – Bottle Wine Split Macro** splits orders containing multiple wine bottles into separate orders for each bottle type.
+
+It ensures that different bottle types are separated and assigned to their respective warehouse locations, enabling efficient multi-warehouse processing.
+
+<Callout kind="tip" collapsed="false">
+  Ensure bottletypelist and locationlist are correctly mapped in sequence to avoid incorrect warehouse assignment.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Identifies items that are wine bottles
+
+- Splits orders based on bottle type
+
+- Assigns each split order to the correct warehouse location
+
+👉 In short:\
+Split one order into multiple based on bottle type and route to correct warehouse.
+
+## When It Runs
+
+Used for order routing & warehouse optimization for wine products.
+
+Typically runs:
+
+- Manually triggered
+
+- During order processing (before picking & packing)
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of orders to be evaluated.
+</ParamField>
+
+<ParamField path="bottletypelist" param-type="string" required="true" deprecated="false">
+  List of wine bottle types (comma-separated).
+</ParamField>
+
+<ParamField path="locationlist" param-type="string" required="true" deprecated="false">
+  Corresponding warehouse locations for bottle types.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Example:\
+  bottletypelist = Red Wine, White Wine, Sparkling Wine\
+  locationlist = WarehouseA, WarehouseB, WarehouseC
+
+  Mapping:\
+  Red Wine → WarehouseA\
+  White Wine → WarehouseB\
+  Sparkling Wine → WarehouseC
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Prepare Mapping" icon="map" title-type="p">
+    Map each bottle type to its corresponding warehouse location.
+  </Step>
+
+  <Step title="Evaluate Orders" icon="search" title-type="p">
+    Review all items within each selected order.
+  </Step>
+
+  <Step title="Check Split Requirement" icon="check-circle" title-type="p">
+    ✔ Multiple items with different bottle types → proceed\
+    ❌ Same bottle type → no split
+  </Step>
+
+  <Step title="Group Items" icon="layers" title-type="p">
+    Group items based on their wine bottle types.
+  </Step>
+
+  <Step title="Assign Locations" icon="map-pin" title-type="p">
+    Assign each group to its mapped warehouse location.
+  </Step>
+
+  <Step title="Handle Unmapped Items" icon="alert-circle" title-type="p">
+    Items without matching bottle type are grouped into an “other” order.
+  </Step>
+
+  <Step title="Split Order" icon="git-branch" title-type="p">
+    Create separate orders while retaining the original shipping method.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Orders are split based on bottle types
+
+  - Each order contains only relevant bottle type items
+
+  - Warehouse locations are correctly assigned
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Multi-warehouse operations
+
+- Faster picking and packing
+
+- Reducing warehouse confusion
+
+- Improving order accuracy
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Applies only when orders contain multiple wine bottle types
+
+  - Bottle types must be properly mapped
+
+  - No split occurs if all items belong to same bottle type
+
+  - Unmapped items go into a separate “other” order
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Bottle-Based Order Split Example" default-open="false">
+  An order contains:
+
+  - Red Wine bottle
+
+  - White Wine bottle
+
+  - Sparkling Wine bottle
+
+  👉 The macro:
+
+  - Splits into three orders
+
+  - Assigns Red Wine → WarehouseA
+
+  - Assigns White Wine → WarehouseB
+
+  - Assigns Sparkling Wine → WarehouseC
+
+  Result: Each warehouse processes only relevant bottle types.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Splitting orders by wine bottle type and routing them to correct locations significantly improves warehouse efficiency and simplifies fulfilment workflows.
+</Callout>

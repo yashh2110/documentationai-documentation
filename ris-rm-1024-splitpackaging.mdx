@@ -1,0 +1,172 @@
+---
+title: Split Packaging
+description: >-
+  Automatically split order items into multiple packages based on SKU-level
+  packaging rules, enabling precise and efficient shipment handling.
+---
+## Overview
+
+The **RIS-RM-1024 – SplitPackaging** macro customizes packaging by splitting order items into multiple packages based on predefined SKU rules.
+
+It overrides the default packaging logic and ensures items are divided into manageable shipment quantities.
+
+<Callout kind="tip" collapsed="false">
+  Ensure SKU and PackageSplit mappings are correctly aligned before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Applies SKU-based packaging rules
+
+- Splits item quantities into smaller packages
+
+- Handles both normal and composite items
+
+- Overrides default packaging logic
+
+👉 In short:\
+Split items into multiple packages based on SKU rules.
+
+## When It Runs
+
+Used for packaging automation and shipment optimization
+
+Typically runs:
+
+- Manually triggered (on selected orders)
+
+- During packaging workflows
+
+- Before shipping label generation
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of order IDs to process.
+</ParamField>
+
+<ParamField path="Sku" param-type="string" required="true" deprecated="false">
+  Comma-separated list of SKUs.
+</ParamField>
+
+<ParamField path="PackageSplit" param-type="string" required="true" deprecated="false">
+  Comma-separated package split rules corresponding to each SKU.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Example:\
+  Sku = "SKU1,SKU2"\
+  PackageSplit = "5,10"
+
+  Meaning:
+
+  - SKU1 → split into packs of 5
+
+  - SKU2 → split into packs of 10
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Prepare SKU Mapping" icon="settings" title-type="p">
+    Convert SKU and PackageSplit into a mapping structure (e.g., SKU1 → 5).
+  </Step>
+
+  <Step title="Process Orders" icon="list" title-type="p">
+    Loop through each OrderId and retrieve order details.
+  </Step>
+
+  <Step title="Process Normal Items" icon="box" title-type="p">
+    For non-composite items:
+
+    - Match SKU with mapping
+
+    - Split quantity based on defined rule\
+      Example: Qty 12 with split 5 → 5 + 5 + 2
+  </Step>
+
+  <Step title="Process Composite Items" icon="layers" title-type="p">
+    Apply the same splitting logic to child items within bundles.
+  </Step>
+
+  <Step title="Build Packaging Structure" icon="package" title-type="p">
+    Create packaging boxes where each split represents a separate package.
+  </Step>
+
+  <Step title="Apply Packaging Override" icon="edit" title-type="p">
+    Override default packaging using manual packaging logic.
+  </Step>
+
+  <Step title="Log Execution" icon="file-text" title-type="p">
+    Record packaging updates and any issues.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Items split into multiple packages
+
+  - Packaging customized per SKU
+
+  - Works for normal and composite items
+
+  - Default packaging overridden successfully
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Handling bulk order packaging efficiently
+
+- Improving packing accuracy
+
+- Reducing shipping errors
+
+- Supporting custom warehouse rules
+
+- Managing bundle/composite products
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - SKU and PackageSplit lists must align correctly
+
+  - Applies only to defined SKUs
+
+  - Non-matching SKUs use default packaging
+
+  - Overrides existing packaging setup
+
+  - No validation for incorrect inputs
+
+  - Uses manual packaging override logic
+
+  - Package dimensions and weight remain default
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Split Bulk Items into Packages" default-open="false">
+  An order contains large quantities of specific SKUs.
+
+  👉 The macro:
+
+  - Applies SKU-based split rules
+
+  - Divides items into smaller packages
+
+  - Overrides default packaging
+
+  Result: Orders are packed efficiently into manageable shipment units.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  SKU-level packaging control enables precise shipment handling, ensuring bulk quantities are efficiently split into optimized packages aligned with warehouse standards.
+</Callout>
+

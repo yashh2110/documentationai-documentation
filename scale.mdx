@@ -1,0 +1,108 @@
+---
+title: Scale
+description: >-
+  Connect and configure an electronic scale with Odoo Point of Sale to weigh
+  products and automatically calculate prices during checkout.
+---
+## **Prerequisite**
+
+To use a scale with POS, an **IoT system** is required.
+
+## **Configuration**
+
+### **Connect the scale**
+
+1. Go to <a href="https://www.odoo.com/documentation/19.0/applications/sales/point_of_sale/use.html#pos-use-settings" target="_blank" rel="noopener noreferrer">**POS Settings**</a>
+
+2. Scroll to **Connected Devices**
+
+3. Enable **IoT Box**
+
+4. Select your scale in the **Electronic Scale** field
+
+5. Click **Save**
+
+**Tip**
+
+You can also access these settings by clicking the menu icon (**⋮**) on a POS card and selecting **Edit**.
+
+### **Configure products for weighing**
+
+To sell products using a scale:
+
+1. Go to **Point of Sale ‣ Products ‣ Products**
+
+2. Create a new product or open an existing one
+
+Then configure:
+
+- Enable **Available in POS**
+
+- Set a **Sales Price per kg**
+
+**Note**
+
+This requires the <a href="https://www.odoo.com/documentation/19.0/applications/inventory_and_mrp/inventory/product_management/configure/uom.html" target="_blank" rel="noopener noreferrer">**Units of Measure**</a> feature.
+
+To enable it:
+
+1. Go to **Inventory ‣ Configuration ‣ Settings**
+
+2. Activate **Units of Measure**
+
+1) In the **Point of Sale** tab:
+
+- Enable **To Weigh With Scale**
+
+**Important**
+
+The unit of measure must be set to **kg** to comply with **European regulations**.
+
+## **European compliance**
+
+When using scales in commercial environments, your system must meet specific regulatory requirements:
+
+- Support at least **three decimal places**
+
+- Use appropriate units (e.g., `kg` instead of generic units)
+
+- Apply correct rounding rules
+
+If the setup is not compliant:
+
+- A red scale icon appears as a warning
+
+- Click it to view issues
+
+- Select **Apply changes** to fix them automatically
+
+Once compliant, the icon turns green.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/legal-requirements.png" width="975" height="301" alt="Scale compliance requirements." />
+
+### **Additional requirement**
+
+Both the POS screen and <a href="https://www.odoo.com/documentation/19.0/applications/sales/point_of_sale/hardware_network/customer_display.html" target="_blank" rel="noopener noreferrer">**customer display**</a> must be at least **6 inches** in size.
+
+## **Using the scale in POS**
+
+1. <a href="https://www.odoo.com/documentation/19.0/applications/sales/point_of_sale/use.html#pos-use-open-register" target="_blank" rel="noopener noreferrer">**Open the POS register**</a>
+
+2. Select or scan the product
+
+3. Place the item on the scale
+
+4. Wait for the weight to appear in the popup
+
+5. The price is calculated automatically
+
+6. Click **Order** to add the item to the cart
+
+7. Remove the item from the scale
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/weigh.png" width="425" height="363" alt="Weighing product in POS." />
+
+**Important**
+
+Ensure the scale resets to **zero** before weighing a new item.\
+If not, the **Order** button will remain disabled until the scale is reset.

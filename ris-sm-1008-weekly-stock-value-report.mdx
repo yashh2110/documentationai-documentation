@@ -1,0 +1,176 @@
+---
+title: Weekly Stock Value Report
+description: >-
+  Generate and send a weekly stock value report with filtered inventory data via
+  email.
+---
+## Overview
+
+The **RIS-SM-1008 – Weekly Stock Value Report** macro automatically generates a structured stock value report and distributes it via email.
+
+It retrieves inventory data using predefined queries, applies filters, and presents the results in an easy-to-read HTML format.
+
+<Callout kind="tip" collapsed="false">
+  Ensure SQL queries and email configurations are correctly set up before scheduling this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Retrieves inventory data
+
+- Filters relevant stock information
+
+- Sends a formatted report via email
+
+👉 In short:\
+Automatically generate and email weekly stock value reports.
+
+## When It Runs
+
+Used for reporting & inventory analysis
+
+Typically runs:
+
+- Scheduled weekly execution
+
+- Manually when required
+
+## Parameters
+
+<Callout kind="info" collapsed="false">
+  No external input required for data processing.\
+  The macro relies on predefined queries and configuration.
+
+  Email configuration parameters:
+
+  - ServerName (SMTP server)
+
+  - port
+
+  - username / password
+
+  - fromEmail / fromName
+
+  - toEmail / toName
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Execute Query" icon="database" title-type="p">
+    Run predefined SQL query to retrieve stock data.
+  </Step>
+
+  <Step title="Apply Filters" icon="filter" title-type="p">
+    Exclude:
+
+    - Dropship suppliers
+
+    - Composite items
+
+    - Specific categories (e.g., Cardcraft)
+
+    - Low purchase price items (0.01 / 0.05)
+
+    - Zero stock items
+  </Step>
+
+  <Step title="Process Data" icon="layers" title-type="p">
+    Map retrieved data into structured report fields.
+  </Step>
+
+  <Step title="Generate Report" icon="file-text" title-type="p">
+    Create HTML table with key inventory details.
+  </Step>
+
+  <Step title="Send Email" icon="mail" title-type="p">
+    Deliver report using configured SMTP settings.
+  </Step>
+
+  <Step title="Log Execution" icon="check-circle" title-type="p">
+    Record success, failures, and exceptions.
+  </Step>
+</Steps>
+
+## Report Includes
+
+<Callout kind="info" collapsed="false">
+  Key columns in the report:
+
+  - Item Title
+
+  - Item Number
+
+  - Category
+
+  - Location
+
+  - Purchase Price
+
+  - Stock Level
+
+  - Stock Value
+</Callout>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Weekly stock report generated automatically
+
+  - Clean and structured HTML report sent via email
+
+  - Only relevant inventory data included
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Automating stock reporting
+
+- Monitoring inventory value
+
+- Supporting financial planning
+
+- Reducing manual reporting effort
+
+- Improving data visibility
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Depends on predefined SQL query
+
+  - Excludes dropship and composite items
+
+  - Typically uses default stock location
+
+  - Requires valid email configuration
+
+  - Report is generated in HTML format
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Weekly Stock Report Example" default-open="false">
+  At the end of the week:
+
+  👉 The macro:
+
+  - Retrieves filtered stock data
+
+  - Generates an HTML report
+
+  - Sends it to stakeholders via email
+
+  Result: Team receives a ready-to-use stock value report without manual effort.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Automating inventory reporting ensures consistent insights, improves decision-making, and eliminates repetitive manual work.
+</Callout>
+

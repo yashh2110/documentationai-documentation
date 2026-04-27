@@ -1,0 +1,166 @@
+---
+title: Mark Macro (Read XML & Update Order Data)
+description: >-
+  Reads order XML, updates order items and totals based on XML values, flags
+  specific customers, and stores old values for audit tracking.
+---
+## Overview
+
+The **RIS-RM-2131 – Mark Macro** ensures that order data aligns with XML input, updates pricing and totals, flags special customers, and logs all previous values for auditing purposes.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  Use XML as the source of truth to correct orders, flag customers, and maintain an audit trail.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Reads order data from XML
+
+- Updates order items, prices, and totals
+
+- Flags special customers based on CustomerGroupId
+
+- Stores old values for auditing and tracking
+
+- Adds notes for each processed order
+
+---
+
+## When It Runs
+
+Typically executed:
+
+- Automatically or manually during order validation
+
+- After order import (Magento/Amazon XML sync)
+
+- During data correction or reconciliation processes
+
+- When customer group-based processing is required
+
+- To fix mismatched order totals
+
+---
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="array" required="true" deprecated="false">
+  List of order IDs to process.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  This parameter controls which orders the macro will process dynamically.
+</Callout>
+
+---
+
+---
+
+## Simple Explanation
+
+The macro reads XML for orders, updates item prices, tax, and totals, flags customers in specific groups, and stores previous values in extended properties for auditing.
+
+---
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Fetch Orders" icon="inbox" title-type="p">
+    Loop through provided OrderIds using Api.Orders.GetOrderById.
+  </Step>
+
+  <Step title="Load XML Data" icon="file-code" title-type="p">
+    Retrieve XML using Api.Orders.GetOrderXml and parse item and pricing details.
+  </Step>
+
+  <Step title="Extract XML Values" icon="list" title-type="p">
+    Get SKU, price, tax, row total, shipping, subtotal, tax, and total charge.
+  </Step>
+
+  <Step title="Identify Customer Group" icon="users" title-type="p">
+    Check CustomerGroupId from XML to identify special customers.
+  </Step>
+
+  <Step title="Mark Special Customer" icon="flag" title-type="p">
+    If CustomerGroupId = 4:
+
+    - Add extended property flag using Api.Orders.SetExtendedProperties
+
+    - Add order note using Api.Orders.SetOrderNotes
+  </Step>
+
+  <Step title="Store Old Values (Audit)" icon="archive" title-type="p">
+    Save old item prices and totals (postage, subtotal, tax, total) in extended properties.
+  </Step>
+
+  <Step title="Update Order Items" icon="edit" title-type="p">
+    Match SKU with XML, update price, cost, and tax using Api.Orders.UpdateOrderItem; recalculate if SKU not found.
+  </Step>
+
+  <Step title="Update Order Totals" icon="calculator" title-type="p">
+    Replace totals using XML values via Api.Orders.SetOrderTotalsInfo.
+  </Step>
+
+  <Step title="Save Changes" icon="check-circle" title-type="p">
+    Apply all updates to items, totals, extended properties, and notes.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  The macro produces:
+
+  - **Updated Order Data** – Prices and totals corrected from XML
+
+  - **Customer Marking** – Special customers flagged via extended properties
+
+  - **Audit Trail** – Old values stored for review
+
+  - **Order Notes** – Logs changes and flags for tracking
+</Callout>
+
+---
+
+## Usefulness
+
+- **Data Accuracy** – Aligns order with XML source
+
+- **Customer Segmentation** – Identifies and flags special customers
+
+- **Audit Tracking** – Maintains history of all changes
+
+- **Error Fixing** – Resolves pricing, tax, and total mismatches
+
+---
+
+## Example Scenario
+
+<Expandable title="Scenario 1: Price Mismatch" default-open="false">
+  **XML Price:** 10\
+  **System Price:** 8
+
+  **Result:**\
+  Price updated to 10, totals corrected.
+</Expandable>
+
+<Expandable title="Scenario 2: Special Customer" default-open="false">
+  **CustomerGroupId:** 4
+
+  **Result:**\
+  Order flagged, note added, extended property stored.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Ensuring XML remains the single source of truth allows accurate order pricing, proper customer flagging, and full auditability, preventing errors, mismatches, and reporting inconsistencies.
+</Callout>
+

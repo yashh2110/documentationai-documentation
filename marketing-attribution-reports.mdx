@@ -1,0 +1,179 @@
+---
+title: Marketing attribution reports
+description: >
+  Use the Odoo CRM app to compile a marketing attribution report, which analyzes
+  the source of leads and measures marketing’s impact on lead generation,
+  attribution, and win rates.
+---
+Use the Odoo CRM app to compile a marketing attribution report. This report helps analyze the source of leads and measure marketing’s overall impact on lead generation, attribution, conversion rate, and more.
+
+## Leads Analysis dashboard
+
+Navigate to:
+
+CRM → Reporting → Leads
+
+This opens the Leads Analysis dashboard.
+
+### Notes
+
+- If the *Leads* feature is enabled, reports can also be accessed via:
+  CRM → Leads
+
+- If the *Leads* feature is disabled, use:
+  CRM → Sales → My Pipeline
+
+Both dashboards support filtering and grouping required for attribution reporting.
+
+## Understanding the dashboard
+
+By default:
+
+- Graph view is enabled
+
+- Filters applied:
+
+  - Active or Inactive
+
+  - Created on: current year
+
+The chart shows:
+
+- Leads generated per month
+
+- Segmented by sales team
+
+Switch to **List View** to see detailed grouped data.
+
+## Add UTM parameters
+
+UTM (Urchin Tracking Module) parameters are used to track how visitors reach your website.
+
+Odoo uses these parameters to build accurate marketing attribution reports.
+
+### Key UTM parameters
+
+- **Medium**\
+  Broad channel (e.g. social, email, CPC)
+
+- **Source**\
+  Specific platform (e.g. Google, Facebook, LinkedIn)
+
+- **Campaign**\
+  Specific campaign name (e.g. Summer Sale, Black Friday)
+
+## Create UTMs
+
+UTMs can be created using:
+
+- Link Tracker in Odoo
+
+- Email Marketing app
+
+- Marketing Automation app
+
+These tools automatically attach tracking data to links.
+
+## Create reports
+
+Click the filter dropdown next to the search bar.
+
+### Filters
+
+Filters narrow down results.
+
+Examples:
+
+- Active → shows ongoing leads
+
+- Won → shows converted leads
+
+### Group By
+
+Group By organizes data into meaningful segments.
+
+You can apply multiple levels of grouping.
+
+### Example grouping order:
+
+1. Medium
+
+2. Source
+
+3. Campaign
+
+This creates a hierarchy:
+Medium → Source → Campaign
+
+## Example report setup
+
+To build a useful attribution report:
+
+1. Apply filter:
+
+   - Active
+
+2. Apply Group By (in this order):
+
+   - Source
+
+   - Country or City
+
+### Result
+
+- Leads grouped by source
+
+- Further segmented by location
+
+### Insights
+
+- Identify top-performing marketing channels
+
+- Understand geographic demand
+
+- Optimize campaign targeting
+
+## Export reports
+
+### Option 1: Export as Excel (.xlsx)
+
+1. Switch to List View
+
+2. Click the Actions (gear icon)
+
+3. Select Export All
+
+### Option 2: Export to Odoo Spreadsheet
+
+1. Click Actions (gear icon)
+
+2. Select Spreadsheet → Insert list in spreadsheet
+
+3. Choose:
+
+   - New spreadsheet OR existing file
+
+4. Click Confirm
+
+## Best practices
+
+- Always use UTM parameters in campaigns
+
+- Use consistent naming for campaigns
+
+- Combine filters + grouping for deeper insights
+
+- Review reports regularly for optimization
+
+## Summary
+
+Marketing attribution reports in Odoo help you:
+
+- Track lead sources accurately
+
+- Measure campaign effectiveness
+
+- Improve conversion rates
+
+- Make data-driven marketing decisions
+

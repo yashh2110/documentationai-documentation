@@ -1,0 +1,151 @@
+---
+title: Additional Info Remove Macro
+description: >-
+  Remove unnecessary item-level additional information while retaining only
+  essential option details.
+---
+## Overview
+
+The **RIS-RM-1006 – Additional Info Remove Macro** cleans up item-level additional information in orders by removing unnecessary data.
+
+It ensures that only relevant option fields are retained, improving clarity and usability for downstream processes like picking and packing.
+
+<Callout kind="tip" collapsed="false">
+  Ensure required option fields are correctly defined before running this macro, as removed data cannot be recovered.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Reviews item-level additional information
+
+- Retains only essential option fields
+
+- Removes all non-essential data
+
+👉 In short:\
+Clean and standardize item-level additional information.
+
+## When It Runs
+
+Used for data cleanup & order standardization
+
+Typically runs:
+
+- Manually triggered
+
+- During order processing (before picking & packing)
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of orders to be processed.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  No additional parameters are required.\
+  The macro operates based on predefined rules.
+
+
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Process Orders" icon="download" title-type="p">
+    Iterate through each selected order individually.
+  </Step>
+
+  <Step title="Check Identifier" icon="search" title-type="p">
+    Verify if the order already has identifier Remove additional info.
+  </Step>
+
+  <Step title="Skip or Proceed" icon="check-circle" title-type="p">
+    ✔ Not present → proceed\
+    ❌ Already present → skip order
+  </Step>
+
+  <Step title="Review Item Data" icon="file-text" title-type="p">
+    Inspect all additional information fields for each item.
+  </Step>
+
+  <Step title="Filter Required Fields" icon="filter" title-type="p">
+    Retain only:
+
+    - Text Options
+
+    - Choose A Color
+
+    - Choose A Colour
+  </Step>
+
+  <Step title="Remove Extra Data" icon="trash" title-type="p">
+    Delete all other non-essential additional information.
+  </Step>
+
+  <Step title="Update Order" icon="save" title-type="p">
+    Save updated item-level data.
+  </Step>
+
+  <Step title="Assign Identifier" icon="tag" title-type="p">
+    Add identifier Remove additional info to mark as processed.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Unnecessary data removed from items
+
+  - Only essential options retained
+
+  - Orders marked to prevent duplicate processing
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Maintaining clean and structured data
+
+- Reducing confusion for warehouse teams
+
+- Improving picking and packing efficiency
+
+- Eliminating redundant information
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Processes only orders without the identifier
+
+  - Retains only predefined fields
+
+  - Removed data cannot be recovered
+
+  - Adds identifier to prevent reprocessing
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Additional Info Cleanup Example" default-open="false">
+  An order item contains multiple additional fields including irrelevant data.
+
+  👉 The macro:
+
+  - Keeps only required fields (Text Options, Color selections)
+
+  - Removes all other fields
+
+  - Marks order as processed
+
+  Result: Clean and simplified item data for warehouse use.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Cleaning and standardizing item-level data ensures better operational clarity and improves efficiency across fulfilment workflows.
+</Callout>
+

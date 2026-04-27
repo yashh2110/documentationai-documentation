@@ -1,0 +1,151 @@
+---
+title: Self-ordering
+description: >-
+  Enable customers to browse products, place orders, and complete payments using
+  their mobile devices or a kiosk interface in Odoo POS.
+---
+The **self-ordering** feature allows customers to view your menu or product catalog, place orders, and pay independently using either their smartphone or a kiosk.
+
+## **Configuration**
+
+### **Activate the feature**
+
+To enable self-ordering:
+
+1. Go to <a href="https://www.odoo.com/documentation/19.0/applications/sales/point_of_sale/use.html#pos-use-settings" target="_blank" rel="noopener noreferrer">**POS Settings**</a>
+
+2. Scroll to **Mobile self-order & Kiosk**
+
+3. Select a **Self Ordering** type under **QR menu & Kiosk activation**
+
+### **Available modes**
+
+You can choose between:
+
+- **QR Menu**\
+  Customers can browse the menu via QR code
+
+- **QR Menu + Ordering**\
+  Customers can browse, order, and pay from their device
+
+- **Kiosk**\
+  Orders are placed directly on a self-service screen
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/qr-activation.png" width="412" height="252" alt="Self-ordering activation settings." />
+
+### **Generate QR codes**
+
+- Click **Print QR Codes** to download a PDF
+
+- Click **Download QR Codes** to get a compressed file
+
+**Note**
+
+- In restaurants, QR codes are generated per table
+
+- In retail shops, a single generic QR code is created
+
+**Tip**
+
+To customize QR codes:
+
+1. Scan the generated QR code to get its URL
+
+2. Use tools like:
+
+   - <a href="https://www.qrcode-monkey.com/" target="_blank" rel="noopener noreferrer">**QR Code Monkey**</a>
+
+   - <a href="https://www.qr-code-generator.com/" target="_blank" rel="noopener noreferrer">**QR Code Generator**</a>
+
+3. Create a custom-designed QR code using that URL
+
+### **Additional settings**
+
+Available settings adapt depending on the selected mode:
+
+- Home buttons
+
+- Service location and payment options
+
+- Language
+
+- Splash screens
+
+- Eat-in / Take-away
+
+- Launch on IoT Box
+
+### **Home buttons setup**
+
+Home buttons appear on the self-ordering interface.
+
+To configure:
+
+1. Click **Home buttons**
+
+2. Click **New**
+
+3. Define:
+
+- **Label**: Button name
+
+- **URL**:
+
+  - External link (must start with `https://`)
+
+  - `/products` to open the product catalog
+
+- **Points of Sale**: Limit button visibility (optional)
+
+- **Style**: Choose a predefined design
+
+**Note**
+
+- Leaving **Points of Sale** empty applies the button to all POS
+
+- The **Preview** column updates automatically
+
+### **Preview the interface**
+
+Before going live:
+
+- Click **Preview Web Interface**
+
+- Verify layout, buttons, and settings
+
+## **Usage**
+
+### **Accessing the interface**
+
+POS users can open the interface by:
+
+- Scanning the QR code
+
+- Clicking (**⋮**) on the POS card → **Mobile Menu**
+
+Customers can:
+
+1. Scan the QR code
+
+2. Tap a **home button** to open the menu
+
+3. Select items
+
+4. Click **Order**
+
+5. Follow instructions to:
+
+   - Choose table (if applicable)
+
+   - Complete payment
+
+## **Important notes**
+
+- The <a href="https://www.odoo.com/documentation/19.0/applications/sales/point_of_sale/use.html#pos-use-open-register" target="_blank" rel="noopener noreferrer">**POS register must be open**</a> for orders to be processed
+
+- Orders are automatically:
+
+  - Sent to the <a href="https://www.odoo.com/documentation/19.0/applications/sales/point_of_sale/extra/preparation.html" target="_blank" rel="noopener noreferrer">**preparation screen**</a>
+
+  - Added to the POS order list
+

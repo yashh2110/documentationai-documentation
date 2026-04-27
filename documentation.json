@@ -1,726 +1,1680 @@
 {
-  "name": "Documentation.AI",
-  "initialRoute": "getting-started/introduction",
+  "name": "Rishvi",
   "colors": {
     "light": {
-      "brand": "#1a1a1a",
-      "heading": "#1a1a1a",
-      "text": "#374151"
+      "brand": "#046BD2"
     },
     "dark": {
-      "brand": "#f2f2f2",
-      "heading": "#f2f2f2",
-      "text": "#c1c1c1"
-    }
-  },
-  "navbar": {
-    "actions": {
-      "primary": {
-        "title": "Get Started",
-        "link": "https://dashboard.documentation.ai/signup"
-      },
-      "links": [
-        {
-          "title": "Login",
-          "link": "https://dashboard.documentation.ai/login"
-        }
-      ]
+      "brand": "#54A6F7"
     }
   },
   "navigation": {
     "tabs": [
       {
-        "tab": "Documentation",
-        "icon": "book",
+        "tab": "Linnworks",
+        "icon": "activity-square-icon",
         "groups": [
           {
-            "group": "Getting Started",
-            "icon": "info",
-            "expandable": false,
+            "group": "Scripts",
+            "icon": "activity-square-icon",
             "pages": [
               {
-                "title": "Introduction",
-                "path": "getting-started/introduction",
-                "icon": "star",
-                "show-parent-label": false,
-                "show-page-navigation": false,
-                "ask-feedback": false
-              },
-              {
-                "title": "Core concepts",
-                "path": "getting-started/core-concepts",
-                "icon": "cog"
-              },
-              {
-                "title": "Quickstart",
-                "path": "getting-started/quickstart",
-                "icon": "zap"
+                "title": "Integartions",
+                "path": "integartions",
+                "icon": "activity-square-icon",
+                "public": true
               }
-            ]
+            ],
+            "public": true
           },
           {
-            "group": "Write and Publish",
-            "icon": "pen-tool",
-            "expandable": true,
+            "group": "Shipping Integration",
             "pages": [
               {
-                "title": "Web Editor",
-                "path": "write-and-publish/web-editor",
-                "icon": "globe"
-              },
-              {
-                "title": "Code Editor",
-                "path": "write-and-publish/code-editor",
-                "icon": "code"
-              },
-              {
-                "group": "Components",
-                "path": "components/components",
-                "pages": [
-                  {
-                    "title": "Headings and Text",
-                    "path": "components/heading-and-text",
-                    "icon": "type"
-                  },
-                  {
-                    "title": "Lists and Tables",
-                    "path": "components/lists-and-tables",
-                    "icon": "list"
-                  },
-                  {
-                    "title": "Card",
-                    "path": "components/card",
-                    "icon": "square"
-                  },
-                  {
-                    "title": "Columns",
-                    "path": "components/columns",
-                    "icon": "columns"
-                  },
-                  {
-                    "title": "Images",
-                    "path": "components/images",
-                    "icon": "image"
-                  },
-                  {
-                    "title": "Videos and Iframes",
-                    "path": "components/videos-and-iframes",
-                    "icon": "video"
-                  },
-                  {
-                    "title": "Code and Groups",
-                    "path": "components/code-blocks-and-groups",
-                    "icon": "code"
-                  },
-                  {
-                    "title": "Mermaid Diagrams",
-                    "path": "components/mermaid",
-                    "icon": "network"
-                  },
-                  {
-                    "title": "Callout",
-                    "path": "components/callout",
-                    "icon": "megaphone"
-                  },
-                  {
-                    "title": "Expandables",
-                    "path": "components/expandables",
-                    "icon": "chevron-down"
-                  },
-                  {
-                    "title": "Steps",
-                    "path": "components/steps",
-                    "icon": "list-ordered"
-                  },
-                  {
-                    "title": "Tabs",
-                    "path": "components/tabs",
-                    "icon": "lucide-panel-top"
-                  },
-                  {
-                    "title": "Collection List",
-                    "path": "components/collection-list",
-                    "icon": "layout-grid"
-                  },
-                  {
-                    "title": "Collection Content",
-                    "path": "components/collection-content",
-                    "icon": "network"
-                  },
-                  {
-                    "title": "Update",
-                    "path": "components/update",
-                    "icon": "clock"
-                  },
-                  {
-                    "title": "Param Field",
-                    "path": "components/paramfield",
-                    "icon": "settings"
-                  },
-                  {
-                    "title": "Response Field",
-                    "path": "components/responsefield",
-                    "icon": "file-text"
-                  },
-                  {
-                    "title": "API Components",
-                    "path": "components/api-components",
-                    "icon": "code"
-                  }
-                ],
-                "icon": "component"
-              },
-              {
-                "title": "Using Cursor",
-                "path": "write-and-publish/cursor",
-                "icon": "lucide-text-cursor"
-              },
-              {
-                "title": "Using Claude Code",
-                "path": "write-and-publish/claude-code",
-                "icon": "a-large-small-icon"
-              },
-              {
-                "title": "Helpful Prompts",
-                "path": "write-and-publish/prompts",
-                "icon": "check-circle"
+                "title": "Stream Tech Integration",
+                "path": "stream-tech-integration",
+                "icon": "activity-square-icon",
+                "public": true
               }
-            ]
+            ],
+            "icon": "activity-square-icon",
+            "public": true
           },
           {
-            "group": "Organize",
+            "group": "Rule Macro",
             "pages": [
               {
-                "title": "Overview",
-                "path": "organize/overview",
-                "icon": "lucide-info"
+                "title": "DHL-SATURDAY-SERVICE",
+                "path": "dhl-saturday-service-generic-version",
+                "public": false,
+                "show-parent-label": false
               },
               {
-                "title": "Dimensions",
-                "path": "organize/dimensions",
-                "icon": "layers"
+                "title": "RIS-RM-2001 – Bill To Change Based on SubSource",
+                "path": "test",
+                "public": true,
+                "show-parent-label": false
               },
               {
-                "title": "Views",
-                "path": "organize/views",
-                "icon": "layout-dashboard"
+                "title": "RIS-RM-2005 – Bottle Wine Split Macro",
+                "path": "ris-rm-bottle-wine-split",
+                "public": true,
+                "show-parent-label": false
               },
               {
-                "title": "Groups",
-                "path": "organize/groups",
-                "icon": "folder-tree"
+                "title": "RIS-RM-2317 – Shopify External Reference Update",
+                "path": "ris-rm-2317-shopify-external-reference-update",
+                "public": true,
+                "show-parent-label": false
               },
               {
-                "title": "Pages",
-                "path": "organize/pages",
-                "icon": "file-text"
-              }
-            ]
-          },
-          {
-            "group": "Customize",
-            "icon": "palette",
-            "expandable": true,
-            "pages": [
-              {
-                "title": "Colors & Typography",
-                "path": "customize/colors-and-typography",
-                "icon": "type"
+                "title": "RIS-RM-2311 – ShipStation Order Splitter",
+                "path": "ris-rm-2311-shipstation-order-splitter",
+                "show-parent-label": false
               },
               {
-                "title": "Navigation & Sidebar",
-                "path": "customize/navigation-and-sidebar",
-                "icon": "menu"
+                "title": "RIS-RM-2298 – Split Every Macro ",
+                "path": "ris-rm-2298-split-every-macro",
+                "show-parent-label": false
               },
               {
-                "title": "Header & Navbar",
-                "path": "customize/header-and-navbar",
-                "icon": "layout"
+                "title": "RIS-SM-2294 –  Restore Order Value",
+                "path": "ris-rm-2293-reduce-order-value-order-value-adjustment---part-2",
+                "show-parent-label": false
               },
               {
-                "title": "Branding",
-                "path": "customize/branding",
-                "icon": "award"
+                "title": "RIS-RM-2293 – Reduce Order Value",
+                "path": "ris-rm-2293-reduce-order-value-order-value-adjustment---part-1",
+                "show-parent-label": false
               },
               {
-                "title": "Templates",
-                "path": "customize/templates",
-                "icon": "layout-template"
+                "title": "RIS-RM-2281 – Shopify Customisation to Notes",
+                "path": "ris-rm-2281-shopify-customisation-to-notes",
+                "show-parent-label": false
               },
               {
-                "group": "SEO & GEO",
-                "pages": [
-                  {
-                    "title": "Robots.txt & llms.txt",
-                    "path": "seo-and-geo/robots-txt-and-llm-txt",
-                    "icon": "file"
-                  },
-                  {
-                    "title": "Sitemap",
-                    "path": "seo-and-geo/sitemap",
-                    "icon": "map"
-                  }
-                ],
-                "icon": "search-check-icon"
+                "title": "RIS-RM-2263 – Remove Company Name",
+                "path": "ris-rm-2263-remove-company-name-from-open-order-add-to-address-line-3",
+                "show-parent-label": false
               },
               {
-                "title": "Custom Domain Setup",
-                "path": "customize/custom-domain",
-                "icon": "globe"
+                "title": "RIS-RM-2252 – Last Name Update if Blank in Open Order",
+                "path": "ris-rm-2252-last-name-update-if-blank-in-open-order",
+                "show-parent-label": false
               },
               {
-                "group": "Custom Subpath Setup",
-                "icon": "link",
-                "expandable": true,
-                "pages": [
-                  {
-                    "title": "Overview",
-                    "path": "customize/custom-subpath/overview",
-                    "icon": "info"
-                  },
-                  {
-                    "title": "Vercel",
-                    "path": "customize/custom-subpath/vercel",
-                    "icon": "triangle"
-                  },
-                  {
-                    "title": "Cloudflare Workers",
-                    "path": "customize/custom-subpath/cloudflare",
-                    "icon": "cloud"
-                  },
-                  {
-                    "title": "AWS Route 53 & CloudFront",
-                    "path": "customize/custom-subpath/aws",
-                    "icon": "cloud-cog"
-                  }
-                ]
+                "title": "RIS-RM-2250 – Reduce Order Value",
+                "path": "ris-rm-2250-reduce-order-value-case-warehouse",
+                "show-parent-label": false
               },
               {
-                "title": "Redirects",
-                "path": "customize/redirects-and-rewrites",
-                "icon": "repeat"
+                "title": "RIS-RM-2230 – Prime Identifier to Web Order",
+                "path": "ris-rm-2230-prime-identifier-to-web-order",
+                "show-parent-label": false
               },
               {
-                "title": "Custom Scripts",
-                "path": "customize/custom-scripts",
-                "icon": "file-code"
+                "title": "RIS-RM-2222 – Amazon Customisation",
+                "path": "ris-rm-2222-amazon-customisation-data-extract-add-to-order-notes",
+                "show-parent-label": false
               },
               {
-                "title": "Cookie Consent",
-                "path": "customize/cookie-consent",
-                "icon": "cookie"
+                "title": "RIS-RM-2220 – Dispatch Date Update from XML",
+                "path": "ris-rm-2220-dispatch-date-update-from-xml",
+                "show-parent-label": false
               },
               {
-                "group": "Access Control",
-                "icon": "lock",
-                "expandable": true,
-                "pages": [
-                  {
-                    "title": "Overview",
-                    "path": "customize/access-control/overview",
-                    "icon": "info"
-                  },
-                  {
-                    "title": "Password",
-                    "path": "customize/access-control/password",
-                    "icon": "key"
-                  },
-                  {
-                    "title": "JWT",
-                    "path": "customize/access-control/jwt",
-                    "icon": "key-round"
-                  },
-                  {
-                    "title": "OAuth 2.0",
-                    "path": "customize/access-control/oauth",
-                    "icon": "shield"
-                  }
-                ]
+                "title": "RIS-RM-2214 – Order Move",
+                "path": "ris-rm-2214-order-move-move-to-presales-location",
+                "show-parent-label": false
               },
               {
-                "title": "Site Configuration",
-                "path": "customize/site-configuration",
-                "icon": "file-cog"
+                "title": "RIS-RM-2212 – Missing Town & Region Fix",
+                "path": "ris-rm-2212-missing-town-region-fix",
+                "show-parent-label": false
               },
               {
-                "title": "Page Configuration",
-                "path": "customize/page-configuration",
-                "icon": "file-text"
-              }
-            ]
-          },
-          {
-            "group": "API Documentation",
-            "icon": "server",
-            "expandable": true,
-            "pages": [
-              {
-                "title": "OpenAPI / JSON Schema Import",
-                "path": "api-documentation-and-playground/openapi-import",
-                "icon": "file-code"
+                "title": "RIS-RM-2209 – Get Cheapest Shipping and Assign Service",
+                "path": "ris-rm-2209-get-cheapest-shipping-and-assign-service",
+                "show-parent-label": false
               },
               {
-                "title": "Organize API Reference",
-                "path": "api-documentation-and-playground/organize-api-reference",
-                "icon": "folder-open"
+                "title": "RIS-RM-2176 – Tradeplace To Linnworks Sync",
+                "path": "ris-rm-2176-tradeplace-to-linnworks-sync",
+                "show-parent-label": false
               },
               {
-                "title": "Interactive Playground Setup",
-                "path": "api-documentation-and-playground/interactive-playground-setup",
-                "icon": "play-circle"
+                "title": "RIS-RM-2171 – Shopify POS Location Stock Deduction",
+                "path": "ris-rm-2171-shopify-pos-location-stock-deduction",
+                "show-parent-label": false
               },
               {
-                "title": "Code Generation",
-                "path": "api-documentation-and-playground/code-generation",
-                "icon": "terminal"
-              }
-            ]
-          },
-          {
-            "group": "AI Features",
-            "icon": "bot",
-            "expandable": true,
-            "pages": [
-              {
-                "title": "AI Documentation Agent",
-                "path": "ai/ai-documentation-agent",
-                "icon": "stars-icon"
+                "title": "RIS-RM-2154 – Remove Non Uk Order",
+                "path": "ris-rm-2154-macro",
+                "show-parent-label": false
               },
               {
-                "title": "AI Assistant",
-                "path": "ai/ai-assistant",
-                "icon": "settings"
+                "title": "RIS-RM-2144 – Fetch Dispatch Date and Update",
+                "path": "ris-rm-2144-fetch-dispatch-date-and-update",
+                "show-parent-label": false
               },
               {
-                "title": "MCP Server",
-                "path": "ai/mcp-server",
-                "icon": "server-cog"
+                "title": "RIS-RM-2137 – Packaging Selection By Location",
+                "path": "ris-rm-2137-packaging-selection-by-location",
+                "show-parent-label": false
               },
               {
-                "title": "Page Actions",
-                "path": "page-actions",
-                "icon": "menu"
+                "title": "RIS-RM-2131 – Mark Macro",
+                "path": "ris-rm-2131-mark-macro-read-xml-update-order-data",
+                "show-parent-label": false
               },
               {
-                "title": "AI Credits",
-                "path": "ai/ai-credits",
-                "icon": "stars"
-              }
-            ]
-          },
-          {
-            "group": "Integrations",
-            "icon": "workflow",
-            "expandable": true,
-            "pages": [
-              {
-                "title": "Overview",
-                "path": "integrations/overview",
-                "icon": "info"
+                "title": "RIS-RM-2060 – Volumetric Package",
+                "path": "ris-rm-2060-volumetric-package-parcel-size-weight-validation",
+                "show-parent-label": false
               },
               {
-                "title": "Github",
-                "path": "integrations/github",
-                "icon": "github"
+                "title": "RIS-RM-2058 – Sales – Character Limit Validation & Fix",
+                "path": "ris-rm-2058-sales-character-limit-validation-fix",
+                "show-parent-label": false
               },
               {
-                "group": "Analytics",
-                "icon": "trending-up",
-                "pages": [
-                  {
-                    "title": "Google Tag Manager",
-                    "path": "integrations/google-tag-manager",
-                    "icon": "tag"
-                  },
-                  {
-                    "title": "Google Analytics",
-                    "path": "integrations/google-analytics",
-                    "icon": "bar-chart"
-                  },
-                  {
-                    "title": "PostHog",
-                    "path": "integrations/posthog",
-                    "icon": "trending-up"
-                  },
-                  {
-                    "title": "Amplitude",
-                    "path": "integrations/amplitude",
-                    "icon": "activity"
-                  },
-                  {
-                    "title": "Mixpanel",
-                    "path": "integrations/mixpanel",
-                    "icon": "pie-chart"
-                  },
-                  {
-                    "title": "Segment",
-                    "path": "integrations/segment",
-                    "icon": "share-2"
-                  },
-                  {
-                    "title": "Heap",
-                    "path": "integrations/heap",
-                    "icon": "layers"
-                  },
-                  {
-                    "title": "Plausible",
-                    "path": "integrations/plausible",
-                    "icon": "shield"
-                  },
-                  {
-                    "title": "Fathom",
-                    "path": "integrations/fathom",
-                    "icon": "eye"
-                  },
-                  {
-                    "title": "Pirsch",
-                    "path": "integrations/pirsch",
-                    "icon": "shield"
-                  },
-                  {
-                    "title": "Hotjar",
-                    "path": "integrations/hotjar",
-                    "icon": "mouse-pointer"
-                  },
-                  {
-                    "title": "Microsoft Clarity",
-                    "path": "integrations/clarity",
-                    "icon": "monitor"
-                  },
-                  {
-                    "title": "Clearbit",
-                    "path": "integrations/clearbit",
-                    "icon": "user-check"
-                  },
-                  {
-                    "title": "LogRocket",
-                    "path": "integrations/logrocket",
-                    "icon": "video"
-                  },
-                  {
-                    "title": "Hightouch",
-                    "path": "integrations/hightouch",
-                    "icon": "upload"
-                  }
-                ]
+                "title": "RIS-RM-2053 – PrintTax – IOSS Information to Notes)",
+                "path": "ris-rm-2053-printt-ioss-information-to-notes",
+                "show-parent-label": false
               },
               {
-                "group": "Support",
-                "icon": "message-circle",
-                "pages": [
-                  {
-                    "title": "Intercom",
-                    "path": "integrations/intercom",
-                    "icon": "message-circle"
-                  },
-                  {
-                    "title": "Crisp",
-                    "path": "integrations/crisp",
-                    "icon": "message-square"
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "group": "Analytics",
-            "icon": "trending-up",
-            "expandable": true,
-            "pages": [
+                "title": "RIS-RM-2052 – Remove Extra from Additional Info",
+                "path": "ris-rm-2052-remove-extra-from-additional-info",
+                "show-parent-label": false
+              },
               {
-                "title": "Overview",
-                "path": "analytics/overview",
-                "icon": "bar-chart4-icon"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "Changelog",
-        "icon": "scroll",
-        "groups": [
-          {
-            "group": "Changelog",
-            "icon": "bell",
-            "expandable": false,
-            "pages": [
+                "title": "RIS-RM-2049 – Add Order Note Macro",
+                "path": "ris-rm-2049-add-order-note-macro",
+                "show-parent-label": false
+              },
               {
-                "title": "Changelog",
-                "path": "changelog",
-                "icon": "scroll",
+                "title": "RIS-RM-2044 – Split Order if Item is OOS",
+                "path": "ris-rm-2044-split-order-if-item-is-oos",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-2043 – Split Order Based on Item EP",
+                "path": "ris-rm-2043-split-order-based-on-item-ep",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-2042 – Add Last Name",
+                "path": "ris-rm-2042-add-last-name",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-2041 – Phone Number and Email ",
+                "path": "ris-rm-2041-phone-number-and-email",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-2038 – Reduce Open Order Value",
+                "path": "ris-rm-2038-reduce-open-order-value",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-2037 – ShippingProtection",
+                "path": "ris-rm-2037-shippingprotection",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-2034 – ReadFTPFile",
+                "path": "ris-rm-2034-readftpfile",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-2032 – GenericDropshipEmail ",
+                "path": "ris-rm-2032-genericdropshipemail",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-2298 – Split Every Macro",
+                "path": "ris-rm-2031-folderassignmentandorderitemaddition",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-2026 – OpenOrderInXMLFormat",
+                "path": "ris-rm-2026-openorderinxmlformat",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-2025 – IdentifierAssing",
+                "path": "ris-rm-2025-identifierassing",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-2024 –Metadata Processing Macro",
+                "path": "ris-rm-2024-Metadata",
+                "show-parent-label": false
+              },
+              {
+                "title": " RIS-RM-2022 – SaveNotefromOrderXML",
+                "path": " RIS-RM-2022 – SaveNotefromOrderXML",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-2023 – SuitcaseSplitOrderPackage",
+                "path": "ris-rm-2023-suitcasesplitorderpackage",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-2021 – AssignPaymentMethod",
+                "path": "ris-rm-2021-assignpaymentmethod",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-2020 – PackagingSelectionByLocationRulesEngine",
+                "path": "RIS-RM-2020 – PackagingSelectionByLocationRulesEngine",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-2016 – FolderAssignmentAndOrderItem",
+                "path": "RIS-RM-2016 – FolderAssignmentAndOrderItem",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-2014 – SampleAssignFolderToOneOrder",
+                "path": "ris-rm-2014-sampleassignfoldertooneorder",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-2013 – Auto Billing Details Update",
+                "path": "ris-rm-2013-auto-billing-details-update",
+                "show-parent-label": false
+              },
+              {
+                "title": " RIS-RM-2011 – Add Extended Property",
+                "path": "ris-rm-2011-add-extended-property",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-2010 – Ginger Pig Delete Order",
+                "path": "ris-rm-2010-ginger-pig-delete-order",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-2008 – Assign EP Open Order",
+                "path": "ris-rm-2008-assign-ep-open-order",
+                "show-parent-label": false
+              },
+              {
+                "title": " RIS-RM-2006 – Pair Bar Stool",
+                "path": "ris-rm-2006-pair-bar-stool",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-2005 – Desktop Macro",
+                "path": "ris-rm-2005-desktop-macro",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-2004 – Desktop To Dot Net Macro",
+                "path": "ris-rm-2004-desktop-to-dot-net-macro",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-2003 – Category Split Macro",
+                "path": "ris-rm-2003-category-split-macro",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-1030 – LowStockEmail",
+                "path": "ris-rm-1030-lowstockemail",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-1029 – Missing Phone Number",
+                "path": "ris-rm-1029-missingphonenumber",
+                "show-parent-label": false
+              },
+              {
+                "title": " RIS-RM-1028 – IOSS Note",
+                "path": "ris-rm-1028-iossnote",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-1027 – AssignPaymentMethodBySubsource",
+                "path": "ris-rm-1027-assignpaymentmethodbysubsource",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-1025 – SaturdayService",
+                "path": "ris-rm-1025-saturdayservice",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-1024 – SplitPackaging",
+                "path": "ris-rm-1024-splitpackaging",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-1023 – MarkNoteAsExternalRulesEngine",
+                "path": "ris-rm-1023-marknoteasexternalrulesengine",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-1020 – SufficientStockAllocation",
+                "path": "ris-rm-1020-sufficientstockallocation",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-1019 – PurchaseOrderCreation",
+                "path": "ris-rm-1019-purchaseordercreation",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-1018 – OrderIdentification",
+                "path": "ris-rm-1018-orderidentification",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-1014 – Create Note From XML",
+                "path": "ris-rm-1014-create-note-from-xml",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-1013 – Missing Phone Number and Email",
+                "path": "ris-rm-1013-missing-phone-number-and-email",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-1011 – Dispatch Date Change ",
+                "path": "ris-rm-1011-dispatch-date-change-fine-food-from-xml",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-1009 – Extract Node from XML",
+                "path": "ris-rm-1009-extract-node-from-xml",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-1007 – Dropship Macro",
+                "path": "ris-rm-1007-dropship",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-1006 – Additional Info Remove Macro ",
+                "path": "ris-rm-1006-additional-info-remove-macro",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-1004 – Set Cheapest Shipping Price",
+                "path": "ris-rm-1004-set-cheapest-shipping-price",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-1003 – Apply Discount If Order Item Value is Zero",
+                "path": "ris-rm-1003-apply-discount-if-order-item-value-is-zero",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-RM-1001 – Saturday Service by Date",
+                "path": "ris-rm-1001-saturday-service-by-date",
                 "show-parent-label": false
               }
-            ]
+            ],
+            "icon": "align-end-horizontal",
+            "public": false
+          },
+          {
+            "group": "Schedule Macro",
+            "pages": [
+              {
+                "title": "RIS-SM-2332 - User-Guide",
+                "path": "ris-sm-2332---user-guide",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-2332 - Automated Monitoring & Notification for Unfulfilled Marketplace Orders",
+                "path": "ris-sm-2332---automated-monitoring-notification-for-unfulfilled-marketplace-orders",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-2292 – Change Packaging Type",
+                "path": "ris-sm-2292-change-packaging-type-dynamic-packaging-override",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-2291 – Pick & Pack Automation",
+                "path": "ris-sm-2291-pick-pack-automation",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-2289 – Order Move to Stock Available Location",
+                "path": "ris-sm-2289-order-move-to-stock-available-location-multi-location-auto-move-logic",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-2283 – Auto PO Creation & Email",
+                "path": "ris-sm-2283-auto-po-creation-email",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-2270 – Change Country to UK",
+                "path": "ris-sm-2270-change-country-to-uk",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-2269 – Order Split Macro",
+                "path": "ris-sm-2269-order-split-macro-pod-stock-adjust-po-creation",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-2267 – Open Orders Report ",
+                "path": "ris-sm-2267-open-orders-report-excluding-unpaid",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-2210 – Printing Labels via SFTP to 3PL",
+                "path": "ris-sm-2210-printing-labels-via-sftp-to-3pl",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-2187 – Change Currency to PLN Macro",
+                "path": "ris-sm-2187-change-currency-to-pln",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-2186 – Print Shipping Label Macro",
+                "path": "ris-sm-2186-print-shipping-label-macro",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-2185 – Merge Orders Macro ",
+                "path": "ris-sm-2185-merge-orders-macro",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-2178 – Sales Overview Email",
+                "path": "ris-sm-2178-sales-overview-email",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-2145 – Get Price",
+                "path": "ris-sm-2145-get-price",
+                "show-parent-label": false
+              },
+              {
+                "title": " RIS-SM-2136 – Macro to Update Composite Bin Racks",
+                "path": "ris-sm-2136-macro-to-update-composite-bin-racks",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-2135 – Move Order to Location Schedule Macro",
+                "path": "ris-sm-2135-move-rkw-order-to-location-schedule-macro",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-2068 – Shipping Label Generate & Upload to FTP",
+                "path": "ris-sm-2068-shipping-label-generate-upload-to-ftp",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-2064 – Update Purchase Price Daily ",
+                "path": "ris-sm-2064-update-purchase-price-daily-gbp-conversion",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-2039 – Increase Open Order Value",
+                "path": "ris-sm-2039-increase-open-order-value",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-2036 – JSON TO CSV",
+                "path": "ris-sm-2036-utopiajson",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-2035 – ShippingLableInFTP",
+                "path": "ris-sm-2035-shippinglableinftp",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-2033 – InventoryUpdate",
+                "path": "ris-sm-2033-inventoryupdate",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-2030 – TaxBreakdown",
+                "path": "ris-sm-2030-taxbreakdown",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-2029 – OpenOrderMarkAsProcessed ",
+                "path": "ris-sm-2029-openordermarkasprocessed",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-2028 – ShippingErrorLabel",
+                "path": "ris-sm-2028-shippingerrorlabel",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-2027 – Order Sync Macro for Automated POS Sales Integration",
+                "path": "ris-sm-2027-vendhq",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-2019 – PackagingSelectionByLocation",
+                "path": "ris-sm-2019-packagingselectionbylocation",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-2017 – PrintShippingLabel",
+                "path": "ris-sm-2017-printshippinglabel",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-2015 – SetPrecentageOrder",
+                "path": "ris-sm-2015-setprecentageorder",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-2009 – Open Order CSV Labels",
+                "path": "ris-sm-2009-open-order-csv-funky-labels",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-2007 – Excel to CSV Convert",
+                "path": "ris-sm-2007-excel-to-csv-convert-by-killigans",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-1040 – AutoFileManifest",
+                "path": "ris-sm-1040-autofilemanifest",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-1035 – Update SKU Identifier ",
+                "path": "ris-sm-1035-update-sku-identifier"
+              },
+              {
+                "title": "RIS-SM-1026 – SendOpenOrderPrintToVirtualPrinter",
+                "path": "ris-sm-1026-sendopenorderprinttovirtualprinter",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-1022 – MarkNoteAsExternal",
+                "path": "ris-sm-1022-marknoteasexternal",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-1021 – SyncChannelDataManually",
+                "path": "ris-sm-1021-syncchanneldatamanually",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-1017 – ShippingLabelPrintToFTP",
+                "path": "ris-sm-1017-shippinglabelprinttoftp",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-1016 – MarkOrderProcessShippingLabelPrinted",
+                "path": "ris-sm-1016-markorderprocessshippinglabelprinted",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-1015 – Reduce Item Discount",
+                "path": "ris-sm-1015-reduceitemdiscount",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-1012 – Label Print in FTP",
+                "path": "ris-sm-1012-gls-label-print-in-ftp",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-1010 – FBA Transfer Macro",
+                "path": "ris-sm-1010-fba-transfer-macro",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-1008 – Weekly Stock Value Report",
+                "path": "ris-sm-1008-weekly-stock-value-report",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-1005 – Shipping Label Generate in FTP",
+                "path": "ris-sm-1005-shipping-label-generate-in-ftp",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-1005 – CNC Shipping Label Generate in FTP",
+                "path": "ris-sm-1005-cnc-shipping-label-generate-in-ftp",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SM-1002 – Auto Map Macro",
+                "path": "ris-sm-1002-auto-map-macro",
+                "show-parent-label": false
+              }
+            ],
+            "path": "macro",
+            "public": true
+          },
+          {
+            "group": "Script",
+            "pages": [
+              {
+                "title": "RIS-SC-2343 - Stocklevel",
+                "path": "ris-cs-2343---stocklevel",
+                "show-parent-label": false,
+                "public": false
+              },
+              {
+                "title": "RIS-CS- 2278-COGS REPORT",
+                "path": "ris--cs-2278--cogs-report",
+                "public": true,
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-2314-Purchase Order Status Report",
+                "path": "ris-sc-2314-purchase-order-po-status-report",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-2308 - Binrack Wise Stock Movement Report",
+                "path": "ris-sc-2308---binrack-wise-stock-movement-report",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-2301 - Product Sales Script",
+                "path": "ris-sc-2301---product-sales-script",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-2300 - Stock Item Audit",
+                "path": "ris-sc-2300---stock-item-audit",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-2288 – Scheduled Auto Print Label",
+                "path": "ris-sc-2288-scheduled-auto-print-label",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-2287 - Sales Data",
+                "path": "ris-sc-2287---sales-data",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-2277 - Processed Orders Tracking Report",
+                "path": "ris-sc-2277-processed-orders-tracking-report",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-2276 - Net Revenue Report",
+                "path": "ris-sc-2276---net-revenue-report",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-2275 – Purchase Order Delivery Time Report",
+                "path": "ris-sc-2275---purchase-order-delivery-time-report",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-2273 - Sales Stock Summary Report",
+                "path": "ris-sc-2273-sales-stock-summary-report",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-2272 - Detailed Stock Movement Data",
+                "path": "ris-sc-2272---detailed-stock-movement-data",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-PO- Open POs / Partial POs / Delivered Value Data",
+                "path": "ris-sc-2271---open-pos-/-partial-pos-/-delivered-value-data",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-2260 – Sales Value By Brand with SKU",
+                "path": "ris-sc-2260---sales-value-by-brand-with-sku",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-2258 – Printing Report",
+                "path": "ris-sc-2258--printing-report",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-2245 – SLAs & KPI Compliance Report",
+                "path": "ris-sc-2245-slas-kpi-compliance-report",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-2243 – Throughput & Capacity Planning Report",
+                "path": "ris-sc-2243-throughput-capacity-planning-report",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-2242 – Error & Exception Tracking Report",
+                "path": "ris-sc-2242-error-exception-tracking-report",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-2241 – Pickwave Efficiency Report",
+                "path": "ris-sc-2241-pickwave-efficiency-report",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-2240 – User Productivity Report",
+                "path": "ris-sc-2240-user-productivity-report",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-2197 – Monthly Sales Report Scrip",
+                "path": "ris-sc-2197-monthly-sales-report",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-2164 – Shipping Carrier CourierData",
+                "path": "ris-sc-2164-shipping-carrier-courierdata",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-2071 – Address Field Character Replacemen",
+                "path": "ris-sc-2071-address-field-character-replacement",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1044 – Multi-Channel Pricing Analysis",
+                "path": "ris-sc-1044-multi-channel-pricing-analysis",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1043 – Amazon SKU Mapping",
+                "path": "ris-sc-1043-amazon-subsource-sku-mapping",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1042 – Stock Item Channel SKU Pivot",
+                "path": "ris-sc-1042-stock-item-channel-sku-pivot",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1041 – Inventory Low Stock Report",
+                "path": "ris-sc-1041-inventory-low-stock-report",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1040 – Channel Listing Count Pivot",
+                "path": "ris-sc-1040-channel-listing-count-pivot",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1039 – Amazon MFN Sales Analysis",
+                "path": "ris-sc-1039-amazon-mfn-sales-analysis",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1038 – Scrap Report by Subsource and Date",
+                "path": "ris-sc-1038-scrap-report-by-subsource-and-date",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1037 – Evaluating eBay Variation Data",
+                "path": "ris-sc-1037-evaluating-ebay-variation-data",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1036 – Count of Paid Orders by Fulfillment Location",
+                "path": "ris-sc-1036-count-of-paid-orders-by-fulfillment-location",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1035 – Stock Item Extended Properties Pivot",
+                "path": "ris-sc-1035-stock-item-extended-properties-pivot",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1034 – Disabled Channel Exclusions Report",
+                "path": "ris-sc-1034-disabled-channel-exclusions-report",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1033 – Inconsistent TSIN and Barcode Report",
+                "path": "ris-sc-1033-inconsistent-tsin-and-barcode-report",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1032 – Multi-Shipment Tracking Report",
+                "path": "ris-sc-1032-multi-shipment-tracking-report",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1031 – Top 100 Selling Products Overview",
+                "path": "ris-sc-1031-top-100-selling-products-overview",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1030 – Column Search Results",
+                "path": "ris-sc-1030-column-search-results",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1029 – Top 500 Categories",
+                "path": "ris-sc-1029-top-500-categories-6-month-sales-analysis",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1028 – Channel Order Details",
+                "path": "ris-sc-1028-channel-order-details-date-range",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1027 – Unmapped Listings",
+                "path": "ris-sc-1027-unmapped-listings-all-channels",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1026 – Last Month Shipments Overview",
+                "path": "ris-sc-1026-last-month-ups-shipments-overview",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1025 – Recent x-days Prime Orders with Third-Party Carrier",
+                "path": "ris-sc-1025-recent-x-days-prime-orders-with-third-party-carrier",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1024 – Generate JSON Inventory Data ",
+                "path": "ris-sc-1024-generate-json-inventory-data",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1023 – Retrieve Linked Channel SKUs",
+                "path": "ris-sc-1023-retrieve-linked-channel-skus",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1022 – Scrap Order with Resend Booking Report",
+                "path": "ris-sc-1022-scrap-order-with-resend-booking-report",
+                "show-parent-label": false
+              },
+              {
+                "title": " RIS-SC-1021 – Retrieve Linked SKUs and Replace",
+                "path": "ris-sc-1021-retrieve-linked-skus-and-replace",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1020 – SKUs with Invalid Bin Rack",
+                "path": "ris-sc-1020-skus-with-invalid-bin-rack-in-aisle",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1019 – Inventory Sales Analysis by Category",
+                "path": "ris-sc-1019-inventory-sales-analysis-by-category",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1018 – SKU Composition Analysis",
+                "path": "ris-sc-1018-sku-composition-analysis",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1017 – FBA Shipment Task Details",
+                "path": "ris-sc-1017-fba-shipment-task-details",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1016 – SKU Details",
+                "path": "ris-sc-1016-sku-details-size-colour-and-quantity",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1015 – Channel Linking Report",
+                "path": "ris-sc-1015-channel-linking-report",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1013 – eBay Channel Linking Report",
+                "path": "ris-sc-1013-ebay-channel-linking-report",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1012 – Channel Inventory Aggregation by Source and Subsources",
+                "path": "ris-sc-1012-channel-inventory-aggregation-by-source-and-subsources",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1010 – Sales Analysis of Processed Orders",
+                "path": "ris-sc-1010-sales-analysis-of-processed-orders",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1009 – Active FBA Inventory Analysis",
+                "path": "ris-sc-1009-active-fba-inventory-analysis",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1008 – Product Commodity Codes",
+                "path": "ris-sc-1008-product-commodity-codes",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1007 – eBay Orders with Item Details",
+                "path": "ris-sc-1007-ebay-orders-with-item-details",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1006 – Stock Item Dimensions and Packaging",
+                "path": "ris-sc-1006-stock-item-dimensions-and-packaging",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1005 – Multi-Channel Price Comparison",
+                "path": "ris-sc-1005-multi-channel-price-comparison",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1004 – Channel Inventory Report by Location",
+                "path": "ris-sc-1004-channel-inventory-report-by-location",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1002 – Sales By Sub Source Channels",
+                "path": "ris-sc-1002-sales-by-sub-source-channels",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-SC-1001 – Order Invoice Printing History",
+                "path": "ris-sc-1001-order-invoice-printing-history",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-CS-2265 – Process Order Script",
+                "path": "ris-cs-2265---process-order-script",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-CS-2280 – Process Order Report",
+                "path": "ris--cs-2280--process-order-report",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-CS-2279 – Purchase Price Report",
+                "path": "ris--cs-2279-purchase-price-report",
+                "show-parent-label": false
+              }
+            ],
+            "icon": "align-center-horizontal",
+            "path": "scripts",
+            "public": false
+          },
+          {
+            "group": "Applications",
+            "pages": [
+              {
+                "title": "RIS-APP-2286 - Dashboard and Mobile App",
+                "path": "ris-app-2286---dashboard-and-mobile-app"
+              },
+              {
+                "title": "RIS-APP-2299-LoadingSheet",
+                "path": "ris-app-2299-loadingsheet",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-APP-2299-ManufecturingSheet2",
+                "path": "ris-app-2299-manufecturingsheet2",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-APP-2299-ManufecturingSheet1",
+                "path": "ris-app-2299",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-APP-2184-PO Automation",
+                "path": "ris-app-2184-po-automation",
+                "show-parent-label": false
+              },
+              {
+                "title": "SHOPWARE SHIPPING INTEGRATION",
+                "path": "shopware-shipping-integration",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-APP-2318-Evri 3PL Linnworks",
+                "path": "ris-app-2318---evri3pl-linnworks",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-APP-2310 AUTO EXPORT ORDER TO OTHER LINNWORKS",
+                "path": "ris-app-2310-spiral-auto-export-order-to-other-linnworks",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-APP-2306-Linnworks To Rithum Integration",
+                "path": "ris-app-2306-spiral-linnworks-linnworks-to-rithum-integration",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-APP-WEBFLOW INTEGRATION",
+                "path": "ris-app-2266",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-APP-2251- invoice macro automation",
+                "path": "ris-app-2251-macro-automation",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-APP-2221-Jushuitan integration ",
+                "path": "ris-app-2221-jushuitanintegration",
+                "show-parent-label": false
+              },
+              {
+                "title": "RIS-APP-2192-Linnworks -ActiveAnt",
+                "path": "ris-app-2192-linnworks",
+                "show-parent-label": false
+              }
+            ],
+            "icon": "alert-circle",
+            "public": false
+          },
+          {
+            "group": "All",
+            "pages": [
+              {
+                "title": "Stream Shipping Integration",
+                "path": "stream-shipping-integration"
+              },
+              {
+                "title": "Shopee Connector",
+                "path": "shopee-connector"
+              },
+              {
+                "title": "Quick Start",
+                "path": "quick-start"
+              },
+              {
+                "title": "Introduction",
+                "path": "introduction"
+              },
+              {
+                "title": "Integrations",
+                "path": "integrations"
+              },
+              {
+                "title": "Help Center",
+                "path": "help-center"
+              },
+              {
+                "title": "Features",
+                "path": "features"
+              },
+              {
+                "title": "Changelog",
+                "path": "changelog"
+              }
+            ],
+            "public": false
           }
-        ]
+        ],
+        "public": true
       },
       {
-        "tab": "Help",
-        "icon": "help-circle",
+        "tab": "Stream",
         "pages": [
           {
-            "title": "Contact Us",
-            "path": "help/contact-us",
-            "icon": "mail"
+            "title": "STREAM-KATANA NEW USER GUIDE",
+            "path": "stream-katana-new-user-guide",
+            "public": true
           },
           {
-            "title": "Community",
-            "path": "help/community",
-            "icon": "users"
+            "title": "STREAM-TECH NEW USER GUIDE",
+            "path": "stream-tech-new-user-guide",
+            "show-parent-label": false,
+            "public": true
           },
           {
-            "title": "Roadmap",
-            "href": "https://documentationai.featurebase.app/roadmap",
-            "icon": "globe"
+            "title": "STREAM-TECH 3.0",
+            "path": "stream-tech",
+            "show-parent-label": false,
+            "public": true
+          },
+          {
+            "title": "STREAM-KATANA",
+            "path": "stream-katana",
+            "show-parent-label": false,
+            "public": true
           }
-        ]
+        ],
+        "icon": "activity-square-icon",
+        "public": false
+      },
+      {
+        "tab": "Odoo",
+        "icon": "airplay-icon",
+        "groups": [
+          {
+            "group": "Sales",
+            "icon": "activity-square-icon",
+            "pages": [
+              {
+                "group": "CRM",
+                "pages": [
+                  {
+                    "group": "Organize the pipeline",
+                    "pages": [
+                      {
+                        "title": "Lost opportunities",
+                        "path": "lost-opportunities",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Merge similar leads and opportunities",
+                        "path": "merge-similar-leads-and-opportunities",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Manage sales teams",
+                        "path": "manage-sales-teams",
+                        "icon": "activity-square-icon"
+                      }
+                    ],
+                    "icon": "airplay-icon"
+                  },
+                  {
+                    "group": " Acquire leads",
+                    "pages": [
+                      {
+                        "title": "Convert leads into opportunities",
+                        "path": "convert-leads-into-opportunities",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Create opportunities from web contact forms",
+                        "path": "create-opportunities-from-web-contact-forms",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Create leads (from email or manually)",
+                        "path": "create-leads-from-email-or-manually",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Create and send quotations",
+                        "path": "create-and-send-quotations",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Lead mining",
+                        "path": "lead-mining",
+                        "icon": "activity-square-icon"
+                      }
+                    ],
+                    "icon": "airplay-icon"
+                  },
+                  {
+                    "group": " Assign and track leads",
+                    "pages": [
+                      {
+                        "title": "Assign leads with predictive lead scoring",
+                        "path": "assign-leads-with-predictive-lead-scoring",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Unattended leads report",
+                        "path": "unattended-leads-report",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Quality leads report",
+                        "path": "quality-leads-report",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Resellers",
+                        "path": "resellers",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Marketing attribution reports",
+                        "path": "marketing-attribution-reports",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Lead distribution report",
+                        "path": "lead-distribution-report",
+                        "icon": "activity-square-icon"
+                      }
+                    ],
+                    "icon": "airplay-icon"
+                  },
+                  {
+                    "group": " Analyze performance",
+                    "pages": [
+                      {
+                        "title": "Pipeline Analysis",
+                        "path": "pipeline-analysis",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Expected revenue report",
+                        "path": "expected-revenue-report",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Forecast report",
+                        "path": "forecast-report",
+                        "icon": "activity-square-icon"
+                      }
+                    ],
+                    "icon": "airplay-icon"
+                  },
+                  {
+                    "group": "Optimize your Day-to-Day work",
+                    "pages": [
+                      {
+                        "title": "Enrich contacts with partner autocomplete",
+                        "path": "enrich-contacts-with-partner-autocomplete",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "CRM Gamification",
+                        "path": "crm-gamification",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "CRM activities and activity plans",
+                        "path": "crm-activities-and-activity-plans",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Lead enrichment",
+                        "path": "lead-enrichment",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Membership / Partnership module",
+                        "path": "membership-/-partnership-module",
+                        "icon": "activity-square-icon"
+                      }
+                    ],
+                    "icon": "airplay-icon"
+                  }
+                ],
+                "icon": "album"
+              },
+              {
+                "group": "Sales",
+                "pages": [
+                  {
+                    "group": "Sales quotations",
+                    "pages": [
+                      {
+                        "title": "Create quotations",
+                        "path": "create-quotations",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Quotation templates",
+                        "path": "quotation-templates",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Margins",
+                        "path": "margins",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Optional products",
+                        "path": "optional-products",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Online signatures for order confirmations",
+                        "path": "online-signatures-for-order-confirmations",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Online payment order confirmation",
+                        "path": "online-payment-order-confirmation",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Quotation deadlines",
+                        "path": "quotation-deadlines",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Deliveries and invoices to different addresses",
+                        "path": "deliveries-and-invoices-to-different-addresses",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Product variants on quotations and sales orders",
+                        "path": "product-variants-on-quotations-and-sales-orders",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "PDF quote builder",
+                        "path": "pdf-quote-builder",
+                        "icon": "activity-square-icon"
+                      }
+                    ],
+                    "icon": "airplay-icon"
+                  },
+                  {
+                    "group": " Invoicing Method",
+                    "pages": [
+                      {
+                        "title": "Invoicing policies",
+                        "path": "invoicing-policies",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Down payments",
+                        "path": "down-payments",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Pro-forma invoices",
+                        "path": "pro-forma-invoices",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Invoicing based on time and materials",
+                        "path": "invoicing-based-on-time-and-materials",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Invoice project milestones",
+                        "path": "invoice-project-milestones",
+                        "icon": "activity-square-icon"
+                      }
+                    ],
+                    "icon": "airplay-icon"
+                  },
+                  {
+                    "group": " Products & Prices",
+                    "pages": [
+                      {
+                        "group": "Manage your products",
+                        "pages": [
+                          {
+                            "title": "Import products",
+                            "path": "import-products",
+                            "icon": "activity-square-icon"
+                          },
+                          {
+                            "title": "Product variants",
+                            "path": "product-variants",
+                            "icon": "activity-square-icon"
+                          },
+                          {
+                            "title": "Product images with Google Images",
+                            "path": "product-images-with-google-images",
+                            "icon": "activity-square-icon"
+                          }
+                        ],
+                        "icon": "align-center-vertical-icon"
+                      },
+                      {
+                        "group": "Manage your pricing",
+                        "pages": [
+                          {
+                            "title": "Pricelists",
+                            "path": "pricelists",
+                            "icon": "activity-square-icon"
+                          },
+                          {
+                            "title": "Foreign currencies",
+                            "path": "foreign-currencies",
+                            "icon": "activity-square-icon"
+                          },
+                          {
+                            "title": "Discounts",
+                            "path": "discounts",
+                            "icon": "activity-square-icon"
+                          }
+                        ],
+                        "icon": "airplay-icon"
+                      },
+                      {
+                        "title": "Returns and refunds",
+                        "path": "returns-and-refunds",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Use eWallets and gift cards",
+                        "path": "use-ewallets-and-gift-cards",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Discount and loyalty programs",
+                        "path": "discount-and-loyalty-programs",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Commissions",
+                        "path": "commissions",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "group": "Amazon Connector",
+                        "pages": [
+                          {
+                            "title": "Amazon Connector features",
+                            "path": "amazon-connector-features",
+                            "icon": "activity-square-icon"
+                          },
+                          {
+                            "title": "Amazon Connector configuration",
+                            "path": "amazon-connector-configuration",
+                            "icon": "activity-square-icon"
+                          },
+                          {
+                            "title": "Amazon order management",
+                            "path": "amazon-order-management",
+                            "icon": "activity-square-icon"
+                          },
+                          {
+                            "title": "Tracking lot or serial number products with FBA orders",
+                            "path": "tracking-lot-or-serial-number-products-with-fba-orders",
+                            "icon": "activity-square-icon"
+                          }
+                        ],
+                        "icon": "airplay-icon"
+                      },
+                      {
+                        "group": "Shopee Connector",
+                        "pages": [
+                          {
+                            "title": "Shopee Connector configuration",
+                            "path": "shopee-connector-configuration",
+                            "icon": "activity-square-icon"
+                          },
+                          {
+                            "title": "Shopee order management",
+                            "path": "shopee-order-management",
+                            "icon": "activity-square-icon"
+                          }
+                        ],
+                        "icon": "airplay-icon"
+                      },
+                      {
+                        "group": "Lazada Connector",
+                        "pages": [
+                          {
+                            "title": "Lazada Connector features",
+                            "path": "lazada-connector-features",
+                            "icon": "activity-square-icon"
+                          },
+                          {
+                            "title": "Lazada Connector configuration",
+                            "path": "lazada-connector-configuration",
+                            "icon": "activity-square-icon"
+                          },
+                          {
+                            "title": "Lazada order management",
+                            "path": "lazada-order-management",
+                            "icon": "activity-square-icon"
+                          }
+                        ],
+                        "icon": "airplay-icon"
+                      },
+                      {
+                        "title": "Gelato",
+                        "path": "gelato",
+                        "icon": "activity-square-icon"
+                      }
+                    ],
+                    "icon": "airplay-icon"
+                  }
+                ],
+                "icon": "album-icon"
+              },
+              {
+                "group": "Point of Sale",
+                "pages": [
+                  {
+                    "group": "Use",
+                    "pages": [
+                      {
+                        "title": "Invoices",
+                        "path": "invoices",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Receipts",
+                        "path": "receipts",
+                        "icon": "activity-square-icon"
+                      }
+                    ],
+                    "icon": "airplay-icon"
+                  },
+                  {
+                    "title": "Products",
+                    "path": "products",
+                    "icon": "activity-square-icon"
+                  },
+                  {
+                    "group": "Hardware and network",
+                    "pages": [
+                      {
+                        "title": "Local Network Access",
+                        "path": "local-network-access",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "IoT system connection",
+                        "path": "iot-system-connection",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Receipt printers",
+                        "path": "receipt-printers",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Electronic shelf labels",
+                        "path": "electronic-shelf-labels",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Customer display",
+                        "path": "customer-display",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Scale",
+                        "path": "scale",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Self-signed certificate for ePOS printers",
+                        "path": "self-signed-certificate-for-epos-printers",
+                        "icon": "activity-square-icon"
+                      }
+                    ],
+                    "icon": "airplay-icon"
+                  },
+                  {
+                    "title": "Shop features",
+                    "path": "shop-features",
+                    "icon": "activity-square-icon"
+                  },
+                  {
+                    "group": "Restaurant features",
+                    "pages": [
+                      {
+                        "title": "Online food delivery",
+                        "path": "online-food-delivery",
+                        "icon": "activity-square-icon"
+                      }
+                    ],
+                    "icon": "airplay-icon"
+                  },
+                  {
+                    "group": "Extra features",
+                    "pages": [
+                      {
+                        "title": "Multi-employee management",
+                        "path": "multi-employee-management",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Preparation display",
+                        "path": "preparation-display",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Self-ordering",
+                        "path": "self-ordering",
+                        "icon": "activity-square-icon"
+                      },
+                      {
+                        "title": "Pricing features",
+                        "path": "pricing-features",
+                        "icon": "activity-square-icon"
+                      }
+                    ],
+                    "icon": "airplay-icon"
+                  },
+                  {
+                    "group": "Payment methods",
+                    "pages": [
+                      {
+                        "group": "Cash machines",
+                        "pages": [
+                          {
+                            "title": "Glory",
+                            "path": "glory",
+                            "icon": "activity-square-icon"
+                          }
+                        ],
+                        "icon": "activity-square-icon"
+                      }
+                    ],
+                    "icon": "airplay-icon"
+                  }
+                ],
+                "icon": "album-icon"
+              }
+            ]
+          }
+        ],
+        "public": true
       }
     ]
   },
-  "seo": {
-    "robots:index": true,
-    "robots:follow": true
-  },
-  "favicon": "https://blob-cdn.documentation.ai/org-53a37986-2c9e-4094-b9e8-1e1ffae9e9ee/doc-b389b141-ae58-4fd5-91f9-6702fae9ac58/1763647259799-dvpow3xiipa-doc-favicon-dark.png",
-  "logo-dark": "https://blob-cdn.documentation.ai/org-53a37986-2c9e-4094-b9e8-1e1ffae9e9ee/doc-b389b141-ae58-4fd5-91f9-6702fae9ac58/1767703540306-1ow538yjggl-logo_dark_mode.svg?q=85&fm=auto&auto=compress%2Cformat",
-  "logo-light": "https://blob-cdn.documentation.ai/org-53a37986-2c9e-4094-b9e8-1e1ffae9e9ee/doc-b389b141-ae58-4fd5-91f9-6702fae9ac58/1767703565522-24h54tbc4tf-logo_light_mode.svg?q=85&fm=auto&auto=compress%2Cformat",
-  "ai": {
-    "page-actions": [
-      "copy",
-      "view",
-      "claude",
-      "chatgpt",
-      "perplexity",
-      "grok",
-      "mcp"
-    ]
-  },
   "integrations": {
+    "ga4": {
+      "measurementId": "G-WV5RKWP1P6"
+    },
     "gtm": {
-      "tagId": "GTM-NDB4L6DV"
+      "tagId": "GTM-NWGN9M2"
+    },
+    "clarity": {
+      "projectId": "wbf0okanzm"
     }
-  },
-  "redirects": [
-    {
-      "source": "/integrations-and-workflows/github-integration",
-      "destination": "/integrations/github"
-    },
-    {
-      "source": "/integrations-and-workflows",
-      "destination": "/integrations/overview"
-    },
-    {
-      "source": "/integrations-and-workflows/overview",
-      "destination": "/integrations/overview"
-    },
-    {
-      "source": "/integrations-and-workflows/analytics-and-chat",
-      "destination": "/integrations/overview"
-    },
-    {
-      "source": "/integrations-and-workflows/google-tag-manager",
-      "destination": "/integrations/google-tag-manager"
-    },
-    {
-      "source": "/integrations-and-workflows/google-analytics",
-      "destination": "/integrations/google-analytics"
-    },
-    {
-      "source": "/integrations-and-workflows/posthog",
-      "destination": "/integrations/posthog"
-    },
-    {
-      "source": "/integrations-and-workflows/amplitude",
-      "destination": "/integrations/amplitude"
-    },
-    {
-      "source": "/integrations-and-workflows/mixpanel",
-      "destination": "/integrations/mixpanel"
-    },
-    {
-      "source": "/integrations-and-workflows/segment",
-      "destination": "/integrations/segment"
-    },
-    {
-      "source": "/integrations-and-workflows/heap",
-      "destination": "/integrations/heap"
-    },
-    {
-      "source": "/integrations-and-workflows/plausible",
-      "destination": "/integrations/plausible"
-    },
-    {
-      "source": "/integrations-and-workflows/fathom",
-      "destination": "/integrations/fathom"
-    },
-    {
-      "source": "/integrations-and-workflows/pirsch",
-      "destination": "/integrations/pirsch"
-    },
-    {
-      "source": "/integrations-and-workflows/hotjar",
-      "destination": "/integrations/hotjar"
-    },
-    {
-      "source": "/integrations-and-workflows/clarity",
-      "destination": "/integrations/clarity"
-    },
-    {
-      "source": "/integrations-and-workflows/clearbit",
-      "destination": "/integrations/clearbit"
-    },
-    {
-      "source": "/integrations-and-workflows/logrocket",
-      "destination": "/integrations/logrocket"
-    },
-    {
-      "source": "/integrations-and-workflows/hightouch",
-      "destination": "/integrations/hightouch"
-    },
-    {
-      "source": "/integrations-and-workflows/intercom",
-      "destination": "/integrations/intercom"
-    },
-    {
-      "source": "/integrations-and-workflows/crisp",
-      "destination": "/integrations/crisp"
-    },
-    {
-      "source": "/integrations-and-workflows/gitlab-integration",
-      "destination": "/integrations/gitlab-integration"
-    },
-    {
-      "source": "/integrations-and-workflows/slack-notifications",
-      "destination": "/integrations/slack-notifications"
-    },
-    {
-      "source": "/integrations-and-workflows/zapier-integration",
-      "destination": "/integrations/zapier-integration"
-    },
-    {
-      "source": "/integrations-and-workflows/webhook-setup",
-      "destination": "/integrations/webhook-setup"
-    },
-    {
-      "source": "/integrations-and-workflows/issue-trackers",
-      "destination": "/integrations/issue-trackers"
-    },
-    {
-      "source": "/integrations-and-workflows/third-party-tools",
-      "destination": "/integrations/third-party-tools"
-    },
-    {
-      "source": "/integrations-and-workflows/analytics-integration",
-      "destination": "/integrations/analytics-integration"
-    },
-    {
-      "source": "/customize/access-control",
-      "destination": "/customize/access-control/overview"
-    },
-    {
-      "source": "/components/collection",
-      "destination": "/components/collection-list"
-    }
-  ]
+  }
 }

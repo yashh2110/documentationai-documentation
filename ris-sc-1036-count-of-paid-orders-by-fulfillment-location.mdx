@@ -1,0 +1,139 @@
+---
+title: Count of Paid Orders by Fulfillment Location
+description: >-
+  Counts paid orders and categorizes them by fulfillment type and shipping method.
+---
+## Overview
+
+The **RIS-SC-1036 – Count of Paid Orders by Fulfillment Location** script helps analysts understand the distribution of paid orders across different fulfillment types and shipping methods.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  See how many paid orders fall into each fulfillment category.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Counts paid orders  
+- Categorizes orders by fulfillment type (TS Prime, WD Prime, Premium, Standard)  
+- Summarizes totals for each category  
+- Helps monitor fulfillment distribution  
+
+---
+
+## When It Runs
+
+Used for daily order analysis, performance tracking, and reporting.
+
+**Typically runs:**
+
+- Manually executed by analysts  
+- During daily order reviews  
+- While tracking fulfillment performance  
+- For shipping strategy and management reporting  
+
+---
+
+## Parameters
+
+<ParamField path="None" param-type="none" required="false" deprecated="false">
+The script uses predefined categorization logic and does not require any manual input.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Fixed rules are applied for order categorization based on fulfillment type and shipping method.
+</Callout>
+
+---
+
+## Simple Explanation
+
+The script collects all paid orders, identifies their fulfillment type (TS Prime, WD Prime, Premium, Standard), and counts the number of orders in each category to provide operational insight.
+
+---
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Filter Paid Orders" icon="filter" title-type="p">
+    Select orders with paid status.
+  </Step>
+
+  <Step title="Collect Base Data" icon="database" title-type="p">
+    Prepare the dataset of all paid orders.
+  </Step>
+
+  <Step title="Identify TS Prime Orders" icon="star" title-type="p">
+    Filter Prime orders originating from the Trimming Shop.
+  </Step>
+
+  <Step title="Identify WD Prime Orders" icon="star" title-type="p">
+    Filter Prime orders from other channels (non-Trimming Shop).
+  </Step>
+
+  <Step title="Identify Premium Orders" icon="premium" title-type="p">
+    Select non-Prime orders using premium carriers.
+  </Step>
+
+  <Step title="Identify Standard Orders" icon="package" title-type="p">
+    Select remaining non-Prime orders.
+  </Step>
+
+  <Step title="Filter by Location" icon="map" title-type="p">
+    Include only orders from the default warehouse location.
+  </Step>
+
+  <Step title="Calculate Counts" icon="calculator" title-type="p">
+    Aggregate total orders per fulfillment category.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+The report contains:
+
+- Total orders  
+- TS Prime orders  
+- WD Prime orders  
+- Premium orders  
+- Standard orders
+</Callout>
+
+---
+
+## Usefulness
+
+- **Operational Insights** – Understand distribution of paid orders  
+- **Fulfillment Planning** – Allocate resources efficiently  
+- **Performance Monitoring** – Track Prime vs Standard order counts  
+- **Shipping Optimization** – Analyze carrier usage and impact  
+
+---
+
+## Example Scenario
+
+<Expandable title="Daily Fulfillment Review Example" default-open="false">
+**Scenario:** Daily fulfillment review  
+
+- Total orders: 500  
+- TS Prime: 200  
+- WD Prime: 100  
+- Premium: 120  
+- Standard: 80  
+
+**Insight:**  
+Prime orders require faster processing, Premium shipments may increase costs, and Standard orders can be optimized for efficiency.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+By categorizing and counting paid orders based on fulfillment type, this script provides clear visibility into order distribution, improving operational planning, shipping strategy, and overall efficiency.
+</Callout>

@@ -1,0 +1,149 @@
+---
+title: Shipping Protection Adjustment
+description: >-
+  Convert shipping protection items into shipping cost by removing the SKU and
+  adding its value to the order’s shipping charge for cleaner order handling.
+---
+## Overview
+
+The **RIS-RM-2037 – ShippingProtection** macro adjusts orders by removing shipping protection items and merging their cost into the shipping charge.
+
+It ensures that protection charges are handled as part of shipping rather than as separate products, improving order clarity and accounting.
+
+<Callout kind="tip" collapsed="false">
+  Ensure the correct protection SKU is provided before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Identifies shipping protection items  
+- Transfers their cost into shipping charges  
+- Removes the protection SKU from the order  
+
+👉 In short:  
+Convert protection item → add cost to shipping → remove item.
+
+## When It Runs
+
+Used for order cleanup and shipping adjustment
+
+Typically runs:
+
+- During order processing  
+- Manually triggered  
+- Before dispatch or fulfilment  
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of orders to process.
+</ParamField>
+
+<ParamField path="SKU" param-type="string" required="true" deprecated="false">
+  Shipping protection item SKU to identify and process.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Both OrderIds and SKU must be provided for the macro to function correctly.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Process Orders" icon="list" title-type="p">
+    Iterate through each order provided in OrderIds.
+  </Step>
+
+  <Step title="Fetch Order Details" icon="download" title-type="p">
+    Retrieve full order details including items and shipping information.
+  </Step>
+
+  <Step title="Identify Protection Item" icon="search" title-type="p">
+    Check if any order item matches the provided protection SKU.
+  </Step>
+
+  <Step title="Capture Protection Cost" icon="save" title-type="p">
+    Store the cost of the protection item as an extended property for tracking.
+  </Step>
+
+  <Step title="Update Shipping Cost" icon="truck" title-type="p">
+    Add the protection item cost to the existing shipping charge.
+  </Step>
+
+  <Step title="Apply Order Updates" icon="check-circle" title-type="p">
+    Save updated shipping information back to the order.
+  </Step>
+
+  <Step title="Remove Protection Item" icon="trash" title-type="p">
+    Delete the protection SKU from the order items list.
+  </Step>
+
+  <Step title="Log Execution" icon="file-text" title-type="p">
+    Record processing details, success, and any errors.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Protection SKU removed from order  
+
+  - Shipping cost updated with protection value  
+
+  - Cost stored for tracking purposes  
+
+  - Order structure simplified for processing  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Simplifying order structure  
+- Improving shipping cost accuracy  
+- Enhancing accounting clarity  
+- Reducing unnecessary items in picking  
+- Streamlining warehouse operations  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - SKU must match exactly  
+
+  - Existing shipping cost is increased (not replaced)  
+
+  - No duplicate check for extended property  
+
+  - No rollback if process fails midway  
+
+  - Runs per order, which may impact performance for large batches  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Shipping Protection Handling Example" default-open="false">
+  An order contains:
+
+  - Product A → £50  
+  - Shipping Protection SKU → £5  
+  - Shipping Cost → £10  
+
+  👉 The macro:
+
+  - Removes protection SKU  
+  - Adds £5 to shipping  
+
+  Result:
+
+  - Product A → £50  
+  - Shipping Cost → £15  
+  - Cleaner order with no extra SKU  
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By embedding protection costs into shipping and removing redundant items, this macro ensures cleaner order data, better accounting accuracy, and smoother warehouse operations.
+</Callout>

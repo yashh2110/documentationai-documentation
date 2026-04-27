@@ -1,0 +1,136 @@
+---
+title: Assign Folder & Add Additional Items
+description: >-
+  Automatically add additional items to orders based on extended properties and
+  group matching orders into a predefined folder for easier processing.
+---
+## Overview
+
+The **RIS-RM-2014 – SampleAssignFolderToOneOrder** macro enhances order processing by adding additional items (based on item extended properties) and grouping similar orders into a folder.
+
+It helps identify related orders and prepares them for merging or further processing.
+
+<Callout kind="tip" collapsed="false">
+  Ensure item extended properties (AdditonalItem1 / AdditonalItem2) are correctly configured before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Reads item extended properties  
+- Adds additional items to orders  
+- Identifies matching orders based on address and customer details  
+- Assigns orders to a predefined folder  
+
+👉 In short:  
+Add extra items and group similar orders into a folder for processing.
+
+## When It Runs
+
+Used for order grouping and enhancement
+
+Typically runs:
+
+- Manually triggered (on selected orders)  
+- During order processing workflows  
+- For merge or consolidation logic  
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of order IDs to process.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Note:  
+  Folder name is fixed as **"Possible Merge Orders"** and is automatically created if it does not exist.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Fetch Open Orders" icon="download" title-type="p">
+    Retrieve all open orders for comparison.
+  </Step>
+
+  <Step title="Process Selected Orders" icon="list" title-type="p">
+    Loop through each OrderId and fetch detailed order data.
+  </Step>
+
+  <Step title="Read Extended Properties" icon="settings" title-type="p">
+    Check item-level properties such as AdditonalItem1 and AdditonalItem2.
+  </Step>
+
+  <Step title="Add Additional Items" icon="plus-circle" title-type="p">
+    Extract SKU from properties and add item to order (Quantity = 1).
+  </Step>
+
+  <Step title="Match Orders" icon="search" title-type="p">
+    Compare orders using:
+    - Address (Address1–3, Town, PostCode, Country)  
+    - Customer Name  
+  </Step>
+
+  <Step title="Group Matching Orders" icon="layers" title-type="p">
+    Collect all matching orders into a group.
+  </Step>
+
+  <Step title="Assign Folder" icon="folder" title-type="p">
+    Assign orders to folder: "Possible Merge Orders"  
+    (Created automatically if not existing)
+  </Step>
+
+  <Step title="Log Results" icon="file-text" title-type="p">
+    Record execution details including added items and grouped orders.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Additional items added to orders  
+  - Matching orders identified successfully  
+  - Orders grouped into "Possible Merge Orders" folder  
+  - Execution logs available for tracking  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Automating bundle or add-on item logic  
+- Identifying duplicate or mergeable orders  
+- Organizing orders for efficient processing  
+- Reducing manual effort in order management  
+- Supporting order consolidation workflows  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Works only if extended properties (AdditonalItem1/2) exist  
+  - Address matching is strict (case-insensitive but exact)  
+  - May add duplicate items if executed multiple times  
+  - Folder is auto-created if not present  
+  - Additional items are always added with quantity = 1  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Group Similar Orders for Merge" default-open="false">
+  Multiple orders from the same customer have identical addresses.
+
+  👉 The macro:
+
+  - Adds additional items based on extended properties  
+  - Identifies matching orders  
+  - Groups them into "Possible Merge Orders" folder  
+
+  Result: Orders are organized and ready for merging or combined processing.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Combining item-level automation with address-based grouping enables efficient order consolidation, improves workflow organization, and reduces operational complexity.
+</Callout>

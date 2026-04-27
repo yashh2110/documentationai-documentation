@@ -1,0 +1,158 @@
+---
+title: Split Order if Item is Out Of Stock (OOS)
+description: >-
+  Automatically split orders based on item stock availability, separating in-stock and out-of-stock items, and tagging OOS orders for proper fulfillment handling.
+---
+
+## Overview
+
+The **RIS-RM-2044 – Split Order if Item is OOS** macro evaluates stock levels for each order item and splits orders accordingly.  
+
+Items that are in-stock remain in the original order, while out-of-stock (OOS) items are moved to a new order and tagged for visibility.
+
+<Callout kind="tip" collapsed="false">
+  Ensure stock data is accurate and extended property configuration is set before executing this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Checks stock levels of order items  
+- Splits orders into in-stock and OOS items  
+- Adds notes and identifiers to OOS orders  
+- Prevents duplicate processing with an execution flag  
+
+👉 In short:  
+Smartly separate available and unavailable items for optimized fulfillment.
+
+## When It Runs
+
+Used for order processing and fulfillment optimization  
+
+Typically runs:
+
+- During order processing  
+- Manual execution  
+- Before picking or shipping stage  
+- When stock accuracy is critical  
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of orders to process.
+</ParamField>
+
+## How It Works
+
+<Steps>
+  <Step title="Start Macro" icon="play-circle" title-type="p">
+    Loop through all provided OrderIds and log order numbers.
+  </Step>
+
+  <Step title="Prevent Duplicate Execution" icon="alert-circle" title-type="p">
+    Check Extended Property `HeroesincMacroRun = YES`.  
+    If exists → skip order; otherwise → continue processing.
+  </Step>
+
+  <Step title="Fetch Order & Stock Info" icon="download" title-type="p">
+    Get order details and items.  
+    Identify fulfillment location.  
+    For each item → fetch stock using stock API.
+  </Step>
+
+  <Step title="Classify Items" icon="layers" title-type="p">
+    Categorize items:
+    - ✅ Fully Available: Stock ≥ ordered quantity → add to availableItems  
+    - ❌ Fully Out of Stock: Stock ≤ 0 → add to outOfStockItems  
+    - ⚠️ Partially Available: Split item into available and unavailable quantities
+  </Step>
+
+  <Step title="Decide Split Behavior" icon="check-circle" title-type="p">
+    Cases:
+    - Mixed Items (Available + OOS): Split order  
+      - Original → in-stock items  
+      - New order → OOS items  
+    - All Items OOS: No split; add note & assign identifier `OUT OF STOCK!`  
+    - All Items In Stock: No split required
+  </Step>
+
+  <Step title="Create Split Orders" icon="split" title-type="p">
+    Build `OrderSplit` objects including Quantity, UnitCost, Weight, RowId.  
+    Execute split to generate new orders.
+  </Step>
+
+  <Step title="Process Split Orders" icon="edit" title-type="p">
+    For each new order:
+    - OOS Order: Add note `"Split from original Order ID: XXX - This order contains out-of-stock items"` and assign identifier `OUT OF STOCK!`  
+    - In-stock Order: Add note `"Split from original Order ID: XXX - This order contains in-stock items"`
+  </Step>
+
+  <Step title="Add Execution Flag" icon="flag" title-type="p">
+    Add Extended Property: `HeroesincMacroRun = YES` to prevent duplicate processing.
+  </Step>
+
+  <Step title="Logging" icon="file-text" title-type="p">
+    Log:
+    - Macro start/end  
+    - Order numbers  
+    - Stock values  
+    - Split results  
+    - Errors
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Orders split based on stock availability  
+  - In-stock items ready for immediate fulfillment  
+  - Out-of-stock items separated and tagged  
+  - Duplicate execution prevented
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Enabling partial order fulfillment  
+- Improving warehouse efficiency  
+- Avoiding delays for available items  
+- Providing clear visibility of OOS items  
+- Supporting backorder and supplier workflows  
+- Preventing duplicate processing
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Relies on accurate stock levels  
+  - Handles partial stock scenarios intelligently  
+  - Adds identifiers and notes for clarity  
+  - Extended property prevents reprocessing  
+  - Splitting increases number of orders  
+  - Must be aligned with fulfillment workflows
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Split Orders for OOS Items" default-open="false">
+  Item | Ordered Qty | Stock  
+  --- | --- | ---  
+  Item A | 5 | 5  
+  Item B | 3 | 0  
+
+  👉 The macro:
+
+  - Splits orders based on availability  
+  - Adds notes and OOS identifier  
+
+  Result:  
+  - Order 1 (Original) → Item A (5 qty) ✅ Ready to ship  
+  - Order 2 (Split) → Item B (3 qty) ❌ Tagged: OUT OF STOCK! 📝 Note added
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Automating stock-based order splitting ensures faster fulfillment for in-stock items while isolating out-of-stock items for backorder or supplier handling, and prevents duplicate processing.
+</Callout>

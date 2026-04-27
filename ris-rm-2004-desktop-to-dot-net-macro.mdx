@@ -1,0 +1,158 @@
+---
+title: Desktop To Dot Net Macro
+description: >-
+  Automatically assign packaging type and shipping service based on item count
+  and product configuration.
+---
+## Overview
+
+The **RIS-RM-2004 – Desktop To Dot Net Macro** automatically assigns the appropriate packaging type and shipping service to orders.
+
+It evaluates item quantity and product configuration to determine the correct packaging group, dimensions, weight, and shipping method.
+
+<Callout kind="tip" collapsed="false">
+  Ensure product extended properties (e.g., Shipping Type) and packaging mappings are correctly configured for accurate results.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Evaluates order item quantity
+
+- Determines packaging type dynamically
+
+- Assigns appropriate shipping service
+
+👉 In short:\
+Automatically decide packaging and shipping based on order contents.
+
+## When It Runs
+
+Used for packaging automation & shipping optimization
+
+Typically runs:
+
+- Manually triggered
+
+- During order processing (before picking & shipping)
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of orders to be processed.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  No additional parameters are required.\
+  The macro automatically determines packaging and shipping based on order data.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Calculate Item Quantity" icon="calculator" title-type="p">
+    Determine total number of items in the order.
+  </Step>
+
+  <Step title="Handle Single Item Orders" icon="box" title-type="p">
+    Apply predefined packaging and shipping service directly.
+  </Step>
+
+  <Step title="Evaluate Multi-Item Orders" icon="layers" title-type="p">
+    Read product extended properties for all items.
+  </Step>
+
+  <Step title="Check Shipping Type" icon="search" title-type="p">
+    Identify if items are marked as Automatic or Manual.
+  </Step>
+
+  <Step title="Apply Packaging Rules" icon="package" title-type="p">
+    Apply packaging based on item count and shipping type rules.
+  </Step>
+
+  <Step title="Set Packaging Group" icon="box" title-type="p">
+    Assign packaging group along with dimensions and weight.
+  </Step>
+
+  <Step title="Assign Shipping Service" icon="truck" title-type="p">
+    Apply the appropriate shipping service based on selected packaging.
+  </Step>
+</Steps>
+
+## Packaging & Shipping Rules
+
+<Callout kind="info" collapsed="false">
+  Automatic Items:
+
+  - 2–5 items → Small package + standard service
+
+  - 6–8 items → Medium package + faster service
+
+  - 9–26 items → Large package + priority service
+
+  - 27+ items → Default/manual packaging
+
+  Manual Items:
+
+  - Default packaging with manual handling
+</Callout>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Packaging type assigned automatically
+
+  - Shipping service applied based on rules
+
+  - No manual intervention required
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Saving time in order processing
+
+- Standardising packaging decisions
+
+- Reducing human errors
+
+- Improving shipping efficiency
+
+- Enabling scalable automation
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Single-item orders use predefined mappings
+
+  - Multi-item orders depend on Shipping Type property
+
+  - Default packaging is used if data is missing
+
+  - Requires proper configuration of products, packaging groups, and shipping services
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Automatic Packaging Assignment Example" default-open="false">
+  An order contains 7 items marked as Automatic.
+
+  👉 The macro:
+
+  - Identifies item count (6–8 range)
+
+  - Selects Medium packaging
+
+  - Applies faster shipping service
+
+  Result: Order is processed with correct packaging and delivery method.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Combining item quantity with product-level configuration allows this macro to automate packaging and shipping decisions efficiently, ensuring consistency and scalability.
+</Callout>
+

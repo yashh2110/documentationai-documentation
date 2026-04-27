@@ -1,0 +1,186 @@
+---
+title: Order Split Macro (POD + Stock Adjust + PO Creation)
+description: >-
+  Automate handling of mixed orders by splitting POD items, adjusting stock for
+  non-POD items, moving POD orders to a dedicated location, and creating
+  purchase orders.
+---
+## Overview
+
+The **RIS-SM-2269 – Order Split Macro (POD + Stock Adjust + PO Creation)** macro streamlines complex order handling by separating POD and non-POD items, managing stock, routing orders, and automating procurement.
+
+<Callout kind="tip" collapsed="false">
+  Use this macro for EU POD workflows to ensure correct fulfillment routing and automated supplier ordering.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Splits POD items into separate orders
+
+- Adjusts stock for non-POD items
+
+- Moves POD orders to a dedicated location
+
+- Automatically creates purchase orders
+
+- Tags processed orders to avoid duplication
+
+👉 In short:\
+Split POD → adjust stock → move orders → create PO → tag.
+
+## When It Runs
+
+Typically executed:
+
+- After order import
+
+- Before order processing
+
+- For EU POD orders
+
+- Handling mixed orders (POD + non-POD)
+
+- During automated procurement workflows
+
+- Manually or via automation
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="GUID[]" required="true" deprecated="false">
+  List of orders to process.
+</ParamField>
+
+<ParamField path="SourceLocation" param-type="string" required="true" deprecated="false">
+  Main warehouse location.
+</ParamField>
+
+<ParamField path="PodLocation" param-type="string" required="true" deprecated="false">
+  POD fulfillment location.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Example:\
+  OrderIds = \[Order1, Order2]\
+  SourceLocation = "Main Warehouse"\
+  PodLocation = "POD Warehouse"
+</Callout>
+
+## Simple Explanation
+
+The macro processes each order, separates POD items, adjusts stock for regular items, moves POD orders to a dedicated warehouse, creates purchase orders for POD items, and tags the order.
+
+## Step-by-Step Flow
+
+<Steps>
+  <Step title="Start Macro" icon="play" title-type="p">
+    Log execution start and validate input orders.
+  </Step>
+
+  <Step title="Cache Locations" icon="map" title-type="p">
+    Fetch all warehouse locations and map Source and POD locations.
+  </Step>
+
+  <Step title="Loop Through Orders" icon="list" title-type="p">
+    Remove duplicates and process each order individually.
+  </Step>
+
+  <Step title="Skip Processed Orders" icon="skip-forward" title-type="p">
+    Check identifier "pod\_macro\_ran". Skip if already processed.
+  </Step>
+
+  <Step title="Validate Location" icon="check-circle" title-type="p">
+    Ensure order belongs to SourceLocation. Skip if mismatch.
+  </Step>
+
+  <Step title="Identify POD Items" icon="search" title-type="p">
+    Detect POD items using title pattern and split into:
+  </Step>
+
+  <Step title="Validate Suppliers" icon="shield" title-type="p">
+    Ensure POD items have supplier mapping. Validate composite child items.
+  </Step>
+
+  <Step title="Stock Adjustment (Non-POD)" icon="package" title-type="p">
+    Adjust stock based on availability:
+  </Step>
+
+  <Step title="POD Handling" icon="layers" title-type="p">
+    Only POD Orders:
+
+    Mixed Orders:
+  </Step>
+
+  <Step title="Create Purchase Order" icon="shopping-cart" title-type="p">
+    Generate PO using POD items:
+  </Step>
+
+  <Step title="Add Notes" icon="edit" title-type="p">
+    Add internal notes for stock adjustments, splits, and POD processing.
+  </Step>
+
+  <Step title="Tag Order" icon="tag" title-type="p">
+    Assign identifier "pod\_macro\_ran" to prevent reprocessing.
+  </Step>
+
+  <Step title="Logging" icon="file-text" title-type="p">
+    Log processing steps, PO creation, skipped orders, and errors.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Orders split into POD and non-POD
+
+  - Stock adjusted accurately
+
+  - POD orders moved to correct location
+
+  - Purchase orders automatically created
+
+  - Orders tagged to prevent duplication
+</Callout>
+
+## Usefulness
+
+- **Full Automation** – Handles split, stock, and PO creation in one flow
+
+- **Inventory Accuracy** – Prevents overselling
+
+- **POD Optimization** – Separates fulfillment workflows
+
+- **Procurement Automation** – Auto-generates supplier POs
+
+- **Error Prevention** – Validates stock and supplier mapping
+
+## Example Scenario
+
+<Expandable title="Mixed Order Processing (POD + Non-POD)" default-open="false">
+  Order contains:
+
+  - 2 normal items
+
+  - 1 POD item
+
+  The macro:
+
+  - Adjusts stock for normal items
+
+  - Splits POD item into a new order
+
+  - Moves POD order to POD warehouse
+
+  - Creates purchase order
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This macro follows a complete automation flow:\
+  Order → Validate → Split POD → Adjust Stock → Move → Create PO → Tag.
+
+  It prevents mixing fulfillment types, stock overselling, missing supplier mappings, manual PO creation, duplicate processing, and incorrect warehouse routing.
+</Callout>
+

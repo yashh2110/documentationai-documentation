@@ -1,0 +1,2283 @@
+---
+title: Stream Tech Integration
+description: >-
+  Guide to configuring and using the Stream Tech Integration with Linnworks to
+  automate shipment processing, label generation, and tracking updates.
+---
+## Module 1: Overview
+
+Stream Tech Integration is a shipping integration that connects the Linnworks Order Management System (OMS) with the Stream delivery and logistics platform.
+
+The integration enables businesses to automate their shipping workflow by allowing orders created in Linnworks to be processed, shipped, and tracked through the Stream platform.
+
+By linking these two systems, Stream eliminates the need for manual shipment creation and reduces operational overhead in warehouse and logistics environments. Orders managed in Linnworks can be sent directly to Stream for shipment processing, delivery planning, and tracking management.
+
+The integration acts as a middleware layer that ensures reliable communication between Linnworks and Stream through secure API interactions.
+
+## **Systems Involved**
+
+The Stream Tech Integration connects three primary systems that together form the shipping workflow.
+
+Linnworks is the central Order Management System (OMS) used by businesses to manage sales orders, inventory, and fulfillment operations.
+
+Within the Stream Tech Integration workflow, Linnworks is responsible for:
+
+- Importing and managing orders from sales channels
+
+- Assigning shipping services to orders
+
+- Managing warehouse operations
+
+- Sending order data to the Stream platform
+
+- Displaying shipment tracking information
+
+Orders typically originate in Linnworks after being imported from various sales channels such as eCommerce stores or marketplaces.
+
+## **Stream Platform**
+
+The Stream platform is responsible for handling the operational aspects of shipment processing and delivery management.
+
+Stream manages:
+
+- Shipment creation
+
+- Depot management
+
+- Delivery methods
+
+- Delivery runs and routing
+
+- Label generation
+
+- Tracking number creation
+
+- Shipment status updates
+
+Once an order is sent from Linnworks to Stream, the Stream platform processes the shipment and coordinates delivery operations.
+
+## Stream Tech Integration Layer
+
+The Stream Tech Integration Layer is the component responsible for connecting Linnworks with the Stream platform.
+
+Its responsibilities include:
+
+- Synchronizing orders between systems
+
+- Sending shipment creation requests to Stream
+
+- Retrieving tracking numbers
+
+- Synchronizing shipment status updates
+
+- Applying order identifiers in Linnworks
+
+- Managing delivery run and sequence information
+
+This integration layer ensures that both systems remain synchronized and that shipment data flows correctly between them.
+
+## **Key Capabilities**
+
+The Stream Tech Integration provides several key features designed to simplify shipping and logistics operations.
+
+## **Order Synchronization**
+
+Orders created in Linnworks can be automatically retrieved and sent to the Stream platform for shipment processing.
+
+This ensures that shipping operations are triggered directly from the order management system without requiring manual data entry.
+
+## Shipment Creation
+
+Once an order is sent to Stream, the platform creates a shipment record based on the order details and the assigned delivery service.
+
+Shipment creation includes validating the order information, assigning the correct depot and delivery method, and preparing the shipment for delivery planning.
+
+## Shipping Label Generation
+
+The integration allows shipping labels to be generated through the Stream platform.
+
+Users can configure:
+
+- label format
+
+- number of label copies
+
+- label reference information
+
+This allows warehouses to produce labels suitable for different shipping and packaging workflows.
+
+## Delivery Service Assignment
+
+Shipping services are configured in Linnworks and mapped to Stream depots and delivery methods.
+
+These services determine how an order will be processed when sent to the Stream platform.
+
+Examples of services include combinations such as:
+
+Courier (Justin Depot)
+
+Collection (Justin Depot)
+
+Rcollection (Rishvi)
+
+The selected service determines which depot and delivery method will be used when the shipment is created.
+
+## Tracking Number Synchronization
+
+Once a shipment is accepted and created by Stream, the platform generates a tracking number.
+
+The integration automatically retrieves this tracking number and updates the corresponding order in Linnworks. This allows users to view shipment tracking information directly within the order record.
+
+## Delivery Run Management
+
+The Stream platform allows shipments to be grouped into delivery runs, which represent delivery routes or scheduled delivery batches.
+
+Run identifiers are synchronized back to Linnworks, allowing warehouse teams to see which run a shipment belongs to.
+
+This helps with delivery planning and operational coordination.
+
+## Shipment Status Updates
+
+Shipment status updates from Stream are synchronized back to Linnworks using webhooks and integration updates.
+
+For example, when a shipment is marked as Delivered, the integration can automatically update the corresponding order status in Linnworks.
+
+This provides real-time visibility into shipment progress and delivery completion.
+
+## Who Should Use This Integration
+
+The Stream Tech Integration is designed for organizations that manage shipping operations through Linnworks and rely on Stream for delivery and logistics management.
+
+**Typical users include:**
+
+<Columns cols="2">
+  <Card title="Warehouse Teams" icon="activity-square" horizontal="false" target="_self">
+    Warehouse staff responsible for picking, packing, and dispatching orders can use the integration to generate shipping labels and manage shipment processing directly from Linnworks.
+  </Card>
+
+  <Card title="Logistics and Dispatch Teams" icon="activity-square" horizontal="false" target="_self">
+    Logistics teams responsible for planning deliveries can benefit from Stream’s delivery run and routing capabilities while keeping order management centralized in Linnworks.
+  </Card>
+
+  <Card title="Integration Administrators" icon="activity-square" horizontal="false" target="_self">
+    System administrators responsible for configuring integrations between business systems will manage the setup and configuration of the Stream Tech Integration within Linnworks. This includes configuring API credentials, label settings, services, and synchronization options.
+  </Card>
+
+  <Card title="Technical Support Teams" icon="activity-square" horizontal="false" target="_self">
+    Support teams can use the integration documentation and identifier system to diagnose synchronization issues, validation errors, and shipment processing problems.
+  </Card>
+</Columns>
+
+## **Benefits of the Integration**
+
+Using the Stream Tech Integration provides several operational benefits:
+
+- Automated shipment creation
+
+- Reduced manual data entry
+
+- Centralized order and shipment visibility
+
+- Faster warehouse operations
+
+- Reliable shipment tracking updates
+
+- Improved coordination between order management and delivery systems
+
+These capabilities allow businesses to streamline shipping workflows while maintaining accurate and synchronized shipment data across both systems.
+
+## Module 2: System Architecture
+
+The Stream Tech Integration follows a modular architecture that connects the Linnworks Order Management System with the Stream delivery platform through a dedicated integration layer.
+
+This architecture enables seamless communication between the two systems and ensures that order data, shipment information, tracking updates, and delivery planning details are synchronized accurately.
+
+The integration architecture is designed to:
+
+- automate shipment processing
+
+- maintain consistent data synchronization
+
+- reduce manual operational work
+
+- support scalable logistics workflows
+
+## **Architecture Overview**
+
+The integration consists of four main components that work together to process and manage shipments.
+
+## **Flowchart TD**
+
+```bash
+A[Order Sent to Stream] --> B[Shipment Created]
+B --> C[Shipment Assigned to Run]
+C --> D[Run Identifier Applied]
+D --> E[Delivery Day Retrieved]
+E --> F[Day Identifier Applied]
+F --> G[Sequence Assigned]
+G --> H[Sequence Identifier Applied]
+```
+
+## **Core Components**
+
+### Linnworks Order Management System
+
+Linnworks is the central system where orders are created, managed, and prepared for shipment.
+
+Orders may originate from various sales channels connected to Linnworks, such as:
+
+- eCommerce websites
+
+- online marketplaces
+
+- retail platforms
+
+- custom integrations
+
+Within the integration workflow, Linnworks is responsible for:
+
+- managing order data
+
+- assigning shipping services to orders
+
+- managing warehouse locations
+
+- initiating shipment creation through the integration
+
+- receiving tracking numbers and shipment updates
+
+When an order is ready to be shipped, Linnworks sends the order information to the Stream Tech Integration layer.
+
+### Stream Tech Integration Layer
+
+The Stream Tech Integration Layer acts as the bridge between Linnworks and the Stream platform.
+
+This layer is responsible for coordinating communication between the two systems and ensuring that shipment data is properly transferred.
+
+Primary responsibilities of the integration layer include:
+
+- retrieving orders from Linnworks
+
+- validating shipment information
+
+- sending shipment requests to Stream
+
+- retrieving tracking numbers from Stream
+
+- updating Linnworks orders with shipment details
+
+- managing identifier updates in Linnworks
+
+- synchronizing delivery run and sequence data
+
+This layer also handles error handling and validation responses, ensuring that any issues returned by the Stream platform are reflected in Linnworks.
+
+For example, if an order fails validation when sent to Stream, the integration will:
+
+- apply the Error from Stream identifier
+
+- add a note to the order describing the validation issue\\
+
+### Stream API Platform
+
+The Stream platform provides the shipping and delivery infrastructure used to process shipments.
+
+The integration communicates with Stream using secure API endpoints.
+
+The Stream platform performs several key logistics operations:
+
+- shipment creation
+
+- delivery method assignment
+
+- depot management
+
+- shipment routing
+
+- delivery run creation
+
+- label generation
+
+- tracking number generation
+
+- shipment status updates
+
+Once a shipment request is received from the integration layer, the Stream platform validates the order and creates a shipment record.
+
+If the shipment is successfully created, the platform generates a tracking number and begins the delivery workflow.
+
+### Depots and Delivery Network
+
+\
+Stream uses depots and delivery methods to determine how shipments are processed and dispatched.
+
+A depot represents a physical logistics location responsible for handling shipments.
+
+Delivery methods represent the type of delivery operation performed, such as:
+
+- courier delivery
+
+- trunk delivery
+
+- collection services
+
+- specialized vehicle delivery
+
+These depot and delivery method configurations are defined within the Stream platform and are retrieved by the integration when configuring services in Linnworks.
+
+However, services themselves must be created manually by Linnworks users.
+
+Each service in Linnworks maps to a specific combination of:
+
+- depot
+
+- delivery method
+
+This mapping ensures that shipments created through the integration are routed correctly within Stream.
+
+## Data Flow Between Systems
+
+The integration architecture supports two primary data flows:
+
+### Order Submission Flow
+
+The first flow occurs when orders are sent from Linnworks to Stream.
+
+**sequenceDiagram**
+
+- participant L as Linnworks
+
+- participant I as Integration Layer
+
+- participant S as Stream Platform
+
+```typescript
+L->>I: Order Ready for Shipment
+I->>S: Send Shipment Request
+S->>S: Validate Order
+S->>I: Shipment Accepted
+I->>L: Apply "Sent to Stream" Identifier
+```
+
+If validation fails, the system instead returns an error response.
+
+The integration then applies the Error from Stream identifier and records the validation issue in the order notes.
+
+### Shipment Update Flow
+
+The second flow occurs when Stream returns shipment updates to Linnworks.
+
+**sequenceDiagram**
+
+participant S as Stream Platform\
+participant I as Integration Layer\
+participant L as Linnworks
+
+```typescript
+S->>I: Shipment Created
+S->>I: Tracking Number Generated
+I->>L: Update Order Tracking Number
+
+S->>I: Delivery Run Assigned
+I->>L: Apply Run Identifier
+
+S->>I: Sequence Assigned
+I->>L: Apply Sequence Identifier
+```
+
+This ensures that Linnworks always contains the most up-to-date shipment information.
+
+## Integration Responsibilities
+
+To maintain reliable synchronization between systems, the Stream Tech Integration performs several critical tasks.
+
+<Card title="Order Processing" horizontal="false" target="_self">
+  The integration retrieves eligible orders from Linnworks and prepares them for shipment creation in Stream.
+</Card>
+
+<Card title="Shipment Validation" horizontal="false" target="_self">
+  Before sending orders to Stream, the integration ensures that required shipment data is available, such as:
+
+  - shipping address
+
+  - assigned service
+
+  - required shipment information
+
+  If validation fails, the order will not be sent to Stream.
+</Card>
+
+<Card title="Identifier Management" horizontal="false" target="_self">
+  The integration manages the identifiers used in Linnworks to track order status.
+
+  Identifiers are automatically created during installation and include:
+
+  - Sent to Stream
+
+  - Error from Stream
+
+  - Run identifiers
+
+  - Day identifiers
+
+  - Sequence identifiers
+
+  These identifiers allow users to quickly determine the shipment status of an order.
+</Card>
+
+<Card title="Tracking Synchronization" horizontal="false" target="_self">
+  Once a shipment is accepted by Stream, the platform generates a tracking number.
+
+  The integration retrieves this tracking number and updates the corresponding order in Linnworks automatically.
+</Card>
+
+## **Architecture Benefits**
+
+The Stream architecture provides several operational advantages.
+
+<Columns cols="2">
+  <Card title="Reliable Data Synchronization" horizontal="false" target="_self">
+    By separating order management and logistics processing into specialized systems, the integration ensures that shipment data is accurately synchronized between Linnworks and Stream.
+  </Card>
+
+  <Card title="Scalable Shipping Operations" horizontal="false" target="_self">
+    The modular architecture allows businesses to handle increasing shipment volumes without disrupting order management workflows.
+  </Card>
+
+  <Card title="Operational Transparency" horizontal="false" target="_self">
+    Through identifiers, tracking updates, and run information, warehouse and logistics teams can easily monitor shipment progress directly from Linnworks.
+  </Card>
+
+  <Card title="Reduced Manual Intervention" horizontal="false" target="_self">
+    The integration automates shipment creation, tracking updates, and delivery planning synchronization, reducing the need for manual operational work.
+  </Card>
+</Columns>
+
+## Module 3: Installation & Setup
+
+The Stream Tech Integration must be installed and configured within Linnworks before it can begin processing shipments.\
+This module explains how to install the integration and configure the required settings so that Linnworks can communicate with the Stream platform.
+
+The installation process consists of two main stages:
+
+1. Creating the integration in Linnworks
+
+2. Configuring the integration settings
+
+Once the setup process is completed, the integration will be able to synchronize orders, create shipments, and retrieve tracking information from the Stream platform.
+
+## Prerequisites
+
+Before installing the integration, ensure the following requirements are met:
+
+- Access to a Linnworks account with administrator permissions
+
+- Valid Stream API credentials
+
+- Stream platform account configured with required depots and delivery methods
+
+- Required warehouse information configured in Linnworks
+
+These prerequisites ensure that the integration can authenticate with the Stream platform and process shipments correctly.
+
+## Installation Process
+
+<Tabs>
+  <Tab title="Step 1">
+    **Navigate to Shipping Integrations**
+
+    1. Log in to Linnworks
+
+    2. Navigate to the Shipping section
+
+    3. Select Integrations
+
+    This page displays all available shipping integrations.
+
+    Screenshot – Shipping Integrations Page
+  </Tab>
+
+  <Tab title="Step 2">
+    **Add a New Integration**
+
+    1. Click Add Integration
+
+    2. Locate Stream Integration
+
+    3. Select the Stream integration option
+
+    This action begins the setup process for connecting Linnworks with the Stream platform.
+
+    Screenshot – Add Integration
+  </Tab>
+
+  <Tab title="Step 3">
+    **Configure Basic Integration Information**
+
+    After selecting the Stream integration, users will be prompted to provide basic configuration information.
+
+    **Required field:**
+
+    | Field            | Description                                                   |
+    | ---------------- | ------------------------------------------------------------- |
+    | Integration Name | A user-defined name used to identify the integration instance |
+
+    **Example:**
+
+    Stream Tech Integration
+
+    The integration name is used only for internal identification within Linnworks.
+
+    Screenshot – Integration Name Configuration
+  </Tab>
+
+  <Tab title="Step 4">
+    **Save the Integration**
+
+    After entering the integration name:
+
+    1. Click Next
+
+    2. The integration will be created
+
+    3. The configuration page will automatically open
+
+    At this stage, the integration instance exists but is not yet fully configured.
+  </Tab>
+</Tabs>
+
+## Automatic Setup During Installation
+
+When the Stream Tech Integration is installed, the system automatically creates several order identifiers used to track shipment status.
+
+These identifiers allow the integration to track the lifecycle of orders sent to the Stream platform.
+
+**Important note:**
+
+Users DO NOT need to manually create these identifiers.\
+They are automatically created during installation.
+
+Automatically created identifiers include:
+
+- Sent to Stream
+
+- Error from Stream
+
+- Run identifiers
+
+- Day identifiers
+
+- Sequence identifiers
+
+These identifiers will be used later during order processing.
+
+## Integration Configuration Page
+
+\
+After installation, the configuration screen will appear.
+
+This page contains all settings required for the integration to operate correctly.
+
+Configuration sections include:
+
+- Stream API Credentials
+
+- Partner Account
+
+- Sender Address
+
+- Warehouse Configuration
+
+- Date Configuration
+
+- Advanced Settings
+
+- Label Configuration
+
+- Stream Configuration
+
+- Webhook Configuration
+
+- Order Synchronization
+
+Each section controls a specific part of the shipping workflow.
+
+Screenshot – Integration Configuration Page
+
+## Stream API Credentials
+
+The integration must authenticate with the Stream platform using API credentials.
+
+**Required fields:**
+
+| **Field**            | **Description**                               |
+| -------------------- | --------------------------------------------- |
+| Stream Client ID     | Unique identifier used for API authentication |
+| Stream Client Secret | Secure authentication token                   |
+| Stream API Base URL  | Base URL used to access the Stream API        |
+
+[<a href="https://www.demo.go2stream.net" target="_blank" rel="noopener noreferrer">https://www.demo.go2stream.net</a>](https://www.demo.go2stream.net)
+
+These credentials are typically provided by the Stream platform administrator.
+
+Screenshot – API Credentials Configuration
+
+## Sender Address Configuration
+
+The Sender Address defines the origin address used for shipments created through the integration.
+
+Required fields include:
+
+- Contact Name
+
+- Company Name
+
+- Address
+
+- City
+
+- Region / State
+
+- Country
+
+- Postal Code
+
+- Contact Phone Number
+
+This information may appear on shipping labels and shipment documentation.
+
+Screenshot – Sender Address Settings
+
+## Warehouse Configuration
+
+The warehouse configuration determines which Linnworks warehouse will be used when processing shipments.
+
+Option available:
+
+Use Default Warehouse Location
+
+When enabled:
+
+- The selected warehouse will automatically be used for all shipments created through the integration.
+
+This ensures that shipments are associated with the correct warehouse location.
+
+Screenshot – Warehouse Configuration
+
+## Date Configuration
+
+\
+The integration allows automatic assignment of shipment pickup dates.
+
+**Available option:**
+
+Use Current Date as Pickup Date
+
+When this option is enabled, the shipment pickup date will automatically be set to the current date when the shipment is created.
+
+This simplifies shipment scheduling for warehouse teams.
+
+Screenshot – Date Configuration
+
+## Completing the Setup
+
+After all required settings have been configured:
+
+1. Review the integration configuration
+
+2. Save the configuration
+
+3. Enable order synchronization if required
+
+Once these steps are completed, the integration will be ready to begin processing orders.
+
+Orders that meet the configured criteria will then be eligible to be sent to the Stream platform for shipment creation.
+
+## Module 4: Service Configuration
+
+The Service Configuration module defines how orders are routed from Linnworks to the Stream platform for shipment processing.
+
+In the Stream Tech Integration, services determine which Stream depot and delivery method will be used when creating shipments.
+
+Unlike some shipping integrations that automatically assign delivery services, Stream relies on services that are manually configured in Linnworks.
+
+These services act as the mapping layer between Linnworks and the Stream platform.
+
+Once configured, the selected service assigned to an order determines how the shipment will be created and processed in Stream.
+
+## How Services Work
+
+A service in Linnworks represents a shipping option that maps to a specific Stream configuration.
+
+Each service contains two key components:
+
+- Depot
+
+- Delivery Method
+
+When an order is sent to Stream, the integration reads the service assigned to the order and uses the configured depot and delivery method to create the shipment.
+
+## Example service structure:
+
+**Service Name (Depot)**
+
+Example services:
+
+- Justin Delivery (Justin Depot)
+
+- Courier (Justin Depot)
+
+- Trunk (Justin Depot)
+
+- Collection (Justin Depot)
+
+- Rcollection (Rishvi)
+
+- Rishvi Vehicles (Rishvi)
+
+These services determine which logistics configuration will be used for shipment creation.
+
+## Depot and Delivery Method Synchronization
+
+The Stream Tech Integration retrieves available depots and delivery methods from the Stream platform.
+
+These values are synchronized with Linnworks and become available as selectable options when configuring services.
+
+If new depots or delivery methods are created within the Stream platform, they will automatically become available within Linnworks during service configuration.
+
+However, it is important to note the following rule:
+
+The integration does NOT automatically generate services.\
+Services must be created manually by Linnworks users.
+
+This design ensures that users maintain full control over how services are mapped and used for shipment processing.
+
+## Creating Services in Linnworks
+
+To configure a service for use with the Stream Tech Integration, a Linnworks user must create a shipping service and select the appropriate Stream configuration.
+
+The service setup process typically involves the following steps:
+
+1. Create a new shipping service in Linnworks
+
+2. Select the appropriate Stream depot
+
+3. Select the corresponding delivery method
+
+4. Save the service configuration
+
+Once the service is created, it becomes available for assignment to orders.
+
+Screenshot – Service Configuration
+
+## Service Assignment
+
+After services are created, they can be assigned to orders within Linnworks.
+
+The assigned service determines how the order will be processed when it is sent to the Stream platform.
+
+When an order is synchronized with Stream, the integration reads the service assigned to the order and applies the corresponding Stream configuration.
+
+This ensures that the shipment is created using the correct depot and delivery method.
+
+## Order Processing Workflow
+
+The service configuration plays a critical role in the order processing workflow.
+
+The typical process is as follows:
+
+1. Depots and delivery methods are synchronized from Stream.
+
+2. A Linnworks user creates services using these options.
+
+3. The service is assigned to an order in Linnworks.
+
+4. The Stream Tech Integration retrieves the order.
+
+5. The shipment is created using the configured depot and delivery method.
+
+This workflow ensures that shipments are routed correctly within the Stream platform.
+
+## Additional Service Options
+
+The service configuration page also includes additional options that control how shipment data is processed.
+
+## Override Packaging Split
+
+The Override Packaging Split option allows the integration to override the default packaging behavior when creating shipments.
+
+When enabled, this option allows shipments to be grouped or split according to custom packaging rules.
+
+This feature can be useful when warehouse operations require specific packaging configurations.
+
+## Skip Composite Parent
+
+When this option is enabled, the integration ignores the parent item of a composite product and processes only the individual component items during shipment creation.
+
+This ensures that shipment data reflects the actual items being shipped rather than the bundled product structure.
+
+This option is particularly useful for businesses that use composite products or bundled product listings.
+
+## Best Practices for Service Configuration
+
+To ensure reliable shipment processing, users should follow these recommended practices when configuring services.
+
+**Maintain Consistent Naming**
+
+Use clear and consistent service naming that reflects the associated depot and delivery method.
+
+Example:
+
+Courier (Justin Depot)
+
+**Verify Depot and Delivery Method Mapping**
+
+Ensure that each service is mapped to the correct Stream depot and delivery method.
+
+Incorrect mappings may result in shipment validation errors.
+
+**Review Service Configuration Regularly**
+
+If new depots or delivery methods are added to the Stream platform, review existing services to ensure they are still configured correctly.
+
+## **Summary**
+
+The Service Configuration module defines how shipments are routed from Linnworks to the Stream platform.
+
+By manually configuring services and mapping them to Stream depots and delivery methods, users can control how orders are processed during shipment creation.
+
+Correct service configuration ensures that:
+
+- shipments are routed to the correct depot
+
+- the correct delivery method is used
+
+- order synchronization with Stream operates reliably
+
+## Module 5: Label Configuration
+
+The Label Configuration module controls how shipping labels are generated when orders are processed through the Stream Tech Integration.
+
+Shipping labels are created when a shipment is successfully generated in the Stream platform. These labels contain the shipment information required for warehouse operations, delivery routing, and package identification.
+
+The label configuration settings allow administrators to control:
+
+- the format of the shipping label
+
+- the reference information displayed on the label
+
+- the number of label copies generated
+
+- how labels are generated during shipment creation
+
+These settings allow businesses to adapt label generation to match their warehouse operations and printing workflows.
+
+## Label Generation Workflow
+
+Shipping labels are generated as part of the shipment creation process. When an order is sent to the Stream platform, Stream creates the shipment and generates the shipping label.
+
+The typical workflow for label generation is shown below:
+
+**flowchart TD**
+
+```typescript
+A [Order Created in Linnworks] –> B [Service Assigned]
+B –> C [Order Sent to Stream]
+C –> D [Shipment Created in Stream]
+D –> E [Shipping Label Generated]
+E –> F [Label Available in Linnworks]
+```
+
+Once the shipment is accepted by Stream, the system generates the shipping label and makes it available in Linnworks for printing.
+
+## On-Demand Label Generation
+
+The Stream Tech Integration supports on-demand label generation, allowing shipments to be created immediately when a shipping service is assigned to an order.
+
+When a shipping service is applied to an order in Linnworks, the integration can instantly send the order to the Stream platform for shipment creation. This eliminates the need to wait for scheduled synchronization and allows warehouse staff to generate shipping labels immediately.
+
+Once the order is processed successfully by Stream, the integration retrieves the shipment details and updates the order in Linnworks.
+
+This includes:
+
+- shipment confirmation
+
+- tracking number
+
+- generated shipping label
+
+This feature allows warehouse users to process shipments faster and begin dispatch operations without delay.
+
+## On-Demand Shipment Workflow
+
+The on-demand shipment process follows this workflow:
+
+**flowchart TD**
+
+```typescript
+A [Order Created in Linnworks] –> B [Shipping Service Assigned]
+B –> C [Order Sent Instantly to Stream]
+C –> D [Stream Validates Shipment]
+D –> E [Shipment Created]
+E –> F [Tracking Number Generated]
+F –> G [Tracking Number Synced to Linnworks]
+G –> H [Shipping Label Generated]
+```
+
+This process enables rapid shipment processing directly from the Linnworks interface.
+
+## Tracking Number Synchronization
+
+Once a shipment is successfully created in the Stream platform, Stream generates a tracking number.
+
+The integration retrieves the tracking number immediately and updates the corresponding order in Linnworks. This allows warehouse teams and administrators to view shipment tracking information directly within the order record.
+
+Tracking numbers are added automatically once the order is accepted by Stream and do not require manual input.
+
+## **API Processing Limit**
+
+To ensure stable and reliable system performance, the Stream Tech Integration applies a processing limit when sending orders for on-demand shipment creation.
+
+Due to API limitations, the integration processes a maximum of:
+
+<Card title="10 orders per request" horizontal="false" target="_self">
+  This limit helps prevent API overload and reduces the likelihood of request failures when processing multiple shipments simultaneously.
+
+  If more than 10 orders are selected for shipment processing, they will be processed in batches to maintain reliability and system stability.
+</Card>
+
+<Card title="Label Reference Type" horizontal="false" target="_self">
+  The Label Reference Type setting determines which identifier is displayed on the shipping label.
+
+  This reference allows warehouse staff to quickly identify shipments during picking, packing, and dispatch.
+
+  **Example reference:**
+
+  Linnworks Order ID
+
+  Using the Linnworks order ID ensures that the label corresponds directly to the order record within the Linnworks system.
+</Card>
+
+## Label Format
+
+The Label Format setting determines the layout and structure of the generated shipping label.
+
+Different formats may be used depending on the type of printer used in the warehouse or the courier’s label requirements.
+
+**Available Label Formats**
+
+- Label Format Description
+
+- Default (4×6 with QR & Barcode) Standard shipping label including QR code and barcode
+
+- Portrait without QR Vertical label layout without a QR code
+
+- Portrait Standard Standard portrait label layout
+
+- Compact (100x50mm without QR) Smaller label format designed for compact printers
+
+The default 4×6 format is commonly used because it is compatible with most warehouse label printers.
+
+Screenshot – Label Configuration
+
+## Number of Labels
+
+The Number of Labels option controls how many copies of the shipping label are generated for each shipment.
+
+Available options include:
+
+1. label copy
+
+2. label copies
+
+3. label copies
+
+4. label copies
+
+5. label copies
+
+Generating multiple label copies can be useful in warehouse environments where additional labels are required for operational processes.
+
+## Common Use Cases
+
+Multiple labels are often used for:
+
+- packaging identification
+
+- internal warehouse tracking
+
+- courier documentation
+
+- shipment verification
+
+For example, one label may be attached to the package while another is used for warehouse record keeping.
+
+## Label Printing Process
+
+Once the shipment has been successfully created and labels are generated, users can print the labels directly from Linnworks.
+
+The label printing process typically follows these steps:
+
+1. A shipping service is assigned to an order.
+
+2. The order is sent to the Stream platform.
+
+3. Stream validates the shipment request.
+
+4. The shipment is created.
+
+5. Stream generates the shipping label.
+
+6. The label becomes available in Linnworks.
+
+7. The warehouse team prints the label and attaches it to the package.
+
+This automated workflow ensures that shipping labels are generated consistently and reduces manual processing steps.
+
+## Best Practices for Label Configuration
+
+To ensure efficient warehouse operations, administrators should follow these recommended practices when configuring label settings.
+
+#### **Use a Standard Label Format**
+
+\
+Most warehouse environments use the 4×6 label format, as it is compatible with standard shipping label printers.
+
+#### **Verify Printer Compatibility**
+
+\
+Before selecting a label format, ensure that the selected format is supported by the warehouse printers.
+
+#### **Configure Appropriate Label Quantity**
+
+\
+Choose the number of labels based on warehouse workflow requirements. If multiple labels are required for internal tracking or packaging operations, configure the appropriate number of label copies.
+
+## Summary
+
+The Label Configuration module controls how shipping labels are generated when orders are processed through the Stream Tech Integration.
+
+Through label format selection, reference configuration, label quantity settings, and on-demand shipment processing, the integration ensures that shipping labels are generated efficiently and consistently.
+
+The ability to generate labels immediately after assigning a shipping service allows warehouse teams to process shipments quickly while maintaining accurate tracking and shipment records within Linnworks.
+
+## Module 6: Order Synchronization
+
+The Order Synchronization module controls how orders are retrieved from Linnworks and transmitted to the Stream platform for shipment processing.
+
+Order synchronization is a core component of the Stream Tech Integration, as it ensures that shipment data is consistently exchanged between Linnworks and Stream.
+
+Through synchronization settings, administrators can control:
+
+- when orders are retrieved from Linnworks
+
+- when orders are sent to Stream
+
+- how shipment updates are returned to Linnworks
+
+- how historical orders are included in synchronization
+
+Proper configuration of order synchronization ensures that orders are processed efficiently and that shipment data remains consistent between both systems.
+
+## Order Synchronization Overview
+
+The integration continuously monitors Linnworks for orders that are ready to be processed for shipment.
+
+When an eligible order is identified, the integration sends the order information to the Stream platform for shipment creation.
+
+The basic synchronization workflow is illustrated below:
+
+**flowchart TD**
+
+```typescript
+A [Order Created in Linnworks] –> B [Service Assigned]
+B –> C [Order Eligible for Synchronization]
+C –> D [Order Sent to Stream]
+D –> E [Shipment Created]
+E –> F [Tracking Number Generated]
+F –> G [Tracking Synced to Linnworks]
+```
+
+This process ensures that orders created in Linnworks can be quickly converted into shipments within the Stream platform.
+
+## Enable Order Synchronization
+
+The Enable Order Synchronization setting determines whether the integration will retrieve orders from Linnworks.
+
+When this option is enabled:
+
+- the integration monitors Linnworks for orders that meet the shipment criteria
+
+- eligible orders can be sent to the Stream platform for shipment creation
+
+If this setting is disabled, orders will not be automatically synchronized with Stream.
+
+## Enable Dispatch Synchronization
+
+The Enable Dispatch Synchronization setting controls whether shipment updates from Stream are synchronized back to Linnworks.
+
+When enabled, the integration retrieves shipment updates such as:
+
+- shipment confirmation
+
+- tracking number generation
+
+- delivery run assignment
+
+- shipment status updates
+
+These updates ensure that Linnworks reflects the latest shipment status information from the Stream platform.
+
+## Order Lookback Days
+
+The Order Lookback Days setting determines how far back the integration will search for orders when retrieving orders from Linnworks.
+
+This is particularly useful when:
+
+- the integration is newly installed
+
+- orders were created before synchronization was enabled
+
+- administrators need to reprocess recent orders
+
+**Example configuration:**
+
+7 days
+
+With this configuration, the integration will retrieve orders created within the past seven days when checking for eligible shipments.
+
+## Synchronization Eligibility
+
+Not all orders are automatically eligible for shipment processing.
+
+For an order to be synchronized with the Stream platform, it must meet certain conditions.
+
+**Order Requirements**
+
+An order must typically include:
+
+- a valid shipping address
+
+- a configured shipping service
+
+- required shipment data fields
+
+Orders that do not meet these requirements may fail validation when sent to Stream.
+
+## Validation Handling
+
+Before creating a shipment, the Stream platform validates the order information.
+
+If validation fails, the integration will apply the Error from Stream identifier to the order in Linnworks.
+
+Additionally, a note will be added to the order explaining the validation error returned by the Stream platform.
+
+Example validation issues may include:
+
+- missing address fields
+
+- invalid postal codes
+
+- incorrect service configuration
+
+These validation notes help administrators quickly identify and resolve shipment issues.
+
+## Successful Order Synchronization
+
+When an order is successfully synchronized with the Stream platform, the integration applies the Sent to Stream identifier to the order.
+
+This identifier indicates that:
+
+- the order has been transmitted successfully
+
+- the shipment creation process has been initiated
+
+This allows warehouse teams and administrators to quickly identify orders that have already been processed.
+
+## Shipment Update Synchronization
+
+Once the shipment has been created in Stream, the platform begins returning shipment updates to the integration.
+
+These updates include:
+
+- tracking number generation
+
+- delivery run assignment
+
+- sequence number assignment
+
+- delivery status updates
+
+The integration applies the appropriate identifiers in Linnworks and updates the order with the latest shipment information.
+
+## Tracking Number Synchronization
+
+When a shipment is accepted by the Stream platform, a tracking number is generated.
+
+The integration retrieves this tracking number and updates the corresponding order in Linnworks.
+
+This ensures that shipment tracking information becomes available immediately after shipment creation.
+
+## Best Practices for Order Synchronization
+
+To ensure reliable order processing, administrators should follow these best practices:
+
+Assign Services Before Synchronization
+
+Orders must have a valid shipping service assigned before they can be sent to Stream.
+
+## Monitor Validation Errors
+
+If an order receives the Error from Stream identifier, review the order notes to identify the validation issue.
+
+<Card title="Configure Lookback Period Carefully" horizontal="false" target="_self">
+  Choose an appropriate lookback period to avoid retrieving unnecessary historical orders.
+</Card>
+
+<Card title="Enable Dispatch Synchronization" horizontal="false" target="_self">
+  Enabling dispatch synchronization ensures that shipment updates are reflected in Linnworks in real time.
+</Card>
+
+## Summary
+
+The Order Synchronization module ensures that orders created in Linnworks are transmitted to the Stream platform for shipment creation and delivery processing.
+
+By controlling order retrieval, shipment updates, and synchronization settings, the integration ensures that shipment data remains accurate and consistent across both systems.
+
+Proper synchronization configuration enables efficient order processing while maintaining complete visibility of shipment status within Linnworks.
+
+## Module 7: Identifiers & Order Status Mapping
+
+The Stream Tech Integration uses Linnworks Order Identifiers to track the status of orders as they move through the shipment lifecycle.
+
+Identifiers allow warehouse teams, support staff, and administrators to quickly determine the processing status of an order without needing to check the Stream platform directly.
+
+These identifiers provide visibility into key shipment events such as:
+
+- successful order submission
+
+- shipment validation errors
+
+- delivery run assignment
+
+- delivery scheduling
+
+- sequence positioning
+
+By using identifiers, users can easily monitor order progress and identify issues that may require attention.
+
+## Automatic Identifier Creation
+
+During installation of the Stream Tech Integration, the system automatically creates all required identifiers in Linnworks.
+
+**Important note:**
+
+Identifiers are automatically created when the integration is installed.\
+Users do NOT need to create identifiers manually.
+
+These identifiers are used internally by the integration to update order status throughout the shipment lifecycle.
+
+## Identifier Categories
+
+The Stream Tech Integration uses several types of identifiers to represent different shipment states and delivery planning information.
+
+The main identifier categories include:
+
+- Synchronization identifiers
+
+- Run identifiers
+
+- Day identifiers
+
+- Sequence identifiers
+
+Each identifier category serves a specific purpose within the shipment workflow.
+
+<Expandable title="Synchronization Identifiers" default-open="true">
+  Synchronization identifiers indicate whether an order has been successfully processed or if an error occurred during shipment creation.
+</Expandable>
+
+<Expandable title="Sent to Stream" default-open="false">
+  The Sent to Stream identifier is applied when an order is successfully transmitted from Linnworks to the Stream platform.
+
+  When this identifier appears on an order, it indicates that:
+
+  - the order has been successfully synchronized
+
+  - Stream has received the shipment request
+
+  - shipment processing has begun
+
+  This identifier confirms that the order has entered the shipment workflow.
+</Expandable>
+
+## Error from Stream
+
+The Error from Stream identifier is applied when an order fails validation during shipment creation.
+
+If Stream detects an issue with the order data, the integration will:
+
+1. Apply the Error from Stream identifier to the order
+
+2. Add a note to the order describing the validation issue
+
+Common validation errors may include:
+
+- missing or invalid shipping address
+
+- incorrect postal code
+
+- invalid service configuration
+
+- missing shipment data
+
+These notes help administrators quickly diagnose and resolve shipment issues.
+
+## **Run Identifiers**
+
+Run identifiers represent delivery routes created in the Stream platform.
+
+A run is a collection of shipments that will be delivered together as part of a specific delivery route.
+
+Run identifiers follow a strict naming syntax.
+
+**Required format:**
+
+RUN (number)
+
+**Examples:**
+
+RUN 01\
+RUN 02\
+RUN 03
+
+When a shipment is assigned to a run in Stream, the integration retrieves the run information and applies the corresponding identifier to the order in Linnworks.
+
+This allows users to easily identify which delivery run the order belongs to.
+
+## Run Identifier Limit
+
+The integration supports a maximum of:
+
+**20 run identifiers**
+
+This allows the system to track multiple delivery routes within Linnworks.
+
+**Day Identifier**
+
+The Day identifier represents the scheduled delivery or collection day for the shipment.
+
+Once a shipment is assigned to a delivery run in Stream, the integration retrieves the delivery day information and updates the corresponding order in Linnworks.
+
+This identifier helps warehouse and logistics teams determine when the shipment is expected to be delivered or collected.
+
+**Sequence Identifier**
+
+The Sequence identifier represents the order in which shipments will be delivered within a specific delivery run.
+
+For example, if multiple shipments are assigned to the same run, the sequence number determines the delivery position.
+
+**Example sequence identifiers:**
+
+SEQ 01\
+SEQ 02\
+SEQ 03
+
+This information allows logistics teams to see the delivery order within the route.
+
+## Sequence Identifier Limit
+
+The Stream Tech Integration supports up to:
+
+20 sequence identifiers
+
+Sequence identifiers may be applied when the sequence configuration option is enabled in the integration settings.
+
+## Identifier Workflow
+
+The following diagram illustrates how identifiers are applied during the shipment lifecycle.
+
+**flowchart TD**
+
+```typescript
+A [Order Created in Linnworks] –> B [Service Assigned]
+B –> C [Order Sent to Stream]
+C –> D {Validation Successful?}
+D –>|Yes| E [Sent to Stream Identifier]
+D –>|No| F [Error from Stream Identifier]
+E –> G [Shipment Created]
+G –> H [Tracking Generated]
+H –> I [Run Assigned]
+I –> J [Run Identifier Applied]
+J –> K [Day Identifier Applied]
+K –> L [Sequence Identifier Applied]
+```
+
+This process ensures that Linnworks always reflects the current shipment status based on the latest information received from the Stream platform.
+
+## Benefits of Using Identifiers
+
+The identifier system provides several operational advantages.
+
+<Card title="Clear Shipment Status Visibility" horizontal="false" target="_self">
+  Warehouse teams can quickly see whether an order has been sent to Stream or if it encountered an error.
+</Card>
+
+<Card title="Simplified Delivery Planning" horizontal="false" target="_self">
+  Run and sequence identifiers provide insight into delivery routes and shipment order.
+</Card>
+
+<Card title="Faster Issue Resolution" horizontal="false" target="_self">
+  When validation errors occur, order notes provide clear information about the issue, allowing administrators to resolve problems quickly.
+</Card>
+
+## Best Practices
+
+To ensure effective use of identifiers, administrators should follow these recommendations:
+
+- Do not manually modify integration identifiers
+
+- Monitor orders with the Error from Stream identifier regularly
+
+- Ensure run descriptions follow the required syntax
+
+- Verify that sequence identifiers are enabled if delivery order tracking is required
+
+## Summary
+
+The identifier system is a critical component of the Stream Tech Integration. It provides clear visibility into shipment processing and delivery planning by applying identifiers directly to Linnworks orders.
+
+By using synchronization identifiers, run identifiers, day identifiers, and sequence identifiers, the integration ensures that users can easily track order status throughout the shipment lifecycle.
+
+## Module 8: Run, Day & Sequence Configuration
+
+The Run, Day, and Sequence configuration defines how delivery planning information from the Stream platform is synchronized back to Linnworks.
+
+These identifiers allow Linnworks users to see how shipments are organized for delivery once they have been processed by Stream.
+
+This module explains how the integration retrieves delivery planning information from Stream and applies it to orders in Linnworks using identifiers.
+
+The identifiers covered in this module include:
+
+- Run Identifier
+
+- Day Identifier
+
+- Sequence Identifier
+
+Together, these identifiers provide visibility into the delivery routing and scheduling process managed by the Stream platform.
+
+## Delivery Planning in Stream
+
+Once shipments are successfully created in the Stream platform, they may be assigned to delivery runs.
+
+A delivery run represents a planned delivery route used by the logistics team to organize shipments that will be delivered together.
+
+Each run contains:
+
+- a run identifier
+
+- a scheduled delivery day
+
+- sequence positions for shipments
+
+When these assignments occur in Stream, the integration retrieves this information and updates the corresponding order in Linnworks.
+
+## **Run Identifier**
+
+What is a Run
+
+A Run represents a delivery route or delivery batch created within the Stream platform.
+
+Shipments assigned to the same run are grouped together and delivered as part of the same route.
+
+When an order is assigned to a run in Stream, the integration retrieves the run information and applies a corresponding Run identifier to the order in Linnworks.
+
+This allows users to easily identify which delivery route an order belongs to.
+
+## Run Description Format
+
+For the integration to correctly recognize run identifiers, the run description created in Stream must follow a specific syntax.
+
+**Required format:**
+
+RUN (number)
+
+**Examples:**
+
+RUN 01\
+RUN 02\
+RUN 03
+
+The integration reads the run description and applies the corresponding identifier to the order in Linnworks.
+
+## Run Identifier Limit
+
+The integration supports a maximum of:
+
+20 run identifiers
+
+This allows the system to track up to twenty delivery routes simultaneously within Linnworks.
+
+If additional runs are created beyond this limit, they may not be recognized by the integration.
+
+**Day Identifier**
+
+The Day identifier represents the scheduled delivery or collection day for a shipment.
+
+When a shipment is assigned to a delivery run in Stream, the integration retrieves the delivery schedule information and applies a corresponding day identifier to the order in Linnworks.
+
+This identifier allows warehouse and logistics teams to quickly determine the expected delivery day for each order.
+
+The day identifier provides important visibility into delivery scheduling and helps coordinate dispatch planning.
+
+**Sequence Identifier**
+
+The Sequence identifier represents the delivery position of a shipment within a specific run.
+
+When multiple shipments are included in the same delivery run, the sequence number determines the order in which deliveries will occur.
+
+**Example sequence identifiers:**
+
+SEQ 01\
+SEQ 02\
+SEQ 03
+
+If a shipment is assigned sequence number 01, it will be delivered before shipments with sequence numbers 02 or 03.
+
+This information is synchronized from Stream and applied to the Linnworks order.
+
+## Sequence Identifier Limit
+
+The integration supports up to:
+
+20 sequence identifiers
+
+This allows delivery routes to contain up to twenty sequence positions that can be synchronized back to Linnworks.
+
+**Sequence Identifier Configuration**
+
+Sequence identifiers are optional and are controlled through the integration configuration settings.
+
+If the sequence feature is enabled, the integration retrieves sequence information from the Stream platform and applies the appropriate identifier to the order.
+
+If the feature is disabled, sequence identifiers will not be applied to orders.
+
+This allows administrators to choose whether sequence information should be visible in Linnworks.
+
+## Run, Day & Sequence Workflow
+
+The following diagram illustrates how run, day, and sequence identifiers are applied during the shipment lifecycle.
+
+**flowchart TD**
+
+```typescript
+A [Order Sent to Stream] –> B [Shipment Created]
+B –> C [Shipment Assigned to Run]
+C –> D [Run Identifier Applied]
+D –> E [Delivery Day Retrieved]
+E –> F [Day Identifier Applied]
+F –> G [Sequence Assigned]
+G –> H [Sequence Identifier Applied]
+```
+
+This process ensures that Linnworks reflects the latest delivery planning information generated by the Stream platform.
+
+## Benefits of Run and Sequence Synchronization
+
+Synchronizing run and sequence information provides several operational benefits.
+
+**Delivery Planning Visibility**
+
+Warehouse and dispatch teams can easily see which run a shipment belongs to and when it is scheduled for delivery.
+
+**Improved Route Coordination**
+
+Sequence identifiers allow teams to understand the order of deliveries within a run.
+
+This helps ensure that shipments are loaded and dispatched according to the planned delivery route.
+
+**Reduced Operational Confusion**
+
+By displaying run, day, and sequence identifiers directly in Linnworks, the integration eliminates the need to manually cross-check delivery plans in the Stream platform.
+
+## Best Practices
+
+To ensure proper operation of run and sequence synchronization, administrators should follow these best practices:
+
+- Ensure run descriptions follow the required RUN (number) syntax
+
+- Avoid modifying run identifiers manually in Linnworks
+
+- Verify that sequence identifiers are enabled if delivery order visibility is required
+
+- Monitor delivery run assignments within the Stream platform
+
+Following these practices ensures that delivery planning information is synchronized accurately between Stream and Linnworks.
+
+## Summary
+
+The Run, Day, and Sequence configuration module provides visibility into the delivery planning process managed by the Stream platform.
+
+By synchronizing run identifiers, delivery days, and sequence positions back to Linnworks, the integration allows users to track how shipments are organized for delivery without leaving the Linnworks environment.
+
+This improves coordination between warehouse teams and delivery operations while maintaining consistent shipment information across both systems.
+
+## Module 9: Tracking & Shipment Updates
+
+The Tracking and Shipment Updates module describes how shipment information generated in the Stream platform is synchronized back to Linnworks.
+
+Once an order is successfully sent to Stream and a shipment is created, Stream begins generating shipment information such as:
+
+- tracking numbers
+
+- shipment confirmation
+
+- delivery status updates
+
+- delivery completion status
+
+The Stream Tech Integration retrieves this information and updates the corresponding order in Linnworks.
+
+This ensures that order records inside Linnworks always reflect the most up-to-date shipment information.
+
+## Shipment Creation in Stream
+
+When an order is successfully transmitted to the Stream platform, Stream processes the shipment request and performs the following steps:
+
+1. Validates shipment data
+
+2. Creates the shipment
+
+3. Assigns the shipment to a depot and delivery method
+
+4. Generates shipment tracking information
+
+Once the shipment is created, the integration retrieves the shipment details and updates the order in Linnworks.
+
+## Tracking Number Generation
+
+A tracking number is generated by the Stream platform when a shipment is successfully created.
+
+Once the shipment is accepted by Stream, the integration retrieves the tracking number and automatically updates the order in Linnworks.
+
+This tracking number becomes visible within the order record and can be used for shipment monitoring and customer communication.
+
+## Tracking Number Workflow
+
+The tracking synchronization process follows this sequence:
+
+**flowchart TD**
+
+```typescript
+A [Order Sent to Stream] –> B [Stream Validates Shipment]
+B –> C [Shipment Created]
+C –> D [Tracking Number Generated]
+D –> E [Tracking Number Synced to Linnworks]
+E –> F [Tracking Visible on Order]
+```
+
+This automated process ensures that shipment tracking information is available immediately after the shipment is confirmed.
+
+## Automatic Order Updates
+
+Once Stream generates shipment updates, the integration synchronizes these updates back to Linnworks.
+
+Shipment updates that may be synchronized include:
+
+- tracking number generation
+
+- delivery run assignment
+
+- delivery day assignment
+
+- sequence updates
+
+- delivery completion
+
+These updates allow Linnworks users to monitor shipment progress without needing to access the Stream platform.
+
+## Webhook Configuration
+
+The Stream Tech Integration supports webhook-based updates for shipment status changes.
+
+Webhooks allow Stream to notify the integration when shipment events occur.
+
+This ensures that shipment updates are reflected in Linnworks as soon as they occur.
+
+Webhook updates may include:
+
+- shipment created
+
+- shipment assigned to run
+
+- shipment delivered
+
+This real-time communication improves synchronization accuracy and reduces the need for manual status checks.
+
+## Mark Order as Processed on Delivered
+
+The integration includes an option that automatically updates the order status when a shipment is delivered.
+
+**Option**
+
+Mark Order as Processed on Delivered
+
+When this option is enabled:
+
+- Linnworks automatically marks the order as Processed once the shipment status is updated to Delivered in the Stream platform.
+
+This allows shipment completion to automatically update order status within Linnworks.
+
+## Delivery Status Workflow
+
+The delivery update process typically follows this workflow:
+
+**flowchart TD**
+
+```typescript
+A [Shipment Created] –> B [Shipment Assigned to Run]
+B –> C [Shipment Dispatched]
+C –> D [Shipment Delivered]
+D –> E [Delivery Status Sent to Integration]
+E –> F [Order Updated in Linnworks]
+F –> G [Order Marked as Processed]
+```
+
+This ensures that Linnworks accurately reflects the final delivery state of each shipment.
+
+## Benefits of Shipment Update Synchronization
+
+Synchronizing shipment updates provides several operational benefits.
+
+<Card title="Real-Time Tracking Visibility" horizontal="false" target="_self">
+  Users can see tracking numbers and shipment status updates directly in Linnworks.
+</Card>
+
+<Card title="Automated Order Status Updates" horizontal="false" target="_self">
+  Orders can be automatically marked as processed once delivery is confirmed.
+</Card>
+
+<Card title="Reduced Manual Monitoring" horizontal="false" target="_self">
+  Warehouse and logistics teams do not need to manually check the Stream platform for shipment updates.
+</Card>
+
+## Best Practices
+
+To ensure accurate shipment update synchronization, administrators should follow these recommended practices:
+
+- Enable webhook updates where possible
+
+- Verify that API connectivity between Linnworks and Stream is functioning correctly
+
+- Ensure tracking numbers are retrieved successfully after shipment creation
+
+- Monitor shipment updates to ensure order statuses are synchronized properly
+
+## Summary
+
+The Tracking and Shipment Updates module ensures that shipment information generated in the Stream platform is automatically synchronized back to Linnworks.
+
+By retrieving tracking numbers, delivery updates, and shipment status changes, the integration keeps Linnworks order records up to date with the latest shipping information.
+
+This synchronization provides warehouse teams, administrators, and support teams with complete visibility into the shipment lifecycle.
+
+## Module 10: Troubleshooting & Operational Guide
+
+The Troubleshooting and Operational Guide provides guidance on identifying and resolving common issues that may occur when using the Stream Tech Integration with Linnworks.
+
+While the integration is designed to operate automatically, issues may occur due to:
+
+- incorrect configuration
+
+- invalid shipment data
+
+- API communication issues
+
+- service configuration problems
+
+- shipment validation failures
+
+This module helps administrators and support teams diagnose and resolve these issues quickly.
+
+## Common Integration Issues
+
+Below are the most common issues users may encounter while using the Stream Tech Integration.
+
+## Order Not Sent to Stream
+
+**Symptoms**
+
+An order remains in Linnworks but is not sent to the Stream platform.
+
+**Possible Causes**
+
+- No shipping service assigned to the order
+
+- Order synchronization disabled
+
+- Invalid order data
+
+- Order outside the lookback period
+
+- Missing required address fields
+
+**Resolution Steps**
+
+1. Verify that a shipping service is assigned to the order
+
+2. Ensure order synchronization is enabled
+
+3. Confirm that the order contains a valid shipping address
+
+4. Check the Order Lookback Days configuration
+
+5. Retry sending the order
+
+## Error from Stream Identifier
+
+**Symptoms**
+
+The order receives the Error from Stream identifier.
+
+**Cause**
+
+This identifier is applied when the Stream platform rejects a shipment request due to validation errors.
+
+The integration automatically adds a note to the order describing the validation issue returned by the Stream platform.
+
+**Common validation errors include:**
+
+- incomplete shipping address
+
+- invalid postcode
+
+- incorrect depot configuration
+
+- missing shipment data
+
+**Resolution Steps**
+
+1. Open the order in Linnworks
+
+2. Review the order notes for the validation error message
+
+3. Correct the issue identified in the error note
+
+4. Resend the order to Stream
+
+## Tracking Number Missing
+
+**Symptoms**
+
+The order has been sent to Stream but does not display a tracking number.
+
+**Possible Causes**
+
+- shipment creation failed
+
+- Stream API communication delay
+
+- shipment not yet accepted by Stream
+
+- API response timeout
+
+**Resolution Steps**
+
+1. Confirm that the order has the Sent to Stream identifier
+
+2. Verify that shipment creation was successful in Stream
+
+3. Wait for synchronization to complete
+
+4. Retry retrieving shipment updates if necessary
+
+## Shipment Validation Failure
+
+**Symptoms**
+
+Shipment creation fails and the order receives the Error from Stream identifier.
+
+**Common Validation Issues**
+
+Validation errors often occur due to incorrect shipment data.
+
+Examples include:
+
+- missing address line
+
+- missing postcode
+
+- unsupported delivery method
+
+- invalid depot mapping
+
+**Resolution Steps**
+
+1. Review the order information in Linnworks
+
+2. Verify that all required shipment fields are present
+
+3. Confirm that the shipping service is mapped to the correct depot and delivery method
+
+4. Resend the order after corrections
+
+## Service Configuration Issues
+
+**Symptoms**
+
+Orders fail to create shipments even though they have a service assigned.
+
+**Possible Causes**
+
+- service mapped to incorrect depot
+
+- service mapped to incorrect delivery method
+
+- Stream depot not configured properly
+
+**Resolution Steps**
+
+1. Review the service configuration in Linnworks
+
+2. Verify that the correct Stream depot is selected
+
+3. Verify that the correct delivery method is selected
+
+4. Update the service configuration if necessary
+
+## API Processing Limit Reached
+
+**Symptoms**
+
+Bulk shipment processing fails or some orders are not processed.
+
+**Cause**
+
+The Stream API has a processing limitation for shipment creation.
+
+The integration processes a maximum of:
+
+10 orders per request
+
+This limit is applied to ensure stable communication with the Stream platform.
+
+**Resolution**
+
+If more than 10 orders are processed at once, the integration automatically handles them in batches.
+
+For best results:
+
+- process shipments in batches of 10 or fewer orders
+
+## Run Identifier Not Applied
+
+**Symptoms**
+
+An order does not display a run identifier in Linnworks.
+
+**Possible Causes**
+
+- run description in Stream does not follow the required syntax
+
+- run assignment has not yet occurred
+
+- synchronization delay
+
+**Required Syntax**
+
+Run descriptions must follow this format:
+
+RUN (number)
+
+**Example:**
+
+RUN 01\
+RUN 02
+
+If the run description does not follow this format, the integration cannot recognize the run identifier.
+
+## Sequence Identifier Not Applied
+
+**Symptoms**
+
+Orders assigned to a run do not display a sequence identifier.
+
+**Possible Causes**
+
+- sequence identifiers disabled in integration configuration
+
+- sequence assignment not yet performed in Stream
+
+**Resolution**
+
+1. Verify that sequence identifiers are enabled in the integration settings
+
+2. Confirm that sequence positions have been assigned in the Stream platform
+
+## Webhook Update Issues
+
+**Symptoms**
+
+Shipment updates are delayed or not reflected in Linnworks.
+
+**Possible Causes**
+
+- webhook configuration disabled
+
+- API communication issue
+
+- temporary synchronization delay
+
+**Resolution Steps**
+
+1. Verify that webhook configuration is enabled
+
+2. Confirm API connectivity between Stream and Linnworks
+
+3. Wait for synchronization cycle to complete
+
+## Operational Monitoring
+
+Administrators should regularly monitor the following to ensure the integration operates correctly:
+
+- orders with Error from Stream identifier
+
+- orders without tracking numbers
+
+- service configuration updates
+
+- shipment synchronization status
+
+Regular monitoring helps detect and resolve operational issues early.
+
+## Best Practices
+
+To maintain a stable and reliable integration environment, administrators should follow these best practices:
+
+<Columns cols="2">
+  <Card title="Validate Order Data" horizontal="false" target="_self">
+    Ensure all orders contain complete shipping information before shipment processing.
+  </Card>
+
+  <Card title="Maintain Correct Service Configuration" horizontal="false" target="_self">
+    Verify that services are correctly mapped to Stream depots and delivery methods.
+  </Card>
+
+  <Card title="Follow Run Naming Standards" horizontal="false" target="_self">
+    Ensure delivery runs use the required RUN (number) format.
+  </Card>
+
+  <Card title="Monitor Synchronization" horizontal="false" target="_self">
+    Regularly review orders that contain error identifiers to detect integration issues quickly.
+  </Card>
+</Columns>
+
+## Summary
+
+The troubleshooting module provides administrators and support teams with the tools needed to diagnose and resolve common issues encountered when using the Stream Tech Integration.
+
+By understanding how shipment validation, synchronization, and service configuration operate, users can quickly identify the root cause of issues and restore normal operation.
+
+## Module 11: FAQ & Operational Best Practices
+
+The FAQ and Operational Best Practices module provides answers to frequently asked questions about the Stream Tech Integration with Linnworks.
+
+## **Frequently Asked Questions**
+
+<ExpandableGroup>
+  <Expandable title="1. Do I need to manually create identifiers in Linnworks?" default-open="true">
+    No.
+
+    All identifiers required by the Stream Tech Integration are automatically created during installation of the application.
+
+    These identifiers include:
+
+    - Sent to Stream
+
+    - Error from Stream
+
+    - Run identifiers
+
+    - Day identifiers
+
+    - Sequence identifiers
+
+    Users should not manually create or modify these identifiers.
+  </Expandable>
+
+  <Expandable title="2. When is the tracking number added to the order?" default-open="false">
+    The tracking number is added to the order after the shipment is successfully accepted by the Stream platform.
+
+    The process is as follows:
+
+    1. Order is sent to Stream
+
+    2. Shipment is created in Stream
+
+    3. Tracking number is generated
+
+    4. Tracking number is synchronized back to Linnworks
+
+    Once this occurs, the tracking number becomes visible within the Linnworks order.
+  </Expandable>
+
+  <Expandable title="3. Can labels be generated immediately after assigning a shipping service?" default-open="false">
+    Yes.
+
+    The integration supports on-demand label generation.
+
+    When a shipping service is assigned to an order, the integration can immediately send the order to Stream for shipment creation.
+
+    Once the shipment is created:
+
+    - shipment details are retrieved
+
+    - tracking number is returned
+
+    - shipping label becomes available
+
+    This allows warehouse teams to generate shipping labels immediately without waiting for scheduled synchronization.
+  </Expandable>
+
+  <Expandable title="4. Is there a limit on how many orders can be processed at once?" default-open="false">
+    Yes.
+
+    Due to Stream API limitations, the integration processes a maximum of:
+
+    10 orders per request
+
+    This limit ensures stable API communication and reduces the risk of request failures.
+
+    If more than 10 orders are processed simultaneously, the integration will handle them in batches.
+  </Expandable>
+
+  <Expandable title="5. How are delivery runs identified in Linnworks?" default-open="false">
+    Delivery runs are identified using Run identifiers.
+
+    The run description created in the Stream platform must follow this format:
+
+    RUN (number)
+
+    Example:
+
+    RUN 01\
+    RUN 02\
+    RUN 03
+
+    When a shipment is assigned to a run in Stream, the corresponding run identifier is applied to the order in Linnworks.
+  </Expandable>
+
+  <Expandable title="6. How many run identifiers are supported?" default-open="false">
+    The integration supports up to:
+
+    20 run identifiers
+
+    This allows the system to track up to twenty delivery routes within Linnworks.
+  </Expandable>
+
+  <Expandable title="7. What are sequence identifiers?" default-open="false">
+    Sequence identifiers represent the delivery order of shipments within a run.
+
+    Example sequence identifiers:
+
+    SEQ 01\
+    SEQ 02\
+    SEQ 03
+
+    These identifiers help logistics teams understand the delivery order within a specific route.
+
+    The integration supports up to:
+
+    20 sequence identifiers
+  </Expandable>
+
+  <Expandable title="8. Why does an order receive the “Error from Stream” identifier?" default-open="false">
+    The Error from Stream identifier appears when the Stream platform rejects a shipment request due to validation issues.
+
+    When this occurs:
+
+    - the identifier is applied to the order
+
+    - a note is added explaining the validation issue
+
+    Users should review the order notes to identify and correct the problem before resending the order.
+  </Expandable>
+
+  <Expandable title="9. What happens when a shipment is delivered?" default-open="false">
+    If the Mark Order as Processed on Delivered option is enabled:
+
+    - the integration automatically updates the order status in Linnworks
+
+    - the order will be marked as Processed once Stream reports the shipment as delivered
+
+    This ensures that shipment completion is reflected in Linnworks automatically.
+  </Expandable>
+</ExpandableGroup>
+
+## **Operational Best Practices**
+
+Following best practices helps ensure that the Stream Tech Integration operates reliably and efficiently.
+
+**Maintain Accurate Service Configuration**
+
+Ensure that each shipping service is correctly mapped to:
+
+- the appropriate Stream depot
+
+- the correct delivery method
+
+Incorrect service configuration can lead to shipment validation errors.
+
+**Validate Order Data Before Sending**
+
+Orders should contain complete and accurate shipping information before being sent to Stream.
+
+Required information typically includes:
+
+- full shipping address
+
+- postcode
+
+- service assignment
+
+Incomplete data may cause shipment validation failures.
+
+**Use Consistent Run Naming**
+
+When creating delivery runs in Stream, ensure that the run description follows the required syntax:
+
+RUN (number)
+
+Example:
+
+RUN 01\
+RUN 02
+
+Incorrect run naming may prevent the integration from recognizing the run identifier.
+
+**Monitor Error Identifiers**
+
+Orders marked with the Error from Stream identifier should be reviewed regularly.
+
+The error note added to the order will provide information about the validation issue.
+
+Correcting these issues promptly helps prevent shipment delays.
+
+**Process Orders in Small Batches**
+
+Although the integration automatically manages API limits, it is recommended to process shipments in batches of 10 or fewer orders when generating labels on demand.
+
+This ensures reliable shipment processing and reduces the risk of API errors.
+
+**Enable Shipment Status Updates**
+
+Enable webhook synchronization or dispatch updates to ensure that shipment status changes are reflected in Linnworks as soon as they occur.
+
+This ensures that tracking information and delivery updates remain accurate.
+
+## Summary
+
+The FAQ and Best Practices module provides guidance for using the Stream Tech Integration effectively and resolving common operational questions.
+
+By following recommended practices and understanding how key features such as identifiers, label generation, and shipment synchronization work, users can ensure smooth operation of the integration and maintain efficient shipment workflows.

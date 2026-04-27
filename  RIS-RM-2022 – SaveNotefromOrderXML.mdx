@@ -1,0 +1,136 @@
+---
+title: Save Note from Order XML
+description: >-
+  Automatically extract notes from order XML and save them as external order
+  notes in Linnworks for improved visibility and data consistency.
+---
+## Overview
+
+The **RIS-RM-2022 – SaveNotefromOrderXML** macro extracts note information directly from an order’s XML data and stores it as an order note in Linnworks.
+
+It ensures that important information coming from external systems is captured and made visible within the order.
+
+<Callout kind="tip" collapsed="false">
+  Ensure the XML structure contains the correct Note tag before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Reads order XML data  
+- Extracts note content  
+- Saves note as an order note  
+- Makes note externally visible  
+
+👉 In short:  
+Extract and save notes from XML into the order automatically.
+
+## When It Runs
+
+Used for data enrichment and integration handling
+
+Typically runs:
+
+- Manual execution (on selected orders)  
+- Triggered via Rules Engine  
+- When external systems send notes via XML  
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of order IDs to process.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Note:  
+  - Works only on provided OrderIds  
+  - No additional configuration required  
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Process Orders" icon="list" title-type="p">
+    Loop through each OrderId provided.
+  </Step>
+
+  <Step title="Fetch Order XML" icon="download" title-type="p">
+    Retrieve XML data using GetOrderXml API.
+  </Step>
+
+  <Step title="Parse XML" icon="code" title-type="p">
+    Convert XML string into structured format using XElement.
+  </Step>
+
+  <Step title="Check Note Element" icon="search" title-type="p">
+    Look for the Note tag inside the XML.
+  </Step>
+
+  <Step title="Extract Note Value" icon="file-text" title-type="p">
+    Read the content inside the Note element.
+  </Step>
+
+  <Step title="Validate Note" icon="check-circle" title-type="p">
+    Ensure the extracted note is not empty.
+  </Step>
+
+  <Step title="Save Note to Order" icon="edit" title-type="p">
+    Create a new order note:
+    - Note text = extracted value  
+    - Internal = false (external note)  
+    - CreatedBy = "Add Note From Order XML"  
+  </Step>
+
+  <Step title="Log Execution" icon="file-text" title-type="p">
+    Track processed orders and any errors.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Notes successfully extracted from XML  
+  - Notes added to orders automatically  
+  - Notes marked as external and visible  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Capturing customer instructions from external systems  
+- Preventing missing notes during integrations  
+- Reducing manual data entry  
+- Improving order data visibility  
+- Enhancing processing accuracy  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Works only if Note tag exists in XML  
+  - Existing notes may be overwritten (not appended)  
+  - Notes are always saved as external  
+  - No duplicate check (same note can be added multiple times)  
+  - XML structure must be valid  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Extract Customer Note from XML" default-open="false">
+  An order is imported from an external system containing note data in XML.
+
+  👉 The macro:
+
+  - Reads XML  
+  - Extracts note content  
+  - Saves it as an order note  
+
+  Result: Customer instructions are visible directly in the order.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Extracting notes directly from XML ensures that critical information from external systems is never missed, improving operational transparency and automation reliability.
+</Callout>

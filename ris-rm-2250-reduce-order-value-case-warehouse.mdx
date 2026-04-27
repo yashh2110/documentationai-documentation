@@ -1,0 +1,183 @@
+---
+title: Reduce Order Value – Case Warehouse
+description: >-
+  Apply a percentage-based reduction to order values, update all related totals
+  and item pricing, remove shipping protection, and maintain a complete audit
+  trail.
+---
+## Overview
+
+The **RIS-RM-2250 – Reduce Order Value – Case Warehouse** macro applies controlled percentage-based discounts to orders while ensuring all financial values and item-level data are updated accurately.
+
+<Callout kind="tip" collapsed="false">
+  This macro includes safety checks to prevent duplicate processing and ensure audit traceability.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Reduces order value by a given percentage
+
+- Updates item-level pricing and totals
+
+- Removes shipping protection (if present)
+
+- Maintains a full audit trail
+
+👉 In short:\
+Validate → remove extras → apply discount → update totals → log changes.
+
+## When It Runs
+
+Typically executed:
+
+- During warehouse-specific pricing adjustments
+
+- Bulk discount application
+
+- Order correction workflows
+
+- Regional pricing adjustments
+
+- Financial updates or promotions
+
+- Manually or via automation
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="GUID[]" required="true" deprecated="false">
+  List of orders to process.
+</ParamField>
+
+<ParamField path="Percentage" param-type="double" required="true" deprecated="false">
+  Percentage value to reduce the order total.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Example: Percentage = 10 → Reduces each order value by 10%.
+</Callout>
+
+## Simple Explanation
+
+The macro processes each order, removes extra charges, applies a percentage discount across all values, updates items and totals, and records both original and updated data for audit purposes.
+
+## Step-by-Step Flow
+
+<Steps>
+  <Step title="Start Macro" icon="play" title-type="p">
+    Initialize execution and logging.
+  </Step>
+
+  <Step title="Loop Through Orders" icon="list" title-type="p">
+    Process each order individually and skip if not found.
+  </Step>
+
+  <Step title="Check Already Processed" icon="shield" title-type="p">
+    Verify Extended Property IsTotalReduced.\
+    If exists → skip order to prevent duplicate processing.
+  </Step>
+
+  <Step title="Lock Order" icon="lock" title-type="p">
+    Set order status to In Progress to prevent concurrent updates.
+  </Step>
+
+  <Step title="Remove Shipping Protection" icon="trash" title-type="p">
+    Identify SKU SHIPPING-PROTECTION and remove if present.\
+    Store removal details for audit.
+  </Step>
+
+  <Step title="Skip UK Orders" icon="x-circle" title-type="p">
+    Skip orders belonging to UK regions (GB, England, Scotland, etc.).
+  </Step>
+
+  <Step title="Store Old Values" icon="save" title-type="p">
+    Capture:
+  </Step>
+
+  <Step title="Calculate New Values" icon="calculator" title-type="p">
+    Apply formula:\
+    New Value = Old Value - (Old Value × Percentage / 100)\
+    Applied to totals and item-level pricing.
+  </Step>
+
+  <Step title="Update Item-Level Data" icon="edit" title-type="p">
+    Reduce:
+
+    Ensure minimum price threshold (≥ 1.5).
+  </Step>
+
+  <Step title="Update Order Totals" icon="check-circle" title-type="p">
+    Save recalculated totals back to the order.
+  </Step>
+
+  <Step title="Save Extended Properties" icon="database" title-type="p">
+    Store:
+  </Step>
+
+  <Step title="Add Order Notes" icon="file-text" title-type="p">
+    Add audit notes including full before/after breakdown.
+  </Step>
+
+  <Step title="Logging" icon="activity" title-type="p">
+    Log success and errors for each order processed.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Order totals reduced correctly
+
+  - Item-level pricing updated
+
+  - Shipping protection removed (if applicable)
+
+  - Full audit trail maintained
+</Callout>
+
+## Usefulness
+
+- **Bulk Price Adjustment** – Apply discounts across multiple orders
+
+- **Audit Tracking** – Maintain before/after values
+
+- **Automation** – Eliminate manual calculations
+
+- **Error Prevention** – Avoid duplicate processing
+
+- **Data Accuracy** – Keep totals and items consistent
+
+## Example Scenario
+
+<Expandable title="Case Warehouse Discount Adjustment" default-open="false">
+  Need to reduce all Case Warehouse orders by 10%.
+
+  The macro:
+
+  - Removes shipping protection
+
+  - Applies 10% discount
+
+  - Updates items and totals
+
+  - Stores audit details
+
+  Result:
+
+  - Accurate discounted orders
+
+  - Full traceability
+
+  - No manual effort required
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This macro follows a controlled flow:\
+  Order → Validate → Remove Extra Charges → Apply Discount → Update Items → Save Audit.
+
+  It prevents double discounting, missing audit history, incorrect totals, manual calculation errors, and reprocessing of already updated orders.
+</Callout>
+

@@ -1,0 +1,95 @@
+---
+title: Tracking lot or serial number products with FBA orders
+description: >-
+  When selling products that require lot or serial number tracking through
+  Fulfilled by Amazon (FBA), Amazon does not provide tracking details via its
+  API. This limitation can cause synchronization issues in Odoo.
+---
+When working with products tracked by lots or serial numbers, Amazon’s API does not send the specific tracking information for each sale. As a result, Odoo cannot assign the required tracking numbers, which leads to synchronization errors.
+
+To avoid this issue, configure a <a href="https://www.odoo.com/documentation/19.0/applications/sales/sales/amazon_connector/fba.html#amazon-connector-fba-product-kit" target="_blank" rel="noopener noreferrer">**product kit**</a> in Odoo that represents the Amazon product. When an <u>FBA</u> order is imported, Odoo processes the kit instead of the tracked product, preventing sync failures.
+
+When <a href="https://www.odoo.com/documentation/19.0/applications/sales/sales/amazon_connector/manage.html#amazon-connector-fba-follow-deliveries" target="_blank" rel="noopener noreferrer">**replenishing Amazon stock**</a>, transfer the tracked product to the `WH/Amazon` location. This ensures proper inventory tracking and records stock movement at the time of transfer rather than at the time of sale.
+
+**Note**
+
+The `WH/Amazon` location is automatically created when the first Amazon account is connected.
+
+With this approach, kit product quantities may remain negative. This is expected behavior, as actual inventory is managed through transfers to the Amazon location.
+
+**Important**
+
+This method does not track the exact lot or serial number used in each sale. Its purpose is to allow order synchronization without errors.
+
+## **Settings**
+
+To implement this workflow, ensure the following apps are installed:
+
+- **Sales app**: Required to <a href="https://www.odoo.com/documentation/19.0/applications/sales/sales/amazon_connector/setup.html#amazon-setup" target="_blank" rel="noopener noreferrer">**connect an Amazon account**</a>
+
+- **Inventory app**: Needed for managing stock across <a href="https://www.odoo.com/documentation/19.0/applications/inventory_and_mrp/inventory/warehouses_storage/inventory_management/use_locations.html#use-locations-configuration" target="_blank" rel="noopener noreferrer">**warehouse locations**</a>
+
+- **Manufacturing app**: Used to create <a href="https://www.odoo.com/documentation/19.0/applications/inventory_and_mrp/manufacturing/basic_setup/bill_configuration.html#manufacturing-basic-setup-bom-setup" target="_blank" rel="noopener noreferrer">**Bills of Materials (BoM)**</a> for kits
+
+## **Create a product kit**
+
+To handle tracked products correctly, create a kit that represents the Amazon listing.
+
+1. Go to **Sales app ‣ Products ‣ Products**
+
+2. Click **New**
+
+3. Create a product configured as a <a href="https://www.odoo.com/documentation/19.0/applications/inventory_and_mrp/manufacturing/advanced_configuration/kit_shipping.html#manufacturing-advanced-configuration-kits" target="_blank" rel="noopener noreferrer">**kit**</a>
+
+**Important**
+
+Do **not** enable **Track Inventory** for the kit product.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/product-kit-form.png" width="768" height="414" alt="Example of a product form configured to be a kit in the Inventory app." />
+
+### **Link the Amazon SKU to the product kit**
+
+Next, map the Amazon product to the kit:
+
+1. Go to **Sales app ‣ Configuration ‣ Offers**
+
+2. Click **New**
+
+3. Select the <a href="https://www.odoo.com/documentation/19.0/applications/sales/sales/amazon_connector/features.html#amazon-supported-marketplaces" target="_blank" rel="noopener noreferrer">**Amazon marketplace**</a>
+
+4. Choose the kit product
+
+5. Enter the Amazon SKU
+
+**Note**
+
+This step intentionally removes the direct link between the SKU and the tracked product.\
+Since Odoo cannot assign lot/serial numbers during sync, keeping that link would cause repeated failures.
+
+By linking the SKU to the kit instead, the system bypasses the tracking requirement and completes synchronization successfully.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/link-amazon-sku.png" width="768" height="195" alt="Example of a kit product linked to an Amazon SKU in the Offers page in the Sales app." />
+
+### **Create the BoM for the product kit**
+
+Now define the kit structure:
+
+1. Go to **Sales app ‣ Products ‣ Products**
+
+2. Open the kit product
+
+3. Click the **Bill of Materials** smart button
+
+4. Create a <a href="https://www.odoo.com/documentation/19.0/applications/inventory_and_mrp/manufacturing/advanced_configuration/kit_shipping.html#manufacturing-advanced-configuration-kit-bom" target="_blank" rel="noopener noreferrer">**kit BoM**</a>
+
+In the **Components** tab:
+
+- Add the original tracked product (lot/serial tracked)
+
+**Important**
+
+The tracked product must be the **only component** in the BoM.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/amazon-product-bom-kit.png" width="768" height="382" alt="Example of the kit BoM for the kit product to represent the Amazon listing." />
+
+Once configured, Odoo will process Amazon FBA orders using the kit, allowing smooth synchronization while maintaining internal stock tracking through warehouse transfers.

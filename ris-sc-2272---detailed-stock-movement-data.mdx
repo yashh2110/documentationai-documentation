@@ -1,0 +1,226 @@
+---
+title: Detailed Stock Movement Report (Bin-to-Bin Tracking)
+description: >-
+  Provides detailed tracking of stock movements between bin locations, including
+  quantity moved, value impact, user activity, and source/destination bins.
+---
+## Overview
+
+The **RIS-SC-2272 – Detailed Stock Movement Data** report tracks internal stock transfers between bin locations.
+
+It reconstructs movement activity by pairing stock-out and stock-in transactions, giving a clear view of bin-to-bin transfers along with financial impact.
+
+<Callout kind="tip" collapsed="false">
+  This report matches outbound and inbound movements using quantity, timestamp, and user to accurately reconstruct stock transfers.
+</Callout>
+
+---
+
+## Purpose
+
+This report:
+
+- Tracks stock movement between bin locations
+
+- Identifies source and destination bins
+
+- Captures user activity for each movement
+
+- Calculates value impact of stock transfers
+
+👉 In short:\
+Track who moved stock, from where, to where, and what value was affected.
+
+---
+
+## When It Runs
+
+Executed on-demand (SQL report)
+
+Typically used:
+
+- Warehouse movement tracking
+
+- Internal stock transfer audits
+
+- Bin-level inventory analysis
+
+- Operational monitoring
+
+- Stock discrepancy investigations
+
+---
+
+## Parameters
+
+<ParamField path="StartDate" param-type="date" required="true" deprecated="false">
+  Start date for stock movement tracking.
+</ParamField>
+
+<ParamField path="EndDate" param-type="date" required="true" deprecated="false">
+  End date for stock movement tracking.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  The report includes movements within the selected date range (inclusive).
+</Callout>
+
+---
+
+## How It Works
+
+<Steps>
+  <Step title="Capture Outbound Movements" icon="arrow-up-right" title-type="p">
+    Retrieves stock movements where quantity is negative (stock leaving a bin).
+  </Step>
+
+  <Step title="Capture Inbound Movements" icon="arrow-down-left" title-type="p">
+    Retrieves stock movements where quantity is positive (stock entering a bin).
+  </Step>
+
+  <Step title="Filter Movement Type" icon="filter" title-type="p">
+    Includes only records where:
+
+    - ChangeNote = "Stock Moved"
+  </Step>
+
+  <Step title="Match Movement Pairs" icon="link" title-type="p">
+    Matches outbound and inbound records using:
+
+    - Same user
+
+    - Same timestamp
+
+    - Opposite quantities
+  </Step>
+
+  <Step title="Combine Data" icon="layers" title-type="p">
+    Builds a unified dataset showing:
+
+    - From Bin
+
+    - To Bin
+
+    - Quantity moved
+
+    - Value change
+  </Step>
+
+  <Step title="Join Inventory Data" icon="database" title-type="p">
+    Links movement data with:
+
+    - Batch inventory
+
+    - Batch records
+
+    - Stock item details
+  </Step>
+
+  <Step title="Fetch Current Bin" icon="map-pin" title-type="p">
+    Retrieves current bin location from inventory for reference.
+  </Step>
+
+  <Step title="Prepare Final Output" icon="file-text" title-type="p">
+    Formats results with SKU, quantity, value, user, and bin details.
+  </Step>
+
+  <Step title="Sort Results" icon="arrow-down" title-type="p">
+    Orders data by movement date (latest first).
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - SKU-level stock movement records
+
+  - Quantity moved between bins
+
+  - Source and destination bin locations
+
+  - User responsible for movement
+
+  - Financial value of movement
+
+  - Chronological movement tracking
+</Callout>
+
+---
+
+## Usefulness
+
+This report is highly beneficial for:
+
+- Warehouse audit and traceability
+
+- Tracking internal stock transfers
+
+- Identifying user activity in stock handling
+
+- Monitoring bin utilization
+
+- Detecting discrepancies and errors
+
+---
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Only movements with "Stock Moved" note are included
+
+  - Matching is based on timestamp and user, so precision is critical
+
+  - Movements must have equal and opposite quantities to match
+
+  - If matching fails, some movements may not appear
+
+  - Current bin may differ from original source bin
+
+  - Value is based on StockValueDelta
+
+  - Date filter includes entire end date using DATEADD logic
+</Callout>
+
+---
+
+## Example Scenario
+
+<Expandable title="Bin-to-Bin Movement Example" default-open="false">
+  Scenario:
+
+  - SKU A moved from Bin A → Bin B
+
+  - Quantity moved → 10 units
+
+  - User → John
+
+  - Value change → £50
+
+  👉 The report shows:
+
+  - SKU → A
+
+  - Qty Moved → 10
+
+  - From Bin → Bin A
+
+  - To Bin → Bin B
+
+  - User → John
+
+  - Value → £50
+
+  Insight:\
+  Complete traceability of stock movement with user accountability.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  The core strength of this report lies in reconstructing stock transfers by pairing outbound and inbound movements. This indirect linking approach enables accurate tracking of bin-to-bin movements even without explicit transfer records, making it highly valuable for warehouse audits and operational visibility.
+</Callout>
+

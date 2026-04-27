@@ -1,0 +1,162 @@
+---
+title: Loading Sheet
+---
+## Overview
+
+Loading Sheet is a custom feature available in the Orders screen.
+
+It generates a printable document used by the warehouse and dispatch team during the loading process.
+
+This sheet shows customer details along with product information required for delivery preparation.
+
+## Purpose
+
+The purpose of this feature is to simplify the loading and dispatch process.
+
+It helps teams organize deliveries by showing customer information, product details, and configurations in one place.
+
+This reduces manual checking and improves accuracy during loading.
+
+## Key Features
+
+- Works on selected orders in Linnworks
+
+- Groups products by SKU along with customer details
+
+- Combines quantities for the same product
+
+- Retrieves product details from extended properties
+
+- Displays customer name and postcode
+
+- Generates a printable loading sheet
+
+- Opens print screen automatically
+
+## Data Required
+
+The system uses product extended properties.
+
+**ProductImage**\
+Product image
+
+**Height**\
+Product height
+
+**Width**\
+Product width
+
+**RoofandFloor**\
+Roof and floor details
+
+**SidePanels**\
+Side panel details
+
+**DoorWindowSticksFelt**\
+Door and window accessories
+
+## Output Fields
+
+The loading sheet includes
+
+- Serial Number
+
+- Customer Name
+
+- Postcode
+
+- Product Image
+
+- Height
+
+- Width
+
+- Roof and Floor
+
+- Side Panels
+
+- Door Window Sticks Felt
+
+## How It Works
+
+Step 1\
+User selects one or more orders from the Orders screen
+
+Step 2\
+User clicks Loading Sheet button
+
+Step 3\
+System collects order items and customer details
+
+Step 4\
+Items are grouped by SKU along with customer and postcode
+
+Step 5\
+System retrieves product details and images
+
+Step 6\
+Loading sheet is generated
+
+Step 7\
+Print screen opens automatically
+
+## Screens and Explanation
+
+### Orders Screen with Button
+
+This screen shows where the Loading Sheet button is available.\
+Users select orders and click this button to generate the sheet.
+
+<Image src="https://blob-cdn.documentation.ai/org-87fb0951-1e07-4f5d-a887-8a7327c7777d/doc-98941d2e-0032-424f-8414-3034ac5fa6ee/1775634521565-tm8ypnk1k09-LadingSheet.png?fm=auto&auto=compress%2Cformat" width="1518" height="615" alt="" />
+
+### Generated Loading Sheet
+
+The generated sheet displays customer details along with product information required for dispatch.
+
+<Image src="https://blob-cdn.documentation.ai/org-87fb0951-1e07-4f5d-a887-8a7327c7777d/doc-98941d2e-0032-424f-8414-3034ac5fa6ee/1775634601362-t5748bswxk-pasted-image-1775634511410.png?fm=auto&auto=compress%2Cformat" width="751" height="298" alt="" />
+
+### Print Preview Screen
+
+The print preview opens automatically after generation.\
+Users can print or save the document.
+
+<Image src="https://blob-cdn.documentation.ai/org-87fb0951-1e07-4f5d-a887-8a7327c7777d/doc-98941d2e-0032-424f-8414-3034ac5fa6ee/1775634583886-88w1z0acg3l-pasted-image-1775634494100.png?fm=auto&auto=compress%2Cformat" width="1590" height="759" alt="" />
+
+## Important Notes
+
+- At least one order must be selected
+
+- Orders without items will not be included
+
+- Product details depend on available system data
+
+- Images will be shown only if available
+
+## Error Handling
+
+If no order is selected\
+System shows message Please select at least one order
+
+If selected orders have no items\
+System shows message Selected orders contain no items
+
+If any issue occurs\
+System shows message Error generating Loading Sheet
+
+## Business Benefits
+
+- Improves dispatch and loading efficiency
+
+- Reduces manual work
+
+- Minimizes errors during delivery preparation
+
+- Provides clear customer and product visibility
+
+- Helps warehouse team organize deliveries better
+
+## Summary
+
+Loading Sheet is a simple tool that converts selected orders into a clear and printable delivery preparation document.
+
+It helps warehouse and dispatch teams work faster and more accurately.

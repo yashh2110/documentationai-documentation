@@ -1,0 +1,113 @@
+---
+title: Returns and refunds
+description: >-
+  The Sales app offers multiple ways to handle product returns. The correct
+  method depends on whether the customer has already been invoiced.
+---
+## **Before invoicing**
+
+If a customer returns a product before an invoice is issued or confirmed, the return is handled using *Reverse Transfers*.
+
+**Note**
+
+The *Inventory* app must be installed to process returns using reverse transfers.
+
+To begin:
+
+1. Open the **Sales** app.
+
+2. Select the relevant sales order.
+
+3. Click the **Delivery** smart button to access the related delivery order.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/sales-order-delivery-smart-button.png" width="630" height="241" alt="A typical sales order with a highlighted delivery smart button in Odoo Sales." />
+
+On the validated delivery order, click **Return**.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/validated-delivery-order-return-button.png" width="422" height="411" alt="A validated delivery order with a highlighted Return button in Odoo Sales." />
+
+A **Reverse Transfer** window will appear.
+
+- The default quantities match what was delivered.
+
+- Adjust quantities if needed.
+
+- Remove items using the **🗑️ (trash)** icon.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/reverse-transfer-popup.png" width="629" height="394" alt="The Reverse Transfer pop-up window." />
+
+Click **Return** to confirm. This creates a new warehouse operation for the returned items.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/warehouse-operation-confirmed-return.png" width="632" height="228" alt="Warehouse operation after a return has been confirmed in Odoo Sales." />
+
+Once the returned goods are received, the warehouse team validates the operation by clicking **Validate**.
+
+After validation:
+
+- The **Delivered** quantity on the sales order is automatically updated.
+
+- It reflects the original delivery minus the returned items.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/updated-sales-quantities.png" width="632" height="263" alt="Updated delivered quantity after return." />
+
+When an invoice is later created, the customer is billed only for the products they kept.
+
+## **After invoicing**
+
+If a return happens after the invoice has been issued or paid, additional steps are required. Since confirmed invoices cannot be modified, a combination of *Reverse Transfers* and *Credit Notes* must be used.
+
+Start by opening the relevant sales order in the **Sales** app.
+
+If a payment has already been registered:
+
+- Payment details will appear in the chatter.
+
+- The invoice will show a green **In Payment** status.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/green-in-payment-banner.png" width="219" height="211" alt="Sample of a green in payment banner in Odoo Sales." />
+
+### **Step 1: Process the return**
+
+1. Click the **Delivery** smart button.
+
+2. Open the validated delivery order.
+
+3. Click **Return**.
+
+Update product quantities as needed, then confirm by clicking **Return**.
+
+This creates a return operation, which must be validated by the warehouse team once items are received.
+
+After validation, the **Delivered** quantities on the sales order are updated accordingly.
+
+### **Step 2: Issue a refund**
+
+To refund the customer:
+
+1. Open the invoice using the **Invoices** smart button.
+
+2. Click **Credit Note**.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/credit-note-button.png" width="631" height="145" alt="A typical customer invoice with a Credit Note button highlighted in Odoo Sales." />
+
+This opens the credit note form.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/credit-note-pop-up-form.png" width="628" height="276" alt="Typical credit note pop-up form." />
+
+Fill in the required details:
+
+- **Reason displayed on Credit Note**
+
+- **Journal**
+
+- **Reversal Date**
+
+Then choose one of the following:
+
+- **Reverse**: create a credit note only
+
+- **Reverse and Create Invoice**: create a credit note and a new draft invoice
+
+Make any necessary adjustments, then click **Confirm**.
+
+Once completed, a notification appears indicating that available credits can be applied to settle outstanding invoices.

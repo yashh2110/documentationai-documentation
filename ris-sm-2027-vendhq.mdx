@@ -1,0 +1,162 @@
+---
+title: Order Sync Macro for Automated POS Sales Integration
+description: >-
+  Import completed sales from external POS systems and automatically create
+  orders with customer, item, and payment details in the system.
+---
+
+## Overview
+
+The Order Sync macro retrieves completed sales data from external POS systems and creates corresponding orders.
+
+It processes sales, maps payment methods, and generates orders with customer, item, and payment information.
+
+<Callout kind="tip" collapsed="false">
+  Ensure API access and authentication for the external system are correctly configured before running this macro.
+</Callout>
+
+## Purpose
+
+This macro
+
+- Retrieves completed sales from external systems  
+- Creates orders automatically  
+- Maps payment methods to system accounts  
+- Syncs customer and item data  
+
+In short  
+Sync external sales into the system as orders
+
+## When It Runs
+
+Used for order synchronization
+
+Typically runs
+
+- Scheduled execution recommended  
+- Manually triggered when needed  
+- After sales are completed in external systems  
+
+## Parameters
+
+<ParamField path="sinceDate" param-type="string" required="true" deprecated="false">
+  Date from which sales should be fetched
+</ParamField>
+
+<ParamField path="registers" param-type="string" required="true" deprecated="false">
+  List of register names to filter sales
+</ParamField>
+
+<ParamField path="locationName" param-type="string" required="false" deprecated="false">
+  Location where orders will be assigned
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  The macro processes completed sales and avoids duplicate order creation using external references.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Fetch Sales Data" icon="download" title-type="p">
+    Retrieve completed sales from external system using API.
+  </Step>
+
+  <Step title="Handle Pagination" icon="list" title-type="p">
+    Load all pages of sales data if multiple pages exist.
+  </Step>
+
+  <Step title="Get Existing Orders" icon="search" title-type="p">
+    Retrieve existing order references to avoid duplicates.
+  </Step>
+
+  <Step title="Map Payment Methods" icon="credit-card" title-type="p">
+    Match external payment types with system payment accounts.
+  </Step>
+
+  <Step title="Filter Valid Sales" icon="filter" title-type="p">
+    Process only sales from selected registers.
+  </Step>
+
+  <Step title="Create Orders" icon="plus-circle" title-type="p">
+    Generate new orders with customer and item details.
+  </Step>
+
+  <Step title="Add Order Items" icon="package" title-type="p">
+    Add products to orders with correct quantity and pricing.
+  </Step>
+
+  <Step title="Set Totals and Payments" icon="dollar-sign" title-type="p">
+    Apply totals and assign payment methods.
+  </Step>
+
+  <Step title="Add Notes" icon="file-text" title-type="p">
+    Attach notes from external sales if available.
+  </Step>
+
+  <Step title="Complete Process" icon="check-circle" title-type="p">
+    Finalize order creation and log execution.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Sales are imported as orders  
+
+  - Customer and item data is created  
+
+  - Payment methods are mapped correctly  
+
+  - Duplicate orders are avoided  
+
+  - Process execution is logged  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for
+
+- Automating order creation from external systems  
+- Reducing manual data entry  
+- Improving data accuracy  
+- Syncing sales and orders in real time  
+- Enhancing operational efficiency  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Requires valid API authentication  
+
+  - Processes only completed sales  
+
+  - Avoids duplicates using external reference  
+
+  - Payment mapping must be configured correctly  
+
+  - Depends on external system availability  
+
+  - Large data volumes may impact performance  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Order Sync Example" default-open="false">
+  A sale is completed in an external POS system
+
+  The macro
+
+  - Retrieves the sale data  
+  - Creates a new order  
+  - Adds customer and item details  
+  - Applies payment information  
+
+  Result  
+  The order is automatically created without manual entry
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Automating order synchronization ensures consistency between systems and eliminates manual processing delays.
+</Callout>

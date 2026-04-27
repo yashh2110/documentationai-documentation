@@ -1,0 +1,132 @@
+---
+title: Missing Phone Number
+description: >-
+  Automatically assign a default phone number to orders where the customer phone
+  number is missing to ensure smooth shipping and courier processing.
+---
+## Overview
+
+The **RIS-RM-1029 – Missing Phone Number** macro ensures that all orders contain a valid phone number by filling in missing values with a predefined default.
+
+It helps maintain complete customer contact information, which is critical for shipping, courier services, and delivery communication.
+
+<Callout kind="tip" collapsed="false">
+  Ensure the default phone number is correctly configured before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Checks for missing phone numbers  
+- Assigns a default phone number when required  
+- Updates order customer details  
+
+👉 In short:  
+Fill missing phone numbers automatically.
+
+## When It Runs
+
+Used for contact data validation and shipping readiness
+
+Typically runs:
+
+- Manually triggered  
+- Via Rules Engine  
+- Before shipping or label generation  
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of orders to process.
+</ParamField>
+
+<ParamField path="DefualtPhoneNumber" param-type="string" required="true" deprecated="false">
+  Phone number to assign when the existing value is missing.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  The default phone number is applied only when the phone field is empty or null.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Process Orders" icon="list" title-type="p">
+    Iterate through each order provided in OrderIds.
+  </Step>
+
+  <Step title="Fetch Order Details" icon="download" title-type="p">
+    Retrieve customer address and contact information.
+  </Step>
+
+  <Step title="Check Phone Number" icon="search" title-type="p">
+    Verify if the phone number is empty or missing.
+  </Step>
+
+  <Step title="Assign Default Value" icon="edit" title-type="p">
+    If missing, assign the DefualtPhoneNumber value.
+  </Step>
+
+  <Step title="Update Order" icon="save" title-type="p">
+    Save updated customer information using the API.
+  </Step>
+
+  <Step title="Log Execution" icon="file" title-type="p">
+    Record execution start, completion, and any issues.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Missing phone numbers are automatically filled  
+
+  - Orders contain valid contact information  
+
+  - Orders become ready for shipping and courier processing  
+
+  - Execution results are logged  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Preventing shipping failures  
+- Ensuring courier compliance  
+- Reducing manual data correction  
+- Improving order data quality  
+- Supporting fulfilment automation  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Applies only to orders provided in OrderIds  
+
+  - Does not validate phone number format  
+
+  - Updates only when the value is missing  
+
+  - Default value must be configured correctly before execution  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Missing Phone Number Handling Example" default-open="false">
+  An order is received without a phone number.
+
+  👉 The macro:
+
+  - Detects the missing value  
+  - Assigns the default phone number  
+  - Updates the order  
+
+  Result: Order is now valid for courier processing.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By ensuring every order has a valid phone number, this macro eliminates delivery risks caused by missing contact details and improves overall fulfilment reliability.
+</Callout>

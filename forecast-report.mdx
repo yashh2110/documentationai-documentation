@@ -1,0 +1,152 @@
+---
+title: Forecast report
+description: >-
+  The Forecast report in the CRM app helps visualize upcoming opportunities and
+  estimate future sales by organizing deals based on their expected closing
+  dates.
+---
+The *Forecast* report in the *CRM* app provides a forward-looking view of your sales pipeline. It helps teams estimate potential revenue by organizing opportunities based on their expected closing dates.
+
+Opportunities are grouped by time periods (typically months) and displayed in a visual format, allowing users to quickly assess upcoming deals. You can also drag and drop opportunities between columns to adjust their expected closing timeline.
+
+To access this report, navigate to:\
+**CRM app ‣ Reporting ‣ Forecast**
+
+## **Navigate the forecast report**
+
+By default, the **Forecast** report displays:
+
+- Opportunities assigned to the current user
+
+- Deals expected to close within the next four months
+
+- Opportunities without a defined closing date
+
+These are presented in a **Kanban view**, grouped by expected closing period.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/sample-report.png" width="933" height="375" alt="A sample version of the Forecast report in the CRM app." />
+
+## **Manage expected closing dates**
+
+Opportunities are grouped based on the value in the *Expected Closing* field.
+
+### **Update directly from the report**
+
+You can quickly adjust closing dates without opening the record:
+
+- Drag an opportunity card
+
+- Drop it into a different month column
+
+This automatically updates the **Expected Closing** date to the last day of the selected period.
+
+### **Change grouping period**
+
+The forecast is grouped by *month* by default, but this can be adjusted:
+
+1. Click the **(down arrow)** next to the search bar
+
+2. Under **Group By**, select **Expected Closing**
+
+3. Choose a different time interval (day, week, month, year)
+
+### **Update from opportunity form**
+
+You can also manually edit the closing date:
+
+1. Click an opportunity card
+
+2. Open the record
+
+3. Modify the **Expected Closing** field using the calendar
+
+**Tip**\
+Updating dates regularly ensures your forecast remains accurate and reliable.
+
+## **Understand prorated revenue**
+
+Each column in the forecast displays a revenue value at the top. This is the **prorated revenue**, which represents the weighted expected value of all opportunities in that time period.
+
+This value is calculated using:
+
+- **Expected Revenue**
+
+- **Probability of closing**
+
+In simple terms:
+
+> Prorated Revenue = Expected Revenue × Probability
+
+### **Example**
+
+Consider two opportunities scheduled for the same month:
+
+- **Global Solutions**
+
+  - Expected Revenue: $3,800
+
+  - Probability: 90%
+
+  - Prorated Revenue: $3,420
+
+- **Quote for 600 Chairs**
+
+  - Expected Revenue: $22,500
+
+  - Probability: 20%
+
+  - Prorated Revenue: $4,500
+
+**Total forecast for the month:** $7,920
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/example-revenue.png" width="485" height="488" alt="An example of the prorated revenue for one month of the forecast report." />
+
+When opportunities are moved between columns, the totals update automatically.
+
+**See also**\
+For more details on how probability is calculated, refer to
+
+## **Analyze forecast data**
+
+The forecast report supports multiple views to help you analyze data from different perspectives.
+
+### **Graph view**
+
+Switch to graph view using the **(area chart)** icon.
+
+Available chart types:
+
+- **Bar chart** → Compare revenue across periods
+
+- **Line chart** → Identify trends over time
+
+- **Pie chart** → View proportional distribution
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/pie-chart-view.png" width="933" height="486" alt="A pie chart view of the Forecast report." />
+
+### **Pivot view**
+
+Use the **pivot view** for deeper analysis.
+
+- Group data by stage, salesperson, or time period
+
+- Compare multiple metrics
+
+- Analyze performance trends
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/pivot-view1.png" width="933" height="265" alt="A sample of the forecast report in the pivot view." />
+
+### **List view**
+
+Switch to the **list view** to see all opportunities in a structured format.
+
+This view is useful for:
+
+- Reviewing individual records
+
+- Checking deal details
+
+- Performing operational follow-ups
+
+**Tip**\
+Use pivot view for analysis, graph view for insights, and list view for execution.

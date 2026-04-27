@@ -1,0 +1,181 @@
+---
+title: Low Stock Email Alert
+description: >-
+  Monitor stock levels during order processing and automatically send email
+  alerts when items go out of stock, excluding dropship items.
+---
+## Overview
+
+The **RIS-RM-1030 – LowStockEmail** macro monitors stock levels in real time during order processing and sends email alerts when items reach zero stock.
+
+It ensures only warehouse-managed items are evaluated by excluding dropship items using SQL-based detection.
+
+<Callout kind="tip" collapsed="false">
+  Ensure SMTP configuration and dropship detection logic are correctly set before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Monitors stock levels during order processing  
+- Detects when stock becomes zero  
+- Excludes dropship items from checks  
+- Sends email alerts automatically  
+
+👉 In short:  
+Detect stock-out events and notify instantly.
+
+## When It Runs
+
+Used for inventory monitoring and alerting
+
+Typically runs:
+
+- During order processing  
+- Manual execution  
+- During order import workflows  
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true">
+  List of orders to check for stock changes.
+</ParamField>
+
+<ParamField path="ServerName" param-type="string" required="true">
+  SMTP server used to send emails.
+</ParamField>
+
+<ParamField path="useSSL" param-type="boolean" required="true">
+  Enable or disable SSL for email communication.
+</ParamField>
+
+<ParamField path="port" param-type="number" required="true">
+  SMTP port number.
+</ParamField>
+
+<ParamField path="username" param-type="string" required="true">
+  Email account username.
+</ParamField>
+
+<ParamField path="password" param-type="string" required="true">
+  Email account password.
+</ParamField>
+
+<ParamField path="fromEmail" param-type="string" required="true">
+  Sender email address.
+</ParamField>
+
+<ParamField path="fromName" param-type="string" required="true">
+  Sender display name.
+</ParamField>
+
+<ParamField path="toEmails" param-type="string" required="true">
+  Comma-separated list of recipient email addresses.
+</ParamField>
+
+## How It Works
+
+<Steps>
+  <Step title="Process Orders" icon="list" title-type="p">
+    Loop through each order provided in OrderIds.
+  </Step>
+
+  <Step title="Read Order Items" icon="box" title-type="p">
+    Extract SKU, quantity, and current stock level for each item.
+  </Step>
+
+  <Step title="Detect Dropship Items" icon="search" title-type="p">
+    Execute SQL query to identify dropship supplier items and skip them.
+  </Step>
+
+  <Step title="Calculate Stock Levels" icon="calculator" title-type="p">
+    Determine:
+    - Stock before order  
+    - Stock after order  
+  </Step>
+
+  <Step title="Check Out-of-Stock Condition" icon="alert-triangle" title-type="p">
+    Identify items where:
+    Stock before > 0 AND stock after ≤ 0
+  </Step>
+
+  <Step title="Prepare Email Content" icon="edit" title-type="p">
+    Create alert email with SKU and stock details.
+  </Step>
+
+  <Step title="Send Email Alerts" icon="send" title-type="p">
+    Send notification to all configured recipients.
+  </Step>
+
+  <Step title="Log Execution" icon="file-text" title-type="p">
+    Record success, failures, and processing details.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Out-of-stock items detected in real time  
+
+  - Email alerts sent automatically  
+
+  - Dropship items excluded from monitoring  
+
+  - Improved inventory visibility  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Preventing overselling  
+- Improving stock visibility  
+- Enabling faster replenishment  
+- Reducing manual monitoring  
+- Ensuring timely notifications  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Depends on SQL query for dropship detection  
+
+  - Requires correct SMTP configuration  
+
+  - No retry mechanism for failed emails  
+
+  - Triggers only when stock reaches zero  
+
+  - Duplicate recipients may receive multiple alerts  
+
+  - Sensitive credentials are used in configuration  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Out-of-Stock Detection Example" default-open="false">
+  An order is processed for an item with limited stock.
+
+  👉 Before processing:
+  Stock = 2  
+
+  👉 Order quantity:
+  2  
+
+  👉 After processing:
+  Stock = 0  
+
+  The macro:
+
+  - Detects stock depletion  
+  - Skips if item is dropship  
+  - Sends alert email with SKU details  
+
+  Result: Team is immediately notified to restock.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By identifying stock depletion at the exact moment it occurs, this macro enables proactive inventory management and helps prevent fulfilment issues caused by stock shortages.
+</Callout>

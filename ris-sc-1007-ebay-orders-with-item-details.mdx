@@ -1,0 +1,163 @@
+---
+title: eBay Orders with Item Details
+description: >-
+  Retrieves detailed eBay order data including item-level, customer, shipping,
+  and tax information, along with XML-specific details.
+---
+## Overview
+
+The **RIS-SC-1007 – eBay Orders with Item Details** script provides a comprehensive view of eBay orders, combining order, item, customer, shipping, and XML data.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  Get full eBay order details including items, customer, shipping, and additional eBay-specific information.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Retrieves order ID, channel order ID, order dates, totals, tax, and currency
+
+- Extracts eBay XML data (site ID, item numbers)
+
+- Retrieves customer name, address, phone, email, and buyer ID
+
+- Fetches shipping carrier, service, and tracking numbers
+
+- Retrieves item details (channel SKU, internal SKU, product title, price, quantity, barcode)
+
+- Gets warehouse bin or rack location
+
+👉 Supports audits, reporting, dispute resolution, and operational visibility.
+
+## When It Runs
+
+Used for eBay order reporting and operational analysis.
+
+**Typically runs:**
+
+- Manual execution for reporting
+
+- During customer or shipping investigations
+
+- For order audits and dispute handling
+
+## Parameters
+
+<ParamField path="startDate" param-type="nvarchar" required="true" deprecated="false">
+  Start date for processed orders.\
+  Example: '01 Nov 2018'
+</ParamField>
+
+<ParamField path="endDate" param-type="nvarchar" required="true" deprecated="false">
+  End date for processed orders.\
+  Example: '21 Feb 2019'
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  The script consolidates order, item, and XML data to generate a full eBay order report.
+</Callout>
+
+## Process Flow Step-by-Step
+
+<Steps>
+  <Step title="Set Date Range" icon="calendar" title-type="p">
+    Define startDate and endDate to filter processed orders.
+  </Step>
+
+  <Step title="Filter Orders" icon="filter" title-type="p">
+    Include only eBay orders for subsource EBAY1 with status Paid, Processed, or Dispatched.
+  </Step>
+
+  <Step title="Get Order Details" icon="list" title-type="p">
+    Retrieve order ID, channel order ID, order date, processed date, total, tax, and currency.
+  </Step>
+
+  <Step title="Extract eBay XML Data" icon="file-text" title-type="p">
+    Convert stored XML and extract site ID and item numbers.
+  </Step>
+
+  <Step title="Get Customer Details" icon="user" title-type="p">
+    Retrieve customer name, address, city, postcode, country, phone, email, and buyer ID.
+  </Step>
+
+  <Step title="Get Shipping Details" icon="truck" title-type="p">
+    Retrieve carrier, shipping service, and tracking number.
+  </Step>
+
+  <Step title="Get Item Details" icon="package" title-type="p">
+    Retrieve channel SKU, internal SKU, product title, price, quantity, and barcode.
+  </Step>
+
+  <Step title="Get Warehouse Information" icon="map-pin" title-type="p">
+    Retrieve bin or rack location for each item.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Comprehensive report containing:
+
+    - Order details
+
+    - Customer information
+
+    - Shipping details
+
+    - Item-level data
+
+    - eBay-specific identifiers\
+      Provides a complete view of each eBay order.
+</Callout>
+
+## Usefulness
+
+This script is highly beneficial for:
+
+- Detailed order audits
+
+- Customer support and dispute resolution
+
+- Warehouse operations with bin location
+
+- Full visibility of eBay transactions
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Works only for eBay orders
+
+  - Depends on accurate XML data storage
+
+  - Requires correct subsource configuration
+
+  - Large datasets may impact performance
+
+  - Read-only script; no data modifications
+</Callout>
+
+## Example Scenario
+
+<Expandable title="eBay Order Investigation Example" default-open="false">
+  Scenario: Customer reports wrong item delivery
+
+  Processing:
+
+  - Retrieve order, item, customer, shipping, and XML details
+
+  **Result:**
+
+  - Complete order breakdown is available including SKU, customer info, and shipping
+
+  **Insight:**\
+  Helps quickly identify and resolve customer order issues.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Consolidates all critical eBay order information into a single report, enabling effective audits, customer support, and issue resolution.
+</Callout>
+

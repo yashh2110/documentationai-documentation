@@ -1,0 +1,168 @@
+---
+title: Sales By Sub Source Channels
+description: >-
+  Generates a sales report showing products sold across different sales channels
+  (subsources), dynamically creating columns for each subsource with sales
+  quantities.
+---
+## Overview
+
+The **RIS-SC-1002 – Sales By Sub Source Channels** script aggregates sales data by product and splits it across subsource channels. Each subsource is displayed as a separate column for easy comparison.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  Group sales by product → Split by channel → Display in one consolidated report
+</Callout>
+
+## Purpose
+
+This script:
+
+- Collects sales data by product
+
+- Groups sales by subsource channel
+
+- Dynamically creates report columns for each subsource
+
+- Aggregates quantity sold per channel
+
+👉 Provides a clear multi-channel sales overview.
+
+## When It Runs
+
+Used for sales reporting and business analysis.
+
+**Typically runs:**
+
+- Manual execution for reporting
+
+- Sales performance review
+
+- Business reporting and dashboards
+
+- Channel-wise sales comparison
+
+## Parameters
+
+<ParamField path="startDate" param-type="nvarchar" required="true" deprecated="false">
+  Start date of the report period.
+</ParamField>
+
+<ParamField path="endDate" param-type="nvarchar" required="true" deprecated="false">
+  End date of the report period.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Example:
+
+  - **startDate:** 01 Sep 2020
+
+  - **endDate:** 20 Sep 2020
+</Callout>
+
+<Callout kind="info" collapsed="false">
+  The script collects and pivots sales data into a channel-wise consolidated view.
+</Callout>
+
+## Process Flow Step-by-Step
+
+<Steps>
+  <Step title="Define Date Range" icon="calendar" title-type="p">
+    Set `startDate` and `endDate` to filter sales data.
+  </Step>
+
+  <Step title="Get Subsource List" icon="layers" title-type="p">
+    Dynamically fetch all subsources from the system and convert them into column names.
+  </Step>
+
+  <Step title="Build Dynamic Query" icon="code" title-type="p">
+    Create a dynamic SQL query based on available subsources. Avoid hardcoding channel names.
+  </Step>
+
+  <Step title="Fetch Product Data" icon="package" title-type="p">
+    Retrieve for each product:
+
+    - SKU
+
+    - Product title
+
+    - Product type
+
+    - Stock availability
+
+    - Image URL
+  </Step>
+
+  <Step title="Filter Data" icon="filter" title-type="p">
+    Include only orders within the specified date range and stock for the default location.
+  </Step>
+
+  <Step title="Pivot Data" icon="grid" title-type="p">
+    Convert rows into columns using pivot. Each subsource becomes a separate column with aggregated quantity sold.
+  </Step>
+
+  <Step title="Execute Query" icon="play" title-type="p">
+    Run the dynamic SQL query to generate the sales report.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Report showing product details with sales split by subsource channels
+
+  - Each channel appears as a separate column
+
+  - Consolidated multi-channel sales view for analysis
+</Callout>
+
+## Usefulness
+
+This script is highly beneficial for:
+
+- Comparing sales performance across channels
+
+- Supporting inventory planning based on demand
+
+- Providing insights into top-performing products per channel
+
+- Management reporting and dashboards
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Dynamic query adapts to available subsources
+
+  - Requires correct date range input
+
+  - Works only on available sales data
+
+  - Large datasets may impact performance
+
+  - Depends on correct channel mapping in the system
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Multi-Channel Sales Reporting Example" default-open="false">
+  Scenario: Multi-channel business with products sold on Amazon, eBay, and Shopify
+
+  Processing:
+
+  - Manager runs report for last 15 days
+
+  **Result:**
+
+  - SKU TSHIRT1 → Amazon: 50, eBay: 10, Shopify: 5
+
+  **Insight:**
+
+  - Amazon is the highest performing sales channel for this product
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Transforms raw sales data into a structured channel-wise view, enabling businesses to understand platform performance, optimize inventory, and make data-driven decisions.
+</Callout>
+

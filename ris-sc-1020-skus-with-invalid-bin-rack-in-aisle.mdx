@@ -1,0 +1,123 @@
+---
+title: SKUs with Invalid Bin Rack
+description: >-
+  Identifies SKUs in Aisle A with bin rack codes that do not follow the correct
+  4-character format.
+---
+## Overview
+
+The **RIS-SC-1020 – SKUs with Invalid Bin Rack&#x20;**&#x73;cript audits warehouse bin locations to ensure all SKUs in Aisle A have correctly formatted bin codes.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  It finds products in Aisle A that have incorrect or improperly formatted bin rack codes.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Checks SKUs stored in bin rack
+
+- Validates bin rack codes for correct length (4 characters)
+
+- Highlights invalid bin locations for correction
+
+## When It Runs
+
+Manually executed by warehouse staff or auditors.
+
+**Typically used:**
+
+- During warehouse audits
+
+- For bin location cleanup
+
+- Before stock takes or inspections
+
+## Parameters
+
+<ParamField path="None" param-type="string" required="false" deprecated="false">
+  No manual input is required. The script only checks Aisle A and validates bin codes with exactly 4 characters.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Combines SKU and bin location data to detect these incorrectly formatted locations.
+</Callout>
+
+## Process Flow Step-by-Step
+
+<Steps>
+  <Step title="Get SKU and Bin Location" icon="package" title-type="p">
+    Retrieve SKU and its assigned bin rack code from ItemLocation.
+  </Step>
+
+  <Step title="Filter Aisle A" icon="filter" title-type="p">
+    Include only locations that contain "A".
+  </Step>
+
+  <Step title="Identify Invalid Format" icon="alert-circle" title-type="p">
+    Check bin rack length; mark codes not equal to 4 characters as invalid.
+  </Step>
+
+  <Step title="Exclude Unwanted Items" icon="trash" title-type="p">
+    Remove composite items, archived items, and deleted items.
+  </Step>
+
+  <Step title="Sort Results" icon="list-number" title-type="p">
+    Display results in SKU order.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  Report containing:
+
+  - SKU
+
+  - Bin Rack with invalid format
+</Callout>
+
+## Usefulness
+
+- **Warehouse Accuracy** – Ensures bin locations follow standard format
+
+- **Error Detection** – Finds incorrect or incomplete bin codes
+
+- **Operational Efficiency** – Improves picking accuracy
+
+- **Audit Support** – Useful before stock audits
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Only validates bin racks containing the letter **"A"**.
+
+  - Bin codes must be exactly 4 characters
+
+  - Excludes composite, archived, and deleted SKUs
+
+  - Read-only report; does not modify any data
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Warehouse Audit Example" default-open="false">
+  Expected bin format: 4 characters (e.g., A101, A205)
+
+  Report Result:
+
+  - SKU **ITEM1** → Bin Rack **A12**
+
+  - SKU **ITEM2** → Bin Rack **A12345**
+
+  **Insight:** Both bin locations are invalid and need correction.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By identifying incorrectly formatted bin locations, this script helps maintain warehouse accuracy, reduces picking errors, and ensures smooth inventory operations.
+</Callout>
+

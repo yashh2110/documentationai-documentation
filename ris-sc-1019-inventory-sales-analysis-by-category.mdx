@@ -1,0 +1,149 @@
+---
+title: Inventory Sales Analysis by Category
+description: >-
+  Analyzes recent sales by category, compares it with current stock, and
+  suggests minimum stock levels based on demand.
+---
+## Overview
+
+The **RIS-SC-1019 – Inventory Sales Analysis by Category** script helps monitor sales performance and maintain optimal stock levels by category.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  It shows which products are selling fast and recommends minimum stock levels to avoid shortages.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Analyzes recent sales by product category
+
+- Compares sales with current stock levels
+
+- Suggests a minimum stock level based on demand
+
+- Supports stock planning and inventory optimization
+
+## When It Runs
+
+Manually executed by users or analysts.
+
+**Typically used:**
+
+- During stock replenishment planning
+
+- For fast-moving product analysis
+
+- While reviewing recent sales trends
+
+## Parameters
+
+<ParamField path="None" param-type="string" required="false" deprecated="false">
+  No manual input is required. The script automatically considers the last 2 days of processed orders.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Combines sales data and current stock to provide insights for inventory management.
+</Callout>
+
+## Process Flow Step-by-Step
+
+<Steps>
+  <Step title="Filter Recent Orders" icon="filter" title-type="p">
+    Include only orders processed in the last 2 days.
+  </Step>
+
+  <Step title="Group by Category" icon="grid" title-type="p">
+    Organize products based on their category.
+  </Step>
+
+  <Step title="Calculate Sales Metrics" icon="hash" title-type="p">
+    Compute for each SKU: total units sold, number of orders, and total sales value.
+  </Step>
+
+  <Step title="Get Current Stock" icon="package" title-type="p">
+    Fetch current stock quantity from the default location.
+  </Step>
+
+  <Step title="Estimate Minimum Stock" icon="calculator" title-type="p">
+    Calculate half of the total sold quantity as suggested minimum stock.
+  </Step>
+
+  <Step title="Rank Products" icon="list-number" title-type="p">
+    Rank products within each category based on sales performance.
+  </Step>
+
+  <Step title="Exclude Unwanted Data" icon="trash" title-type="p">
+    Remove composite child items and exclude Amazon FBA orders.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  Report containing:
+
+  - Category
+
+  - SKU
+
+  - Current Stock Level
+
+  - Suggested Minimum Stock
+
+  - Units Sold
+
+  - Number of Orders
+
+  - Total Sales Value
+
+  - Rank within category
+</Callout>
+
+## Usefulness
+
+- **Stock Planning** – Decide how much inventory to maintain
+
+- **Fast Moving Item Detection** – Identify top-selling products
+
+- **Category Performance Analysis** – Understand trends across categories
+
+- **Inventory Optimization** – Prevent overstocking or stockouts
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Only considers processed orders in the last 2 days
+
+  - Excludes composite child items and FBA orders
+
+  - Depends on accurate stock and order data
+
+  - Read-only report; no changes are made to inventory
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Stock Replenishment Example" default-open="false">
+  Recent sales data shows:
+
+  - SKU **ITEM1** sold 20 units
+
+  - SKU **ITEM2** sold 10 units
+
+  Report Result:
+
+  - **ITEM1** → Current Stock 5, Suggested Minimum Stock 10
+
+  - **ITEM2** → Current Stock 15, Suggested Minimum Stock 5
+
+  **Insight:** ITEM1 requires urgent restocking, while ITEM2 has sufficient stock.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By combining recent sales trends with current inventory levels, this script enables smarter stock planning, reduces the risk of stockouts, and ensures balanced inventory across categories.
+</Callout>
+

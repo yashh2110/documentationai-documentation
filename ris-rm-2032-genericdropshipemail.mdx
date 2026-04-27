@@ -1,0 +1,175 @@
+---
+title: Generic Dropship Email
+description: >-
+  Automatically send dropship purchase order emails to suppliers based on order
+  details and assign orders to a folder for processing.
+---
+
+## Overview
+
+The **RIS-RM-2032 – GenericDropshipEmail** macro automates supplier communication in dropshipping workflows by generating and sending purchase order emails.
+
+It prepares a structured email containing order, item, and delivery details, and sends it to the appropriate supplier based on predefined logic.
+
+<Callout kind="tip" collapsed="false">
+  Ensure supplier email configuration, SKU mapping, and category logic are correctly set before running this macro.
+</Callout>
+
+---
+
+## Purpose
+
+This macro:
+
+- Generates supplier-specific dropship emails  
+- Includes item and delivery details in email body  
+- Sends emails to appropriate suppliers  
+- Assigns processed orders to a folder  
+
+👉 In short:  
+Automatically send supplier emails and organize orders.
+
+---
+
+## When It Runs
+
+Used in dropshipping workflows  
+
+Typically runs:
+
+- Manually triggered  
+- Before dispatch  
+- During supplier communication process  
+
+---
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of orders to process.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Folder name is predefined as <b>"Jills Sinks & Taps"</b>.
+</Callout>
+
+---
+
+## How It Works
+
+<Steps>
+  <Step title="Initialize Email Settings" icon="settings" title-type="p">
+    Define supplier email configuration and setup.
+  </Step>
+
+  <Step title="Process Orders" icon="list" title-type="p">
+    Loop through each OrderId and fetch order details.
+  </Step>
+
+  <Step title="Prepare Email Subject" icon="edit" title-type="p">
+    Create email subject using OrderNumber.
+  </Step>
+
+  <Step title="Build Email Body" icon="file-text" title-type="p">
+    Construct email content including items and order details.
+  </Step>
+
+  <Step title="Analyze Items" icon="search" title-type="p">
+    Evaluate SKUs and categories to determine supplier.
+  </Step>
+
+  <Step title="Select Supplier" icon="user-check" title-type="p">
+    Use predefined logic to choose correct supplier email.
+  </Step>
+
+  <Step title="Add Delivery Details" icon="map-pin" title-type="p">
+    Include full customer address and delivery information.
+  </Step>
+
+  <Step title="Assign Folder" icon="folder" title-type="p">
+    Assign order to <b>"Jills Sinks & Taps"</b> folder.
+  </Step>
+
+  <Step title="Send Email" icon="send" title-type="p">
+    Send formatted email to supplier.
+  </Step>
+
+  <Step title="Log Execution" icon="file" title-type="p">
+    Log execution details, success, and errors.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Supplier emails sent automatically  
+
+  - Correct supplier selected based on logic  
+
+  - Orders assigned to "Jills Sinks & Taps" folder  
+
+  - Customer delivery details included in email  
+
+  - Execution logged for tracking  
+</Callout>
+
+---
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Automating dropshipping communication  
+- Reducing manual email effort  
+- Speeding up order processing  
+- Ensuring consistent email format  
+- Improving supplier coordination  
+
+---
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Processes all orders due to forced flag  
+
+  - Uses hardcoded SKU and category logic  
+
+  - Requires correct category matching  
+
+  - Email configuration is hardcoded  
+
+  - No duplicate email prevention  
+
+  - No retry mechanism for failed emails  
+
+  - Folder name is fixed  
+
+  - Logic depends on SKU mapping  
+</Callout>
+
+---
+
+## Example Scenario
+
+<Expandable title="Dropship Email Automation Example" default-open="false">
+  An order contains items mapped to a specific supplier category.
+
+  👉 The macro:
+
+  - Identifies supplier based on SKU/category  
+  - Generates email with item and delivery details  
+  - Sends email to supplier  
+  - Assigns order to "Jills Sinks & Taps" folder  
+
+  Result: Supplier receives order details instantly without manual effort.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By automating supplier communication and routing logic, this macro streamlines dropshipping operations, reduces manual work, and ensures orders are efficiently sent to the correct suppliers.
+</Callout>

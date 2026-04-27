@@ -1,0 +1,175 @@
+---
+title: Shop features
+description: >-
+  Use POS features to manage quotations, shipping, and barcodes directly from
+  the register for faster and more flexible retail operations.
+---
+## **Quotations and sales orders**
+
+In retail scenarios, you may need to access quotations or sales orders created in the Sales app directly from the POS to complete a transaction.
+
+### **Select a quotation or order**
+
+1. Open the POS register
+
+2. Click the menu icon (⋮)
+
+3. Select **Quotation/Order**
+
+A list of available quotations and sales orders appears. Once selected, the order reference is displayed in the cart alongside the product list.
+
+### **Settle or partially pay an order**
+
+After selecting an order, choose how the customer wants to pay:
+
+- **Full payment**
+
+  - Click **Settle the order** to pay the total amount
+
+- **Partial payment (down payment)**
+
+  1. Choose:
+
+     - **Percentage down payment**
+
+     - **Fixed amount down payment**
+
+  2. Enter the amount or percentage
+
+  3. Click **Apply**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/so-settle.png" width="489" height="272" alt="Order settlement options in POS." />
+
+**Note**
+
+Any down payment made is automatically deducted from the remaining balance.
+
+## **Ship later**
+
+The **Ship Later** feature allows you to complete a sale in POS and deliver the products at a later time. This is useful for:
+
+- Out-of-stock items
+
+- Large or bulky products
+
+- Customer-requested delayed delivery
+
+### **Configuration**
+
+1. Go to <a href="https://www.odoo.com/documentation/19.0/applications/sales/point_of_sale/use.html#pos-use-settings" target="_blank" rel="noopener noreferrer">**POS Settings**</a>
+
+2. Scroll to the **Inventory** section
+
+3. Enable **Allow Ship Later**
+
+Then configure:
+
+- **Warehouse**: source location for delivery
+
+- **Route**: optional (leave empty for default)
+
+- **Shipping Policy**:
+
+  - *As soon as possible*
+
+  - *When all products are ready*
+
+### **Use Ship Later**
+
+1. <a href="https://www.odoo.com/documentation/19.0/applications/sales/point_of_sale/use.html#pos-use-open-register" target="_blank" rel="noopener noreferrer">**Open the POS register**</a>
+
+2. Add products to the order
+
+3. On the payment screen:
+
+   - Select a customer
+
+   - Click **Ship Later**
+
+4. Choose a delivery date and confirm
+
+A delivery order is automatically created.
+
+**Note**
+
+The customer must have a valid delivery address configured.
+
+## **Barcodes**
+
+Using a <a href="https://www.odoo.com/documentation/19.0/applications/inventory_and_mrp/barcode/setup/hardware.html" target="_blank" rel="noopener noreferrer">**barcode scanner**</a> speeds up POS operations.
+
+You can use barcodes to:
+
+- Add products to the cart
+
+- Apply discounts
+
+- Log employees into POS
+
+### **Assign barcodes to products**
+
+To enable barcode usage:
+
+- Assign barcodes to products following the <a href="https://www.odoo.com/documentation/19.0/applications/inventory_and_mrp/barcode/setup/software.html" target="_blank" rel="noopener noreferrer">**default barcode rules**</a>
+
+- Optionally use the <a href="https://www.odoo.com/documentation/19.0/applications/inventory_and_mrp/barcode/setup/barcodelookup.html" target="_blank" rel="noopener noreferrer">**barcode lookup feature**</a>
+
+**Note**
+
+Employees can log into POS by scanning a badge. Configure this in the **Employees** app by setting a PIN or Badge ID.
+
+### **Discount tags**
+
+Discount tags are special barcodes used to apply percentage discounts.
+
+They follow a predefined pattern, allowing the POS to interpret them as discounts rather than products.
+
+### **Example**
+
+If a product is nearing expiration:
+
+- Scan its barcode
+
+- Then scan a discount barcode (e.g., starting with `2250`)
+
+The system applies a **50% discount** automatically.
+
+### **Barcode nomenclature**
+
+Barcode rules define how scanned codes are interpreted.
+
+- Each barcode matches a pattern
+
+- Patterns use placeholders like `{NN}` for numeric values
+
+To configure:
+
+1. Go to <a href="https://www.odoo.com/documentation/19.0/applications/sales/point_of_sale/use.html#pos-use-settings" target="_blank" rel="noopener noreferrer">**POS Settings**</a>
+
+2. Scroll to **Inventory**
+
+3. Open **Barcode Nomenclature**
+
+For discount barcodes:
+
+- Default pattern: `22{NN}`
+
+- Example:
+
+  - `2250` → 50% discount
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/barcode-nom.png" width="398" height="422" alt="Barcode nomenclature settings." />
+
+**Tip**
+
+To allow discounts like 100%, modify the pattern to:
+
+- `22{NNN}`
+
+### **Using discount tags**
+
+1. Add or scan a product
+
+2. Scan the discount barcode
+
+The discount is applied to the last added product automatically.

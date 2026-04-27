@@ -1,0 +1,158 @@
+---
+title: Pair Bar Stool
+description: >-
+  Automatically convert individual items into paired products based on matching
+  SKU configuration.
+---
+## Overview
+
+The **RIS-RM-2006 – Pair Bar Stool** macro converts individual order items into paired products using a predefined matching SKU.
+
+It identifies eligible items, groups them into pairs, and restructures the order while maintaining accurate pricing and item details.
+
+<Callout kind="tip" collapsed="false">
+  Ensure the matching\_pair\_sku property is correctly configured for items to enable pairing.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Identifies items eligible for pairing
+
+- Converts quantities into paired products
+
+- Updates order structure accordingly
+
+👉 In short:\
+Automatically group items into pairs using matching SKU rules.
+
+## When It Runs
+
+Used for product bundling & order optimization
+
+Typically runs:
+
+- Manually triggered
+
+- During order processing (before picking & packing)
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of orders to be processed.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  No external input is required.\
+  The macro operates based on item configuration within the system.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Process Items" icon="download" title-type="p">
+    Iterate through all items in each order.
+  </Step>
+
+  <Step title="Check Pair Configuration" icon="search" title-type="p">
+    Look for matching\_pair\_sku in item extended properties.
+  </Step>
+
+  <Step title="Identify Pair SKU" icon="link" title-type="p">
+    Retrieve corresponding paired SKU from the system.
+  </Step>
+
+  <Step title="Validate Quantity" icon="check-circle" title-type="p">
+    ✔ Quantity ≥ 2 → proceed with pairing\
+    ❌ Otherwise → skip pairing
+  </Step>
+
+  <Step title="Create Pairs" icon="layers" title-type="p">
+    Convert items into pairs based on quantity.
+  </Step>
+
+  <Step title="Calculate Pricing" icon="calculator" title-type="p">
+    Set pair price = 2 × single item price while retaining discounts and taxes.
+  </Step>
+
+  <Step title="Update Order" icon="save" title-type="p">
+    Add paired items, retain leftover single items, and remove original items.
+  </Step>
+</Steps>
+
+## Pairing Logic
+
+<Callout kind="info" collapsed="false">
+  Example:\
+  Quantity = 5
+
+  👉 Result:
+
+  - 2 paired items
+
+  - 1 remaining single item
+
+  Pair price = 2 × individual item price
+</Callout>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Items grouped into pairs automatically
+
+  - Order structure simplified
+
+  - Pricing remains accurate and consistent
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Supporting bundle and paired product sales
+
+- Simplifying order structure
+
+- Improving warehouse picking accuracy
+
+- Reducing manual adjustments
+
+- Ensuring consistent SKU usage
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Works only if matching\_pair\_sku is configured
+
+  - Applies only when quantity ≥ 2
+
+  - Odd quantities leave one item unpaired
+
+  - Original items are removed after conversion
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Item Pairing Example" default-open="false">
+  An order contains 5 units of a product with a configured pair SKU.
+
+  👉 The macro:
+
+  - Converts 4 items into 2 paired products
+
+  - Leaves 1 item as a single unit
+
+  - Updates pricing accordingly
+
+  Result: Order contains paired and single items in correct structure.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Automating item pairing ensures consistent product representation, improves operational clarity, and enhances fulfilment efficiency.
+</Callout>
+
+##
+

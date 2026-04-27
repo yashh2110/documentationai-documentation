@@ -1,0 +1,199 @@
+---
+title: Shipping Label Generate & Upload to FTP
+description: >-
+  Automatically generates shipping label PDFs for eligible orders, downloads
+  them, and uploads the files to an FTP server for external system integration.
+---
+## Overview
+
+The **RIS-SM-2068 – Shipping Label Generate & Upload to FTP** macro automates shipping label generation, download, and FTP upload for eligible orders. It ensures external systems have access to label files without manual intervention.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  Generate shipping label → Download PDF → Upload to FTP
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Identifies eligible orders
+
+- Generates shipping label PDFs
+
+- Downloads label files
+
+- Uploads files to configured FTP location
+
+👉 Ensures seamless label distribution to external systems.
+
+## When It Runs
+
+Used for automated label generation and delivery.
+
+**Typically runs:**
+
+- Scheduled execution (periodic)
+
+- Manual trigger
+
+- Processes orders from the last 1 day
+
+- For warehouse, courier, or external system integrations
+
+## Parameters
+
+<ParamField path="identifier" param-type="string" required="true" deprecated="false">
+  Comma-separated order identifiers to filter eligible orders.
+</ParamField>
+
+<ParamField path="FTP_fullPath" param-type="string" required="true" deprecated="false">
+  FTP upload path where PDF files will be stored.
+</ParamField>
+
+<ParamField path="FTP_password" param-type="string" required="true" deprecated="false">
+  Password for FTP server authentication.
+</ParamField>
+
+<ParamField path="FTP_user" param-type="string" required="true" deprecated="false">
+  Username for FTP server authentication.
+</ParamField>
+
+<ParamField path="FTP_server" param-type="string" required="true" deprecated="false">
+  FTP server URL or IP address.
+</ParamField>
+
+<ParamField path="FTP_SSL" param-type="bool" required="false" deprecated="false">
+  Enable or disable SSL for FTP connection.
+</ParamField>
+
+<ParamField path="FTP_port" param-type="int" required="false" deprecated="false">
+  Port number used for FTP connection.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Note:
+
+  - Ensure all FTP credentials and paths are correctly configured.
+
+  - Orders must match identifiers to be processed.
+
+  - Only orders from the last 1 day are processed.
+
+  - Limited to 200 orders per run.
+</Callout>
+
+## Process Flow Step-by-Step
+
+<Steps>
+  <Step title="Start Macro" icon="play" title-type="p">
+    Log macro start message.
+  </Step>
+
+  <Step title="Filter Orders" icon="filter" title-type="p">
+    Fetch open orders from the last 1 day.\
+    Apply filters: LabelPrinted = false and matches provided identifiers.
+  </Step>
+
+  <Step title="Limit Processing" icon="hash" title-type="p">
+    Sort orders by received date.\
+    Limit processing to 200 orders per run.
+  </Step>
+
+  <Step title="Generate Label" icon="package" title-type="p">
+    For each order, call `CreatePDFfromJobForceTemplate` using template "Shipping Labels".\
+    Receive PDF URL.
+  </Step>
+
+  <Step title="Download PDF" icon="download" title-type="p">
+    Use HTTP client to download PDF from URL and convert into byte array.
+  </Step>
+
+  <Step title="Upload to FTP" icon="upload" title-type="p">
+    Upload PDF to FTP server.\
+    File naming format: OrderNumber.pdf.
+  </Step>
+
+  <Step title="Logging" icon="file-text" title-type="p">
+    Log success messages for uploaded files and errors for failed uploads.\
+    Maintain logs in internal buffer.
+  </Step>
+
+  <Step title="Final Output" icon="check-circle" title-type="p">
+    If no eligible orders found, log a message.\
+    Log macro completion.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Shipping labels generated for eligible orders
+
+  - PDF files downloaded and uploaded to FTP
+
+  - External systems can access label files automatically
+
+  - Full logging of process for tracking and error handling
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Automating label generation and delivery
+
+- Integrating Linnworks with external systems
+
+- Reducing manual effort
+
+- Handling bulk processing efficiently
+
+- Providing reliable logging and error tracking
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Processes only orders from the last 1 day
+
+  - Limited to 200 orders per run
+
+  - Requires correct FTP configuration
+
+  - Depends on valid print template setup
+
+  - Orders must match identifiers to be processed
+
+  - Network or FTP failures may impact upload
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Warehouse Integration Example" default-open="false">
+  Scenario: CNC warehouse integration
+
+  - Orders tagged with identifier "CNC"
+
+  - Macro runs periodically
+
+  Processing:
+
+  - Finds orders without labels
+
+  - Generates label PDFs
+
+  - Uploads files like `12345.pdf` to FTP
+
+  **Result:**
+
+  - Warehouse system retrieves labels automatically
+
+  - No manual intervention required
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This macro bridges Linnworks and external systems by fully automating shipping label generation and distribution, enabling seamless warehouse and courier integration with minimal manual effort.
+</Callout>
+

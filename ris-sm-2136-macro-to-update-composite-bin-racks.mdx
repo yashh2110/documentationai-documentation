@@ -1,0 +1,178 @@
+---
+title: Macro to Update Composite Bin Racks
+description: >-
+  Retrieves composite SKUs, collects bin rack locations of component items,
+  generates a CSV report, and uploads it to an FTP server.
+---
+## Overview
+
+The **RIS-SM-2136 – Macro to Update Composite Bin Racks** helps warehouse teams visualize where all components of bundled (composite) SKUs are stored, streamlining picking and stock audits.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  It creates a file showing where all components of bundle products are stored and uploads it to an FTP server.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Retrieves composite (parent) SKUs
+
+- Collects bin locations of all component items
+
+- Generates a structured CSV report
+
+- Uploads the CSV to an FTP server
+
+- Logs success or failure
+
+---
+
+## When It Runs
+
+Typically executed:
+
+- On daily or hourly schedules
+
+- Before picking operations
+
+- During warehouse audits
+
+- For bin location analysis of composite products
+
+---
+
+## Parameters
+
+<ParamField path="FTPServer" param-type="string" required="true" deprecated="false">
+  FTP server address used for uploading CSV file.
+</ParamField>
+
+<ParamField path="FTPUserName" param-type="string" required="true" deprecated="false">
+  FTP username for authentication.
+</ParamField>
+
+<ParamField path="FTPPassword" param-type="string" required="true" deprecated="false">
+  FTP password for authentication.
+</ParamField>
+
+<ParamField path="FTPSSL" param-type="bool" required="false" deprecated="false">
+  Enable or disable secure connection.
+</ParamField>
+
+<ParamField path="FTPPort" param-type="int" required="false" deprecated="false">
+  FTP port number.
+</ParamField>
+
+<ParamField path="FTPFilePath" param-type="string" required="true" deprecated="false">
+  Destination folder path for the CSV file.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  These parameters allow the macro to securely connect and upload the generated CSV file to the FTP server.
+</Callout>
+
+---
+
+---
+
+## Tables Used
+
+- **StockItem** – Composite (parent) SKU details
+
+- **Stock\_ItemComposition** – Links parent SKUs to component items
+
+- **ItemLocation** – Stores bin/rack locations
+
+---
+
+## Simple Explanation
+
+The macro finds all bundle (composite) products, retrieves bin locations of their component items, creates a CSV file listing all bins per parent SKU, and uploads the file to an FTP server for warehouse visibility.
+
+---
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Fetch Composite Data" icon="database" title-type="p">
+    Use Api.Dashboards.ExecuteCustomScriptQuery to retrieve master SKUs, child items, and bin rack locations.
+  </Step>
+
+  <Step title="Prepare Data Structure" icon="table" title-type="p">
+    Convert query results into a structured format suitable for CSV export.
+  </Step>
+
+  <Step title="Group by Master SKU" icon="layers" title-type="p">
+    Combine all component bin racks under each parent SKU.
+  </Step>
+
+  <Step title="Clean Bin Data" icon="broom" title-type="p">
+    Remove null or empty bin locations to ensure data quality.
+  </Step>
+
+  <Step title="Create CSV File" icon="file-text" title-type="p">
+    Format: Master SKU → BinRacks\
+    Separate multiple bins using "|" symbol.
+  </Step>
+
+  <Step title="Upload to FTP" icon="cloud-upload" title-type="p">
+    Connect using provided FTP parameters and upload CSV via ProxyFactory.GetFtpUploadProxy.
+  </Step>
+
+  <Step title="Logging & Validation" icon="check-circle" title-type="p">
+    Log success or failure, handle errors safely.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  The macro generates and uploads a CSV file containing:
+
+  - **Master SKU** (Composite item)
+
+  - **Combined bin rack locations** of all components
+</Callout>
+
+---
+
+## Usefulness
+
+- **Warehouse Optimization** – Locate all components easily
+
+- **Picking Efficiency** – Faster collection of items
+
+- **Inventory Visibility** – Clear storage mapping
+
+- **Automation** – Eliminates manual tracking of composite SKUs
+
+---
+
+## Example Scenario
+
+<Expandable title="Scenario: Picking a Bundle Product" default-open="false">
+  **SKU:** KIT-100\
+  **BinRacks:** A1 | B3 | C2
+
+  **Insight:**\
+  Components are stored across multiple bins.
+
+  **Action:**\
+  Picker collects items from all listed bins.
+
+  **Result:**\
+  Faster and accurate picking of composite products.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This macro links composite SKUs with all their component bin locations, enabling faster picking, reducing errors, and improving overall warehouse efficiency by ensuring no components are missed during order processing.
+</Callout>
+

@@ -1,0 +1,249 @@
+---
+title: Historical Stock Valuation Report
+description: >-
+  Shows stock available at a selected location as of a chosen date and provides
+  an estimated stock value using historical stock records where possible, or
+  current buying cost as a fallback.
+---
+## Overview
+
+The **Historical Stock Valuation Report** provides a snapshot of stock quantity and estimated stock value for a selected date and location.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  See how much stock you had on a past date and what that stock was worth.
+</Callout>
+
+## Purpose
+
+This report:
+
+- Shows stock available at a selected location on a chosen date
+
+- Estimates the stock value for each product
+
+- Uses historical stock value where available
+
+- Falls back to current buying cost if historical value is not available
+
+- Helps users understand how reliable the valuation is
+
+---
+
+## When It Runs
+
+Typically used for:
+
+- Historical stock reviews
+
+- Month-end or year-end valuation checks
+
+- Finance or audit support
+
+- Stock reconciliation reviews
+
+- Reviewing stock position on a past date
+
+---
+
+## Parameters
+
+<ParamField path="RequestedDateTime" param-type="datetime" required="true" deprecated="false">
+  The date used to check historical stock. The report returns the latest available stock position up to this date.
+</ParamField>
+
+<ParamField path="LocationName" param-type="string" required="true" deprecated="false">
+  The location for which the stock valuation should be calculated.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  These parameters allow users to select a date, choose a location .
+</Callout>
+
+---
+
+## Simple Explanation
+
+The report checks each active product and finds the latest stock record available up to the selected date for the chosen location. It then estimates the stock value using the best available pricing source.
+
+---
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Select Date and Location" icon="calendar" title-type="p">
+    Choose the required date and stock location.
+  </Step>
+
+  <Step title="Check Active Products" icon="box" title-type="p">
+    Only active products are considered. Deleted and archived products are excluded.
+  </Step>
+
+  <Step title="Find Latest Stock Record" icon="clock" title-type="p">
+    For each product, the report finds the most recent stock history record up to the selected date.
+  </Step>
+
+  <Step title="Match the Selected Location" icon="map-pin" title-type="p">
+    Only stock records from the chosen location are used.
+  </Step>
+
+  <Step title="Bring Product Information" icon="info" title-type="p">
+    Product details such as identifier, title, barcode, and category are included for reference.
+  </Step>
+
+  <Step title="Get Buying Currency" icon="coins" title-type="p">
+    The currency is taken from the default supplier setup where available.
+  </Step>
+
+  <Step title="Use Historical Stock Value" icon="database" title-type="p">
+    If historical stock value exists in the stock history, that value is treated as the stronger source.
+  </Step>
+
+  <Step title="Fallback to Current Buying Cost" icon="calculator" title-type="p">
+    If historical value is not available, the report uses current buying cost multiplied by stock quantity.
+  </Step>
+
+  <Step title="Assign Confidence Level" icon="shield-check" title-type="p">
+    The report marks the result as high, medium, or low confidence depending on the available pricing data.
+  </Step>
+
+  <Step title="Generate Final Report" icon="play" title-type="p">
+    The final report shows the stock position, estimated value, pricing basis, and last stock movement date.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  The report contains:
+
+  - Product details
+
+  - Historical stock quantity
+
+  - Buying currency where available
+
+  - Current buying cost
+
+  - Estimated stock value
+
+  - Pricing method used
+
+  - Confidence level
+
+  - Date of the last stock movement used
+</Callout>
+
+---
+
+## How the Value Is Calculated
+
+### Historical Value Available
+
+If a historical stock value exists for the selected stock record, the report uses that as the stronger source of information.
+
+### Historical Value Not Available
+
+If no historical stock value exists, the report calculates the value using current buying cost multiplied by stock quantity.
+
+### No Price Available
+
+If neither historical value nor current buying cost is available, the stock value cannot be properly calculated.
+
+---
+
+## Confidence of the Result
+
+- **High** – Historical stock value is available and stock quantity exists
+
+- **Medium** – Value is calculated using current buying cost
+
+- **Low** – No valid price is available
+
+---
+
+## What Is Included
+
+The report only includes products that are:
+
+- Active
+
+- Not deleted
+
+- Not archived
+
+- Linked to the selected location through stock history
+
+- Recorded in stock history on or before the selected date
+
+---
+
+## Usefulness
+
+- **Historical Review** – Check stock and value on a past date
+
+- **Finance Support** – Assist with valuation review
+
+- **Audit Support** – Show how stock value was derived
+
+- **Stock Control** – Review stock position by location
+
+---
+
+## Example Scenario
+
+<Expandable title="Year-End Stock Review" default-open="false">
+  **Scenario:**\
+  A business wants to review stock held in the main location on the last day of the year.
+
+  **What the report does:**
+
+  - Looks at each active product
+
+  - Finds the latest stock record up to the selected date
+
+  - Uses historical stock value where available
+
+  - Falls back to current buying cost if needed
+
+  **Outcome:**
+
+  - Users get a historical stock snapshot
+
+  - They can see how the stock value was derived
+
+  - They can judge how reliable the valuation is
+</Expandable>
+
+---
+
+## Limitations
+
+<Callout kind="warning" collapsed="false">
+  Important limitations:
+
+  - If no default supplier is set for a product, the currency will be empty
+
+  - If no stock history exists before the selected date, the product will not appear
+
+  - If historical stock value is missing, the report uses current buying cost instead
+
+  - Current buying cost may not reflect the actual historical buying cost from that date
+
+  - If buying cost is missing or zero, the value may be shown as zero or unavailable
+
+  - If multiple suppliers exist but none is marked as default, the currency will not be returned
+
+  - This report is suitable for valuation review, but not as a full accounting reconciliation report
+</Callout>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This report is useful for understanding past stock value, but the accuracy depends on stock history quality, supplier setup, and buying cost data.
+</Callout>
+

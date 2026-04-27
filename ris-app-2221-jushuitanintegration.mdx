@@ -1,0 +1,948 @@
+---
+title: Jushuitan Integration — Documentation
+description: >-
+  Complete business documentation covering overview, purpose, architecture,
+  workflows, automation, observability, risks, scalability, operational
+  ownership, business impact, and expected outcomes.
+---
+# Executive Summary
+
+This integration connects your business platform with Jushuitan so that orders, inventory, product information, and pricing can move between systems in a controlled and automated way. It reduces manual work, improves operational accuracy, supports faster fulfillment, and gives the business a more scalable operating model. The current structure already includes system overview, architecture, workflow, automation, error handling, observability, scalability, and business impact, which makes it a strong base for business-level documentation.
+
+---
+
+# 1. Overview
+
+This system connects your business platform with an external fulfillment and inventory system.
+
+It acts as a central operational layer that:
+
+- Moves order data between systems
+
+- Keeps inventory accurate
+
+- Synchronizes product and pricing data
+
+- Automates repeated operational tasks
+
+- Reduces manual intervention
+
+- Improves consistency across systems
+
+At a business level, this means the integration helps different parts of the operation work together without relying on manual updates between teams or systems.
+
+---
+
+# 2. Problem Definition
+
+Without this integration, the business faces several common operational issues:
+
+- Orders may need to be moved manually from one system to another
+
+- Inventory can become inconsistent across channels
+
+- Fulfillment delays can happen because information is not shared quickly enough
+
+- Product or pricing changes may not be reflected in time
+
+- Human errors increase when teams must repeat the same tasks manually
+
+This integration solves those problems by automating how data is validated, transferred, updated, and monitored across systems.
+
+---
+
+# 3. System Purpose
+
+The purpose of this system is to create a reliable operating bridge between your business platform and Jushuitan.
+
+The system is designed to:
+
+- Send orders for fulfillment
+
+- Receive order progress and status updates
+
+- Keep stock levels aligned
+
+- Synchronize product data
+
+- Maintain pricing consistency
+
+- Support high-volume operations through automation
+
+- Give teams visibility into failures and system health
+
+This means the system is not only a connector. It is also a control layer that supports smooth day-to-day business operations.
+
+---
+
+# 4. Stakeholders
+
+This section explains who uses or benefits from the system.
+
+## Business Owners
+
+Business owners benefit because the system improves efficiency, reduces process gaps, and supports scale.
+
+## Operations Team
+
+The operations team uses the integration outcome to ensure orders move correctly, failures are reviewed, and service levels are maintained.
+
+## Customer Support Team
+
+Support teams benefit from better status visibility and more accurate order progress, which helps them respond to customer questions.
+
+## Warehouse and Fulfillment Teams
+
+Fulfillment teams benefit because orders arrive in a structured and timely way, reducing confusion and delays.
+
+## Product and Inventory Teams
+
+These teams depend on synchronized product and stock information so that item availability, catalog consistency, and sellable inventory remain accurate.
+
+## Technical Team
+
+The technical team is responsible for monitoring logs, handling failures, reviewing jobs, and supporting future enhancements.
+
+---
+
+# 5. Business Objectives
+
+The integration supports the following business objectives:
+
+- Reduce manual work across order and inventory operations
+
+- Improve order processing speed
+
+- Increase data accuracy across systems
+
+- Improve stock reliability
+
+- Reduce failed fulfillment events caused by bad or missing data
+
+- Support business growth without increasing operational effort at the same rate
+
+- Create a more reliable and traceable operating model
+
+---
+
+# 6. System Architecture
+
+## 6.1 Core Components
+
+### Business Platform
+
+This is the source of orders, products, and pricing information. It represents the business-facing system where commercial activity originates.
+
+### External Fulfillment and Inventory System
+
+This is where downstream operational actions happen, including inventory handling and fulfillment activities.
+
+### Integration Layer
+
+This is the core system that manages communication, business rules, transformation, validation, automation, and monitoring between systems.
+
+---
+
+## 6.2 Internal Structure
+
+The integration layer is made up of several logical parts.
+
+### Entry Layer
+
+This receives incoming requests or triggers and acts as the gateway into the system.
+
+### Processing Layer
+
+This applies business rules, validates information, and prepares data for movement.
+
+### Communication Layer
+
+This handles the sending and receiving of information between systems.
+
+### Background Processing Layer
+
+This manages long-running or repeated tasks such as automatic synchronization and retries.
+
+### Data Layer
+
+This stores operational states, logs, processing outcomes, and other data needed for traceability and control.
+
+---
+
+## 6.3 Architecture Clarity
+
+At a business level, the architecture can be understood as:
+
+- One system creates and manages commercial activity
+
+- One system handles downstream operational execution
+
+- One integration layer ensures the two remain aligned
+
+This separation is useful because it allows each system to focus on its purpose while the integration manages coordination.
+
+---
+
+# 7. Trigger Logic
+
+The system operates through three main trigger types.
+
+## 7.1 Event-Based Triggers
+
+These happen when something changes in the source system, such as:
+
+- A new order being created
+
+- A product being changed
+
+- A pricing update being made
+
+- A stock-related event occurring
+
+## 7.2 Scheduled Triggers
+
+These run automatically at fixed intervals to make sure no information is missed. The current structure already highlights scheduled syncing and background activity as part of the design.
+
+Examples include:
+
+- Order checks
+
+- Inventory sync cycles
+
+- Retry attempts
+
+- Routine background processing
+
+## 7.3 Manual Triggers
+
+These are used when a person needs to intervene, such as:
+
+- Reprocessing a failed flow
+
+- Correcting bad data
+
+- Forcing a synchronization
+
+- Reviewing exceptions
+
+This three-part trigger model makes the system flexible. It can respond immediately, run automatically over time, and still allow manual control when needed.
+
+---
+
+# 8. Complete System Flow
+
+The overall end-to-end flow of the system is:
+
+1. A secure connection is established
+
+2. Orders are detected
+
+3. Orders are validated
+
+4. Orders are processed and formatted
+
+5. Orders are sent to the external system
+
+6. The external system processes them
+
+7. Updates are received back
+
+8. Inventory information is synchronized
+
+9. Background jobs keep the process running continuously
+
+This flow is important because it shows that the integration is not a one-time transfer. It is an ongoing operational cycle.
+
+---
+
+# 9. Order Management Flow
+
+## 9.1 Business Explanation
+
+Order management is one of the most important parts of the integration. It ensures that customer demand captured in the business platform is transferred into operational execution.
+
+## 9.2 Step-by-Step Flow
+
+1. An order is created
+
+2. The system detects the order
+
+3. The order data is validated
+
+4. The order is formatted correctly
+
+5. The order is sent externally
+
+6. The external system processes the order
+
+7. A status update is returned
+
+8. The order state is updated internally
+
+## 9.3 Order States
+
+The system recognizes key operational states:
+
+- New
+
+- Pending
+
+- Processing
+
+- Completed
+
+- Failed
+
+## 9.4 Key Insight
+
+A major business insight already identified in the existing documentation is that most failures happen during the validation stage.
+
+That means data quality is one of the strongest drivers of operational success.
+
+## 9.5 Business Value
+
+Strong order flow management gives the business:
+
+- Faster movement from sale to fulfillment
+
+- Better tracking
+
+- Lower manual effort
+
+- Lower risk of lost or delayed orders
+
+---
+
+# 10. Product Management
+
+## 10.1 Purpose
+
+Product management within the integration ensures that product information remains aligned between systems.
+
+## 10.2 Product Flow
+
+1. A product is created or updated
+
+2. The system detects the change
+
+3. The information is validated
+
+4. The product data is synchronized
+
+5. Confirmation is received
+
+## 10.3 Business Importance
+
+If products are not aligned correctly:
+
+- Orders may fail
+
+- Wrong items may be processed
+
+- Pricing may become inconsistent
+
+- Catalog reliability may be affected
+
+## 10.4 Key Risk
+
+The existing documentation identifies incorrect mapping as a risk that can cause failures.
+
+That makes product structure and mapping quality a key operational dependency.
+
+---
+
+# 11. Inventory Management
+
+## 11.1 Purpose
+
+Inventory management ensures that stock information remains accurate and reliable.
+
+## 11.2 Inventory Flow
+
+1. Stock is updated externally
+
+2. The change is detected
+
+3. The data is processed
+
+4. The internal system is updated
+
+## 11.3 Business Importance
+
+Inventory accuracy matters because it affects:
+
+- What can be sold
+
+- Customer trust
+
+- Operational planning
+
+- Prevention of overselling
+
+## 11.4 Key Rule
+
+The current documentation clearly identifies that stock must never go negative.
+
+This is an important business control because inaccurate stock causes both revenue risk and customer service issues.
+
+---
+
+# 12. Pricing Management
+
+## 12.1 Purpose
+
+Pricing management ensures that both systems stay aligned on product pricing.
+
+## 12.2 Pricing Flow
+
+1. A price change is detected
+
+2. The change is validated
+
+3. The update is synchronized
+
+4. Confirmation is received
+
+## 12.3 Business Importance
+
+Pricing consistency matters because incorrect pricing can create:
+
+- Revenue leakage
+
+- Customer dissatisfaction
+
+- Operational confusion
+
+- Reporting inconsistencies
+
+---
+
+# 13. API and Functional Interaction Model
+
+This documentation does not rely on endpoint names, but the system includes several groups of functional interfaces.
+
+## 13.1 Secure Access Functionality
+
+Used to establish and maintain trusted communication.
+
+## 13.2 Order Retrieval Functionality
+
+Used to detect or fetch new order information for processing.
+
+## 13.3 Order Processing Functionality
+
+Used to validate, format, and move order information through the workflow.
+
+## 13.4 Order Update Functionality
+
+Used to reflect processing progress and completion.
+
+## 13.5 Product Synchronization Functionality
+
+Used to keep product information consistent.
+
+## 13.6 Inventory Synchronization Functionality
+
+Used to keep stock aligned.
+
+## 13.7 Pricing Synchronization Functionality
+
+Used to ensure consistent selling values.
+
+## 13.8 Internal Control Functionality
+
+Used for state management, operational tracking, and orchestration.
+
+## 13.9 Scheduling Functionality
+
+Used to automate background tasks and repeated processes.
+
+At a business level, these functions collectively form the system’s operating behavior rather than isolated technical endpoints.
+
+---
+
+# 14. Background Jobs and Automation
+
+## 14.1 Purpose
+
+The system uses automation to reduce manual effort and support consistent operations.
+
+## 14.2 Background Tasks
+
+The current documentation already identifies the use of jobs for:
+
+- Order fetching
+
+- Order processing
+
+- Inventory updates
+
+- Retry handling
+
+## 14.3 Why Automation Matters
+
+Automation provides:
+
+- Continuous processing
+
+- Lower dependence on manual action
+
+- Better support for higher transaction volume
+
+- More reliable timing for recurring activities
+
+## 14.4 Business Insight
+
+Automation improves efficiency, but it also increases the need for visibility and monitoring because problems can continue silently if not detected early.
+
+---
+
+# 15. Error Handling and Retry Logic
+
+## 15.1 Error Handling Flow
+
+The current documentation defines a clear flow:
+
+1. An error occurs
+
+2. It is logged
+
+3. A retry is triggered
+
+4. The process stops after the retry limit is reached
+
+## 15.2 Common Error Types
+
+The existing structure identifies:
+
+- Missing data
+
+- Invalid format
+
+- External system failure
+
+## 15.3 Business Meaning
+
+This is important because not every failure needs human intervention immediately. Some are temporary and recoverable, while others require data correction.
+
+## 15.4 Operational Response
+
+When retries no longer work, the business needs a clear manual resolution process so the affected transaction does not remain unresolved.
+
+---
+
+# 16. Observability
+
+## 16.1 Monitoring
+
+The current documentation already includes monitoring of:
+
+- Order status
+
+- Job execution
+
+- Failures
+
+## 16.2 Logging
+
+It also confirms that:
+
+- Actions are recorded
+
+- Errors are tracked
+
+## 16.3 Alerts
+
+Repeated failures should trigger alerts so that the relevant team can respond quickly.
+
+## 16.4 Business Importance
+
+Observability matters because automation without visibility creates operational risk. Business teams need enough transparency to know:
+
+- What is running
+
+- What has failed
+
+- What is delayed
+
+- What needs intervention
+
+---
+
+# 17. Scalability Concerns
+
+## 17.1 Current Challenges
+
+The existing structure identifies the main scalability challenges as:
+
+- High order volume
+
+- Large inventory updates
+
+- External API limits
+
+## 17.2 Solutions Already Identified
+
+It also identifies:
+
+- Background job scaling
+
+- Batch processing
+
+- Retry optimization
+
+## 17.3 Business Interpretation
+
+As the business grows, the integration must process more transactions without causing delays or failures. A scalable design helps the business grow without proportionally increasing operational complexity.
+
+---
+
+# 18. Performance Considerations
+
+The current documentation highlights several important performance principles:
+
+- Avoid duplicate processing
+
+- Optimize data handling
+
+- Use asynchronous processing
+
+At a business level, performance is not only about speed. It is also about predictability, stability, and the ability to keep pace with demand.
+
+---
+
+# 19. Security
+
+The current structure already identifies three key security expectations:
+
+- Secure authentication
+
+- Controlled access
+
+- Safe data exchange
+
+From a business perspective, security protects:
+
+- Customer information
+
+- Transaction integrity
+
+- Operational trust
+
+- Compliance posture
+
+---
+
+# 20. Data Ownership and Responsibility
+
+It is useful at business level to define where responsibility sits.
+
+## Orders
+
+Orders originate from the business platform.
+
+## Inventory
+
+Inventory status is primarily driven by the external operational system.
+
+## Products and Pricing
+
+These are generally driven by business-side management but require synchronization to remain accurate.
+
+## Integration Layer
+
+The integration is responsible for transfer, validation, synchronization, state tracking, and operational consistency.
+
+This section helps clarify accountability when issues occur.
+
+---
+
+# 21. User Interaction Points
+
+Even though the integration is automated, people still play an important role.
+
+## Daily User Actions
+
+- Check failed transactions
+
+- Review system health
+
+- Review logs
+
+- Confirm critical flows are running
+
+## Weekly User Actions
+
+- Validate mappings
+
+- Review performance
+
+- Investigate recurring issues
+
+## Manual Intervention Scenarios
+
+- Correct bad data
+
+- Reprocess failed transactions
+
+- Review recurring external issues
+
+- Escalate system problems
+
+---
+
+# 22. Risks and Dependencies
+
+## 22.1 External Dependencies
+
+The integration depends on:
+
+- Availability of the external system
+
+- Reliable communication channels
+
+- External response times
+
+- External API usage constraints
+
+## 22.2 Internal Risks
+
+The current document already highlights several risk-linked areas, including validation failures, mapping issues, and processing problems.
+
+Common business risks include:
+
+- Incorrect product mapping
+
+- Incomplete order information
+
+- Delayed inventory synchronization
+
+- Repeated external service failures
+
+- Poor visibility into recurring issues
+
+## 22.3 Mitigation
+
+Mitigation methods include:
+
+- Validation rules
+
+- Retry logic
+
+- Logging
+
+- Alerts
+
+- Manual intervention procedures
+
+- Regular operational review
+
+---
+
+# 23. Change Impact
+
+Business documentation should also explain the impact of changes.
+
+## Product Changes
+
+May affect mapping, order flow, and fulfillment accuracy.
+
+## Pricing Changes
+
+May affect revenue, margin, and customer-facing consistency.
+
+## Inventory Changes
+
+May affect sellable stock and customer expectations.
+
+## Process Changes
+
+May affect background jobs, timing, and operational dependencies.
+
+## External System Changes
+
+May affect synchronization behavior, data formats, or response handling.
+
+This is important because even small changes can have wide operational effects when systems are tightly connected.
+
+---
+
+# 24. Service Expectations
+
+Business teams usually need a practical expectation of behavior.
+
+## Expected Outcomes
+
+- Orders should move through the system without unnecessary delay
+
+- Inventory updates should be reflected within the expected sync window
+
+- Failed items should either recover through retry or appear clearly for intervention
+
+- Repeated operational issues should become visible through monitoring
+
+## Reliability Expectation
+
+The presence of monitoring, retries, and background jobs in the current structure supports a reliability-oriented design, but final service timing should be defined by the business or delivery team based on actual operational requirements.
+
+---
+
+# 25. Success Metrics and KPIs
+
+To make this a true business-level document, success should be measurable.
+
+## Operational KPIs
+
+- Order processing success rate
+
+- Percentage of orders completed without manual intervention
+
+- Retry recovery rate
+
+- Inventory synchronization accuracy
+
+- Product synchronization success rate
+
+- Processing delay time
+
+- Number of recurring failures
+
+## Business KPIs
+
+- Reduction in manual operational effort
+
+- Improvement in order turnaround time
+
+- Reduction in overselling incidents
+
+- Reduction in fulfillment-related errors
+
+- Improvement in customer satisfaction due to more reliable operations
+
+These KPIs help show whether the integration is creating business value, not just technical activity.
+
+---
+
+# 26. Operational Guidelines
+
+## Daily Checklist
+
+- Check failed orders
+
+- Monitor system health
+
+- Review logs
+
+- Confirm that automated jobs are running
+
+## Weekly Checklist
+
+- Validate product or service mappings
+
+- Review trends in failures
+
+- Review sync performance
+
+- Confirm no recurring integration issues are being ignored
+
+## Monthly Review
+
+- Review business KPIs
+
+- Review operational pain points
+
+- Review volume growth and scalability readiness
+
+- Review whether process improvements are needed
+
+---
+
+# 27. Key Insights
+
+The current documentation already identifies several strong insights:
+
+- Data quality is critical
+
+- Automation reduces effort
+
+- Background jobs enable scaling
+
+- Monitoring ensures reliability
+
+Additional business interpretation of those insights is:
+
+- Good automation depends on good input data
+
+- Scale requires both performance and visibility
+
+- Integration value is realized only when failures are controlled and recoverable
+
+- Business reliability depends on both system behavior and operational response
+
+---
+
+# 28. Business Impact
+
+The current documentation already captures three major impact areas.
+
+## Operational Impact
+
+- Faster workflows
+
+- Reduced manual effort
+
+## Customer Impact
+
+- Faster delivery
+
+- More accurate order handling
+
+## Financial Impact
+
+- Lower operational cost
+
+- Better efficiency
+
+Additional business impact includes:
+
+- Better cross-team coordination
+
+- More predictable fulfillment flow
+
+- Reduced operational firefighting
+
+- Stronger ability to scale
+
+---
+
+# 29. Summary
+
+The current documentation states that this system is a complete automation layer that:
+
+- Connects systems
+
+- Processes orders
+
+- Syncs inventory
+
+- Handles errors
+
+- Scales with business growth
+
+At a business level, this means the integration is not just a technical connector. It is an operating capability that improves efficiency, consistency, reliability, and scale.
+
+---
+
+# 30. Final Result
+
+The documented intended outcomes are:
+
+- Reliable operations
+
+- Accurate data
+
+- Faster fulfillment
+
+- Scalable system
+
+From a business point of view, the final result is a more automated and controlled operational model that reduces manual effort, lowers error exposure, improves service execution, and supports growth with better process discipline.

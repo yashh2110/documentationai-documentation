@@ -1,0 +1,219 @@
+---
+title: CRM Gamification
+description: >-
+  Motivate sales teams and improve performance using gamification tools in Odoo
+  CRM with goals, challenges, and rewards.
+---
+Odoo’s *CRM Gamification* feature helps businesses motivate and evaluate their sales teams through structured **goals**, **challenges**, and **rewards**.
+
+With gamification, you can encourage productivity, track performance, and reward achievements automatically making your CRM more engaging and results driven.
+
+## What is CRM Gamification?
+
+Gamification introduces competitive and reward-based elements into your CRM workflow.
+
+You can:
+
+- Set measurable goals
+
+- Create challenges for teams or individuals
+
+- Reward achievements with badges
+
+- Track performance automatically
+
+This helps boost team motivation and improve overall sales performance.
+
+## Configuration
+
+### Install the CRM Gamification Module
+
+1. Go to the **Apps** application
+
+2. Remove the default *Apps* filter from the search bar
+
+3. Search for `CRM Gamification`
+
+4. Click **Install**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/gamification-module-install.png" width="768" height="281" alt="Installing CRM Gamification module in Odoo" />
+
+**Note**
+
+If both **CRM** and **Sales** apps are installed, the gamification module may already be enabled by default.
+
+### Enable Gamification Tools
+
+To access gamification settings:
+
+1. Enable **Developer Mode (Debug Mode)**
+
+2. Navigate to:\
+   **Settings → Gamification Tools**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/gamification-tools-menu.png" width="768" height="242" alt="Gamification tools menu in Odoo settings" />
+
+## Create Badges
+
+Badges are rewards given to users after completing goals or challenges.
+
+### Access Badges
+
+Go to:\
+**Settings → Gamification Tools → Badges**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/badges2.png" width="768" height="313" alt="Badges list in Odoo" />
+
+### Create a New Badge
+
+1. Click **New**
+
+2. Enter:
+
+   - Badge name
+
+   - Description
+
+### Badge Permissions (Allowance to Grant)
+
+You can control who is allowed to grant badges:
+
+- **Everyone** – Any user can grant the badge
+
+- **Selected Users** – Only specific users can grant it
+
+- **Users with Specific Badges** – Only users who already earned certain badges can grant
+
+- **Only via Challenges** – Badge is awarded automatically (no manual granting)
+
+### Limit Badge Distribution
+
+To control usage:
+
+- Enable **Monthly Limited Spending**
+
+- Set a maximum number of times a badge can be granted per user
+
+### Manually Grant a Badge
+
+1. Open a badge
+
+2. Click **Grant**
+
+3. Select the user
+
+4. Add a message (optional)
+
+5. Click **Grant Badge**
+
+## Create a Challenge
+
+Challenges are structured competitions based on goals.
+
+### Create a New Challenge
+
+1. Go to:\
+   **Settings → Gamification Tools → Challenges**
+
+2. Click **New**
+
+3. Enter a **Challenge Name**
+
+### Assign Challenge to Users
+
+Define rules to assign participants:
+
+1. Select a field (e.g., Groups, Salesperson)
+
+2. Choose a condition (e.g., is in)
+
+3. Set the value
+
+**Example:**\
+To include all sales users:
+
+- Field: Groups
+
+- Operator: is in
+
+- Value: `Sales/User: Own Documents Only`
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/assignation-rule.png" width="768" height="201" alt="Challenge assignment rules in Odoo" />
+
+### Set Challenge Period
+
+Choose how often the challenge runs using the **Periodicity** field (daily, weekly, monthly, etc.).
+
+## Add Goals to a Challenge
+
+Goals define what users need to achieve.
+
+1. Go to the **Goals** tab
+
+2. Click **Add a line**
+
+3. Select a **Goal Definition**
+
+4. Set a **Target value**
+
+### Predefined CRM Goals
+
+Odoo provides ready-to-use goals such as:
+
+- New Leads
+
+- Time to Qualify Leads
+
+- Days to Close Deals
+
+- New Opportunities
+
+- New Sales Orders
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/challenge-goals.png" width="768" height="278" alt="Challenge goals configuration" />
+
+You can add multiple goals within a single challenge.
+
+## Add Rewards
+
+Rewards are given when a challenge is completed.
+
+1. Go to the **Reward** tab
+
+2. Select badges for:
+
+   - **1st User (Top Performer)**
+
+   - **All Other Successful Users**
+
+### When Are Rewards Given?
+
+Badges are awarded when:
+
+- The challenge period ends
+
+- The challenge reaches its end date
+
+- The challenge is manually closed
+
+## Start the Challenge
+
+Once everything is configured:
+
+- Click **Start Challenge**
+
+The system will begin tracking progress and automatically assign rewards.
+
+## Conclusion
+
+CRM Gamification in Odoo helps you:
+
+- Increase team motivation
+
+- Improve sales performance
+
+- Track measurable outcomes
+
+- Create a competitive and engaging environment
+
+By combining goals, challenges, and rewards, you can turn your CRM into a powerful performance management system.

@@ -1,0 +1,131 @@
+---
+title: Create Note From XML
+description: >-
+  Extract buyer name from order XML data and automatically create a visible
+  order note for improved accessibility and operational visibility.
+---
+## Overview
+
+The **RIS-RM-1014 – Create Note From XML** macro extracts the buyer’s name from an order’s XML data and stores it as a visible order note.
+
+This helps convert structured XML information into easily accessible data within the order interface.
+
+<Callout kind="tip" collapsed="false">
+  Ensure the XML structure contains the required node (ChannelBuyerName) before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Retrieves XML data from an order  
+- Extracts the buyer’s name  
+- Creates a visible order note  
+- Enhances order data visibility  
+
+👉 In short:  
+Extract buyer name from XML and store it as an order note.
+
+## When It Runs
+
+Used for order data enrichment and visibility
+
+Typically runs:
+
+- Manually triggered (per order)  
+- During order processing  
+- During data enrichment workflows  
+
+## Parameters
+
+<ParamField path="OrderId" param-type="string" required="true" deprecated="false">
+  Order ID to process.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Example:  
+  OrderId = 5001  
+
+  Meaning:  
+  Only this specific order will be processed.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Fetch XML Data" icon="download" title-type="p">
+    Retrieve XML data for the specified order.
+  </Step>
+
+  <Step title="Parse XML" icon="code" title-type="p">
+    Convert XML into structured format using XElement.
+  </Step>
+
+  <Step title="Locate Node" icon="search" title-type="p">
+    Navigate to: Order → ChannelBuyerName.
+  </Step>
+
+  <Step title="Extract Buyer Name" icon="user" title-type="p">
+    Read the buyer’s name from the XML node.
+  </Step>
+
+  <Step title="Create Note" icon="edit" title-type="p">
+    Create a new order note with the extracted value.
+  </Step>
+
+  <Step title="Set Visibility" icon="eye" title-type="p">
+    Mark the note as non-internal (visible).
+  </Step>
+
+  <Step title="Save & Log" icon="file-text" title-type="p">
+    Save the note and log execution details including errors.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Buyer name extracted from XML  
+  - Order note created successfully  
+  - Information visible within the order  
+  - Execution process logged for tracking  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Capturing important customer details automatically  
+- Improving visibility for support and operations teams  
+- Eliminating manual XML data checks  
+- Enhancing order data accessibility  
+- Supporting better customer communication  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Works only if XML contains ChannelBuyerName node  
+  - May overwrite existing notes instead of appending  
+  - Processes one order per execution  
+  - XML structure must match expected format  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Extract Buyer Name from XML" default-open="false">
+  An order contains buyer information within its XML data.
+
+  👉 The macro:
+
+  - Reads the XML  
+  - Extracts the buyer’s name  
+  - Creates a visible order note  
+
+  Result: Buyer information is easily accessible without opening XML data.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Transforming XML-based data into visible order notes improves transparency, reduces manual effort, and ensures critical customer information is instantly accessible.
+</Callout>

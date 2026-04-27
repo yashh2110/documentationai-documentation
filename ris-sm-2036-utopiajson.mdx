@@ -1,0 +1,154 @@
+---
+title: JSON to CSV FTP Integration
+description: >-
+  Retrieve product stock data from an external JSON API, convert it into CSV
+  format, and upload it to an FTP server for integration with external systems.
+---
+
+## Overview
+
+The **JSON to CSV FTP Integration** macro fetches product stock data from an external API, converts it into a CSV file, and uploads it to an FTP server.
+
+It acts as a bridge between modern API-based data sources and systems that require flat file formats like CSV.
+
+<Callout kind="tip" collapsed="false">
+  Ensure API endpoint and FTP credentials are correctly configured before executing this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Fetches product stock data from API
+- Converts JSON response into CSV format
+- Uploads file to FTP server
+- Enables system integration using CSV
+
+👉 In short:\
+Convert API data into CSV and upload to FTP.
+
+## When It Runs
+
+Used for stock synchronization and integrations
+
+Typically runs:
+
+- Scheduled execution (recommended)
+- Manual execution
+- During supplier stock update workflows
+
+## Parameters
+
+<ParamField path="apiEndpoint" param-type="string" required="true">
+  API endpoint used to fetch product stock data.
+</ParamField>
+
+<ParamField path="ftpServer" param-type="string" required="true">
+  FTP server URL where the file will be uploaded.
+</ParamField>
+
+<ParamField path="ftpUserName" param-type="string" required="true">
+  FTP username for authentication.
+</ParamField>
+
+<ParamField path="ftpPassword" param-type="string" required="true">
+  FTP password for authentication.
+</ParamField>
+
+<ParamField path="ftpSSL" param-type="boolean" required="true">
+  Enable or disable SSL for FTP connection.
+</ParamField>
+
+<ParamField path="ftpPort" param-type="number" required="true">
+  FTP port number.
+</ParamField>
+
+<ParamField path="ftpFilePath" param-type="string" required="true">
+  Destination folder path on FTP server.
+</ParamField>
+
+## How It Works
+
+<Steps>
+  <Step title="Start Execution" icon="play">
+    Initialize macro and log execution start.
+  </Step>
+
+  <Step title="Fetch API Data" icon="download">
+    Call external API and retrieve JSON response using HTTP client.
+  </Step>
+
+  <Step title="Parse JSON Data" icon="code">
+    Deserialize JSON response into product objects.
+  </Step>
+
+  <Step title="Convert to CSV" icon="file-text">
+    Transform product data into CSV format including:
+    - SKU (productId)
+    - Stock (100 or 0)
+    - Stock Status (Yes/No)
+  </Step>
+
+  <Step title="Prepare File" icon="file">
+    Generate file name:
+    <code>Update.csv</code>
+  </Step>
+
+  <Step title="Upload to FTP" icon="upload-cloud">
+    Upload CSV file to configured FTP location using FTP proxy.
+  </Step>
+
+  <Step title="Log Execution" icon="file-text">
+    Record API response status and FTP upload result.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Product data fetched from API  
+  - Data converted into CSV format  
+  - File uploaded to FTP server  
+  - Ready for external system consumption  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Automating supplier stock updates
+- Converting API data into simple formats
+- Supporting legacy system integrations
+- Reducing manual effort
+- Ensuring consistent stock synchronization
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Depends on API availability and response structure  
+  - FTP credentials must be configured correctly  
+  - No retry mechanism for API or FTP failures  
+  - Uses fixed stock logic (100 or 0 only)  
+  - No validation for incorrect JSON data  
+  - File overwrites existing file if same name is used  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="API to CSV Stock Update" default-open="false">
+A supplier provides stock data via API.
+
+👉 The macro:
+
+- Fetches product data from API  
+- Converts it into CSV format  
+- Uploads file to FTP  
+
+Result: External system receives updated stock data in CSV format.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By transforming dynamic API responses into a standardized CSV format, this macro enables seamless integration between modern APIs and legacy systems that rely on file-based data exchange.
+</Callout>

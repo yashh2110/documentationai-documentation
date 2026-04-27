@@ -1,0 +1,147 @@
+---
+title: Open Order Export in XML Format
+description: >-
+  Generate structured XML files from Linnworks open orders and upload them to
+  an FTP server for seamless integration with external systems.
+---
+## Overview
+
+The **RIS-RM-2026 – OpenOrderInXMLFormat** macro converts Linnworks order data into a standardized XML format and uploads it to an FTP server.
+
+It enables smooth integration with external systems such as ERP or supplier platforms by transforming internal order data into a structured XML file.
+
+<Callout kind="tip" collapsed="false">
+  Ensure FTP configuration and XML format requirements are properly set before executing this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Extracts order and customer data  
+- Converts data into structured XML  
+- Applies source-specific logic  
+- Uploads XML files to FTP  
+
+👉 In short:  
+Convert orders into XML and send them to an external system.
+
+## When It Runs
+
+Used for integration and data export workflows
+
+Typically runs:
+
+- Manual execution (on selected orders)  
+- Triggered via Rules Engine  
+- During ERP or supplier integration processes  
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of order IDs to process.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Note:  
+  - FTP configuration is predefined within the macro  
+  - Only selected orders are processed  
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Fetch Orders" icon="download" title-type="p">
+    Retrieve orders using provided OrderIds.
+  </Step>
+
+  <Step title="Validate Orders" icon="check-circle" title-type="p">
+    Ensure at least one item has a price greater than zero.
+  </Step>
+
+  <Step title="Retrieve Order XML" icon="file-code" title-type="p">
+    Fetch original order XML from Linnworks.
+  </Step>
+
+  <Step title="Build XML Structure" icon="code" title-type="p">
+    Construct structured XML including:
+    - Order details  
+    - Customer details  
+    - Payment information  
+    - Delivery details  
+    - Order items  
+  </Step>
+
+  <Step title="Apply Source Logic" icon="git-branch" title-type="p">
+    Apply source-specific rules:
+    - Shopify → Uses Linnworks payment  
+    - eBay → Custom extraction  
+    - Others → Use XML payment node  
+  </Step>
+
+  <Step title="Add Item Data" icon="box" title-type="p">
+    Include SKU, quantity, price, tax, and totals for each item.
+  </Step>
+
+  <Step title="Generate XML File" icon="file-text" title-type="p">
+    Convert structured data into XML string and clean special characters.
+  </Step>
+
+  <Step title="Upload to FTP" icon="upload-cloud" title-type="p">
+    Upload file using format:
+    OrderNumber.xml
+  </Step>
+
+  <Step title="Log Results" icon="file-text" title-type="p">
+    Record successful uploads and any failures.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - XML file generated for each order  
+  - Files follow structured format  
+  - Uploaded to FTP server  
+  - Ready for external system processing  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Automating order export workflows  
+- Enabling ERP and supplier integrations  
+- Standardizing XML data formats  
+- Reducing manual effort  
+- Improving data accuracy and consistency  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - FTP credentials are hardcoded  
+  - Processes only orders with valid pricing  
+  - Applies different logic based on source  
+  - Depends on correct XML structure  
+  - Upload failures may interrupt integration  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Export Orders to External ERP System" default-open="false">
+  Orders need to be shared with an external ERP system.
+
+  👉 The macro:
+
+  - Converts order data into XML  
+  - Applies source-specific logic  
+  - Uploads files to FTP  
+
+  Result: Orders are automatically available in the external system.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Converting order data into structured XML and delivering it via FTP enables seamless integration, ensuring reliable and automated data exchange between Linnworks and external systems.
+</Callout>

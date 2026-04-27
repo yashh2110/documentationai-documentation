@@ -1,0 +1,152 @@
+---
+title: Shipping Label Print to FTP
+description: >-
+  Automatically generate shipping labels in PDF format for eligible orders and
+  upload them to an FTP server for external processing and integration.
+---
+## Overview
+
+The **RIS-SM-1017 – ShippingLabelPrintToFTP** macro automates shipping label generation and file transfer.
+
+It filters eligible orders, generates shipping labels, downloads them, and uploads the files to a configured FTP server.
+
+<Callout kind="tip" collapsed="false">
+  Ensure FTP credentials and identifier configuration are correct before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Filters orders using identifiers  
+- Generates shipping label PDFs  
+- Uploads files to an FTP server  
+- Supports automated external integrations  
+
+👉 In short:  
+Generate shipping labels and upload them to FTP automatically.
+
+## When It Runs
+
+Used for shipping automation and integrations
+
+Typically runs:
+
+- Scheduled execution (recommended)  
+- Manually triggered  
+
+## Parameters
+
+<ParamField path="identifier" param-type="string" required="true" deprecated="false">
+  Order identifiers used to filter eligible orders.
+</ParamField>
+
+<ParamField path="FTPServer" param-type="string" required="true" deprecated="false">
+  FTP server URL.
+</ParamField>
+
+<ParamField path="FTPUserName" param-type="string" required="true" deprecated="false">
+  FTP username.
+</ParamField>
+
+<ParamField path="FTPPassword" param-type="string" required="true" deprecated="false">
+  FTP password.
+</ParamField>
+
+<ParamField path="FTPSSL" param-type="boolean" required="true" deprecated="false">
+  Enable or disable SSL for FTP connection.
+</ParamField>
+
+<ParamField path="FTPPort" param-type="number" required="true" deprecated="false">
+  FTP port number.
+</ParamField>
+
+<ParamField path="FTPFilePath" param-type="string" required="true" deprecated="false">
+  FTP folder path where files will be uploaded.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Note:  
+  Only orders matching the provided identifier will be processed.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Fetch Open Orders" icon="download" title-type="p">
+    Retrieve open orders from the last 1 day.
+  </Step>
+
+  <Step title="Filter Eligible Orders" icon="filter" title-type="p">
+    Select orders that:
+    - Match the provided identifier  
+    - Do not have labels printed  
+  </Step>
+
+  <Step title="Generate Labels" icon="printer" title-type="p">
+    Generate shipping labels using:
+    - Template: "Shipping Labels"  
+    - Format: PDF  
+  </Step>
+
+  <Step title="Download Files" icon="file" title-type="p">
+    Convert label URLs into file data.
+  </Step>
+
+  <Step title="Upload to FTP" icon="upload-cloud" title-type="p">
+    Upload files using naming format: OrderNumber.pdf to configured FTP path.
+  </Step>
+
+  <Step title="Log Results" icon="file-text" title-type="p">
+    Record successful uploads and failures.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Shipping labels generated in PDF format  
+  - Files uploaded to FTP server  
+  - Only eligible orders processed  
+  - Execution logs available  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Automating label generation workflows  
+- Reducing manual handling of shipping labels  
+- Enabling FTP-based integrations  
+- Supporting bulk order processing  
+- Improving warehouse efficiency  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Processes only orders with matching identifiers  
+  - Does not mark orders as label printed  
+  - Only processes orders from the last 1 day  
+  - Generates one PDF per order  
+  - No retry mechanism for failed uploads  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Automated Label Upload to FTP" default-open="false">
+  Orders are tagged with a specific identifier for shipping.
+
+  👉 The macro:
+
+  - Filters eligible orders  
+  - Generates shipping labels  
+  - Uploads PDFs to FTP server  
+
+  Result: Labels are automatically available for external systems without manual effort.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Combining label generation with FTP upload streamlines warehouse operations and enables seamless integration with external fulfilment and logistics systems.
+</Callout>

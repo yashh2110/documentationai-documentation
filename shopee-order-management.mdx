@@ -1,0 +1,182 @@
+---
+title: Shopee order management
+description: >-
+  This guide explains how to manage Shopee products, orders, deliveries, and
+  reporting in Odoo. It covers catalog mapping, order synchronization,
+  fulfillment workflows, and sales analysis.
+---
+## **Product catalog mapping**
+
+### **For new Odoo databases**
+
+If your products exist only on Shopee, you can import them into Odoo:
+
+1. Export your product catalog from Shopee using the **Mass Function** option, ensuring SKUs are included
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/shopee-seller-centre-product-extract.png" width="813" height="167" alt="Mass Function drop-down in Shopee." />
+
+1. Import the file into Odoo via **Inventory ‣ Products ‣ Import**
+
+2. Map the Shopee SKU to the **Internal Reference** field to link products correctly
+
+### **For existing Odoo products**
+
+If products already exist in Odoo, you need to match them with Shopee listings:
+
+1. Export product catalogs from both Shopee (with SKUs) and Odoo (with Internal References)
+
+2. Use a spreadsheet to match Shopee SKUs with Odoo Internal References
+
+3. Import the updated file back into Odoo to update product mappings
+
+**Important**
+
+Product catalog synchronization is **manual**. It must be performed by the user and is not handled automatically.
+
+## **Order synchronization**
+
+Shopee orders are imported into Odoo automatically at scheduled intervals.
+
+- Only orders with updated statuses are retrieved
+
+- Synchronization reflects changes made on Shopee only
+
+- If an order is canceled on Shopee, it updates in Odoo
+
+- Canceling an order in Odoo does not affect Shopee
+
+For each imported order:
+
+- A **sales order** is created
+
+- A **customer record** is generated if needed
+
+**Note**
+
+Only orders that require shipment are synchronized. Orders such as **SHIPPED**, **CANCELLED**, **UNPAID**, or **COMPLETED** are excluded.
+
+## **Force synchronization**
+
+To manually trigger order synchronization:
+
+1. Go to **Sales ‣ Configuration ‣ Shopee ‣ Shops**
+
+2. Open the relevant shop
+
+3. Adjust the **Last Order Sync** date under **Orders Follow-up**
+
+4. Save changes
+
+Set the date earlier than the last update of the order you want to retrieve.
+
+## **Manage deliveries in FBM**
+
+When an <u>FBM</u> order is synchronized:
+
+- A **picking** is created in the Inventory app
+
+- A **sales order** and customer record are generated
+
+To process delivery:
+
+1. Confirm the picking in Odoo
+
+2. Go to Shopee Seller Center and click **Arrange Shipment**
+
+3. Generate the tracking number and shipping label
+
+4. Odoo retrieves and attaches the shipping label
+
+### **Shopee delivery statuses**
+
+Understanding order statuses helps manage fulfillment:
+
+- **Ready to ship**: Shipment can be arranged
+
+- **Shipment arranged**: Tracking number assigned
+
+- **Shipped**: Package handed to logistics provider
+
+- **Cancelled**: Order canceled
+
+- **Pickup failed**: Delivery attempt failed and needs retry
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/shopee-delivery-orders-status.png" width="933" height="141" alt="Shopee delivery status in Odoo." />
+
+**Important**
+
+Non-Shopee Supported Logistics (NSSL) are not supported.
+
+- Shipping labels and tracking numbers must be created manually via the logistics provider
+
+- A tracking number is required for all shipments
+
+Refer to your region’s supported logistics providers (e.g., <a href="https://seller.shopee.com.my/edu/article/388" target="_blank" rel="noopener noreferrer">Malaysia</a>).
+
+## **Track deliveries in Odoo**
+
+For <u>FBM</u> orders:
+
+- Stock movements are automatically created in Odoo based on Shopee updates
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/shopee-wh-out.png" width="933" height="474" alt="Stock move created for Shopee order in Odoo." />
+
+### **Order fulfillment workflow**
+
+1. Orders are created automatically in Odoo when placed on Shopee
+
+2. Shipment must be arranged in Shopee Seller Center
+
+   - Select shipping provider
+
+   - Generate label
+
+   - Schedule pickup or drop-off
+
+3. Odoo retrieves the shipping label and tracking details
+
+4. Validate the delivery in Odoo to update stock
+
+5. Updated inventory is pushed back to Shopee
+
+## **Register payments**
+
+Since Shopee collects payments:
+
+1. Create a dedicated journal (e.g., `Shopee Payments`)
+
+2. Use an intermediary account
+
+Because payouts are grouped:
+
+- Select all related invoices
+
+- Use **Batch Deposit** as the payment method
+
+- Validate via **Actions → Create Batch Payment**
+
+**Tip**
+
+This process can also be used for Shopee commission or fee-related bills.
+
+After receiving payment:
+
+- Reconcile it using bank statements
+
+- Match it against the intermediary account
+
+## **Analyze Shopee sales in reporting**
+
+Odoo provides consolidated reporting across all channels.
+
+To analyze Shopee sales:
+
+1. Assign a **Sales Team** to each Shopee shop
+
+   - Go to **Sales ‣ Configuration ‣ Shopee ‣ Accounts**
+
+2. Use filters in reporting dashboards to view Shopee-specific data
+
+### **Best practice**
+
+Assign separate sales teams per marketplace to enable more detailed performance tracking and reporting.

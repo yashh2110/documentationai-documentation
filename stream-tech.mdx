@@ -1,0 +1,643 @@
+---
+title: 'Stream Tech Integration — Linnworks to Stream: End-User Guide'
+---
+<Card title="New User Guide" href="/stream-tech-new-user-guide" icon="zap" horizontal="false" target="_self">
+  Check the documentation guide for new users
+</Card>
+
+## Overview&#x20;
+
+The Stream Tech Integration connects Linnworks, your order management system, with Stream, a logistics and delivery management platform. Once configured, the integration automates the entire shipment lifecycle — from picking up open orders in Linnworks, creating consignments in Stream, and writing tracking numbers back to Linnworks, through to receiving real-time delivery status updates via webhooks.
+
+Key flows the integration manages:
+
+- Open orders in Linnworks are fetched and stored in the integration queue automatically, every five minutes.
+
+- Each queued order is submitted to Stream to create a delivery or collection consignment.
+
+- Stream returns a consignment number, tracking number, and tracking URL, which are written back to the Linnworks order immediately.
+
+- Shipping labels are generated on demand directly from Linnworks using the Stream tracking data.
+
+- Webhook events from Stream update Linnworks orders when deliveries are planned, dispatched, or completed.
+
+- Order identifiers in Linnworks (such as "Sent to Stream", run numbers, and sequence numbers) provide visible, at-a-glance status for warehouse and dispatch teams.
+
+The integration runs in the background via a scheduled job processor. Most operations require no manual intervention once services and credentials are configured.
+
+---
+
+## Who Should Use This Integration
+
+**Warehouse Teams**
+
+Teams responsible for picking and packing use the integration's Linnworks order identifiers — particularly "Sent to Stream" and run/sequence numbers — to know which orders have been accepted by Stream and what delivery run they belong to. Label printing is also handled through this integration.
+
+**Logistics and Dispatch Teams**
+
+Dispatch teams use run identifiers (RUN 01 through RUN 20), sequence identifiers (SEQ-01 through SEQ-20), and day identifiers (SUNDAY through SATURDAY) to coordinate vehicle loading and route management. These identifiers are applied automatically to Linnworks orders as Stream plans and assigns delivery runs.
+
+**Integration Administrators**
+
+Administrators configure the integration's API credentials, sender address, sync settings, and postal service mappings. They also monitor the scheduler dashboard to verify that nightly master data syncs, order fetch jobs, and webhook processing jobs are running successfully.
+
+**Support Teams**
+
+Support staff use the integration's audit logs and order queue views to diagnose why an order was not sent, why a tracking number is missing, or why a delivery status has not updated. The "Error from Stream" identifier on a Linnworks order is the primary signal that an order needs attention.
+
+---
+
+## Key Features
+
+- **Automated order synchronisation** — Open Linnworks orders matching the configured lookback window are fetched every five minutes and queued for dispatch to Stream.
+
+- **Delivery and collection shipment creation** — Each order is submitted to Stream as either a delivery order or a collection order, depending on the postal service configuration.
+
+- **Shipping label generation** — Labels are generated directly from Linnworks in four available formats, with one to five copies per package.
+
+- **Tracking number synchronisation** — Consignment numbers, tracking numbers, and tracking URLs are written back to Linnworks immediately after successful order creation in Stream.
+
+- **Real-time delivery status updates** — Webhook events from Stream trigger order notes in Linnworks when an order is delivered, partially delivered, collected, or partially collected.
+
+- **Planning event synchronisation** — Stream planning events (open planning, lock planning, close planning) update order group information in Linnworks.
+
+- **Run, day, and sequence identifier tagging** — Linnworks order identifiers are automatically applied to reflect Stream delivery run assignments.
+
+- **Master data synchronisation** — Stream depots, delivery methods, and order identifiers are synced into Linnworks daily to keep postal service mappings and identifier lists current.
+
+- **Configurable batch processing** — Batch sizes and retry limits are configurable to match operational volume and API constraints.
+
+- **Full audit logging** — Every fetch, send, label generation, and webhook event is logged with timestamps, correlation IDs, and outcome details.
+
+- **Order deletion with Stream cleanup** — Completed orders can be deleted from Stream and cleared in Linnworks in a single operation.
+
+---
+
+## Order Lifecycle
+
+Every order that passes through the integration follows a defined progression of statuses. These statuses are visible in the integration's order queue view.
+
+| Status                | Description                                                                                                     |
+| --------------------- | --------------------------------------------------------------------------------------------------------------- |
+| **Pending**           | The order has been fetched from Linnworks and is waiting to be submitted to Stream.                             |
+| **In Progress**       | The order is currently being submitted to Stream. It is locked to prevent duplicate sends.                      |
+| **Completed**         | The order has been successfully created in Stream. Tracking information is populated.                           |
+| **Failed**            | Stream returned an error when the order was submitted. The order will be retried automatically.                 |
+| **Validation Failed** | The order is missing required fields or configuration. It cannot be sent until the issue is corrected manually. |
+| **Ready for Retry**   | A previously failed order has been queued for another send attempt.                                             |
+| **Deleted**           | The order has been removed from Stream and its tracking information has been cleared in Linnworks.              |
+
+**Lifecycle flow:**
+
+An order begins as **Pending** once fetched. The send job picks it up and moves it to **In Progress**. If Stream accepts it, the status moves to **Completed**. If Stream rejects it, the status moves to **Failed**, and the integration applies the "Error from Stream" identifier to the Linnworks order. On the next cycle, failed orders are moved to **Ready for Retry** and the send is attempted again, up to the configured maximum number of retry attempts (`MaxRetryAttempts`, default: 3). If all retries are exhausted, the order remains **Failed** until corrected. Orders with missing configuration move to **Validation Failed** and must be fixed before they can proceed. Once an order is **Completed**, it may later be moved to **Deleted** through a manual delete operation.
+
+<Image src="https://blob-cdn.documentation.ai/org-87fb0951-1e07-4f5d-a887-8a7327c7777d/doc-98941d2e-0032-424f-8414-3034ac5fa6ee/1775736737252-mc5yw9s2npr-1a15e8fc-276d-48e9-8324-2327a558c79f.jpg?fm=auto&auto=compress%2Cformat" width="800" height="533" alt="" style="width: 800px; height: auto; cursor: pointer; margin: 0 auto;" />
+
+---
+
+## How Orders Are Sent to Stream&#x20;
+
+### Eligibility
+
+Before an order is submitted to Stream, the integration checks the following conditions:
+
+- The installation must be active.
+
+- The integration's **Order Sync Enabled** flag (`IsOrderSyncEnabled`) must be set to `true`. Manual sends bypass this check.
+
+- The order must have a postal service assigned in Linnworks that is fully mapped to a Stream depot and delivery method.
+
+- The order must not already be in **In Progress** status — concurrent sends of the same order are blocked.
+
+If any condition is not met, the order is not sent and will not appear in the queue unless the issue is corrected.
+
+### Fetch Process
+
+The scheduler runs a **fetch job** every five minutes for each active installation. This job:
+
+1. Queries Linnworks for open orders within the configured lookback window (`OrderLookbackDays`, set per integration).
+
+2. Stores any new orders in the integration's local order queue with status **Pending**.
+
+3. Re-fetches orders that previously had a **Validation Failed** status to pick up any corrections made in Linnworks.
+
+Page size for Linnworks order queries is configurable (`OrderSyncPageSize`, default: 50 per page).
+
+### Send Process
+
+A **send job** runs every five minutes, staggered two minutes after the fetch job, for each installation. This offset ensures orders are fetched before the send cycle begins. The send job:
+
+1. Reads up to `MaxBatchSizePerInstallation` (default: 5) Pending orders from the queue.
+
+2. Locks each order as **In Progress** using optimistic concurrency — if another process has already claimed it, it is skipped.
+
+3. Determines whether the order is a delivery or collection based on the postal service's **Stream Order Type** setting.
+
+4. Transforms the Linnworks order data into a Stream delivery or collection request (see [Shipment Creation and Label Generation](#shipment-creation-and-label-generation)).
+
+5. Submits the request to the Stream API.
+
+Up to `MaxInstallationsPerBatch` (default: 2) installations are processed simultaneously in each scheduler cycle.
+
+### On Success
+
+When Stream accepts an order:
+
+- The Stream order ID, consignment number, tracking number, and tracking URL are saved to the integration queue.
+
+- The tracking number is written to the Linnworks order's shipping information.
+
+- The **"Sent to Stream"** identifier is applied to the Linnworks order.
+
+- The order queue status is set to **Completed**.
+
+### On Failure
+
+When Stream rejects an order:
+
+- The HTTP status code and error details are recorded in the order queue.
+
+- The **"Error from Stream"** identifier is applied to the Linnworks order.
+
+- The order status is set to **Failed**.
+
+- On the next sync cycle, the order is automatically moved to **Ready for Retry** and re-submitted, up to `MaxRetryAttempts` (default: 3) times.
+
+<Image src="https://blob-cdn.documentation.ai/org-87fb0951-1e07-4f5d-a887-8a7327c7777d/doc-98941d2e-0032-424f-8414-3034ac5fa6ee/1775736769134-yjw0328z83a-854a2b09-be1e-4765-b260-fafb650741ba.jpg?fm=auto&auto=compress%2Cformat" width="800" height="533" alt="" />
+
+---
+
+## Shipping Service Setup
+
+### How Services Are Mapped
+
+Each postal service in Linnworks that represents a Stream delivery option must be mapped to the corresponding Stream depot and delivery method. The mapping is stored per postal service and contains the following:
+
+| Field                              | Description                                                                                        |
+| ---------------------------------- | -------------------------------------------------------------------------------------------------- |
+| **Stream Depot**                   | The Stream depot that will handle this shipment.                                                   |
+| **Stream Delivery Method**         | The delivery method available at the selected depot.                                               |
+| **Stream Order Type**              | Whether this service creates a `Delivery` or `Collection` order in Stream. Default: `Delivery`.    |
+| **Stream Service**                 | Optional service override code sent to Stream.                                                     |
+| **Stream Service Level**           | Optional service level code sent to Stream.                                                        |
+| **Stream Stock Location**          | Optional stock location associated with the service.                                               |
+| **Label Type**                     | The label format to use when printing labels for orders on this service.                           |
+| **Label Copies**                   | Number of label copies to generate per package. Default: 1, maximum: 5.                            |
+| **Skip Composite Parent**          | Whether to exclude composite parent items from the Stream request. Default: enabled.               |
+| **Override Packaging Split**       | Whether to override the default packaging split behaviour for this service.                        |
+| **Mark as Processed on Delivered** | If enabled, the Linnworks order is automatically marked as processed when Stream reports delivery. |
+
+**Below is an example of a configured Stream service in Linnworks:**
+
+<Image src="https://blob-cdn.documentation.ai/org-87fb0951-1e07-4f5d-a887-8a7327c7777d/doc-98941d2e-0032-424f-8414-3034ac5fa6ee/1775737212015-mrqawl21anj-482fefb6-7068-4187-864f-ac8fc2c55a0a.jpg?fm=auto&auto=compress%2Cformat" width="800" height="145" alt="" />
+
+<Image src="https://blob-cdn.documentation.ai/org-87fb0951-1e07-4f5d-a887-8a7327c7777d/doc-98941d2e-0032-424f-8414-3034ac5fa6ee/1775738873602-pyq0jty52j-4575579d-7b06-49bff8-b6a5-41ab9d84dcd8.jpg?fm=auto&auto=compress%2Cformat" width="800" height="690" alt="" />
+
+### How Services Are Created
+
+The integration performs a **postal services master data sync** daily at 4:00 AM. This sync:
+
+- Fetches available depots and delivery methods from Stream.
+
+- Creates or updates corresponding postal services in Linnworks under the **STREAM TECH** vendor name (or **STREAMTECH** in staging environments).
+
+- Keeps the list of available services current as Stream's depot network changes.
+
+Once a service appears in Linnworks, an administrator must complete its configuration by assigning the appropriate depot, delivery method, label type, and other settings before it can be used by orders.
+
+### Service Assignment
+
+In Linnworks, assign the correct postal service to each order before the sync cycle runs. Orders without a valid, fully configured service will fail validation and will not be sent to Stream.
+
+---
+
+## Shipment Creation and Label Generation
+
+### Shipment Creation
+
+When the send job processes a Pending order, it builds a Stream shipment request using the following data from Linnworks:
+
+- **Order header** — order reference, order date, customer details, and delivery address.
+
+- **Items** — each order line item, with descriptions truncated to a maximum of 140 characters. Weights are submitted in kilograms and cubic volume in cubic metres.
+
+- **Composite items** — by default, composite parent items are excluded from the Stream request; only child items are included. This is configurable per service via the **Skip Composite Parent** setting.
+
+- **Delivery group** — the recipient's delivery address, any required contact information, and the configured delivery method.
+
+The request is submitted as either a **Delivery Order** or a **Collection Order** based on the **Stream Order Type** configured on the postal service.
+
+### Label Generation
+
+Labels are generated from within Linnworks using the standard shipping label print workflow. When Linnworks requests a label for an order:
+
+1. The integration checks whether the order has been submitted to Stream and has a **Completed** status with a valid tracking number and consignment number.
+
+2. If the order is not yet synced, the integration automatically fetches the order from Linnworks and submits it to Stream before generating the label.
+
+3. If the order is currently **In Progress** (being submitted by a concurrent job), the integration waits up to approximately six seconds, polling every three seconds, before timing out.
+
+4. If the sync fails, label generation is cancelled and an error is returned to Linnworks.
+
+5. Once the order is confirmed as **Completed**, labels are generated for each package in the request.
+
+**Available label types:**
+
+| Label Type                    | Description                                |
+| ----------------------------- | ------------------------------------------ |
+| Default                       | 4×6 inch label with QR code and barcode.   |
+| Portrait without QR           | Portrait-oriented label without a QR code. |
+| Portrait Standard             | Portrait-oriented standard label.          |
+| Compact (100×50mm without QR) | Compact 100×50mm label without a QR code.  |
+
+The label type is configured per postal service. Each label is returned as a Base64-encoded PNG image and PDF document. The number of copies per package is configurable per service (1 to 5 copies).
+
+**Cancelling a label:** Label cancellation requests from Linnworks always return a success response. No action is taken in Stream. This behaviour is required by the Linnworks integration contract.
+
+<Image src="https://blob-cdn.documentation.ai/org-87fb0951-1e07-4f5d-a887-8a7327c7777d/doc-98941d2e-0032-424f-8414-3034ac5fa6ee/1775736807344-lmhstjq4ky-3087e2a3-c886-4079-8454-df1d09f90daf.jpg?fm=auto&auto=compress%2Cformat" width="800" height="533" alt="" />
+
+---
+
+## Tracking Number and Shipment Updates
+
+### Tracking Written to Linnworks
+
+Immediately after a successful shipment creation in Stream, the following are written to the Linnworks order:
+
+- **Tracking number** — updated in the order's shipping information.
+
+- **Tracking URL** — stored alongside the tracking number for reference.
+
+- **Consignment number** — stored in the integration queue and used to match incoming webhook events.
+
+### Delivery Status Updates via Webhooks
+
+If **Webhook Features** are enabled on the integration (`IsWebhookFeaturesEnabled = true`), the integration subscribes to Stream webhook events. These events are received, stored, and processed every two minutes by the webhook processing job.
+
+The following delivery event codes trigger updates in Linnworks:
+
+| Stream Event Code | Meaning                                       |
+| ----------------- | --------------------------------------------- |
+| `DELIVERED`       | The consignment has been fully delivered.     |
+| `PARTDELVRD`      | The consignment has been partially delivered. |
+| `COLLECTED`       | The consignment has been fully collected.     |
+| `PARTCOLLECTED`   | The consignment has been partially collected. |
+
+On receiving one of these events, the integration adds an order note to the corresponding Linnworks order with the delivery event details.
+
+The following planning event codes trigger order group updates in Linnworks:
+
+| Stream Event Code | Meaning                                            |
+| ----------------- | -------------------------------------------------- |
+| `OPENPLANNING`    | Delivery route planning has been opened in Stream. |
+| `LOCKPLANNING`    | Delivery route planning has been locked.           |
+| `CLOSEPLANNING`   | Delivery route planning has been closed/finalised. |
+
+### Mark as Processed on Delivered
+
+When the **Mark as Processed on Delivered** option is enabled on a postal service, Linnworks orders on that service will automatically be marked as processed when Stream reports a `DELIVERED` or `COLLECTED` event. This removes the need for warehouse staff to manually mark orders as dispatched.
+
+<Image src="https://blob-cdn.documentation.ai/org-87fb0951-1e07-4f5d-a887-8a7327c7777d/doc-98941d2e-0032-424f-8414-3034ac5fa6ee/1775736835832-7g5q8td4n2i-29b98c2c-a3c4-4c19-b88f-245faf7adcb3.jpg?fm=auto&auto=compress%2Cformat" width="800" height="533" alt="" />
+
+---
+
+## Run, Day,Sent to Stream,Error from Stream and Sequence Identifiers
+
+### Overview
+
+The integration applies identifiers to Linnworks orders to reflect Stream's delivery route planning. These identifiers appear directly on the order in Linnworks and are the primary way warehouse and dispatch teams know which run, day, and sequence position an order belongs to.
+
+All identifiers are registered in Linnworks via the **master data sync** that runs daily at 3:00 AM, ensuring the full set of identifiers is always available before the working day begins.
+
+### Run Identifiers
+
+| Format                   | Range            | Count          |
+| ------------------------ | ---------------- | -------------- |
+| RUN 01, RUN 02, … RUN 20 | RUN 01 to RUN 20 | 20 identifiers |
+
+Run identifiers are applied to a Linnworks order when Stream assigns it to a specific delivery run during route planning. The identifier reflects the run number, making it straightforward for warehouse staff to sort and group orders before dispatch.
+
+<Image src="https://blob-cdn.documentation.ai/org-87fb0951-1e07-4f5d-a887-8a7327c7777d/doc-98941d2e-0032-424f-8414-3034ac5fa6ee/1775736588953-ww1819e4ih8-3163fe06-4d76-4f95-94cd-f5a831874958.jpg?fm=auto&auto=compress%2Cformat" width="140" height="140" alt="" style="width: 140px; height: auto; cursor: pointer; margin: 0 auto;" />
+
+### Sequence Identifiers
+
+| Format                   | Range            | Count          |
+| ------------------------ | ---------------- | -------------- |
+| SEQ-01, SEQ-02, … SEQ-20 | SEQ-01 to SEQ-20 | 20 identifiers |
+
+Sequence identifiers indicate the order's position within a run. They are applied alongside run identifiers. Sequence identifier support must be explicitly enabled by setting **Group Sequence Identifier Enabled** (`IsGroupSequenceIdentifierEnabled = true`) in the integration configuration. If not enabled, sequence identifiers will not be applied even when Stream provides sequence data.
+
+<Image src="https://blob-cdn.documentation.ai/org-87fb0951-1e07-4f5d-a887-8a7327c7777d/doc-98941d2e-0032-424f-8414-3034ac5fa6ee/1775736605962-gom55mpu7g7-30b5eea7-920c-4028-a8c9-dbf6d4dcccef.jpg?fm=auto&auto=compress%2Cformat" width="140" height="140" alt="" style="width: 140px; height: auto; cursor: pointer; margin: 0 auto;" />
+
+### Day Identifiers
+
+| Identifier |
+| ---------- |
+| SUNDAY     |
+| MONDAY     |
+| TUESDAY    |
+| WEDNESDAY  |
+| THURSDAY   |
+| FRIDAY     |
+| SATURDAY   |
+
+Day identifiers reflect the scheduled delivery day as planned by Stream. They are applied to Linnworks orders via webhook events when Stream's route planning assigns a delivery date.
+
+<Image src="https://blob-cdn.documentation.ai/org-87fb0951-1e07-4f5d-a887-8a7327c7777d/doc-98941d2e-0032-424f-8414-3034ac5fa6ee/1775736626369-d57hs0i3xkb-31e2fe4e-639b-4ee4-90d5-0e5f2621f666.jpg?fm=auto&auto=compress%2Cformat" width="140" height="140" alt="" style="width: 140px; height: auto; cursor: pointer; margin: 0 auto;" />
+
+### Sent to Stream
+
+| Format         | Count        |
+| -------------- | ------------ |
+| Sent to Stream | 1 identifier |
+
+The **Sent to Stream** identifier is applied to a Linnworks order immediately after it has been successfully submitted to Stream and a consignment number and tracking number have been returned. Its presence confirms the order is active in Stream and labels can be printed. It remains on the order until the order is deleted from Stream, at which point the integration removes it automatically.
+
+<Image src="https://blob-cdn.documentation.ai/org-87fb0951-1e07-4f5d-a887-8a7327c7777d/doc-98941d2e-0032-424f-8414-3034ac5fa6ee/1775736641481-szmlv0mh2wp-787259e9-3533-4669-93cb-bc5f245328ef.jpg?fm=auto&auto=compress%2Cformat" width="140" height="140" alt="" style="width: 140px; height: auto; cursor: pointer; margin: 0 auto;" />
+
+### Error from Stream
+
+| Format            | Count        |
+| ----------------- | ------------ |
+| Error from Stream | 1 identifier |
+
+The **Error from Stream** identifier is applied to a Linnworks order when Stream rejects the submission or when the integration encounters an error during processing. It signals that the order requires attention before it can be dispatched. To investigate, open the integration order queue, locate the order, and review the error message and HTTP status code recorded against it. Once the underlying issue is corrected, the identifier is removed automatically when the order is successfully re-submitted.
+
+<Image src="https://blob-cdn.documentation.ai/org-87fb0951-1e07-4f5d-a887-8a7327c7777d/doc-98941d2e-0032-424f-8414-3034ac5fa6ee/1775736657834-qpbv2c6irtd-d07fa2a7-fed0-45d1-bd01-3377fe8392a8.jpg?fm=auto&auto=compress%2Cformat" width="150" height="150" alt="" style="width: 150px; height: auto; cursor: pointer; margin: 0 auto;" />
+
+### How Identifiers Are Applied
+
+Identifiers are applied and removed automatically by the integration in response to Stream webhook events. Manual modification of these identifiers in Linnworks is not recommended, as the integration may overwrite or conflict with manually set values.
+
+The maximum supported identifiers are: **20 run identifiers** and **20 sequence identifiers**.
+
+---
+
+## Order Status Identifiers
+
+The following identifiers appear on Linnworks orders and are managed by the integration. Each identifier serves as an at-a-glance status indicator.
+
+| Identifier            | What It Means                                                                                                                     |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Sent to Stream**    | The order has been successfully submitted to Stream. A tracking number and consignment number are available.                      |
+| **Error from Stream** | The order was rejected by Stream or failed during submission. Check the order queue for the specific error message.               |
+| **RUN 01 – RUN 20**   | Stream has assigned this order to the indicated delivery run during route planning.                                               |
+| **SEQ-01 – SEQ-20**   | This order is at the indicated sequence position within its assigned run. Requires feature to be enabled in integration settings. |
+| **MONDAY – SUNDAY**   | Stream has assigned this order a delivery day. The identifier reflects the day of the scheduled delivery.                         |
+
+---
+
+## Configuration Settings
+
+### Integration-Level Settings
+
+These settings are configured per integration within the integration administration area. Each integration represents a Linnworks account connected to a Stream account.
+
+| Setting                                                                    | Required    | Description                                                                  |
+| -------------------------------------------------------------------------- | ----------- | ---------------------------------------------------------------------------- |
+| **Stream Client ID** (`StreamClientId`)                                    | Yes         | The OAuth client ID for the Stream API account.                              |
+| **Stream Client Secret** (`StreamClientSecret`)                            | Yes         | The OAuth client secret for the Stream API account.                          |
+| **Stream Client URL** (`StreamClientUrl`)                                  | Yes         | The base URL for the Stream API endpoint.                                    |
+| **Using Stream Partner Account** (`IsUsingStreamPartnerAccount`)           | No          | Set to `true` if operating under a Stream partner account.                   |
+| **Stream Partner Account ID** (`StreamPartnerAccountId`)                   | Conditional | Required when using a Stream partner account.                                |
+| **Stream Partner Account Name** (`StreamPartnerAccountName`)               | Conditional | Display name of the Stream partner account.                                  |
+| **Contact Name** (`ContactName`)                                           | Yes         | Sender contact name included on all Stream requests.                         |
+| **Company Name** (`CompanyName`)                                           | Yes         | Sender company name.                                                         |
+| **Address Line 1–3** (`AddressLine1`, `AddressLine2`, `AddressLine3`)      | Yes         | Sender address lines.                                                        |
+| **City** (`City`)                                                          | Yes         | Sender city.                                                                 |
+| **County** (`County`)                                                      | No          | Sender county.                                                               |
+| **Country Code** (`CountryCode`)                                           | Yes         | ISO country code for the sender address.                                     |
+| **Postcode** (`PostCode`)                                                  | Yes         | Sender postcode.                                                             |
+| **Contact Phone Number** (`ContactPhoneNo`)                                | Yes         | Sender contact phone number.                                                 |
+| **Label Reference** (`LabelReference`)                                     | No          | Field used as the reference printed on generated labels.                     |
+| **Order Number Prefix** (`OrderNumPrefix`)                                 | No          | A prefix applied to order numbers submitted to Stream.                       |
+| **Order Sync Enabled** (`IsOrderSyncEnabled`)                              | Yes         | Enables or disables the automated order sync scheduler for this integration. |
+| **Order Dispatch Sync Enabled** (`IsOrderDispatchSyncEnabled`)             | No          | Enables dispatch status synchronisation.                                     |
+| **Order Lookback Days** (`OrderLookbackDays`)                              | Yes         | Number of days back from today to retrieve open orders from Linnworks.       |
+| **Use Current Date as Hands-On Date** (`UseCurrentDateAsHandsOnDate`)      | No          | If enabled, submits today's date as the hands-on date on Stream requests.    |
+| **Webhook Features Enabled** (`IsWebhookFeaturesEnabled`)                  | No          | Enables webhook subscriptions and real-time delivery event processing.       |
+| **Group Sequence Identifier Enabled** (`IsGroupSequenceIdentifierEnabled`) | No          | Enables SEQ-01 to SEQ-20 sequence identifier tagging on orders.              |
+
+**Example configuration screen:**
+
+<Image src="https://blob-cdn.documentation.ai/org-87fb0951-1e07-4f5d-a887-8a7327c7777d/doc-98941d2e-0032-424f-8414-3034ac5fa6ee/1775738568333-39bp3befdd2-image.png?fm=auto&auto=compress%2Cformat" width="799" height="291" alt="" style="width: 799px; height: auto; cursor: pointer;" />
+
+<Image src="https://blob-cdn.documentation.ai/org-87fb0951-1e07-4f5d-a887-8a7327c7777d/doc-98941d2e-0032-424f-8414-3034ac5fa6ee/1775739314424-mki6yz4qmzo-483bd424-8ad7-4c4b-9652-6b3671c61a09.jpg?fm=auto&auto=compress%2Cformat" width="800" height="282" alt="" />
+
+<Image src="https://blob-cdn.documentation.ai/org-87fb0951-1e07-4f5d-a887-8a7327c7777d/doc-98941d2e-0032-424f-8414-3034ac5fa6ee/1775739328536-2b26wv0380x-ff538cba-0b79-4726-83b7-7b8a3c7b4fb5.jpg?fm=auto&auto=compress%2Cformat" width="800" height="465" alt="" />
+
+<Image src="https://blob-cdn.documentation.ai/org-87fb0951-1e07-4f5d-a887-8a7327c7777d/doc-98941d2e-0032-424f-8414-3034ac5fa6ee/1775739339083-j5q8u50z2cp-e8a66582-edc6-49df-9ece-38dcdb7a2509.jpg?fm=auto&auto=compress%2Cformat" width="800" height="446" alt="" />
+
+<Image src="https://blob-cdn.documentation.ai/org-87fb0951-1e07-4f5d-a887-8a7327c7777d/doc-98941d2e-0032-424f-8414-3034ac5fa6ee/1775739350180-m26bhz1a4ym-a19a7092-1125-4ac1-8e24-f55633396957.jpg?fm=auto&auto=compress%2Cformat" width="799" height="470" alt="" />
+
+---
+
+### Per-Service Settings
+
+These settings are configured per postal service within the integration. They apply to every order dispatched using that service.
+
+| Setting                                                     | Required | Default  | Description                                                                                        |
+| ----------------------------------------------------------- | -------- | -------- | -------------------------------------------------------------------------------------------------- |
+| **Label Type** (`ShippingLabelType`)                        | Yes      | Default  | The label format used when printing labels for orders on this service.                             |
+| **Label Copies** (`LabelCopies`)                            | No       | 1        | Number of label copies to generate per package (1–5).                                              |
+| **Stream Order Type** (`StreamOrderType`)                   | Yes      | Delivery | Whether orders on this service create a Stream delivery order or collection order.                 |
+| **Stream Delivery Method** (`StreamDeliveryMethod`)         | Yes      | —        | The Stream delivery method code for this service.                                                  |
+| **Override Packaging Split** (`OverridePkgSplit`)           | No       | false    | Overrides the default packaging split calculation for this service.                                |
+| **Skip Composite Parent** (`SkipCompositeParent`)           | No       | true     | Excludes composite parent items from the item list submitted to Stream. Only child items are sent. |
+| **Mark as Processed on Delivered** (`ProcessedOnDelivered`) | No       | false    | Automatically marks the Linnworks order as processed when Stream reports a delivery event.         |
+| **Stream Service** (`StreamService`)                        | No       | —        | Optional service code sent to Stream in the order header.                                          |
+| **Stream Service Level** (`StreamServiceLevel`)             | No       | —        | Optional service level code sent to Stream in the order header.                                    |
+
+---
+
+### System-Level Settings
+
+These settings are configured by administrators at the system level and apply across all installations.
+
+| Setting                                 | Default    | Range | Description                                                                                       |
+| --------------------------------------- | ---------- | ----- | ------------------------------------------------------------------------------------------------- |
+| **Max Batch Size Per Installation**     | 5          | 1–50  | Maximum number of orders processed per installation in a single send cycle.                       |
+| **Max Installations Per Batch**         | 2          | 1–50  | Maximum number of installations processed simultaneously in one scheduler cycle.                  |
+| **Max User-Selected Orders**            | 5          | 1–100 | Maximum number of orders that a user can manually select for a bulk operation.                    |
+| **Max User-Selected Orders for Delete** | 10         | 1–50  | Maximum number of orders that a user can select for bulk deletion.                                |
+| **Max Retry Attempts**                  | 3          | 1–20  | Maximum number of automatic retry attempts for a failed order before it is left in Failed status. |
+| **Webhook Batch Size**                  | 5          | 1–50  | Maximum number of webhook events processed in one webhook processing cycle.                       |
+| **Webhook Max Retry Attempts**          | 3          | 1–10  | Maximum number of retry attempts for a failed webhook event.                                      |
+| **Stream API Timeout**                  | 30 seconds | 1–300 | Timeout for individual Stream API requests.                                                       |
+| **Stream API Max Retry Attempts**       | 3          | 0–5   | Number of HTTP-level retries on transient Stream API errors (5xx, 408, 429).                      |
+| **Linnworks Order Sync Page Size**      | 50         | 1–500 | Number of orders retrieved per page when fetching from Linnworks.                                 |
+
+---
+
+## Daily Operational Workflow
+
+The following describes the typical day-to-day operational flow for teams using the integration.
+
+**1. Assign the correct postal service to orders in Linnworks.**
+Before the sync cycle runs, each order must have a valid Stream postal service assigned. Orders without a service, or with a service that is not fully configured, will not be sent to Stream.
+
+**2. Wait for the scheduled fetch cycle.**
+Every five minutes, the integration automatically retrieves open orders from Linnworks within the configured lookback window. No manual action is needed. Orders appear in the integration queue with status **Pending**.
+
+**3. Wait for the scheduled send cycle.**
+Approximately two minutes after each fetch cycle, the send job processes Pending orders and submits them to Stream. Successfully submitted orders move to **Completed** status.
+
+**4. Confirm orders with the "Sent to Stream" identifier.**
+Once submitted, the **"Sent to Stream"** identifier appears on the Linnworks order. This confirms the order has been accepted by Stream and has a tracking number.
+
+**5. Print shipping labels from Linnworks.**
+Labels can be printed using the standard Linnworks shipping label workflow. The integration generates the label automatically using Stream tracking data. If the order has not yet been synced, the integration will attempt an immediate sync before generating the label.
+
+**6. Monitor for "Error from Stream" identifiers.**
+Check for any orders tagged with the **"Error from Stream"** identifier. These orders require attention. Review the error message in the order queue, correct the underlying issue in Linnworks (for example, missing address or invalid service configuration), then trigger a re-fetch or wait for the next automatic sync cycle.
+
+**7. Watch for run, day, and sequence identifiers.**
+As Stream plans delivery routes, run identifiers (RUN 01–RUN 20), day identifiers (MONDAY–SUNDAY), and sequence identifiers (SEQ-01–SEQ-20) are applied to orders automatically via webhooks. Use these to organise picking and loading by run and sequence.
+
+**8. Receive delivery confirmations in Linnworks.**
+When Stream delivers an order, a delivery note is added to the corresponding Linnworks order automatically. If **Mark as Processed on Delivered** is enabled on the service, the Linnworks order is also marked as processed.
+
+---
+
+## Validation Errors and Common Causes
+
+The following errors can prevent an order from being submitted to Stream. Validation errors result in the order being moved to **Validation Failed** status. They will not be retried automatically until the underlying issue is resolved.
+
+| Validation Error                    | Cause                                                                                                                       |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| Installation not found or inactive  | The Linnworks account associated with the order is not active in the integration. Contact your administrator.               |
+| Linnworks token missing or expired  | The Linnworks authentication token stored for the installation is invalid or has been revoked. Re-connect the installation. |
+| No active installations available   | No active Linnworks installations are configured. At least one must exist.                                                  |
+| Order not found in Linnworks        | The order exists in the integration queue but could not be retrieved from Linnworks via the API.                            |
+| Order not found in database         | The order was expected in the integration queue but is missing. Trigger a re-fetch.                                         |
+| Postal service not assigned         | The order does not have a postal service assigned in Linnworks. Assign a valid Stream service.                              |
+| Postal service not fully configured | The assigned postal service is missing a Stream depot or delivery method mapping. Complete the service configuration.       |
+| Order sync disabled                 | The integration's `IsOrderSyncEnabled` flag is set to `false`. Enable it or use a manual send.                              |
+| Order already in progress           | A concurrent operation is already processing this order. Wait for the current send to complete.                             |
+| Missing delivery address fields     | The order's delivery address is incomplete. Required fields include Address Line 1, Town, Postcode, and Country.            |
+| Too many orders selected            | The number of orders selected for a bulk operation exceeds the configured maximum. Reduce the selection.                    |
+
+---
+
+## Troubleshooting Guide
+
+| Issue                                  | Symptoms                                                | Likely Cause                                                                                                | Resolution                                                                                                                                                   |
+| -------------------------------------- | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Order not sent to Stream               | Order remains **Pending** for multiple sync cycles      | `IsOrderSyncEnabled` is disabled, or the order has no postal service assigned                               | Verify the integration's Order Sync Enabled setting and confirm a valid service is assigned to the order                                                     |
+| "Error from Stream" identifier appears | Identifier visible on the Linnworks order               | Stream rejected the order due to a validation issue, authentication error, or invalid service configuration | Open the integration order queue, view the error details, correct the data in Linnworks, then wait for or trigger a re-sync                                  |
+| Tracking number missing                | No tracking number in Linnworks shipping info           | The order has not reached **Completed** status — it may be Pending, Failed, or In Progress                  | Check the order's current status in the queue; resolve any errors before printing labels                                                                     |
+| "RUN XX" identifier not applied        | No run identifier on a dispatched order                 | Webhook features are not enabled, or Stream has not yet sent a planning event for this order                | Confirm `IsWebhookFeaturesEnabled = true` and verify that webhook subscriptions are active for the integration                                               |
+| "SEQ-XX" identifier not applied        | No sequence identifier on a planned order               | `IsGroupSequenceIdentifierEnabled` is set to `false` in the integration configuration                       | Enable the Group Sequence Identifier Enabled setting in the integration configuration                                                                        |
+| Delivery status not updating           | No delivery notes appearing in Linnworks after delivery | Webhook events are not being received or are pending in the queue                                           | Check the webhook processing job status in the scheduler dashboard; events are processed every two minutes and retried up to `WebhookMaxRetryAttempts` times |
+| Label generation fails                 | Linnworks shows a label error for a synced order        | Tracking number or consignment number is not yet available, or the order is still In Progress               | Wait for the order to reach Completed status, or trigger a manual sync; confirm that Stream returned a valid consignment number                              |
+| Order delete fails                     | Error when attempting to delete an order                | Only **Completed** orders can be deleted; Pending or Failed orders cannot be deleted                        | Verify the order is in Completed status before attempting deletion                                                                                           |
+| Duplicate send / order sent twice      | "Order already in progress" error appears               | A concurrent job claimed the order while another was already processing it                                  | This is handled automatically; the duplicate attempt is discarded. If it persists, check for two scheduler instances running against the same database       |
+| Master data sync not completing        | Services in Linnworks are outdated or missing           | The nightly master data sync (4:00 AM) failed                                                               | Check the scheduler dashboard for the `sync-master-data-postal-services` job status and review the master data sync audit log                                |
+
+---
+
+## Best Practices
+
+- **Configure postal services fully before orders arrive.** Each service must have a Stream depot and delivery method mapped. Orders assigned to an incomplete service will fail and require manual re-processing.
+
+- **Keep Order Sync Enabled active.** Setting `IsOrderSyncEnabled = true` on the integration ensures orders are submitted automatically without manual intervention. If disabled, orders must be triggered manually.
+
+- **Use a consistent order number prefix.** The `OrderNumPrefix` setting applied to a Stream integration's order numbers should be unique and stable. Changing it mid-operation can cause reference mismatches in Stream.
+
+- **Do not manually modify identifier values in Linnworks.** Identifiers such as "Sent to Stream", "RUN 01", and "SEQ-01" are managed by the integration. Manual changes may be overwritten on the next sync cycle.
+
+- **Monitor the "Error from Stream" identifier daily.** This identifier is the primary signal that an order requires attention. Establish a daily check of orders carrying this identifier.
+
+- **Set an appropriate lookback window.** The `OrderLookbackDays` setting controls how far back the fetch job retrieves orders. A value that is too short may miss orders processed on a previous day; a value that is too long may increase cycle time unnecessarily.
+
+- **Enable webhooks for live delivery tracking.** Setting `IsWebhookFeaturesEnabled = true` enables real-time delivery event processing. Without webhooks, delivery status changes in Stream are not reflected in Linnworks.
+
+- **Enable sequence identifiers if using run-based dispatch.** If your warehouse and dispatch team rely on sequence within a run for loading order, enable `IsGroupSequenceIdentifierEnabled` to apply SEQ-01 through SEQ-20 identifiers alongside run numbers.
+
+- **Keep batch sizes within safe limits.** The default `MaxBatchSizePerInstallation` of 5 is conservative. Increasing it improves throughput but raises the risk of Stream API rate limiting. Adjust gradually and monitor for increased failure rates.
+
+- **Verify master data sync completes each night.** The scheduler processes the identifier sync at 3:00 AM and the postal services sync at 4:00 AM. A failure in either sync can cause missing identifiers or outdated service mappings. Check the scheduler dashboard each morning.
+
+---
+
+## FAQ
+
+**How often are orders automatically synced?**
+
+The fetch job runs every five minutes, retrieving open orders from Linnworks. The send job runs every five minutes, offset by two minutes, so orders are typically submitted to Stream within approximately seven minutes of being fetched.
+
+**What happens if Stream is temporarily unavailable?**
+
+If Stream is unavailable, order submissions will fail and be marked as **Failed**. The integration automatically retries failed orders on each subsequent cycle, up to `MaxRetryAttempts` times (default: 3). If Stream remains unavailable beyond the retry limit, orders will stay in **Failed** status until Stream is reachable and a manual or scheduled retry is triggered.
+
+**Can I manually trigger an order sync?**
+
+Yes. Individual orders or groups of orders can be manually selected and submitted through the integration's order management interface. Manual submissions bypass the `IsOrderSyncEnabled` check, so they will attempt to send even if the automated sync is disabled.
+
+**How do I fix an order with the "Error from Stream" identifier?**
+
+Open the integration order queue and locate the order. The queue view displays the last error message and HTTP status code returned by Stream. Correct the underlying issue — for example, a missing address field, an invalid delivery method, or an authentication problem — then wait for the next automatic retry cycle, or trigger a manual resend.
+
+**What is the difference between a delivery order and a collection order?**
+
+A **delivery order** instructs Stream to deliver goods to the recipient's address. A **collection order** instructs Stream to collect goods from an address. The order type is determined by the **Stream Order Type** setting on the postal service assigned to the Linnworks order. The default is `Delivery`.
+
+**How many orders can be submitted at once?**
+
+For the automated scheduler, up to `MaxBatchSizePerInstallation` orders (default: 5) are processed per installation per cycle. For manual bulk operations, users can select up to `MaxUserSelectedOrders` orders (default: 5) per operation.
+
+**What label types are available?**
+
+Four label types are supported:
+
+- **Default** — 4×6 inch label with QR code and barcode.
+
+- **Portrait without QR** — Portrait-oriented label without a QR code.
+
+- **Portrait Standard** — Portrait-oriented standard label.
+
+- **Compact (100×50mm without QR)** — Compact 100×50mm label without a QR code.
+
+The label type is selected per postal service in the integration configuration.
+
+**Can I print multiple copies of a label?**
+
+Yes. The **Label Copies** setting on each postal service controls how many copies are printed per package. The supported range is 1 to 5 copies.
+
+**What does "Mark as Processed on Delivered" do?**
+
+When this setting is enabled on a postal service, Linnworks orders on that service are automatically marked as processed when Stream sends a delivery confirmation event (`DELIVERED` or `COLLECTED`). This removes the need for warehouse staff to mark the order manually after dispatch confirmation.
+
+**How do I enable run and sequence identifiers?**
+
+Run identifiers (RUN 01–RUN 20) are enabled automatically when webhook features are enabled (`IsWebhookFeaturesEnabled = true`) and Stream sends planning events for assigned orders. Sequence identifiers (SEQ-01–SEQ-20) additionally require `IsGroupSequenceIdentifierEnabled = true` in the integration configuration. Both sets of identifiers are pre-registered in Linnworks by the master data sync at 3:00 AM daily.
+
+**What happens if I try to delete a Pending or Failed order?**
+
+Only orders in **Completed** status can be deleted. Attempting to delete a **Pending**, **Failed**, or **In Progress** order will return an error. Resolve the order's status first — either wait for a successful send or correct any errors — before deleting.
+
+**Are webhook events retried if they fail to process?**
+
+Yes. If a webhook event fails to process, its retry count is incremented. It is moved to **Ready for Retry** status and reprocessed on the next webhook processing cycle (every two minutes). Events are retried up to `WebhookMaxRetryAttempts` times (default: 3). If all retry attempts are exhausted, the event is marked as **Failed** and will not be retried again automatically.
+
+---
+
+## Summary
+
+The Stream Tech Integration fully automates the order handoff between Linnworks and Stream. Once configured with valid Stream API credentials, sender address details, and properly mapped postal services, the integration runs continuously in the background:
+
+- Orders are fetched from Linnworks every five minutes and submitted to Stream within a further two minutes.
+
+- Tracking numbers and consignment IDs are written back to Linnworks immediately on success.
+
+- Labels are generated on demand, with automatic sync triggered if an order has not yet been submitted.
+
+- Webhook events from Stream apply run, day, and sequence identifiers to Linnworks orders in real time.
+
+- Delivery confirmations can automatically mark Linnworks orders as processed.
+
+- Master data syncs at 3:00 AM and 4:00 AM keep identifiers and postal services current.
+
+The integration's order queue, audit logs, and scheduler dashboard provide full visibility into every sync operation, label generation event, and webhook activity. Administrators can adjust batch sizes, retry limits, and lookback windows to match operational volume and requirements.
+
+For any order that cannot be automatically resolved, the **"Error from Stream"** identifier in Linnworks and the corresponding error detail in the order queue provide the information needed to diagnose and correct the issue.

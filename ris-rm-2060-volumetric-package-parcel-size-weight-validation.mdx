@@ -1,0 +1,137 @@
+---
+title: Volumetric Package Validation
+description: >-
+  Validates orders against courier parcel limits for weight and volumetric size, tagging orders that exceed thresholds and logging warnings.
+---
+
+## Overview
+
+The **RIS-RM-2060 – Volumetric Package (Parcel Size & Weight Validation)** macro checks order weight and volumetric size to ensure compliance with courier limits.  
+
+Orders exceeding the defined limits are flagged with an identifier, allowing warehouse and shipping teams to take appropriate action.
+
+<Callout kind="tip" collapsed="false">
+  Ensure item dimensions and weights are accurate before running this macro to avoid false flags.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Retrieves order packaging data  
+- Calculates total weight and volumetric size  
+- Compares against courier limits  
+- Flags orders exceeding limits with an identifier  
+- Logs validation results and warnings  
+
+👉 In short:  
+Automatically validate parcel weight and size and tag orders exceeding courier constraints.
+
+## When It Runs
+
+Used for courier compliance and shipping validation  
+
+Typically runs:
+
+- Manual execution  
+- During order validation  
+- Before shipping allocation  
+- Before packing or dispatch  
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of orders to process
+</ParamField>
+
+## How It Works
+
+<Steps>
+  <Step title="Start Macro" icon="play-circle" title-type="p">
+    Loop through all OrderIds and fetch order details.
+  </Step>
+
+  <Step title="Get Packaging Data" icon="box" title-type="p">
+    Call GetOrderPackagingCalculation to retrieve item weight, dimensions (width, height, depth), and quantity.
+  </Step>
+
+  <Step title="Loop Through Items" icon="list" title-type="p">
+    For each item, extract quantity, weight, and dimensions.
+  </Step>
+
+  <Step title="Weight Validation" icon="check-circle" title-type="p">
+    - Convert weight from grams to kilograms  
+    - Calculate total weight = item weight × quantity  
+    - If total weight > 15 kg, assign identifier "parcel size limits exceeds" and log warning
+  </Step>
+
+  <Step title="Dimension Validation" icon="ruler" title-type="p">
+    - Convert dimensions from mm to cm  
+    - Sort dimensions as shortest, middle, longest  
+    - Calculate volumetric size = ((shortest + middle) × 2 + longest) × quantity
+  </Step>
+
+  <Step title="Check Size Limit" icon="check-circle" title-type="p">
+    - If total size ≤ 245 cm → valid order  
+    - If total size > 245 cm → assign identifier "parcel size limits exceeds" and log warning
+  </Step>
+
+  <Step title="Assign Identifier" icon="tag" title-type="p">
+    Create identifier if missing and assign to order using API.
+  </Step>
+
+  <Step title="Logging" icon="file-text" title-type="p">
+    Log order number, weight calculations, dimensions, validation results, and warnings.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Orders exceeding weight or size limits are flagged  
+  - Valid orders remain unchanged  
+  - Identifier provides visibility for warehouse and shipping teams  
+  - Supports courier compliance
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Ensuring compliance with courier parcel limits  
+- Automating courier selection validation  
+- Preventing shipping errors due to incorrect sizing  
+- Improving warehouse efficiency  
+- Reducing additional shipping costs  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Weight limit = 15 kg, size limit = 245 cm  
+  - Accurate item weight and dimensions are critical  
+  - Identifier must exist or be created before assignment  
+  - Orders may be flagged even if only one item exceeds limits  
+  - Large quantities can significantly increase total size
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Parcel Validation Example" default-open="false">
+Order contains:  
+- Item A  
+- Quantity: 2  
+- Weight: 8000 g  
+- Dimensions: 500 × 400 × 300 mm  
+
+Processing:  
+- Weight per item = 8 kg, total weight = 16 kg → exceeds limit → flagged  
+- Dimensions converted to cm = 50, 40, 30 → total size = 190 cm, multiplied by quantity = 380 cm → exceeds limit → flagged  
+
+Result: Order tagged with identifier "parcel size limits exceeds"
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Early validation of order weight and volumetric size reduces shipping failures, prevents extra charges, and enables efficient logistics planning.
+</Callout>

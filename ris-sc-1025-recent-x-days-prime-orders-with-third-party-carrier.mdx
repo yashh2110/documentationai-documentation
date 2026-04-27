@@ -1,0 +1,135 @@
+---
+title: Recent x-days Prime Orders with Third-Party Carrier
+description: >-
+  Retrieves Amazon Prime orders from recent days, filters those shipped using third-party carriers,
+  and provides complete shipping and customer details.
+---
+## Overview
+
+The **RIS-SC-1025 – Recent x-days Prime Orders with Third-Party Carrier** script helps analysts identify Prime orders that were shipped using non-Amazon carriers.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  Find Prime orders shipped via third-party carriers instead of Amazon Logistics.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Retrieves Amazon Prime orders from recent days  
+- Filters orders shipped via non-Amazon carriers  
+- Provides shipping and customer details for analysis  
+
+---
+
+## When It Runs
+
+Used for shipping audits, Prime compliance checks, and carrier performance analysis.
+
+**Typically runs:**
+
+- Manually executed by analysts  
+- During shipping audits  
+- For Prime compliance checks  
+- While analyzing carrier usage  
+- During performance or SLA reviews  
+
+---
+
+## Parameters
+
+<ParamField path="lastDays" param-type="integer" required="true" deprecated="false">
+  Number of past days to retrieve orders.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  This parameter dynamically controls the date range using the current date.
+</Callout>
+
+---
+
+## Simple Explanation
+
+The script identifies recent Amazon Prime orders, filters out those shipped via Amazon Logistics, and shows only orders shipped with third-party carriers, along with full shipping and customer details.
+
+---
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Filter Prime Orders" icon="filter" title-type="p">
+    Extract Prime status from XML and include only Prime orders.
+  </Step>
+
+  <Step title="Filter Amazon Source" icon="search" title-type="p">
+    Limit results to Amazon channel and specific subsource.
+  </Step>
+
+  <Step title="Apply Date Filter" icon="calendar" title-type="p">
+    Retrieve orders processed within the last specified number of days.
+  </Step>
+
+  <Step title="Exclude Amazon Logistics" icon="x-circle" title-type="p">
+    Remove orders shipped using Amazon Logistics.
+  </Step>
+
+  <Step title="Join Supporting Data" icon="link" title-type="p">
+    Fetch carrier, service, and country details.
+  </Step>
+
+  <Step title="Select Output Fields" icon="layers" title-type="p">
+    Include order details, customer info, shipping method, and tracking number.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+The script generates a report containing:
+
+- Dispatch date  
+- Linnworks order ID  
+- Amazon order ID  
+- Customer details  
+- Shipping carrier and service  
+- Tracking number  
+
+Only includes Prime orders shipped via third-party carriers within the selected date range.
+</Callout>
+
+---
+
+## Usefulness
+
+- **Prime Compliance Monitoring** – Ensures correct fulfillment method  
+- **Carrier Analysis** – Identifies use of non-Amazon carriers  
+- **Audit and Reporting** – Supports operational reviews  
+- **Issue Detection** – Highlights incorrect shipping configurations  
+
+---
+
+## Example Scenario
+
+<Expandable title="Prime Order Audit Example" default-open="false">
+**Scenario:** Audit Prime orders for the last 5 days  
+
+**Parameter:** lastDays = 5  
+
+**Result:**
+
+- Prime order shipped via Amazon Logistics → correct  
+- Prime order shipped via DHL → issue  
+
+**Insight:** Prime orders should ideally use Amazon Logistics; third-party shipments indicate a process gap.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+By isolating Prime orders shipped through third-party carriers, this script helps enforce compliance, detect operational issues, and improve shipping accuracy for marketplace requirements.
+</Callout>

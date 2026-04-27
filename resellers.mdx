@@ -1,0 +1,139 @@
+---
+title: Resellers
+description: >-
+  In the CRM application, leads can be distributed to resellers (partners)
+  either manually or automatically based on predefined criteria such as location
+  and partner level.
+---
+Within the **CRM** application, leads can be assigned to resellers (also referred to as partners). These assignments can be handled manually by users or automatically based on specific criteria like partner level and geographic location.
+
+## **Configuration**
+
+To start using reseller functionality, install the *Resellers* module.
+
+1. Go to the **Apps** application
+
+2. Remove the default **Apps** filter from the **Search…** bar
+
+3. Search for `Resellers`
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/resellers-module.png" width="547" height="165" alt="The resellers module in Odoo." />
+
+Click **Install** on the module card. Once installed, return to the main dashboard.
+
+After installation, open the **CRM app**. Under the **Configuration** menu, a new section called **Members** will appear with the following options:
+
+- **Levels**
+
+- **Partner Activations**
+
+- **Commission Plans**
+
+## **Levels**
+
+Partner *levels* help categorize resellers based on their importance or performance.
+
+To access them, go to:\
+**CRM app ‣ Configuration ‣ Levels**
+
+By default, the following levels are available:
+
+- **Gold**
+
+- **Silver**
+
+- **Bronze**
+
+You can create additional levels by clicking **New** and filling in the required details. Existing levels can also be edited or renamed as needed.
+
+### **Level Weight**
+
+Each level includes a **Level Weight**, which determines how likely a partner is to receive leads.
+
+- Higher weight → higher chance of assignment
+
+- Weight set to `0` → no leads assigned
+
+**Tip**
+
+You can override the default level weight directly on an individual partner record. This allows more precise control over lead distribution.
+
+## **Partner activations**
+
+Partner *activations* indicate the current status or maturity of a reseller.
+
+To manage them, go to:\
+**CRM app ‣ Configuration ‣ Partner Activations**
+
+Default activation statuses include:
+
+- **Fully Operational**
+
+- **Ramp-up**
+
+- **First Contact**
+
+You can:
+
+- Add new statuses using **New**
+
+- Rename existing ones
+
+- Enable or disable them using the toggle in the **Active** column
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/activations-toggle.png" width="768" height="266" alt="The list of default partner activations in the CRM app." />
+
+These statuses are useful for filtering and analyzing partner performance in reports such as **Partnership Analysis**.
+
+## **Partner assignments**
+
+Once **Levels** and **Partner Activations** are configured, you can assign them to individual partners.
+
+To update a partner:
+
+1. Go to **CRM app ‣ Sales ‣ Customers**
+
+2. Open the desired customer record
+
+3. Navigate to the **Partner Assignment** tab
+
+From here:
+
+- Select a **Partner Level**
+
+- Choose an **Activation** status
+
+- Adjust the **Level Weight** if needed
+
+This setup controls how leads are distributed across your partner network.
+
+## **Publish partners**
+
+When both the **Website** and **Resellers** apps are installed, a dedicated partners page (`/partners`) is automatically created to showcase your resellers.
+
+To publish a partner:
+
+1. Go to **CRM app ‣ Sales ‣ Customers**
+
+2. Open a partner record
+
+3. Click the **Go to Website** button
+
+This opens the partner’s public page.
+
+Click **Edit** to customize the page using website building blocks. You can add descriptions, visuals, or any relevant business information.
+
+**Tip**
+
+Adding a short company overview improves visibility and credibility.
+
+After editing:
+
+- Click **Save**
+
+- Toggle the page from **Unpublished** to **Published**
+
+Repeat this process for each partner you want to display.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/partners-webpage.png" width="933" height="515" alt="An example of the partners webpage, displaying available partners by level and location." />
+

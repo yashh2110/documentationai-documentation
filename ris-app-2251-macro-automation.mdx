@@ -1,0 +1,472 @@
+---
+title: Warehouse Integration System —Documentation
+description: >-
+  Complete documentation explaining system structure, modules, workflows, and
+  operations without technical endpoint references.
+---
+# 1. Overview
+
+This system is a centralized platform used to manage warehouse operations, shipping rules, returns, client configurations, and order processing.
+
+It acts as a control layer that:
+
+- Defines business rules
+
+- Processes orders
+
+- Manages shipping and tax logic
+
+- Handles returns and exceptions
+
+- Exports operational data
+
+- Automates workflows
+
+---
+
+# 2. System Purpose
+
+The system is designed to:
+
+- Configure shipping, tax, and discount rules
+
+- Manage client-specific settings
+
+- Control return handling logic
+
+- Process and schedule order workflows
+
+- Export data for reporting and external systems
+
+- Maintain consistency across operations
+
+---
+
+# 3. System Architecture
+
+## Core Layers
+
+### Configuration Layer
+
+Stores all business rules and settings.
+
+### Processing Layer
+
+Applies rules and executes workflows.
+
+### Automation Layer
+
+Handles scheduled jobs and background processing.
+
+### Export Layer
+
+Generates files and reports.
+
+### User Layer
+
+Manages user access and authentication.
+
+---
+
+# 4. Master Data Management
+
+This is the foundation of the system. It defines how all operations behave.
+
+## Shipping and Tax Rules
+
+- Defines tax rules for clients
+
+- Defines default shipping tax rules
+
+- Controls how tax is applied to orders
+
+## Client Management
+
+- Stores client details
+
+- Controls client-specific configurations
+
+- Links clients to rules and operations
+
+## Region and Country Setup
+
+- Defines geographical regions
+
+- Used for shipping and tax calculations
+
+## Discount Management
+
+- Defines discount rules
+
+- Applies discounts to orders
+
+## Parameter Management
+
+- Stores system-wide configuration values
+
+- Used across multiple workflows
+
+---
+
+# 5. Advanced Rule Configuration
+
+## Extended Base Logic
+
+- Defines base-level rule structures
+
+- Used for advanced calculations
+
+## Extended Property Logic
+
+- Adds additional conditions and attributes
+
+- Supports complex rule building
+
+## Revised Property Conditions
+
+- Defines advanced conditional logic
+
+- Determines how rules change based on scenarios
+
+## Service Mapping for Conditions
+
+- Links conditions to operational services
+
+- Controls how actions are applied
+
+---
+
+# 6. Return Management
+
+## Return Categories
+
+- Defines types of returns
+
+## Forced Inclusion Rules
+
+- Forces certain returns to be included
+
+## Exclusion Rules
+
+- Prevents certain return reasons from being processed
+
+## Tracked Return Actions
+
+- Tracks return-related actions
+
+- Helps monitor return workflows
+
+---
+
+# 7. Shipping Rate Management
+
+## Shipping Rate Setup
+
+- Defines shipping costs
+
+- Controls pricing logic
+
+## Shipping Rate Import
+
+- Allows bulk upload of shipping rates
+
+## Shipping Rate Export
+
+- Generates shipping rate reports
+
+---
+
+# 8. Dropdown and Reference Data
+
+The system provides structured lists used across the application.
+
+Examples include:
+
+- Regions
+
+- Discount values
+
+- Shipping options
+
+- Return conditions
+
+These ensure consistent selection and reduce errors.
+
+---
+
+# 9. Order Processing System
+
+## Order Execution
+
+- Runs order processing workflows
+
+- Applies rules and validations
+
+## Recent Order Processing
+
+- Processes recent orders only
+
+- Useful for incremental updates
+
+## Client-Based Order Processing
+
+- Filters orders based on client
+
+## System Health Check
+
+- Verifies system availability
+
+---
+
+# 10. Order Scheduling and Automation
+
+## Job Scheduling
+
+- Schedules order processing tasks
+
+- Runs automatically
+
+## Manual Job Execution
+
+- Allows manual triggering of jobs
+
+## User Job Tracking
+
+- Tracks jobs per user
+
+## Database Scheduling
+
+- Handles system-level scheduling
+
+---
+
+# 11. File Export System
+
+## Order Export
+
+- Generates order files
+
+## Export Setup
+
+- Configures export behavior
+
+## Customer-Based Export
+
+- Exports data for specific customers
+
+## XML Export
+
+- Generates structured XML output
+
+---
+
+# 12. User Management
+
+## User Setup
+
+- Installs and initializes user access
+
+## Profile Management
+
+- Retrieves user profile
+
+- Updates user information
+
+## Authorization
+
+- Validates user identity
+
+## Token-Based Login
+
+- Allows secure login without password
+
+---
+
+# 13. Automation and Background Jobs
+
+The system runs automated processes such as:
+
+- Order processing
+
+- Shipping updates
+
+- Data synchronization
+
+- Retry handling
+
+These run continuously without manual input.
+
+---
+
+# 14. Data Flow
+
+1. Configuration is defined
+
+2. Orders are received
+
+3. Rules are applied
+
+4. Orders are processed
+
+5. Shipping and tax calculated
+
+6. Data is exported
+
+7. Updates are tracked
+
+8. Jobs run continuously
+
+---
+
+# 15. Error Handling
+
+## Behavior
+
+- Errors are logged
+
+- Retries are attempted
+
+- Failures are tracked
+
+## Common Issues
+
+- Missing configuration
+
+- Invalid data
+
+- Mapping errors
+
+---
+
+# 16. Observability
+
+## Monitoring
+
+- Order processing status
+
+- Job execution
+
+- Failures
+
+## Logging
+
+- Tracks all actions
+
+- Records errors
+
+## Alerts
+
+- Triggered on repeated failures
+
+---
+
+# 17. Scalability Considerations
+
+## Challenges
+
+- High order volume
+
+- Complex rule processing
+
+- Large data exports
+
+## Solutions
+
+- Background processing
+
+- Batch execution
+
+- Job scheduling
+
+---
+
+# 18. Security
+
+- Token-based authentication
+
+- Controlled access
+
+- Secure data exchange
+
+---
+
+# 19. Operational Guidelines
+
+## Daily Tasks
+
+- Monitor failed processes
+
+- Check job execution
+
+- Review logs
+
+## Weekly Tasks
+
+- Validate configurations
+
+- Review performance
+
+- Fix recurring issues
+
+---
+
+# 20. Key Insights
+
+- Business rules drive the system
+
+- Automation reduces manual effort
+
+- Data accuracy is critical
+
+- Monitoring ensures reliability
+
+---
+
+# 21. Business Impact
+
+## Operational
+
+- Faster workflows
+
+- Reduced manual work
+
+## Customer
+
+- Accurate processing
+
+- Better service
+
+## Financial
+
+- Lower costs
+
+- Improved efficiency
+
+---
+
+# 22. Summary
+
+This system is a complete warehouse and order management engine that:
+
+- Defines business rules
+
+- Processes orders
+
+- Manages shipping and returns
+
+- Automates operations
+
+- Supports scalable growth
+
+---
+
+# 23. Final Result
+
+- Reliable operations
+
+- Accurate data
+
+- Efficient workflows
+
+- Scalable system
+

@@ -1,0 +1,178 @@
+---
+title: Net Revenue Report (By Brand & Day)
+description: >-
+  Calculates daily net revenue by combining product sales, discounts, tax, and refunds,
+  with optional brand-level filtering for deeper financial analysis.
+---
+
+## Overview
+
+The **RIS-SC-2276 – Net Revenue Report** provides a daily financial summary of sales performance by calculating net revenue after accounting for discounts and refunds.
+
+It aggregates order-level and item-level data to give a clear picture of actual earnings.
+
+<Callout kind="tip" collapsed="false">
+  Net Revenue = Sales Revenue - Discounts - Refunds  
+  (Tax is shown separately for clarity)
+</Callout>
+
+---
+
+## Purpose
+
+This report:
+
+- Calculates total sales revenue from order items  
+- Subtracts discounts and refunds to compute net revenue  
+- Provides daily aggregated financial insights  
+- Supports optional filtering by brand  
+
+👉 In short:  
+Track real earnings per day after deductions.
+
+---
+
+## When It Runs
+
+Executed on-demand (SQL report)
+
+Typically used:
+
+- Financial reporting  
+- Daily revenue tracking  
+- Profitability analysis  
+- Brand performance monitoring  
+
+---
+
+## Parameters
+
+<ParamField path="startDate" param-type="datetime" required="false">
+  Start date for the report range (default: last 30 days if null).
+</ParamField>
+
+<ParamField path="endDate" param-type="datetime" required="false">
+  End date for the report range (default: today if null).
+</ParamField>
+
+<ParamField path="BrandName" param-type="string" required="false">
+  Filter by brand name. Use <b>"All"</b> to include all brands.
+</ParamField>
+
+---
+
+## How It Works
+
+<Steps>
+  <Step title="Initialize Date Range" icon="calendar" title-type="p">
+    Sets default date range if parameters are not provided.
+  </Step>
+
+  <Step title="Fetch Base Order Data" icon="database" title-type="p">
+    Retrieves processed orders and calculates line-level revenue:
+    Qty × Price per Unit.
+  </Step>
+
+  <Step title="Apply Brand Filter" icon="filter" title-type="p">
+    Filters data based on brand using extended properties.
+  </Step>
+
+  <Step title="Aggregate Revenue" icon="bar-chart" title-type="p">
+    Groups data by sale date and calculates:
+    - Total Revenue  
+    - Total Tax  
+    - Total Discounts  
+  </Step>
+
+  <Step title="Fetch Refund Data" icon="rotate-ccw" title-type="p">
+    Retrieves refund transactions and aggregates them per day.
+  </Step>
+
+  <Step title="Calculate Net Revenue" icon="calculator" title-type="p">
+    Net Revenue = Revenue - Discount - Refund
+  </Step>
+
+  <Step title="Prepare Final Output" icon="file-text" title-type="p">
+    Formats values and returns daily financial metrics.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Daily revenue calculated  
+
+  - Discounts and refunds deducted  
+
+  - Net revenue clearly derived  
+
+  - Tax reported separately  
+
+  - Brand-level filtering supported  
+</Callout>
+
+---
+
+## Usefulness
+
+This report is highly beneficial for:
+
+- Financial transparency  
+- Daily performance tracking  
+- Revenue reconciliation  
+- Identifying refund impact  
+- Brand-level profitability analysis  
+
+---
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Revenue is calculated at item level (Qty × Price)  
+
+  - Discounts are taken from order-level fields  
+
+  - Refunds are grouped by refund date (not order date)  
+
+  - Tax is not deducted in net revenue (reported separately)  
+
+  - Brand filter depends on extended property accuracy  
+
+  - Includes only processed orders (status 1, 2, 4)  
+</Callout>
+
+---
+
+## Example Scenario
+
+<Expandable title="Daily Revenue Calculation Example" default-open="false">
+  Date: 2025-09-10  
+
+  Orders:
+  - Sales Revenue: £1000  
+  - Discounts: £100  
+  - Refunds: £50  
+
+  👉 Calculation:
+  Net Revenue = 1000 - 100 - 50 = £850  
+
+  Result:
+  - Total Sales Revenue → £1000  
+  - Total Discounts → £100  
+  - Total Refunds → £50  
+  - Net Revenue → £850  
+
+  Insight:
+  Provides a clear view of actual earnings after deductions.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This report separates revenue components (sales, tax, discounts, refunds) to provide a transparent and audit-friendly financial view.  
+  By calculating net revenue at a daily level, it helps businesses quickly identify trends, anomalies, and the true impact of refunds and discounts on profitability.
+</Callout>

@@ -1,0 +1,93 @@
+---
+title: Merge similar leads and opportunities
+description: >-
+  The CRM system can automatically identify duplicate leads and opportunities.
+  Merging these records helps maintain a clean pipeline while ensuring no
+  important data is lost and avoiding duplicate communication with customers.
+---
+The CRM system automatically highlights similar *leads* and *opportunities* by detecting matching contact details. Merging these duplicate records ensures your *pipeline* stays organized and prevents multiple salespeople from reaching out to the same customer unnecessarily.
+
+**Note**
+
+When records are merged, no data is removed. Information from the merged entries is preserved in the activity log and fields for future reference.
+
+## **Identify similar leads and opportunities**
+
+Duplicate records are detected based on matching *email addresses* and *phone numbers*. When a potential match is found, a **Similar Leads** smart button appears on the lead or opportunity form.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/similar-smart-button.png" width="768" height="330" alt="An opportunity record with emphasis on the Similar Leads smart button." />
+
+### **Compare similar records**
+
+To review matching leads or opportunities:
+
+1. Go to **CRM app ‣ Pipeline** or **CRM app ‣ Leads**
+
+2. Open a record
+
+3. Click the **Similar Leads** smart button
+
+This will display a Kanban view filtered to show only related records. You can open each card to review details and decide whether they should be combined.
+
+## **Merge similar leads and opportunities**
+
+**Important**
+
+During the merge process, the system prioritizes the earliest created record and consolidates all information into it. If a lead and an opportunity are merged together, the final result will always be treated as an opportunity.
+
+Once you confirm the records should be merged:
+
+1. Return to the similar records view
+
+2. Switch to list view using the list icon
+
+3. Select the records using the checkboxes
+
+4. Click the **Actions** dropdown
+
+5. Choose **Merge**
+
+A merge confirmation window will appear. Here you can:
+
+- Assign a **Salesperson**
+
+- Assign a **Sales Team**
+
+Below these options, you will see a summary of the selected records. Click **Merge** to complete the process.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/select-merge.png" width="768" height="428" alt="List of similar leads and opportunities selected for merge in the CRM app." />
+
+**Danger**
+
+Merging cannot be undone. Only proceed if you are certain the records refer to the same customer or opportunity.
+
+## **When not to merge records**
+
+Even if records appear similar, merging is not always the right decision. Depending on your sales workflow, there are cases where keeping records separate is more appropriate.
+
+### **Lost records**
+
+A record marked as *lost* can still be merged with an active one. Once merged, the resulting record becomes active and reappears in the pipeline.
+
+### **Different contacts within the same company**
+
+Multiple leads from the same organization may represent different individuals with different requirements. In such cases, merging may lead to confusion, so it’s better to keep them separate while assigning them to the same salesperson or team if needed.
+
+### **Multiple salespeople working on similar records**
+
+Sometimes duplicate records are being handled by different sales representatives. While merging may seem logical, it’s important to ensure proper coordination first. Instead of merging immediately, consider adding internal notes or tagging team members for visibility.
+
+### **Similar but not identical contact details**
+
+The system identifies duplicates based on similar email addresses or phone numbers. However, similar does not always mean identical.
+
+**Example**
+
+Imagine three leads are created:
+
+- Two leads have the same contact name and identical email address — these should be merged
+
+- The third lead has a similar domain but a different email and contact name — this likely represents a different person and should remain separate
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/contact-info-example.png" width="768" height="165" alt="List of similar leads with emphasis on the contact information in the CRM app." />
+

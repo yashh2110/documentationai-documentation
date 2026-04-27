@@ -1,0 +1,100 @@
+---
+title: Manage sales teams
+description: >-
+  The Sales Teams feature in the CRM system allows you to organize multiple
+  teams, define assignment rules, set revenue targets, and manage salespeople
+  efficiently across your organization.
+---
+The *Sales Teams* functionality in the *CRM* module enables businesses to structure their sales operations by creating dedicated teams. Each team can have its own members, assignment logic, and performance targets, helping streamline collaboration and accountability.
+
+## **Create a sales team**
+
+To set up a new sales team, navigate to **CRM app ‣ Configuration ‣ Sales Teams**, and click **New**.
+
+In the team form:
+
+- Enter a name in the **Sales Team** field
+
+- Choose a **Team Leader** from the available users
+
+You can also configure an **Email Alias** for the team. This allows incoming emails sent to that address to automatically generate leads or opportunities. Define who is allowed to send emails by selecting one of the following options:
+
+- Everyone
+
+- Authenticated Partners
+
+- Followers Only
+
+- Authenticated Employees
+
+Assign the team to a specific **Company** if applicable.
+
+**Note**
+
+The **Company** field appears only when working in a multi-company environment and is optional.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/sales-team-creation.png" width="691" height="611" alt="The settings page for a new sales team." />
+
+**Note**
+
+If the *Sales* module is installed, an **Invoicing Target** field will be available. This represents the expected revenue for the current period and is reflected in the team’s performance dashboard.
+
+### **Add sales team members**
+
+To include members in the team, go to the **Members** tab and click **Add**. This opens a configuration window for assigning salespeople.
+
+**Note**
+
+If **Rule-Based Assignment** is disabled in CRM settings, a simpler selection window will appear instead. Just select users from the list and confirm.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/add-salespersons.png" width="768" height="282" alt="The Add: Salespersons pop-up window on a new sales team." />
+
+From the member configuration window:
+
+- Select a user in the **Salesperson** field
+
+- Enable **Skip auto assignment** if you don’t want leads to be assigned automatically to this user
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/create-sales-team-members.png" width="768" height="616" alt="The Create Sales Team Members pop-up window." />
+
+The **Leads (30 days)** field shows how many leads the salesperson has handled in the past month, along with their assignment limit. You can adjust this value to control workload distribution.
+
+**Tip**
+
+Advanced lead distribution can be configured using **assignment rules**, allowing you to define conditions for how leads are allocated.
+
+Once done, click **Save & Close**, or **Save & New** to continue adding more members.
+
+## **Enable multi-team functionality**
+
+If you want users to belong to multiple teams, you need to enable this feature.
+
+1. Go to **CRM app ‣ Configuration ‣ Settings**
+
+2. Locate the **Multi Teams** option under CRM settings
+
+3. Enable it and click **Save**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/enable-multi-teams.png" width="504" height="300" alt="The settings page of the CRM app with the Multi Teams setting enabled." />
+
+## **Sales team dashboard**
+
+To access the sales team overview, navigate to **CRM app ‣ Sales ‣ Teams**. All teams you are part of will be displayed here.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/sales-teams-dashboard.png" width="768" height="248" alt="The sales team dashboard in the CRM app." />
+
+Each team appears as a Kanban card showing key performance metrics, such as:
+
+- Open opportunities
+
+- Quotations and sales orders
+
+- Expected revenue
+
+- Weekly opportunity trends
+
+- Progress toward invoicing targets
+
+You can click **Pipeline** to view that team’s opportunities directly.
+
+To access additional options, click the **(three-dot menu)** in the top-right corner of the card. From there, select **Configuration** to modify team settings.

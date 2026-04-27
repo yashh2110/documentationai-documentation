@@ -1,0 +1,173 @@
+---
+title: Lazada order management
+description: >-
+  This guide outlines how to handle Lazada orders, inventory, deliveries, and
+  reporting within Odoo using the Lazada Connector. It includes product mapping,
+  order synchronization, fulfillment workflows, and performance tracking.
+---
+## **Product catalog mapping**
+
+### **For new Odoo databases**
+
+If your products exist only on Lazada and not yet in Odoo, you can import them directly:
+
+1. In <a href="https://sellercenter.lazada.com.ph/" target="_blank" rel="noopener noreferrer">**Lazada Seller Center**</a>, use the **Bulk Manage** option to export your product catalog, including SKUs
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/lazada-bulk-edit.png" width="3430" height="780" alt="../../../../_images/lazada-bulk-edit.png" />
+
+1. Import the file into Odoo via **Inventory ‣ Products ‣ Import**
+
+2. Map the Lazada SKU to the **Internal Reference** field to link products correctly
+
+### **For existing Odoo products**
+
+If products already exist in Odoo, link them with Lazada listings:
+
+- Use the **Sync Product Catalogue** button to automatically match active Lazada items
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/lazada-sync-product.png" width="3022" height="1256" alt="../../../../_images/lazada-sync-product.png" />
+
+**Important**
+
+Catalog synchronization runs automatically once enabled, but manual syncing helps ensure accurate mapping.
+
+## **Order synchronization**
+
+Lazada orders are imported into Odoo automatically at regular intervals (approximately every hour).
+
+- Only orders with status **READY\_TO\_SHIP** or **PROCESSED** are synchronized, as they require action
+
+- If an order is canceled on Lazada, the status is updated in Odoo
+
+- Canceling an order in Odoo does **not** affect the order in Lazada
+
+For each imported order:
+
+- A **sales order** is created
+
+- A **customer record** is generated if it does not already exist
+
+**Note**
+
+Orders with statuses such as **SHIPPED**, **CANCELLED**, **UNPAID**, or **COMPLETED** are not imported.
+
+## **Force synchronization**
+
+To manually re-sync orders:
+
+1. Go to **Sales app ‣ Configuration ‣ Lazada ‣ Shops**
+
+2. Open the relevant shop
+
+3. Update the **Last Order Sync** date to a time before the order’s last update
+
+4. Save the changes
+
+**Tip**
+
+In debug mode:
+
+- Use **Sync Orders** to fetch orders immediately
+
+- Use **Sync Inventory** to update stock
+
+## **Manage deliveries in FBM**
+
+When an <u>FBM</u> order is imported:
+
+- A **picking** is created in the Inventory app
+
+- A **sales order** and customer record are also generated
+
+### **Processing deliveries**
+
+1. Confirm the picking in Odoo
+
+2. Go to *Lazada Seller Center* and click **Pack Lazada Package** to generate a tracking number
+
+3. Odoo retrieves and attaches the shipping label to the delivery order
+
+4. Validate the transfer in Odoo to update stock levels
+
+### **Lazada package statuses**
+
+Understanding package statuses helps manage fulfillment:
+
+- **Pending**: Awaiting processing
+
+- **Confirmed**: Packed and ready for shipment
+
+- **Ready to Ship**: Awaiting courier handling
+
+- **Delivered**: Shipment completed
+
+- **Canceled**: Order cancelled
+
+- **Manual Handling Required**: Needs intervention outside Odoo
+
+**Important**
+
+A tracking number is mandatory for all deliveries.\
+If not generated automatically, it must be entered manually in *Lazada Seller Center*.
+
+### **Order fulfillment workflow**
+
+1. Orders are created automatically in Odoo
+
+2. Open the sales order and initiate **Pack Lazada Package**
+
+3. Odoo imports tracking details and shipping labels
+
+4. Confirm delivery to update inventory
+
+## **Invoice and register payments**
+
+Due to Lazada’s policies, invoices cannot be sent directly from Odoo to customers.
+
+### **Invoicing**
+
+- Generate invoices in Odoo
+
+- Upload them manually to *Lazada Seller Center* if needed
+
+### **Register payments**
+
+Since Lazada processes payments centrally:
+
+1. Create a dedicated journal (e.g., `Lazada Payments`)
+
+2. Use an intermediary account for tracking
+
+Because payouts are grouped:
+
+- Select related invoices
+
+- Use **Batch Deposit** as the payment method
+
+- Validate via **Actions → Create Batch Payment**
+
+After receiving payment:
+
+- Reconcile it using your bank statement
+
+- Match it against the intermediary account
+
+**Tip**
+
+This method also applies to Lazada-related expenses, such as commission fees.
+
+## **Analyze Lazada sales in reporting**
+
+Odoo provides centralized reporting across all sales channels.
+
+To track Lazada performance:
+
+1. Assign a **Sales Team** to each Lazada shop
+
+   - Navigate to **Sales ‣ Configuration ‣ Lazada ‣ Shops**
+
+2. Use filters in reporting dashboards to analyze data per sales team
+
+**Tip**
+
+Assign separate sales teams for each marketplace to gain more detailed insights into performance.

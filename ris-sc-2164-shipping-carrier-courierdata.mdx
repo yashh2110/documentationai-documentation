@@ -1,0 +1,174 @@
+---
+title: Shipping Carrier CourierData
+description: >-
+  Generates a courier-wise shipment report with goods value, postage, total
+  charge, weight, and item count for shipped orders.
+---
+## Overview
+
+The **RIS-SC-2164 – Shipping Carrier CourierData** script creates detailed shipment reports by courier, enabling performance tracking and financial reconciliation.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  It generates a detailed shipment and courier performance report with cost, weight, and item metrics.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Fetches shipped orders filtered by courier
+
+- Calculates goods value, postage, total charge, shipment weight, and item count
+
+- Groups shipments by consignment and courier
+
+- Generates a structured report suitable for analytics, finance, and BI dashboards
+
+---
+
+## When It Runs
+
+Typically executed:
+
+- Manually by users or analysts
+
+- Weekly or monthly for courier reporting
+
+- After order processing completion
+
+- For finance reconciliation and shipping performance tracking
+
+---
+
+## Parameters
+
+<ParamField path="@Carrier" param-type="string" required="false" deprecated="false">
+  Courier/vendor name filter. Supports partial matching using LIKE '%Carrier%'. Filters recent orders (last 3 weeks).
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Using the carrier filter allows generating reports for specific couriers or all couriers if left blank.
+</Callout>
+
+---
+
+---
+
+## Simple Explanation
+
+The script:
+
+1. Filters orders shipped in the last 3 weeks and optionally by courier
+
+2. Combines order, item, and packaging data
+
+3. Retrieves package-level tracking details
+
+4. Calculates goods value, postage, total charge, shipment weight, and item count
+
+5. Groups shipments by consignment and courier
+
+6. Generates a structured report ready for analysis or reconciliation
+
+---
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Filter Orders" icon="filter" title-type="p">
+    Select orders shipped in the last 3 weeks and apply courier filter if specified.
+  </Step>
+
+  <Step title="Join Tables" icon="database" title-type="p">
+    Combine Order, OrderItem, and OrderPackaging tables, and include shipping package details.
+  </Step>
+
+  <Step title="Identify Consignment Number" icon="tag" title-type="p">
+    Retrieve tracking numbers from shipping packages, fallback to order tracking if necessary.
+  </Step>
+
+  <Step title="Calculate Metrics" icon="calculator" title-type="p">
+    Compute shipment details:
+
+    - Goods Value from OrderItem cost
+
+    - Postage from Order
+
+    - Total Charge from Order
+
+    - Weight from OrderPackaging
+
+    - Item Count from OrderItem quantity
+  </Step>
+
+  <Step title="Group Data" icon="layers" title-type="p">
+    Aggregate shipments by consignment, courier, and order details.
+  </Step>
+
+  <Step title="Sort Results" icon="sort-asc" title-type="p">
+    Order the output by consignment number for readability.
+  </Step>
+
+  <Step title="Execute Query" icon="file-text" title-type="p">
+    Generate the final courier-wise shipment report.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  The script produces a courier-wise shipment report including:
+
+  - **Consignment Number**
+
+  - **Courier Name**
+
+  - **Goods Value**
+
+  - **Postage Cost**
+
+  - **Total Charge**
+
+  - **Weight**
+
+  - **Total Items**
+</Callout>
+
+---
+
+## Usefulness
+
+- **Courier Performance Tracking** – Analyze shipments per courier
+
+- **Financial Reporting** – Compare goods value vs shipping cost
+
+- **Logistics Optimization** – Monitor weight and cost trends
+
+- **Reconciliation** – Match courier invoices with system data
+
+---
+
+## Example Scenario
+
+<Expandable title="Scenario: Courier Cost Analysis (DHL)" default-open="false">
+  **Carrier:** DHL\
+  **Time Period:** Last 3 weeks
+
+  **Action:**\
+  Script filters DHL shipments and calculates shipment metrics.
+
+  **Result:**\
+  Complete report with consignment number, cost, weight, and item details ready for finance and operations analysis.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This script transforms raw order and shipping data into actionable courier insights, enabling businesses to monitor logistics performance, control shipping costs, and improve operational efficiency.
+</Callout>
+

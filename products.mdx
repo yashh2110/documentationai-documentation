@@ -1,0 +1,212 @@
+---
+title: Products
+description: >-
+  Create, manage, and organize products in Odoo Point of Sale, including product
+  categories, combos, and tracking with serial numbers or lots.
+---
+## **Create and manage products**
+
+Products can be created either from the backend or directly within the POS interface.
+
+### **From the backend**
+
+1. Go to **Point of Sale ‣ Products ‣ Products**
+
+2. Click **New** to create a product, or open an existing one
+
+3. Update the required fields
+
+4. Ensure the **Point of Sale** option is enabled
+
+### **From the POS interface**
+
+1. Open the POS register
+
+2. Click the menu icon (☰)
+
+3. Select **Create Product**
+
+4. Enter product details and click **Save**
+
+The product becomes immediately available in the POS.
+
+To edit a product:
+
+- Long-click the product
+
+- Select **Edit**
+
+- Update details and save
+
+## **POS product categories**
+
+POS categories help organize products in the POS interface.
+
+### **Create categories**
+
+1. Go to **Point of Sale ‣ Configuration ‣ PoS Product Categories**
+
+2. Click **New** or edit an existing category
+
+3. Define hierarchy using the **Parent Category** field
+
+Example:
+
+- `Drinks` → `Hot Beverages`, `Soft Drinks`
+
+### **Assign categories to products**
+
+1. Open a product
+
+2. Go to the **Point of Sale** tab
+
+3. Select one or more categories in the **Category** field
+
+### **Restrict visible categories**
+
+To limit categories shown in the POS:
+
+1. Go to <a href="https://www.odoo.com/documentation/19.0/applications/sales/point_of_sale/use.html#pos-use-settings" target="_blank" rel="noopener noreferrer">**POS Settings**</a>
+
+2. In **Product & PoS Categories**, configure **Restrict Categories**
+
+## **Product combos**
+
+Product combos allow you to bundle multiple items into a single product.
+
+Each combo includes:
+
+- **Combo choices** (categories of items)
+
+- Multiple selectable products within each choice
+
+### **Example**
+
+A meal combo may include:
+
+- One burger
+
+- One drink
+
+- One portion of fries
+
+Customers choose one item from each category.
+
+### **Create combo choices**
+
+1. Go to **Point of Sale ‣ Products ‣ Combo Choices**
+
+2. Click **New**
+
+3. Enter a name
+
+4. Define:
+
+   - **Maximum items** (max selections allowed)
+
+   - **Included items** (default included quantity)
+
+5. Add products under **Options**
+
+6. Optionally set **Extra Price** per item
+
+### **Pricing behavior**
+
+- **Combo Price**:\
+  Applied when customers select additional items beyond the included quantity\
+  (based on the lowest-priced product in the choice)
+
+- **Extra Price**:\
+  Additional cost applied to specific items
+
+### **Create a combo product**
+
+1. Go to **Point of Sale ‣ Products ‣ Products**
+
+2. Click **New**
+
+3. Set **Product Type** to **Combo**
+
+4. Select relevant **Combo Choices**
+
+5. Define a **Sales Price**
+
+6. Optionally assign a POS category
+
+### **Use combos in POS**
+
+1. Open the <a href="https://www.odoo.com/documentation/19.0/applications/sales/point_of_sale/use.html#pos-use-open-register" target="_blank" rel="noopener noreferrer">**POS register**</a>
+
+2. Select the combo product
+
+3. Choose items for each combo choice
+
+4. Click **Add to Order**
+
+**Note**
+
+The final price depends on:
+
+- Base **Sales Price**
+
+- Additional selections (Combo Price)
+
+- Items with **Extra Price**
+
+### **Example**
+
+An **Office Combo** priced at **300 €** includes desks and chairs.
+
+- Chair combo allows up to 2 selections
+
+- Cheapest chair defines the combo price (35 €)
+
+- Premium chair has an extra price of 100 €
+
+Selecting:
+
+- Conference chair + armchair
+
+Final price:
+
+- 300 € + 35 € + 100 € = **435 €**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/office-combo.png" width="973" height="559" alt="Office combo example in POS." />
+
+## **Serial numbers and lots**
+
+Tracking with lots or serial numbers helps monitor product movement.
+
+### **Enable tracking**
+
+1. Enable <a href="https://www.odoo.com/documentation/19.0/applications/inventory_and_mrp/inventory/product_management/product_tracking/serial_numbers.html#inventory-product-management-traceability-setting" target="_blank" rel="noopener noreferrer">**Lots & Serial Numbers**</a>
+
+2. Configure products and assign tracking numbers
+
+### **Selling tracked products**
+
+- When adding tracked products to POS, their lot/serial numbers are automatically loaded
+
+- When loading a quotation or sales order, you are prompted to import tracking numbers
+
+Once imported:
+
+- Tracking numbers appear in the cart
+
+- Displayed next to the product
+
+### **Tracking status**
+
+- 🟢 **Valid**: Tracking number is correctly assigned
+
+- 🔴 **Invalid**: Missing or incorrect tracking
+
+To modify:
+
+- Click the tracking icon
+
+- Select another lot or serial number
+
+**Note**
+
+Missing or incorrect tracking numbers do not block sales, but a warning must be confirmed before proceeding to payment.

@@ -1,0 +1,167 @@
+---
+title: Shopify Customisation to Notes
+description: >-
+  Extract customization details from Shopify order XML, format them into
+  structured notes, and store them in the order for improved visibility and
+  processing accuracy.
+---
+## Overview
+
+The **RIS-RM-2281 – Shopify Customisation to Notes** macro enhances order visibility by extracting personalization data from Shopify XML and converting it into structured, readable notes.
+
+<Callout kind="tip" collapsed="false">
+  Use this macro for Shopify orders with personalization to ensure warehouse teams can easily access customization details.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Extracts customization data from Shopify XML
+
+- Filters out unnecessary/system fields
+
+- Formats data into structured notes
+
+- Saves notes in the order
+
+- Prevents duplicate note creation
+
+👉 In short:\
+Read XML → extract customization → format → save notes.
+
+## When It Runs
+
+Typically executed:
+
+- After Shopify order import
+
+- Before picking and packing
+
+- When personalized products exist
+
+- During order processing automation
+
+- When XML-based customization is required
+
+- Manually or via automation
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="GUID[]" required="true" deprecated="false">
+  Orders to process.
+</ParamField>
+
+<ParamField path="xmlnodelist" param-type="string" required="false" deprecated="false">
+  XML nodes to extract customization data (optional).
+</ParamField>
+
+<ParamField path="dynamicFields" param-type="string" required="false" deprecated="false">
+  Additional dynamic fields to extract (optional).
+</ParamField>
+
+## Simple Explanation
+
+The macro reads Shopify XML data, extracts relevant customization details, formats them into a readable structure, and saves them as order notes while avoiding duplicates.
+
+## Step-by-Step Flow
+
+<Steps>
+  <Step title="Start Macro" icon="play" title-type="p">
+    Log total number of orders and begin execution.
+  </Step>
+
+  <Step title="Loop Through Orders" icon="list" title-type="p">
+    Process each order using OrderId.
+  </Step>
+
+  <Step title="Add Despatch Date" icon="calendar" title-type="p">
+    If missing, add despatch date using DespatchByDate.
+  </Step>
+
+  <Step title="Check Already Processed" icon="skip-forward" title-type="p">
+    If note already created by this macro → skip order to prevent duplication.
+  </Step>
+
+  <Step title="Fetch Order XML" icon="download" title-type="p">
+    Retrieve Shopify XML data.
+  </Step>
+
+  <Step title="Extract Order-Level Note" icon="search" title-type="p">
+    Read customization details from XML Order Note node.
+  </Step>
+
+  <Step title="Process Line Items" icon="package" title-type="p">
+    For each item, extract:
+  </Step>
+
+  <Step title="Filter Unwanted Fields" icon="filter" title-type="p">
+    Remove system fields, image uploads, and unnecessary data.
+  </Step>
+
+  <Step title="Build Final Note" icon="edit" title-type="p">
+    Format output:
+  </Step>
+
+  <Step title="Validate Data" icon="check-circle" title-type="p">
+    If no customization found → skip order.
+  </Step>
+
+  <Step title="Avoid Duplicate Notes" icon="copy" title-type="p">
+    Check existing notes before adding new one.
+  </Step>
+
+  <Step title="Update Notes" icon="save" title-type="p">
+    Mark old notes as internal and add new structured note.
+  </Step>
+
+  <Step title="Logging" icon="file-text" title-type="p">
+    Log extracted data, updates, skipped orders, and errors.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Customization details converted into readable notes
+
+  - Structured and standardized format
+
+  - No duplicate notes created
+
+  - Despatch date ensured
+</Callout>
+
+## Usefulness
+
+- **Better Visibility** – No need to open XML manually
+
+- **Automation** – Eliminates manual extraction
+
+- **Accuracy** – Reduces customization errors
+
+- **Clean Data** – Removes unnecessary/system fields
+
+## Example Scenario
+
+<Expandable title="Shopify Personalized Order Processing" default-open="false">
+  A customer places a personalized order with custom text hidden in XML.
+
+  The macro:
+
+  - Extracts customization details
+
+  - Formats them into readable notes
+
+  - Saves them in the order
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This macro follows a simple flow:\
+  Read Shopify XML → Extract Customization → Format → Save Notes.
+
+  It prevents missing customization details, manual XML checking, packing errors, duplicate notes, and warehouse confusion.
+</Callout>
+

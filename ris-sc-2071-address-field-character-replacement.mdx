@@ -1,0 +1,167 @@
+---
+title: Address Field Character Replacement
+description: >-
+  Cleans and standardizes customer address fields by replacing special or
+  accented characters, logs changes, and updates zero-cost items for
+  international orders.
+---
+## Overview
+
+The **RIS-SC-2071 – Address Field Character Replacement** macro ensures that all customer address fields are free from special characters, standardized to plain English, and logged for auditing. It also corrects zero-cost items for international orders.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  Clean messy addresses to avoid shipping, system, and financial issues.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Replaces accented or special characters in address fields
+
+- Updates the order with standardized text
+
+- Logs all changes in order notes
+
+- Corrects zero-cost items for international orders
+
+---
+
+## When It Runs
+
+Typically executed:
+
+- Automatically or manually during order processing
+
+- Before shipping label generation
+
+- During order import validation
+
+- For international orders with cost or address issues
+
+---
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="array" required="true" deprecated="false">
+  List of order IDs to process.
+</ParamField>
+
+<ParamField path="TargetFields" param-type="array" required="true" deprecated="false">
+  Customer fields to clean (e.g., Name, ShippingAddress, BillingAddress).
+</ParamField>
+
+<ParamField path="InternationalCheck" param-type="boolean" required="false" deprecated="false">
+  If true, zero-cost items are updated for non-UK orders. Default: true.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Parameters define which orders to process, which fields to clean, and whether international cost updates are applied.
+</Callout>
+
+---
+
+## Simple Explanation
+
+The macro loops through orders, replaces special or accented characters in specified address fields, updates the order, logs changes in notes, and fixes zero-cost items for international shipments.
+
+---
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Fetch Orders" icon="inbox" title-type="p">
+    Loop through provided OrderIds using Api.Orders.GetOrderById.
+  </Step>
+
+  <Step title="Clean Special Characters" icon="edit" title-type="p">
+    Replace accented characters (á → a, ç → c, ß → ss, etc.) in:
+
+    - Customer Name
+
+    - Shipping Address
+
+    - Billing Address
+  </Step>
+
+  <Step title="Track Changes" icon="clipboard" title-type="p">
+    Compare original vs updated values and prepare a note summarizing modifications.
+  </Step>
+
+  <Step title="Update Address" icon="save" title-type="p">
+    Use Api.Orders.SetOrderCustomerInfo to save cleaned address data.
+  </Step>
+
+  <Step title="Log Changes" icon="book" title-type="p">
+    Add notes using Api.Orders.SetOrderNotes to record all field changes.
+  </Step>
+
+  <Step title="Handle International Orders" icon="globe" title-type="p">
+    For non-UK orders, identify items with cost = 0 and update costs using Api.Orders.UpdateOrderItem.
+  </Step>
+
+  <Step title="Save Updates" icon="check-circle" title-type="p">
+    Apply all changes and confirm execution.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  The macro produces:
+
+  - **Clean Address Data** – Removes special characters and standardizes text
+
+  - **Order Notes** – Logs all field changes
+
+  - **Corrected Costs (International Orders)** – Ensures no zero-cost items remain
+</Callout>
+
+---
+
+## Usefulness
+
+- **Shipping Accuracy** – Prevents courier rejection due to invalid characters
+
+- **System Compatibility** – Avoids encoding and validation errors
+
+- **Audit Tracking** – Logs all modifications for review
+
+- **International Compliance** – Ensures valid financial data for overseas orders
+
+---
+
+## Example Scenario
+
+<Expandable title="Scenario 1: Courier Issue" default-open="false">
+  **Original Name:** François\
+  **Original City:** München
+
+  **Insight:**\
+  Special characters removed
+
+  **Result:**\
+  Shipment processed successfully
+</Expandable>
+
+<Expandable title="Scenario 2: Zero-Cost Item (International Order)" default-open="false">
+  **Item Cost:** 0
+
+  **Action:**\
+  Cost recalculated and updated
+
+  **Result:**\
+  Accurate financial data maintained
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Cleaning address fields and correcting zero-cost items prevents shipping failures, avoids system errors, and ensures smooth order processing across both domestic and international shipments.
+</Callout>
+

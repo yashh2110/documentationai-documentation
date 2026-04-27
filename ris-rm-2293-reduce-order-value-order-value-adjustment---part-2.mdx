@@ -1,0 +1,151 @@
+---
+title: Restore Order Value (Order Value Recovery - Part 2)
+description: >-
+  Restores original order values using stored data after temporary reduction,
+  ensuring accurate totals and clean order state.
+---
+## Overview
+
+The **RIS-SM-2294 –  Restore Order Value** macro completes the pricing lifecycle by restoring original values after temporary adjustments.
+
+It ensures that orders return to their accurate financial state after processing.
+
+<Callout kind="tip" collapsed="false">
+  Ensure sufficient delay after label generation before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Restores original item prices
+
+- Recalculates totals
+
+- Removes processing flags
+
+👉 In short:\
+Fetch backup → restore values → recalculate → clean flags.
+
+## When It Runs
+
+Used for restoring order values
+
+Typically runs:
+
+- After label generation
+
+- After a defined delay
+
+- Before final invoicing
+
+- After supplier processing
+
+## Parameters
+
+<ParamField path="durationInMinutes" param-type="int" required="true" deprecated="false">
+  Delay after label print before restoration.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Only orders with "PriceReducedFlag" and completed delay are processed.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Start Execution" icon="play" title-type="p">
+    Fetches all open orders eligible for restoration.
+  </Step>
+
+  <Step title="Filter Orders" icon="filter" title-type="p">
+    Selects only orders with:
+
+    - PriceReducedFlag
+
+    - Printed label
+
+    - Completed delay
+  </Step>
+
+  <Step title="Restore from XML" icon="file-text" title-type="p">
+    Reads original XML data and restores item prices and tax.
+  </Step>
+
+  <Step title="Fallback Restore" icon="refresh-cw" title-type="p">
+    Uses extended properties if XML data is unavailable.
+  </Step>
+
+  <Step title="Recalculate Totals" icon="calculator" title-type="p">
+    Updates subtotal, tax, and total values.
+  </Step>
+
+  <Step title="Mark Execution" icon="check-circle" title-type="p">
+    Adds execution flag to prevent reprocessing.
+  </Step>
+
+  <Step title="Remove Identifier" icon="trash" title-type="p">
+    Removes "PriceReducedFlag" from the order.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Original pricing restored
+
+  - Accurate totals recalculated
+
+  - Processing flags removed
+
+  - Order returned to clean state
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Restoring accurate financial data
+
+- Completing compliance workflows
+
+- Preventing incorrect invoicing
+
+- Maintaining data integrity
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - XML is the primary source for restoration
+
+  - Extended properties act as fallback
+
+  - Delay must be configured correctly
+
+  - Only flagged orders are processed
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Order Value Restoration Example" default-open="false">
+  Scenario:
+
+  - Original → £100
+
+  - Reduced → £60
+
+  👉 The macro:
+
+  - Restores original values
+
+  Result:
+
+  - Final → £100
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Together with the reduction macro, this creates a complete lifecycle—reduce, process, and restore—ensuring compliance, accuracy, and zero data loss.
+</Callout>
+

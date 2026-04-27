@@ -1,0 +1,136 @@
+---
+title: Saturday Service Assignment
+description: >-
+  Automatically update the shipping service for orders scheduled for Saturday
+  delivery by validating delivery date and applying the correct service.
+---
+## Overview
+
+The **RIS-RM-1025 – SaturdayService** macro ensures that orders scheduled for Saturday delivery are assigned the correct shipping service.
+
+It reads the delivery date from order XML and updates the shipping method if the delivery falls on a Saturday.
+
+<Callout kind="tip" collapsed="false">
+  Ensure the provided shipping service exists in Linnworks before executing this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Reads delivery date from order XML  
+- Identifies Saturday deliveries  
+- Validates shipping service  
+- Updates shipping method automatically  
+
+👉 In short:  
+Assign correct shipping service for Saturday deliveries.
+
+## When It Runs
+
+Used for delivery-based shipping automation
+
+Typically runs:
+
+- Manually triggered (on selected orders)  
+- Via Rules Engine (automation workflows)  
+- During order validation or dispatch preparation  
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of order IDs to process.
+</ParamField>
+
+<ParamField path="serviceName" param-type="string" required="true" deprecated="false">
+  Shipping service to apply for Saturday deliveries.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Example:  
+  serviceName = "Royal Mail Saturday Delivery"  
+
+  Meaning:  
+  Orders with Saturday delivery will use this shipping service.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Process Orders" icon="list" title-type="p">
+    Loop through each OrderId and retrieve order details.
+  </Step>
+
+  <Step title="Fetch Order XML" icon="file-text" title-type="p">
+    Retrieve raw XML data associated with the order.
+  </Step>
+
+  <Step title="Extract Delivery Date" icon="calendar" title-type="p">
+    Read LatestDeliveryDate from XML and convert it into DateTime format.
+  </Step>
+
+  <Step title="Check Delivery Day" icon="search" title-type="p">
+    Validate whether the delivery date falls on a Saturday.
+  </Step>
+
+  <Step title="Validate Shipping Service" icon="check-circle" title-type="p">
+    Ensure the provided serviceName exists in Linnworks.
+  </Step>
+
+  <Step title="Update Shipping Method" icon="truck" title-type="p">
+    Apply the specified shipping service to eligible orders.
+  </Step>
+
+  <Step title="Log Execution" icon="file-text" title-type="p">
+    Record processing details and any issues encountered.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Saturday delivery orders identified  
+  - Shipping method updated automatically  
+  - Only valid services applied  
+  - Execution logged for tracking  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Ensuring correct weekend delivery handling  
+- Reducing shipping errors  
+- Improving delivery accuracy  
+- Automating shipping service selection  
+- Saving operational time  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Works only if LatestDeliveryDate exists in XML  
+  - Date conversion uses UTC (may affect timezone accuracy)  
+  - Shipping service must exist in Linnworks  
+  - Applies only to Saturday deliveries  
+  - Does not validate carrier-specific rules or cutoff times  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Assign Saturday Delivery Service" default-open="false">
+  An order is scheduled for delivery on Saturday.
+
+  👉 The macro:
+
+  - Extracts delivery date from XML  
+  - Identifies it as Saturday  
+  - Applies "Royal Mail Saturday Delivery" service  
+
+  Result: Order is assigned the correct shipping service automatically.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Aligning delivery schedules with appropriate shipping services ensures accurate fulfilment, especially for time-sensitive weekend deliveries.
+</Callout>

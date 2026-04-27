@@ -1,0 +1,154 @@
+---
+title: Auto Map Macro
+description: >-
+  Automatically map inventory items with channel listings using SKU-based
+  matching rules.
+---
+## Overview
+
+The **RIS-SM-1002 – Auto Map Macro** automatically links inventory items in Linnworks with their corresponding listings on sales channels like Amazon and eBay.
+
+It uses predefined SKU formats to intelligently match products, eliminating the need for manual mapping and ensuring seamless synchronization.
+
+<Callout kind="tip" collapsed="false">
+  Ensure SKU formats are consistent across inventory and channel listings for best results.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Retrieves inventory and channel listing data
+
+- Matches items using SKU format rules
+
+- Automatically links (maps) items across systems
+
+👉 In short:\
+Automatically connects inventory items with channel listings using SKU patterns.
+
+## When It Runs
+
+Used for channel integration & inventory mapping
+
+Typically runs:
+
+- Manually during setup
+
+- During ongoing maintenance of listings
+
+## Parameters
+
+<ParamField path="source" param-type="string" required="false" deprecated="false">
+  Sales channel (e.g., Amazon, eBay).
+</ParamField>
+
+<ParamField path="subsource" param-type="string" required="false" deprecated="false">
+  Sub-channel or regional marketplace.
+</ParamField>
+
+<ParamField path="skuformat" param-type="string" required="true" deprecated="false">
+  SKU matching rule (e.g., AMZ-#SKU).
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Example:
+  Inventory SKU = ABC123
+  Channel SKU = AMZ-ABC123
+  skuformat = AMZ-#SKU
+  Here, #SKU is dynamically replaced with the inventory SKU.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Retrieve Sales Channels" icon="download" title-type="p">
+    Fetch all connected sales channels (e.g., Amazon, eBay).
+  </Step>
+
+  <Step title="Apply Filters" icon="filter" title-type="p">
+    Apply source and subsource filters if provided.
+  </Step>
+
+  <Step title="Auto-Link Attempt" icon="zap" title-type="p">
+    Execute built-in auto-linking using existing system logic.
+  </Step>
+
+  <Step title="Find Unlinked Listings" icon="search" title-type="p">
+    Identify channel listings not yet linked to inventory.
+  </Step>
+
+  <Step title="Fetch Inventory Items" icon="database" title-type="p">
+    Retrieve all relevant inventory products.
+  </Step>
+
+  <Step title="Match SKUs" icon="shuffle" title-type="p">
+    Replace #SKU in format and compare with channel SKUs.
+  </Step>
+
+  <Step title="Prepare Mapping Data" icon="list" title-type="p">
+    Build structured mapping pairs between inventory and channel items.
+  </Step>
+
+  <Step title="Link Items" icon="link" title-type="p">
+    Map inventory items to channel listings using system APIs.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Inventory items successfully mapped to channel listings
+
+  - Unlinked items significantly reduced
+
+  - Stock, pricing, and order synchronization works correctly
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Reducing manual mapping effort
+
+- Speeding up product onboarding
+
+- Minimising human errors
+
+- Ensuring consistent stock synchronization
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - SKU formats must be consistent across systems
+
+  - Incorrect SKU patterns may cause mapping failures
+
+  - Already linked items are automatically skipped
+</Callout>
+
+## Example Scenario
+
+<Expandable title="SKU Mapping Example" default-open="false">
+  Inventory SKU: ABC123\
+  Channel SKU: AMZ-ABC123
+
+  Format used: AMZ-#SKU
+
+  👉 The macro:
+
+  - Replaces #SKU → AMZ-ABC123
+
+  - Matches with channel listing
+
+  - Links both records
+
+  Result: Item successfully mapped without manual work.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Using structured SKU patterns for automated mapping simplifies multi-channel integration, improves accuracy, and reduces operational overhead.
+</Callout>
+

@@ -1,0 +1,294 @@
+---
+title: Online food delivery
+description: >-
+  Integrate Odoo Point of Sale with UrbanPiper to manage orders from multiple
+  food delivery platforms in a single interface.
+---
+UrbanPiper is an order management system that connects Odoo with multiple food delivery services. It centralizes incoming orders, making it easier to manage preparation, delivery, and tracking from a single POS interface.
+
+## **Supported providers**
+
+UrbanPiper supports a wide range of delivery platforms, including:
+
+- Careem
+
+- Cari
+
+- ChowNow
+
+- Deliveroo
+
+- DoorDash
+
+- EatEasy
+
+- Glovo
+
+- Grubhub
+
+- HungryPanda
+
+- HungerStation
+
+- Jahez
+
+- Just Eat
+
+- Keeta
+
+- Mrsool
+
+- Ninja
+
+- NoonFood
+
+- Postmates
+
+- Rafeeq
+
+- Rappi
+
+- SkipTheDishes
+
+- Swiggy
+
+- Talabat
+
+- Uber Eats
+
+- Wolt
+
+- Zomato
+
+## **Configuration**
+
+### **Prerequisites**
+
+Before enabling the integration, ensure the following:
+
+- **UrbanPiper subscription**\
+  A valid subscription is required. Contact your account manager if needed
+
+- **Odoo requirements**
+
+  - Odoo Enterprise subscription
+
+  - Version 18.0 or later
+
+  - Compatible with Odoo Online, Odoo.sh, and On-Premise
+
+- **Delivery platform accounts**\
+  You must have reseller accounts with each platform you want to connect
+
+## **Get UrbanPiper credentials**
+
+1. Go to <a href="https://www.odoo.com/documentation/19.0/applications/sales/point_of_sale/use.html#pos-use-settings" target="_blank" rel="noopener noreferrer">**POS Settings**</a>
+
+2. Scroll to **Food Delivery Connector**
+
+3. Click **Fill this form to get Username & API key** and complete the form
+
+Then:
+
+1. Open your <a href="https://atlas.urbanpiper.com/" target="_blank" rel="noopener noreferrer">**UrbanPiper Atlas account**</a>
+
+2. Go to **Settings ‣ API Access**
+
+3. Copy your **Username** and **API Key**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/urban-piper-api.png" width="735" height="417" alt="UrbanPiper API credentials." />
+
+## **Configure POS integration**
+
+1. Open <a href="https://www.odoo.com/documentation/19.0/applications/sales/point_of_sale/use.html#pos-use-settings" target="_blank" rel="noopener noreferrer">**POS Settings**</a>
+
+2. Scroll to **Food Delivery Connector**
+
+3. Enable **UrbanPiper**
+
+Then:
+
+- Enter your **Username** and **API Key**
+
+- Select delivery platforms (e.g., Zomato, Uber Eats)
+
+Click **Save**, then:
+
+1. Click **Create Store**
+
+This creates a store on UrbanPiper Atlas.
+
+**Note**
+
+- Pricelist and fiscal position are set automatically
+
+- Store creation may take a few minutes
+
+- The store name matches your POS name
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/create-store.png" width="829" height="377" alt="Creating UrbanPiper store." />
+
+## **Store timings**
+
+To define delivery availability:
+
+1. Go to **Point of Sale ‣ Configuration ‣ Store Timings**
+
+2. Click **New**
+
+3. Set:
+
+   - Weekday
+
+   - Start time
+
+   - End time
+
+   - Associated POS
+
+## **Product setup**
+
+### **Single product**
+
+1. Go to **Point of Sale ‣ Products ‣ Products**
+
+2. Open a product
+
+3. In the **Point of Sale** tab:
+
+- Select **Available on Food Delivery**
+
+- Optionally configure:
+
+  - Meal type
+
+  - Recommended flag
+
+  - Alcoholic flag
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/product-form.png" width="379" height="216" alt="Product delivery configuration." />
+
+### **Multiple products**
+
+1. Go to product list view
+
+2. Select multiple products
+
+3. Set **Available on Food Delivery**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/product-list.png" width="900" height="237" alt="Bulk product setup." />
+
+**Note**
+
+UrbanPiper does not support combo products directly.\
+Use **product variants** as an alternative.
+
+## **Synchronization**
+
+To publish products:
+
+1. Go to **POS Settings**
+
+2. Scroll to **Food Delivery Connector**
+
+3. Click **Sync Menu**
+
+**Note**
+
+- Sync confirmation appears after completion
+
+- Updates may take a few minutes to reflect in UrbanPiper
+
+## **Go live**
+
+1. Open <a href="https://atlas.urbanpiper.com/locations" target="_blank" rel="noopener noreferrer">**Locations**</a> in Atlas
+
+2. Select your store
+
+3. Click **Request to go Live**
+
+Then:
+
+1. Choose platforms
+
+2. Enter:
+
+   - Platform ID
+
+   - Platform URL
+
+3. Confirm
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/go-live.png" width="900" height="298" alt="Go live request." />
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/go-live-parameters.png" width="747" height="360" alt="Go live parameters." />
+
+**Tip**
+
+Platform ID and URL can be found in the **HUB** tab of the location.
+
+## **Order management**
+
+When a new order is received:
+
+- A notification appears in POS
+
+- Orders can be accessed via:
+
+  - **Review Orders** button
+
+  - Cart icon (online orders)
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/cart-button.png" width="380" height="128" alt="Online order button." />
+
+### **Order stages**
+
+- **New** → newly received
+
+- **Ongoing** → accepted orders
+
+- **Done** → completed orders
+
+### **Process orders**
+
+1. Open the order
+
+2. Click **Accept**
+
+Status changes:
+
+- **Placed → Acknowledged**
+
+When ready:
+
+1. Open the order
+
+2. Click **Mark as ready**
+
+Status updates:
+
+- **Acknowledged → Food Ready**
+
+- POS status → **Paid**
+
+## **Reject orders**
+
+To reject an order:
+
+1. Open the order
+
+2. Click **Reject**
+
+3. Select a reason
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/reject-order.png" width="890" height="805" alt="Reject order popup." />
+
+**Important**
+
+Some platforms have restrictions:
+
+- Swiggy: rejection triggers support contact
+
+- Deliveroo, Just Eat, HungerStation: rejection not allowed
+
+Always follow platform-specific policies.

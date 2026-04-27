@@ -1,0 +1,188 @@
+---
+title: Open Order CSV Labels
+description: >-
+  Extract personalised order note data, convert it into CSV, and upload to FTP
+  for label processing.
+---
+## Overview
+
+The **RIS-SM-2009 – Open Order CSV Labels** macro extracts personalised text data from order notes and converts it into a structured CSV file.
+
+It uploads the generated file to an FTP server, enabling seamless label printing and external processing workflows.
+
+<Callout kind="tip" collapsed="false">
+  Ensure order notes follow a consistent format so that regex-based extraction works accurately.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Reads personalised data from order notes
+
+- Filters items using SKU list
+
+- Generates structured CSV output
+
+- Uploads the file to FTP
+
+👉 In short:\
+Convert order notes into CSV for label and customisation workflows.
+
+## When It Runs
+
+Used for label export & personalisation processing
+
+Typically runs:
+
+- Scheduled execution (daily or interval-based)
+
+- Manually triggered
+
+## Parameters
+
+<ParamField path="ftpuser" param-type="string" required="true" deprecated="false">
+  FTP username.
+</ParamField>
+
+<ParamField path="ftppass" param-type="string" required="true" deprecated="false">
+  FTP password.
+</ParamField>
+
+<ParamField path="ftphost" param-type="string" required="true" deprecated="false">
+  FTP server address.
+</ParamField>
+
+<ParamField path="ftpssl" param-type="boolean" required="true" deprecated="false">
+  Enable or disable SSL.
+</ParamField>
+
+<ParamField path="ftpport" param-type="number" required="true" deprecated="false">
+  FTP port number.
+</ParamField>
+
+<ParamField path="ftpfolder" param-type="string" required="true" deprecated="false">
+  Destination FTP folder.
+</ParamField>
+
+<ParamField path="skulistwithcomma" param-type="string" required="true" deprecated="false">
+  Comma-separated list of SKUs to filter.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Example:\
+  skulistwithcomma = "SKU1, SKU2, SKU3"
+
+  👉 Only matching SKUs will be exported.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Retrieve Orders" icon="download" title-type="p">
+    Fetch open orders from the last 24 hours.
+  </Step>
+
+  <Step title="Skip Processed Orders" icon="skip-forward" title-type="p">
+    Ignore orders already tagged with “Order Checked for Export Ftp”.
+  </Step>
+
+  <Step title="Filter SKUs" icon="filter" title-type="p">
+    Process only items matching the provided SKU list.
+  </Step>
+
+  <Step title="Extract Personalisation Data" icon="search" title-type="p">
+    Use regex to extract details like name, surname, font, and colour from notes.
+  </Step>
+
+  <Step title="Format Data" icon="list" title-type="p">
+    Prepare structured rows including Order ID, SKU, quantity, and text fields.
+  </Step>
+
+  <Step title="Generate CSV" icon="file-plus" title-type="p">
+    Build CSV file with headers and formatted rows.
+  </Step>
+
+  <Step title="Create Filename" icon="edit" title-type="p">
+    Format: ExportedOrders\_DDMMYYHHMMSS.csv
+  </Step>
+
+  <Step title="Upload File" icon="upload-cloud" title-type="p">
+    Upload CSV file to the configured FTP folder.
+  </Step>
+
+  <Step title="Mark Orders" icon="tag" title-type="p">
+    Assign identifier “Order Checked for Export Ftp” to prevent duplication.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - CSV file generated with structured personalisation data
+
+  - File uploaded to FTP server
+
+  - Orders tagged to prevent reprocessing
+
+  - Only selected SKUs included
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Automating personalised label data extraction
+
+- Eliminating manual note handling
+
+- Supporting customised product workflows
+
+- Preventing duplicate processing
+
+- Enabling integration with external label systems
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Processes only orders from the last 24 hours
+
+  - Includes only SKUs from the provided list
+
+  - Requires consistent note format for regex extraction
+
+  - No file generated if no valid data exists
+
+  - FTP configuration must be correct
+
+  - Orders are tagged only after successful processing
+
+  - CSV structure is fixed (OrderId, SKU, Quantity, Text1)
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Funky Label Export Example" default-open="false">
+  An order contains personalised text in notes.
+
+  👉 The macro:
+
+  - Extracts customisation details
+
+  - Filters valid SKUs
+
+  - Converts data into CSV
+
+  - Uploads file to FTP
+
+  Result: Label-ready data is instantly available for printing systems.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Transforming unstructured order notes into structured CSV data improves accuracy, reduces manual effort, and enables seamless integration with external fulfilment and labelling systems.
+</Callout>
+
+##
+

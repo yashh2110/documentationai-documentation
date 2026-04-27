@@ -1,0 +1,135 @@
+---
+title: Retrieve Linked Channel SKUs
+description: >-
+  Retrieves channel-linked SKUs, identifies those containing a specific pattern,
+  and generates updated SKU names while showing channel mapping information.
+---
+## Overview
+
+The **RIS-SC-1023 – Retrieve Linked Channel SKUs** script helps analysts identify SKUs with specific naming patterns, map them across channels, and generate a new SKU format for standardization purposes.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  Find SKUs containing LLC, suggest updated SKUs with LLCPRP, and show channel mappings.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Retrieves channel-linked SKUs
+
+- Identifies SKUs containing the pattern `LLC`
+
+- Generates new SKU names by replacing `LLC` with `LLCPRP`
+
+- Provides channel mapping information for each SKU
+
+---
+
+## When It Runs
+
+Used for SKU standardization and channel mapping verification.
+
+**Typically runs:**
+
+- Manually executed by analysts
+
+- During SKU renaming projects
+
+- Before bulk SKU updates
+
+---
+
+## Parameters
+
+<ParamField path="SKU" param-type="string" required="false" deprecated="false">
+  Base SKU reference; currently not used in filtering.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  The script uses a fixed pattern (`DB-RBN-LLC`) and does not depend on the SKU parameter.
+</Callout>
+
+---
+
+## Simple Explanation
+
+The script finds SKUs with a specific naming pattern, checks where they are used across channels, and creates a new version of the SKU with updated naming.
+
+---
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Filter Target SKUs" icon="filter" title-type="p">
+    Select SKUs starting with `DB-RBN` and containing `LLC`.
+  </Step>
+
+  <Step title="Get Channel Mapping" icon="link" title-type="p">
+    Retrieve linked channel SKUs, including source and subsource information.
+  </Step>
+
+  <Step title="Generate New SKU" icon="edit" title-type="p">
+    Replace `LLC` with `LLCPRP` to create the updated SKU format.
+  </Step>
+
+  <Step title="Combine Results" icon="layers" title-type="p">
+    Display original SKU, linked channel SKU, source, subsource, and new SKU together.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  The script generates a report containing:
+
+  - Original SKU
+
+  - Linked Channel SKU
+
+  - Source and Subsource
+
+  - New SKU after replacement
+</Callout>
+
+---
+
+## Usefulness
+
+- **SKU Standardization** – Helps update naming conventions
+
+- **Impact Visibility** – Shows where SKUs are used before changes
+
+- **Channel Safety** – Prevents breaking mappings during updates
+
+- **Bulk Update Preparation** – Prepares data for migration or renaming
+
+---
+
+## Example Scenario
+
+<Expandable title="SKU Format Update Example" default-open="false">
+  **Old SKU:** DB-RBN-LLC-001
+
+  **New required format:** DB-RBN-LLCPRP-001
+
+  **Result:**
+
+  - Original SKU: DB-RBN-LLC-001
+
+  - New SKU: DB-RBN-LLCPRP-001
+
+  **Insight:** SKU is ready for renaming with full visibility of channel links.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Combining SKU transformation with channel mapping visibility ensures safe, efficient SKU updates without disrupting existing integrations or channel relationships.
+</Callout>
+

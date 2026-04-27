@@ -1,0 +1,129 @@
+---
+title: Reduce Item Discount
+description: >-
+  Automatically reduce 100% discounted items in open orders by a specified
+  percentage to prevent incorrect pricing and revenue loss.
+---
+## Overview
+
+The **RIS-SM-1015 – Reduce Item Discount** macro identifies items with a 100% discount in open orders and reduces the discount based on a specified value.
+
+This ensures that fully discounted items are corrected and pricing remains accurate.
+
+<Callout kind="tip" collapsed="false">
+  Always verify the reducedDiscount value before execution to avoid unintended pricing changes.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Identifies items with 100% discount  
+- Applies a reduced discount value  
+- Updates item pricing automatically  
+- Prevents incorrect free-item scenarios  
+
+👉 In short:  
+Reduce full discounts to a controlled value across open orders.
+
+## When It Runs
+
+Used for pricing correction and validation
+
+Typically runs:
+
+- Manually triggered  
+- During order validation  
+- During pricing correction workflows  
+
+## Parameters
+
+<ParamField path="reducedDiscount" param-type="number" required="true" deprecated="false">
+  Amount to reduce from 100% discount (value between 0 and 100).
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Example:  
+  reducedDiscount = 10  
+
+  Meaning:  
+  Final discount applied = 90%
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Validate Input" icon="check-circle" title-type="p">
+    Ensure reducedDiscount value is between 0 and 100.
+  </Step>
+
+  <Step title="Fetch Open Orders" icon="download" title-type="p">
+    Retrieve all open orders from the system.
+  </Step>
+
+  <Step title="Identify Eligible Items" icon="filter" title-type="p">
+    Filter items where discount is exactly 100%.
+  </Step>
+
+  <Step title="Calculate New Discount" icon="calculator" title-type="p">
+    Compute updated discount using:  
+    New Discount = 100 − reducedDiscount
+  </Step>
+
+  <Step title="Update Order Items" icon="save" title-type="p">
+    Apply updated discount values using the API.
+  </Step>
+
+  <Step title="Log Results" icon="file-text" title-type="p">
+    Record execution details including updates and errors.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Fully discounted items are corrected  
+  - Discounts reduced to specified value  
+  - Orders updated automatically  
+  - Execution logs available for tracking  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Fixing incorrect 100% discounts  
+- Preventing accidental free items  
+- Reducing manual correction effort  
+- Maintaining accurate pricing and billing  
+- Protecting revenue integrity  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Only affects items with 100% discount  
+  - Applies to all open orders  
+  - Cannot increase discount (only reduce)  
+  - Input must be between 0 and 100  
+  - Changes are permanent once applied  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Correct Full Discount Items" default-open="false">
+  Some order items are mistakenly set to 100% discount.
+
+  👉 The macro:
+
+  - Identifies fully discounted items  
+  - Applies reduced discount (e.g., 90%)  
+  - Updates order pricing automatically  
+
+  Result: Pricing is corrected and revenue loss is prevented.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Automatically correcting full-discount items ensures pricing accuracy, prevents revenue leakage, and maintains consistency across all orders.
+</Callout>

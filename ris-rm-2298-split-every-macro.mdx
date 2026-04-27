@@ -1,0 +1,212 @@
+---
+title: RIS-RM-2298 – Split Every Macro
+description: >-
+  Automatically splits order items into multiple child orders based on SKU-level
+  “Split Every” rules, improving processing efficiency and eliminating manual
+  splitting.
+---
+## Overview
+
+The **RIS-RM-2298 – Split Every Macro** automates order splitting by dividing item quantities into smaller groups based on the **“Split Every”** extended property configured at the SKU level.
+
+This ensures that large quantities are broken into manageable units, improving downstream processing in warehouse operations.
+
+<Callout kind="tip" collapsed="false">
+  Ensure that the “Split Every” extended property is correctly configured on SKUs before running the macro.
+</Callout>
+
+---
+
+## Purpose
+
+This macro:
+
+- Splits order items based on SKU-level rules
+
+- Creates multiple child orders automatically
+
+- Maintains parent-child relationships
+
+- Logs split activity for traceability
+
+- Prevents duplicate processing using identifiers
+
+👉 In short:\
+Read split rule → divide quantities → create child orders.
+
+---
+
+## When It Runs
+
+Used for automated order splitting
+
+Typically runs:
+
+- Manually or via workflow trigger
+
+- During order processing stages
+
+- When bulk quantities require controlled splitting
+
+- As part of fulfilment preparation workflows
+
+---
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of order GUIDs to process.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Only the provided orders are processed. Orders already marked as processed will be skipped.
+</Callout>
+
+---
+
+---
+
+## How It Works
+
+<Steps>
+  <Step title="Validate Orders" icon="check-circle" title-type="p">
+    Retrieves order details and validates eligibility.
+    Skips orders that are already processed or contain no valid items.
+  </Step>
+
+  <Step title="Classify Items" icon="filter" title-type="p">
+    Separates items into composite and normal categories.
+    Service items are ignored.
+  </Step>
+
+  <Step title="Handle Composite Items" icon="layers" title-type="p">
+    Applies rules for composite handling:
+
+    - Single composite: no split
+
+    - Composite with normal items: process composites first
+
+    - Multiple composites: retain one, split remaining
+  </Step>
+
+  <Step title="Read Split Rules" icon="database" title-type="p">
+    Retrieves “Split Every” value from SKU extended properties.
+
+    Validation:
+
+    - Missing or invalid values are skipped
+
+    - Items with quantity less than split value are not processed
+  </Step>
+
+  <Step title="Calculate Split Groups" icon="list" title-type="p">
+    Divides quantities into groups based on split rule.
+
+    Example:
+    Quantity 10 with split value 3 → 3, 3, 3, 1
+  </Step>
+
+  <Step title="Create Child Orders" icon="copy" title-type="p">
+    Uses SplitOrder API to generate child orders dynamically based on calculated groups.
+  </Step>
+
+  <Step title="Add Notes" icon="file-text" title-type="p">
+    Updates order notes:
+
+    - Parent order includes split summary
+
+    - Child orders include parent reference and moved items
+  </Step>
+
+  <Step title="Mark as Processed" icon="bookmark" title-type="p">
+    Adds extended property:
+    OrderSplitMacro = Yes
+
+    Prevents duplicate execution.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Orders are split into multiple child orders
+
+  - Each order contains correct item quantities
+
+  - Parent-child relationships are maintained
+
+  - Duplicate processing is prevented
+
+  - Full traceability through notes and properties
+</Callout>
+
+---
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Reducing manual order splitting
+
+- Improving picking and packing efficiency
+
+- Enabling SKU-driven automation
+
+- Supporting complex order structures
+
+- Ensuring consistent processing logic
+
+---
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - “Split Every” must be configured at SKU level
+
+  - Orders without valid split rules are skipped
+
+  - Composite handling follows predefined rules
+
+  - Processed orders are identified using extended properties
+
+  - Incorrect configuration may result in partial or no splitting
+</Callout>
+
+---
+
+## Example Scenario
+
+<Expandable title="Order Splitting Example" default-open="false">
+
+Scenario:
+
+An order contains the following items:
+
+- SKU A with quantity 10 and split rule of 3  
+- SKU B with quantity 5 and split rule of 2  
+
+Process:
+
+- SKU A is divided into groups of 3, 3, 3, and 1  
+- SKU B is divided into groups of 2, 2, and 1  
+- The macro combines these groups and creates multiple child orders accordingly  
+
+Result:
+
+- The parent order retains the first group of items  
+- Additional child orders are created for remaining groups  
+- Each child order contains a valid combination of split quantities  
+- All orders are linked through notes and references  
+
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This macro implements SKU-driven order decomposition, transforming large quantity orders into smaller, processable units while maintaining data integrity and operational traceability.
+</Callout>
+

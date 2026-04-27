@@ -1,0 +1,232 @@
+---
+title: ShipStation Order Splitter
+description: >-
+  Automatically splits orders based on “Ships Alone” rules and weight limits,
+  ensuring correct shipment grouping and seamless ShipStation integration.
+---
+## Overview
+
+The **RIS-RM-2311 – ShipStation Order Splitter** macro intelligently splits orders using two key logics:
+
+- **“Ships Alone” items**
+
+- **Maximum weight per order**
+
+It ensures proper shipment grouping and prepares orders for seamless processing in ShipStation.
+
+<Callout kind="tip" collapsed="false">
+  Ensure required rules and extended properties are properly configured before running this macro.
+</Callout>
+
+---
+
+## Purpose
+
+This macro:
+
+- Splits items that must ship alone
+
+- Groups remaining items based on weight limits
+
+- Flags overweight items for manual handling
+
+- Triggers rules for ShipStation processing
+
+👉 In short:\
+Split orders intelligently based on shipping rules and weight limits.
+
+---
+
+## When It Runs
+
+Used for shipping preparation and automation
+
+Typically runs:
+
+- Manually triggered
+
+- As part of automation workflows
+
+- Before dispatch processing
+
+- Before sending orders to ShipStation
+
+---
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of order GUIDs to process.
+</ParamField>
+
+<ParamField path="ShipsAloneExtendedPropertyName" param-type="string" required="true" deprecated="false">
+  Extended property name used to identify "Ships Alone" items.
+</ParamField>
+
+<ParamField path="MaxWeightPerSplitOrderLbs" param-type="number" required="true" deprecated="false">
+  Maximum allowed weight per split order (in lbs).
+</ParamField>
+
+<ParamField path="RuleName" param-type="string" required="true" deprecated="false">
+  Rule to execute after splitting.
+</ParamField>
+
+<ParamField path="RuleIdentifierName" param-type="string" required="true" deprecated="false">
+  Identifier used for rule tracking.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Only selected orders are processed. Required rules must exist before execution.
+</Callout>
+
+---
+
+## How It Works
+
+<Steps>
+  <Step title="Validate Rules" icon="shield-check" title-type="p">
+    Ensure required automation rules exist. Stop execution if missing.
+  </Step>
+
+  <Step title="Validate Orders" icon="check-square" title-type="p">
+    Skip invalid or already processed orders.
+  </Step>
+
+  <Step title="Pre-Processing Rule" icon="play-circle" title-type="p">
+    Run rule to prepare dispatch and shipping data.
+  </Step>
+
+  <Step title="Classify Items" icon="layers" title-type="p">
+    Categorize items into:
+
+    - Ships Alone items
+
+    - Overweight items
+
+    - Normal items
+  </Step>
+
+  <Step title="Ships Alone Splitting" icon="user-minus" title-type="p">
+    Split each Ships Alone item into individual orders.
+    If only such items exist, keep one in the parent order.
+  </Step>
+
+  <Step title="Weight-Based Grouping" icon="package" title-type="p">
+    Group normal items using max weight limit with greedy logic.
+  </Step>
+
+  <Step title="Handle Overweight Items" icon="alert-triangle" title-type="p">
+    Items exceeding max weight are not split and flagged for manual review.
+  </Step>
+
+  <Step title="Create Child Orders" icon="copy" title-type="p">
+    Generate new orders using SplitOrder API while preserving customer and shipping details.
+  </Step>
+
+  <Step title="Add Notes & Logs" icon="file-text" title-type="p">
+    Record split summary, overweight warnings, and parent-child relationships.
+  </Step>
+
+  <Step title="Assign Identifier & Run Rules" icon="tag" title-type="p">
+    Assign identifiers and trigger rules engine for ShipStation integration.
+  </Step>
+
+  <Step title="Mark as Processed" icon="check-circle" title-type="p">
+    Add Extended Property ShipStationOrderSplitter = Yes to prevent reprocessing.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Ships Alone items are split into individual orders
+
+  - Normal items are grouped within weight limits
+
+  - Overweight items are flagged for manual handling
+
+  - Orders are tagged and processed automatically
+
+  - Rules executed for ShipStation integration
+</Callout>
+
+---
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Automating order splitting for shipping
+
+- Ensuring correct shipment grouping
+
+- Preventing overweight shipment issues
+
+- Supporting ShipStation workflows
+
+- Handling complex mixed orders
+
+---
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Requires valid extended property for "Ships Alone"
+
+  - Max weight must be properly configured
+
+  - Overweight items are not auto-split
+
+  - Required rules must exist before execution
+
+  - Prevents duplicate processing using flags
+
+  - Greedy logic may not always produce perfect grouping
+
+  - Adds notes for traceability
+</Callout>
+
+---
+
+## Example Scenario
+
+<Expandable title="Mixed Order Splitting Example" default-open="false">
+  Order contains:
+
+  - SKU A → Ships Alone (Qty: 2)
+
+  - SKU B → Weight 3 lbs (Qty: 3)
+
+  - Max Weight = 5 lbs
+
+  👉 The macro:
+
+  - Splits Ships Alone items individually
+
+  - Groups remaining items within weight limit
+
+  - Flags any overweight cases
+
+  Result:
+
+  - Order 1 (Parent): SKU A (1)
+
+  - Order 2: SKU A (1)
+
+  - Order 3: SKU B (within 5 lbs limit)
+
+  - Order 4: Remaining SKU B
+
+  Output: Orders are optimized for shipping and ready for ShipStation.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This macro combines rule-based splitting (Ships Alone) with weight-based optimization to create a fully automated and efficient shipping workflow. It minimizes manual intervention, ensures compliance with shipping constraints, and integrates seamlessly with ShipStation.
+</Callout>
+

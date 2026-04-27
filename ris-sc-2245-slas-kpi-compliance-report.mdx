@@ -1,0 +1,155 @@
+---
+title: SLAs & KPI Compliance Report
+description: >-
+  Evaluate warehouse performance against SLA targets by measuring time taken,
+  identifying delays, and calculating compliance metrics.
+---
+## Overview
+
+The **RIS-SC-2245 – SLAs & KPI Compliance Report** tracks whether warehouse operations are completed within defined SLA limits and provides insights into performance and delays.
+
+<Callout kind="tip" collapsed="false">
+  Define realistic SLA values to ensure meaningful performance evaluation.
+</Callout>
+
+## Purpose
+
+This report:
+
+- Compares actual work time against SLA limits
+
+- Identifies on-time and delayed operations
+
+- Calculates SLA compliance percentage
+
+- Tracks overall performance metrics
+
+👉 In short:\
+Set SLA → measure time → compare → track performance.
+
+## When It Runs
+
+Typically executed:
+
+- Daily performance tracking
+
+- SLA compliance checks
+
+- Warehouse performance reviews
+
+- Client reporting
+
+- Delay and issue analysis
+
+- Manually or via scheduled reports
+
+## Parameters
+
+<ParamField path="FromDate" param-type="DateTime" required="true" deprecated="false">
+  Start date for the report.
+</ParamField>
+
+<ParamField path="ToDate" param-type="DateTime" required="true" deprecated="false">
+  End date for the report.
+</ParamField>
+
+<ParamField path="WaveSlaMinutes" param-type="number" required="true" deprecated="false">
+  Maximum allowed time for a pickwave (in minutes).
+</ParamField>
+
+<ParamField path="OrderSlaMinutes" param-type="number" required="true" deprecated="false">
+  Maximum allowed time for order processing (in minutes).
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  All parameters must be provided to calculate SLA compliance accurately.
+</Callout>
+
+## Data Used
+
+- Pickwave start and end time
+
+- Time taken (duration in minutes)
+
+- Orders within each pickwave
+
+- Items picked
+
+- User handling the work
+
+## Simple Explanation
+
+The report measures how long tasks take and compares them with predefined SLA limits to determine whether work is completed on time or delayed.
+
+## Step-by-Step Flow
+
+<Steps>
+  <Step title="Select Date Range" icon="filter" title-type="p">
+    Filter all work within the selected date range.
+  </Step>
+
+  <Step title="Calculate Time Taken" icon="clock" title-type="p">
+    Calculate duration (in minutes) for each pickwave.
+  </Step>
+
+  <Step title="Compare with SLA" icon="check-circle" title-type="p">
+
+  </Step>
+
+  <Step title="Split Data" icon="columns" title-type="p">
+    Separate:
+  </Step>
+
+  <Step title="Calculate Overall Performance" icon="bar-chart" title-type="p">
+    Compute:
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Clear SLA compliance summary
+
+  - On-time vs late work breakdown
+
+  - Performance metrics for decision-making
+</Callout>
+
+## Usefulness
+
+- **SLA Monitoring** – Ensure deadlines are met
+
+- **Performance Tracking** – Measure efficiency
+
+- **Delay Detection** – Identify late operations quickly
+
+- **KPI Measurement** – Track key performance indicators
+
+## Example Scenario
+
+<Expandable title="Warehouse SLA Tracking" default-open="false">
+  All picking work must be completed within 2 hours.\
+  The report:
+
+  - Checks all pickwaves
+
+  - Compares actual time with SLA
+
+  - Separates on-time and late work
+
+  Result:
+
+  - 80% work completed on time
+
+  - 20% delayed
+
+  - Enables operational improvements
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This report follows a clear flow: Set SLA → Measure Time → Compare → Identify On-Time vs Late → Evaluate Performance.\
+  It helps prevent missed deadlines, hidden delays, poor visibility, and lack of accountability.
+</Callout>
+

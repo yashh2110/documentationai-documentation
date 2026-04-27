@@ -1,0 +1,186 @@
+---
+title: Filtered Order Items Report (Channel SKU Pattern Match)
+description: >-
+  Retrieves processed order items within a date range by matching Channel SKUs against predefined patterns,
+  and maps them to internal SKUs where available.
+---
+
+## Overview
+
+The **Filtered Order Items Report** extracts order item data based on specific **Channel SKU patterns** within a defined date range.
+
+It helps identify orders containing targeted SKUs (including variations or partial matches) and maps them to internal system SKUs where possible.
+
+<Callout kind="tip" collapsed="false">
+  Channel SKU → Pattern Match → Internal SKU Mapping → Order Data
+</Callout>
+
+---
+
+## Purpose
+
+This report:
+
+- Filters orders using flexible SKU pattern matching  
+- Retrieves processed order items only  
+- Maps Channel SKUs to internal SKUs (if available)  
+- Displays order-level and item-level details  
+
+👉 In short:  
+Find orders containing specific SKU patterns and link them to actual products.
+
+---
+
+## When It Runs
+
+Executed on-demand (SQL query)
+
+Typically used:
+
+- Investigating specific SKUs or product groups  
+- Debugging channel SKU inconsistencies  
+- Tracking problematic or special SKUs  
+- Order validation and audit  
+- Marketplace SKU mapping analysis  
+
+---
+
+## Parameters
+
+<ParamField path="inputFromDate" param-type="date" required="true">
+  Start date for processed orders.
+</ParamField>
+
+<ParamField path="inputToDate" param-type="date" required="true">
+  End date for processed orders.
+</ParamField>
+
+---
+
+## How It Works
+
+<Steps>
+
+  <Step title="Prepare Date Range" icon="calendar" title-type="p">
+    Converts input dates into full datetime range:
+    - Start → beginning of day  
+    - End → end of day (23:59:59.999)  
+  </Step>
+
+  <Step title="Define SKU Patterns" icon="list" title-type="p">
+    Stores multiple SKU patterns in a table variable:
+    - Supports wildcard matching using LIKE  
+    - Allows flexible and reusable filtering logic  
+  </Step>
+
+  <Step title="Filter Processed Orders" icon="check-circle" title-type="p">
+    Selects only processed orders:
+    - `nStatus = 1`  
+    - Within selected date range  
+  </Step>
+
+  <Step title="Match Channel SKUs" icon="search" title-type="p">
+    Filters order items using:
+    - `EXISTS` condition  
+    - Matches ChannelSKU against defined patterns  
+  </Step>
+
+  <Step title="Resolve Internal SKU" icon="link" title-type="p">
+    Attempts to map Channel SKU to internal SKU:
+    - Via `Stock_ChannelSKU` table  
+    - Falls back to blank if no match found  
+  </Step>
+
+  <Step title="Retrieve Order Data" icon="database" title-type="p">
+    Extracts:
+    - SKU and title  
+    - Order ID  
+    - Quantity ordered  
+    - Original Channel SKU  
+  </Step>
+
+  <Step title="Sort Results" icon="arrow-down" title-type="p">
+    Orders output by:
+    - Channel SKU  
+    - Order ID  
+  </Step>
+
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Filtered list of order items by SKU patterns  
+
+  - Includes both Channel SKU and internal SKU  
+
+  - Displays order ID and quantity  
+
+  - Shows product title (if mapped)  
+
+  - Sorted for easy analysis  
+</Callout>
+
+---
+
+## Usefulness
+
+This report is highly beneficial for:
+
+- SKU-level investigation  
+- Marketplace data validation  
+- Identifying SKU mapping gaps  
+- Troubleshooting order issues  
+- Supporting customer service queries  
+
+---
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Only processed orders are included (`nStatus = 1`)  
+
+  - SKU matching is pattern-based (LIKE), not exact  
+
+  - Internal SKU may be blank if mapping is missing  
+
+  - Performance depends on number of patterns  
+
+  - Channel SKU format consistency is important  
+
+</Callout>
+
+---
+
+## Example Scenario
+
+<Expandable title="SKU Pattern Matching Example" default-open="false">
+
+  Pattern: `%TT-1117%`  
+
+  Matching Channel SKU:
+  - TT-1117-RED  
+  - N_TT-1117-L  
+
+  Result:
+  All such orders are included  
+
+  Mapping:
+  - If linked → Internal SKU shown  
+  - If not → blank SKU  
+
+  Insight:
+  Helps identify all variations of a SKU across channels.
+
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This report enables flexible SKU tracking using pattern matching, making it powerful for handling inconsistent or variable Channel SKUs across marketplaces.  
+  It is especially useful for debugging SKU mapping and tracking specific product groups.
+</Callout>

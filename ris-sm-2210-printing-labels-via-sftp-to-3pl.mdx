@@ -1,0 +1,170 @@
+---
+title: Printing Labels via SFTP to 3PL
+description: >-
+  Identify orders ready for dispatch, generate shipping label PDFs, send them to
+  a 3PL system via SFTP, and mark orders as exported.
+---
+## Overview
+
+The **RIS-SM-2210 – Printing Labels via SFTP to 3PL** macro automates shipping label creation and delivers them to the warehouse or 3PL system via SFTP, ensuring smooth dispatch operations.
+
+<Callout kind="tip" collapsed="false">
+  Ensure correct SFTP credentials and warehouse location configuration before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Identifies orders ready for dispatch
+
+- Generates shipping label PDFs
+
+- Sends files to a 3PL system via SFTP
+
+- Marks orders as exported
+
+👉 In short:\
+Create labels → send via SFTP → mark orders as processed.
+
+## When It Runs
+
+Typically executed:
+
+- During daily shipping batch processing
+
+- Before order dispatch
+
+- After order confirmation
+
+- Manually or via scheduled 3PL integration workflows
+
+- For Amazon Vendor order handling
+
+## Parameters
+
+<ParamField path="LocationName" param-type="string" required="true" deprecated="false">
+  Warehouse location filter.
+</ParamField>
+
+<ParamField path="SFTP_server" param-type="string" required="true" deprecated="false">
+  SFTP server address.
+</ParamField>
+
+<ParamField path="SFTP_user" param-type="string" required="true" deprecated="false">
+  SFTP username.
+</ParamField>
+
+<ParamField path="SFTP_password" param-type="string" required="true" deprecated="false">
+  SFTP password.
+</ParamField>
+
+<ParamField path="SFTP_fullPath" param-type="string" required="true" deprecated="false">
+  Destination folder path on the SFTP server.
+</ParamField>
+
+<ParamField path="SFTP_port" param-type="number" required="false" deprecated="false">
+  SFTP port (default: 22).
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  All SFTP parameters and LocationName must be provided for successful label upload.
+</Callout>
+
+## Simple Explanation
+
+The macro retrieves eligible orders, generates their shipping labels, uploads them to the 3PL system via SFTP, and marks the orders as exported.
+
+## Step-by-Step Flow
+
+<Steps>
+  <Step title="Fetch Orders" icon="download" title-type="p">
+    Retrieve open orders from the selected warehouse (last 14 days).
+  </Step>
+
+  <Step title="Filter Eligible Orders" icon="filter" title-type="p">
+    Orders must:
+  </Step>
+
+  <Step title="Loop Through Orders" icon="list" title-type="p">
+    Process each order individually.
+  </Step>
+
+  <Step title="Generate Label PDF" icon="file-text" title-type="p">
+    Create shipping label using the template and return a downloadable file link.
+  </Step>
+
+  <Step title="Download Label File" icon="download" title-type="p">
+    Download the PDF and convert into the required file format.
+  </Step>
+
+  <Step title="Prepare Upload Data" icon="server" title-type="p">
+    Build the payload with:
+  </Step>
+
+  <Step title="Send to SFTP / 3PL" icon="upload" title-type="p">
+    Upload the file to the 3PL system using SFTP API.
+  </Step>
+
+  <Step title="Track Processed Orders" icon="check-circle" title-type="p">
+    Maintain a list of successfully processed orders.
+  </Step>
+
+  <Step title="Assign Identifier" icon="tag" title-type="p">
+    Assign the tag "Export Labels to Delamode" and create identifier if not exists.
+  </Step>
+
+  <Step title="Error Handling & Logging" icon="alert-circle" title-type="p">
+    Log successes and failures, skipping failed orders safely.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Shipping labels generated (PDF)
+
+  - Files uploaded to 3PL system via SFTP
+
+  - Orders marked as exported
+</Callout>
+
+## Usefulness
+
+- **Automation** – Eliminates manual label handling
+
+- **3PL Integration** – Direct communication with warehouse systems
+
+- **Time Saving** – Processes bulk orders efficiently
+
+- **Error Tracking** – Logs any failures clearly
+
+- **Accuracy** – Processes only valid and eligible orders
+
+## Example Scenario
+
+<Expandable title="3PL Warehouse Integration Example" default-open="false">
+  Warehouse requires shipping labels via SFTP.\
+  The macro automatically:
+
+  - Fetches today’s orders
+
+  - Generates shipping labels
+
+  - Uploads labels to the 3PL system
+
+  Result:
+
+  - Faster processing
+
+  - No manual effort
+
+  - Clear export tracking
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By automating label generation and SFTP upload, this macro streamlines warehouse operations, reduces manual effort, ensures accurate order processing, and enables seamless integration with third-party logistics systems.
+</Callout>
+

@@ -1,0 +1,162 @@
+---
+title: Fetch Dispatch Date and Update
+description: >-
+  Reads order XML data, extracts delivery/dispatch date, updates DespatchByDate
+  in Linnworks, and logs changes.
+---
+## Overview
+
+The **RIS-RM-2144 – Fetch Dispatch Date and Update** macro automatically updates the dispatch date of orders based on external XML data from channels.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  It automatically updates the dispatch date from XML into the order, ensuring accurate scheduling.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Reads dispatch/delivery dates from order XML
+
+- Updates the DespatchByDate in the system
+
+- Logs all changes for audit purposes
+
+- Ensures orders have accurate fulfillment dates
+
+---
+
+## When It Runs
+
+Typically executed:
+
+- Automatically or manually during order processing
+
+- After order import from channels
+
+- Before fulfillment or picking
+
+- As part of scheduled automation jobs
+
+---
+
+## Parameters
+
+<ParamField path="LocationName" param-type="string" required="true" deprecated="false">
+  Filter orders by warehouse/location.
+</ParamField>
+
+<ParamField path="XMLKey" param-type="string" required="true" deprecated="false">
+  XML key containing dispatch/delivery date. Must match the key in order XML exactly.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  These parameters define which orders to process and which XML element to read for the dispatch date.
+</Callout>
+
+---
+
+## Simple Explanation
+
+The macro:
+
+1. Gets orders from a specific warehouse/location
+
+2. Reads each order’s XML data
+
+3. Extracts the delivery/dispatch date using the provided XMLKey
+
+4. Updates the DespatchByDate in the system
+
+5. Logs the update in order notes
+
+This ensures accurate dispatch scheduling and reduces manual errors.
+
+---
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Get Location ID" icon="map-pin" title-type="p">
+    Convert warehouse/location name into system-recognized location ID.
+  </Step>
+
+  <Step title="Fetch Open Orders" icon="shopping-cart" title-type="p">
+    Retrieve all open orders for the specified location.
+  </Step>
+
+  <Step title="Retrieve Order XML" icon="file-text" title-type="p">
+    Access XML data for each order to read dispatch/delivery details.
+  </Step>
+
+  <Step title="Parse XML Data" icon="code" title-type="p">
+    Search for the provided XMLKey and extract the corresponding value (date).
+  </Step>
+
+  <Step title="Validate Date" icon="calendar" title-type="p">
+    Check if the extracted value is a valid date and convert it to standard date format.
+  </Step>
+
+  <Step title="Update Dispatch Date" icon="truck" title-type="p">
+    Apply the extracted date as the order’s dispatch date in the system.
+  </Step>
+
+  <Step title="Add Order Note" icon="file-plus" title-type="p">
+    Record a note indicating the dispatch date was updated for audit tracking.
+  </Step>
+
+  <Step title="Logging & Error Handling" icon="alert-circle" title-type="p">
+    Handle missing XML data, invalid date values, and ensure safe execution.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  Orders are updated with:
+
+  - **Correct dispatch dates extracted from XML**
+
+  - **Order notes tracking all updates**
+</Callout>
+
+---
+
+## Usefulness
+
+- **Automation** – Eliminates manual date updates
+
+- **Accuracy** – Ensures correct dispatch dates
+
+- **Fulfillment Planning** – Improves shipping schedules
+
+- **Audit Tracking** – Maintains history of changes
+
+---
+
+## Example Scenario
+
+<Expandable title="Scenario: WooCommerce Delivery Date Sync" default-open="false">
+  **XML Key:** ywcdd\_order\_delivery\_date
+
+  **Insight:**\
+  Delivery date exists in XML but not in the system.
+
+  **Action:**\
+  Macro extracts date and updates the order.
+
+  **Result:**\
+  Order scheduled correctly for dispatch.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This macro ensures delivery dates from external systems are accurately reflected in the system, enabling better fulfillment planning, reducing manual errors, and preventing late or incorrectly scheduled shipments.
+</Callout>
+

@@ -1,0 +1,118 @@
+---
+title: Generate JSON Inventory Data
+description: >-
+  Retrieves stock item IDs for selected SKUs, assigns default values, and converts
+  the data into JSON format for external use.
+---
+## Overview
+
+The **RIS-SC-1024 – Generate JSON Inventory Data** script helps analysts generate a standardized JSON inventory file for external systems or API integrations.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  Create a ready-to-use JSON file of inventory data for APIs or integrations.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Retrieves stock item IDs for selected SKUs  
+- Assigns default values (quantity = 1, batch inventory ID = 0)  
+- Converts the data into JSON format for external use  
+
+---
+
+## When It Runs
+
+Used for system integrations, API submissions, and data migrations.
+
+**Typically runs:**
+
+- Manually executed by analysts  
+- During system integrations  
+- Before API data submission  
+- For inventory data migration  
+- While testing external system connections  
+
+---
+
+## Parameters
+
+<ParamField path="ItemNumber" param-type="string" required="true" deprecated="false">
+  List of SKUs manually provided in the filter.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Note: SKUs must be manually added in the filter; no dynamic parameters are used.
+</Callout>
+
+---
+
+## Simple Explanation
+
+The script selects specific SKUs, assigns standard default values, and converts the data into a JSON structure ready for use by external systems or APIs.
+
+---
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Filter SKUs" icon="filter" title-type="p">
+    Select only the required SKUs using a predefined list.
+  </Step>
+
+  <Step title="Fetch Stock Item ID" icon="key" title-type="p">
+    Retrieve the unique stock item ID for each SKU.
+  </Step>
+
+  <Step title="Assign Static Values" icon="edit" title-type="p">
+    Set default values:  
+    - Quantity = 1  
+    - Batch Inventory ID = 0
+  </Step>
+
+  <Step title="Convert to JSON" icon="code" title-type="p">
+    Format the results into a standardized JSON structure.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+The script generates a JSON output containing:
+
+- Key representing stock item ID  
+- Quantity set to 1  
+- Batch inventory ID set to 0
+</Callout>
+
+---
+
+## Usefulness
+
+- **System Integration Ready** – Directly usable in APIs or external systems  
+- **Standardized Data Format** – Ensures consistent structure  
+- **Simplifies Data Export** – No manual formatting needed  
+- **Supports Automation** – Can be reused in scripts or integrations  
+
+---
+
+## Example Scenario
+
+<Expandable title="Inventory JSON Example" default-open="false">
+
+**Selected SKUs:** 1001, 1002  
+
+**Result JSON:**
+
+```json
+{
+  "1001": {"Quantity": 1, "BatchInventoryID": 0},
+  "1002": {"Quantity": 1, "BatchInventoryID": 0}
+}
+```
+
+</Expandable>

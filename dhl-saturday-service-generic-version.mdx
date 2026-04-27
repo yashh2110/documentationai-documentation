@@ -1,0 +1,153 @@
+---
+title: DHL Saturday Service (Generic Version)
+description: >-
+  Automatically assign Saturday delivery service and label to eligible orders
+  based on delivery criteria.
+---
+## Overview
+
+The **DHL Saturday Service (Generic Version)** macro automatically assigns a Saturday delivery shipping service (e.g., DHL Saturday Delivery) to eligible orders.
+
+It evaluates order data, validates item eligibility, and ensures that only qualifying orders receive the correct shipping method along with a “Saturday Service” label.
+
+<Callout kind="tip" collapsed="false">
+  Ensure that item-level property DHL = true is properly configured; otherwise, orders will be skipped.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Identifies orders eligible for Saturday delivery
+
+- Applies the correct DHL shipping service
+
+- Assigns a “Saturday Service” label
+
+👉 In short:\
+Eligible orders automatically get correct Saturday delivery handling.
+
+## When It Runs
+
+Used for shipping automation & delivery optimization
+
+Typically runs:
+
+- Manually on selected orders
+
+- As part of automated order processing workflows
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of orders to be evaluated.
+</ParamField>
+
+<ParamField path="serviceName" param-type="string" required="true" deprecated="false">
+  Shipping service to be applied (e.g., DHL Saturday Delivery).
+</ParamField>
+
+## How It Works
+
+<Steps>
+  <Step title="Fetch Orders" icon="download" title-type="p">
+    Retrieve selected orders and process them individually.
+  </Step>
+
+  <Step title="Validate DHL Eligibility" icon="check-circle" title-type="p">
+    Check each item in the order for property DHL = true.\
+    ✔ All items valid → continue\
+    ❌ Any invalid item → skip order
+  </Step>
+
+  <Step title="Extract Delivery Details" icon="file-text" title-type="p">
+    Read order XML and extract:
+
+    - Delivery date
+
+    - Shipping type (e.g., UK Next)
+  </Step>
+
+  <Step title="Validate Saturday Criteria" icon="calendar" title-type="p">
+    Order qualifies only if:
+
+    - Delivery date is Saturday
+
+    - Shipping type is UK Next
+  </Step>
+
+  <Step title="Build Eligible List" icon="list" title-type="p">
+    Add all qualifying orders into processing list.
+  </Step>
+
+  <Step title="Apply Shipping Service" icon="truck" title-type="p">
+    Verify service exists and apply it to eligible orders.
+  </Step>
+
+  <Step title="Assign Label" icon="tag" title-type="p">
+    Check for “Saturday Service” label.\
+    If not available → create it\
+    Assign label to all eligible orders
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  ✔ Correct DHL Saturday shipping method applied\
+  ✔ “Saturday Service” label assigned\
+  ✔ Orders ready for priority weekend processing
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Automating shipping selection
+
+- Reducing manual errors
+
+- Ensuring correct weekend delivery handling
+
+- Helping warehouse teams identify priority orders quickly
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  This macro works only when:
+
+  - All items have DHL = true
+
+  - Delivery day is Saturday
+
+  - Shipping type is UK Next
+
+  Some orders may be internally processed multiple times, but the system safely prevents duplication issues.
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Saturday Delivery Automation Example" default-open="false">
+  An order contains items where all have DHL = true.
+
+  - Delivery date = Saturday
+
+  - Shipping type = UK Next
+
+  👉 The macro:
+
+  - Marks order as eligible
+
+  - Applies DHL Saturday Delivery service
+
+  - Assigns “Saturday Service” label
+
+  Result: Order is ready for correct weekend dispatch.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Automating Saturday delivery handling ensures accurate shipping selection, reduces operational effort, and improves warehouse efficiency for time-sensitive deliveries.
+</Callout>
+

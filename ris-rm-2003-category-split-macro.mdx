@@ -1,0 +1,156 @@
+---
+title: Category Split Macro
+description: >-
+  Automatically split orders into multiple orders based on product categories
+  and assign them to respective warehouse locations.
+---
+## Overview
+
+The **RIS-RM-2003 – Category Split Macro** splits a single order into multiple orders based on product categories.
+
+It ensures that items belonging to different categories are separated and assigned to their respective warehouse locations, enabling efficient multi-warehouse processing.
+
+<Callout kind="tip" collapsed="false">
+  Ensure categorylist and locationlist are correctly mapped in sequence to avoid incorrect warehouse assignment.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Identifies items belonging to different categories
+
+- Splits orders accordingly
+
+- Assigns each split order to the correct warehouse location
+
+👉 In short:\
+Split one order into multiple based on category and route to correct warehouse.
+
+## When It Runs
+
+Used for order routing & warehouse optimization
+
+Typically runs:
+
+- Manually triggered
+
+- During order processing (before picking & packing)
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of orders to be evaluated.
+</ParamField>
+
+<ParamField path="categorylist" param-type="string" required="true" deprecated="false">
+  List of product categories (comma-separated).
+</ParamField>
+
+<ParamField path="locationlist" param-type="string" required="true" deprecated="false">
+  Corresponding warehouse locations for categories.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Example:\
+  categorylist = Electronics, Clothing\
+  locationlist = Warehouse1, Warehouse2
+
+  Mapping:\
+  Electronics → Warehouse1\
+  Clothing → Warehouse2
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Prepare Mapping" icon="map" title-type="p">
+    Map each category to its corresponding warehouse location.
+  </Step>
+
+  <Step title="Evaluate Orders" icon="search" title-type="p">
+    Review all items within each selected order.
+  </Step>
+
+  <Step title="Check Split Requirement" icon="check-circle" title-type="p">
+    ✔ Multiple items with different categories → proceed\
+    ❌ Same category → no split
+  </Step>
+
+  <Step title="Group Items" icon="layers" title-type="p">
+    Group items based on their product categories.
+  </Step>
+
+  <Step title="Assign Locations" icon="map-pin" title-type="p">
+    Assign each group to its mapped warehouse location.
+  </Step>
+
+  <Step title="Handle Unmapped Items" icon="alert-circle" title-type="p">
+    Items without matching category are grouped into an “other” order.
+  </Step>
+
+  <Step title="Split Order" icon="git-branch" title-type="p">
+    Create separate orders while retaining the original shipping method.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Orders are split based on categories
+
+  - Each order contains only relevant category items
+
+  - Warehouse locations are correctly assigned
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Multi-warehouse operations
+
+- Faster picking and packing
+
+- Reducing warehouse confusion
+
+- Improving order accuracy
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Applies only when orders contain multiple items
+
+  - Categories must be properly mapped
+
+  - No split occurs if all items belong to same category
+
+  - Unmapped items go into a separate “other” order
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Category-Based Order Split Example" default-open="false">
+  An order contains:
+
+  - Electronics item
+
+  - Clothing item
+
+  👉 The macro:
+
+  - Splits into two orders
+
+  - Assigns Electronics → Warehouse1
+
+  - Assigns Clothing → Warehouse2
+
+  Result: Each warehouse processes only relevant items.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Splitting orders by category and routing them to correct locations significantly improves warehouse efficiency and simplifies fulfilment workflows.
+</Callout>
+

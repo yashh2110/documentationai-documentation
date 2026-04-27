@@ -1,0 +1,72 @@
+---
+title: Amazon Connector features
+description: >-
+  The Amazon Connector integrates Amazon orders directly into Odoo, reducing
+  manual data entry and enabling better visibility of sales activity across
+  platforms.
+---
+## **Supported features**
+
+The Amazon Connector provides the following capabilities:
+
+- Automatically syncs confirmed Amazon orders (both FBA and FBM) into Odoo, including:
+
+  - product details such as name, description, and quantity
+
+  - shipping fees associated with each order
+
+  - gift wrap charges when applicable
+
+- Creates customer records in Odoo when they do not already exist (including both contact and delivery addresses)
+
+- Sends shipment confirmations from Odoo to Amazon for FBM orders, ensuring timely payment processing
+
+- Updates product stock levels from Odoo to Amazon for FBM operations
+
+- Allows connection of multiple Amazon seller accounts
+
+- Supports multiple marketplaces within each seller account
+
+The table below outlines how features differ between fulfillment methods:
+
+|                            | Fulfilled By Amazon (FBA)                                                                                    | Fulfilled By Merchant (FBM)                                                                               |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
+| **Orders**                 | Syncs shipped and cancelled orders.                                                                          | Syncs pending (unshipped) and cancelled orders.                                                           |
+| **Shipping**               | Shipping fees are calculated by Amazon and included in imported orders.                                      | Shipping fees are calculated by Amazon and included in synchronized orders.                               |
+| Shipping done by Amazon.   | A delivery order is automatically generated in Odoo. Once processed, its status is reflected back in Amazon. |                                                                                                           |
+| **Gift Wrapping**          | Fully handled by Amazon.                                                                                     | Cost is included in the order. Gift messages are added to order and delivery records for manual handling. |
+| **Stock Management**       | Managed by Amazon and tracked in Odoo using a virtual location.                                              | Managed in Odoo Inventory and synchronized with Amazon.                                                   |
+| **Delivery Notifications** | Managed by Amazon.                                                                                           | Notifications are triggered by Amazon based on delivery updates received from Odoo.                       |
+
+**Note**
+
+The Amazon Connector focuses on synchronizing sales orders only. Other operations—such as fee reports, dispute handling, or refunds—must still be managed directly in *Amazon Seller Central*.
+
+**Warning**
+
+As of February 19, 2024, for North American marketplaces, <u>FBA</u> orders imported via the Amazon Connector do not include customer names in Odoo.\
+This change is due to Amazon handling and remitting sales tax on behalf of sellers, which limits the sharing of personally identifiable customer information.
+
+## **Supported marketplaces**
+
+If a required marketplace is not available in your setup, you can manually <a href="https://www.odoo.com/documentation/19.0/applications/sales/sales/amazon_connector/setup.html#amazon-add-new-marketplace" target="_blank" rel="noopener noreferrer">**add a new marketplace**</a>.
+
+### **North America region**
+
+| Country       | Marketplace                                                                                |
+| ------------- | ------------------------------------------------------------------------------------------ |
+| Canada        | <a href="http://Amazon.ca" target="_blank" rel="noopener noreferrer">Amazon.ca</a>         |
+| Mexico        | <a href="http://Amazon.com.mx" target="_blank" rel="noopener noreferrer">Amazon.com.mx</a> |
+| United States | <a href="http://Amazon.com" target="_blank" rel="noopener noreferrer">Amazon.com</a>       |
+
+### **Europe region**
+
+| Country        | Marketplace                                                                              |
+| -------------- | ---------------------------------------------------------------------------------------- |
+| Germany        | <a href="http://Amazon.de" target="_blank" rel="noopener noreferrer">Amazon.de</a>       |
+| Spain          | <a href="http://Amazon.es" target="_blank" rel="noopener noreferrer">Amazon.es</a>       |
+| France         | <a href="http://Amazon.fr" target="_blank" rel="noopener noreferrer">Amazon.fr</a>       |
+| United Kingdom | <a href="http://Amazon.co.uk" target="_blank" rel="noopener noreferrer">Amazon.co.uk</a> |
+| Italy          | <a href="http://Amazon.it" target="_blank" rel="noopener noreferrer">Amazon.it</a>       |
+| Netherlands    | <a href="http://Amazon.nl" target="_blank" rel="noopener noreferrer">Amazon.nl</a>       |
+

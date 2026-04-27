@@ -1,0 +1,133 @@
+---
+title: Create leads (from email or manually)
+description: >-
+  Leads can be generated in the CRM system through email aliases or by manually
+  creating records. These methods complement leads captured from website forms,
+  ensuring all potential opportunities are tracked efficiently.
+---
+Leads can enter the *CRM* system through multiple channels, including dedicated email aliases and manual entry. These methods work alongside leads captured via the **website contact form**, ensuring no potential opportunity is missed.
+
+Before using these features, make sure *Leads* are enabled. Navigate to **CRM app ‣ Configuration ‣ Settings**, activate the **Leads** option, and click **Save**.
+
+## **Configure email aliases**
+
+Each sales team can have its own email alias. Any message sent to this address is automatically converted into a lead (or opportunity), capturing key details from the email.
+
+To configure an email alias:
+
+1. Go to **CRM app ‣ Configuration ‣ Sales Teams**
+
+2. Select a team to open its settings
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/email-alias.png" width="658" height="540" alt="The sales team details page, focused on the email alias section." />
+
+In the team configuration:
+
+- Enter or update the alias name in the **Email Alias** field
+
+- Define who can send emails using the **Accept Emails From** setting
+
+Available options include:
+
+- **Everyone**: accepts emails from any sender
+
+- **Authenticated Partners**: only from existing contacts/customers
+
+- **Followers only**: only from followers of related records or team members
+
+- **Authenticated Employees**: restricted to internal employees
+
+### **Leads created from email**
+
+When an email is received through the alias, a new lead is automatically created.
+
+To view these leads:
+
+- Navigate to **CRM app ‣ Leads**
+
+- Open a record to review its details
+
+The original email is stored in the activity thread (chatter). Typically:
+
+- The email subject becomes the lead title
+
+- The sender’s email is captured in the **Email** field
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/chatter-message.png" width="768" height="398" alt="The chatter thread of a newly created lead in the CRM app." />
+
+**Note**
+
+If the *Leads* feature is disabled, incoming emails will create opportunities instead of leads.
+
+## **Manually create leads**
+
+You can also create leads directly within the CRM.
+
+1. Go to **CRM app ‣ Leads**
+
+2. Click **New** to open a blank form
+
+Enter the following details:
+
+- Lead title
+
+- Contact name
+
+- Company name
+
+**Tip**
+
+Leads can also be generated using automated tools such as lead generation features.
+
+**Note**
+
+When a lead is later converted into an opportunity, the **Company Name** is used to either link to an existing customer or create a new one.
+
+### **Manually create opportunities**
+
+Opportunities can also be created directly without going through the lead stage.
+
+1. Navigate to **CRM app ‣ Sales ‣ My Pipeline**
+
+2. Click **New** to create a new opportunity card
+
+Fill in the key details:
+
+- **Organization/Contact**: the company or person
+
+- **Opportunity**: a descriptive name (required)
+
+**Example**
+
+A name like `5 VP Chairs` clearly indicates both the product and quantity being discussed.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/opportunity-example.png" width="469" height="204" alt="An example of an opportunity in the CRM pipeline." />
+
+Add additional information such as:
+
+- Email and phone number
+
+- Expected revenue (estimated deal value)
+
+**Note**
+
+Expected revenue and priority levels help measure performance at both individual and team levels.
+
+Assign a priority using the star indicators:
+
+- Low priority
+
+- Medium priority
+
+- High priority
+
+- Very high priority
+
+**Note**
+
+Higher priority opportunities are displayed first in the pipeline view.
+
+Once all details are complete, click **Add** to create the opportunity.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/create-opportunities.png" width="455" height="667" alt="The CRM pipeline with a newly created opportunity." />
+

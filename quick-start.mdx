@@ -1,0 +1,160 @@
+---
+title: Quick Start with Rishvi
+description: Get up and running with Rishvi services by setting up your account and taking your first steps toward business optimization.
+---
+
+## Prerequisites
+
+<Callout kind="info" title="Before You Begin">
+Ensure you have:
+- A valid email address for registration
+- Business details ready (company name, industry)
+- Access to your Linnworks or Odoo account credentials if integrating
+</Callout>
+
+Rishvi provides services for Linnworks automation, Odoo ERP, digital marketing, and custom software. Follow these steps to register, request a demo, and start your first integration.
+
+## Step 1: Create Your Account
+
+<Steps>
+  <Step title="Register" icon="user-plus">
+    Visit `https://rishvi.co.uk` and click **Sign Up**.
+
+    Fill in your details:
+
+    | Field       | Description                  |
+    |-------------|------------------------------|
+    | Email       | Your business email          |
+    | Company     | Your company name            |
+    | Password    | Strong password (`>12 chars`) |
+
+    Submit the form to receive a verification email.
+  </Step>
+
+  <Step title="Verify Email" icon="mail">
+    Check your inbox and click the verification link.
+  </Step>
+
+  <Step title="Login" icon="log-in">
+````bash
+# Direct login URL
+https://rishvi.co.uk/login
+````
+
+    Enter your credentials to access the dashboard.
+  </Step>
+</Steps>
+
+## Request a Demo and Select Services
+
+After login, request a personalized demo for your preferred service.
+
+<Callout kind="tip">
+Demos are free and tailored to your business needs, such as Linnworks inventory sync or Odoo ERP setup.
+</Callout>
+
+<Tabs>
+  <Tab title="Linnworks" icon="package">
+    Select **Linnworks Services** from the dashboard.
+
+    <Image
+      src="https://rishvi.co.uk/wp-content/uploads/linnworks-color-min.webp"
+      alt="Linnworks integration dashboard"
+      width="600"
+      height="400"
+    />
+
+    Click **Request Demo** to schedule.
+  </Tab>
+
+  <Tab title="Odoo ERP" icon="database">
+    Choose **Odoo ERP Solutions**.
+
+    Basic setup requires your Odoo API key.
+
+    ```python
+    # Fetch Odoo config
+    import requests
+
+    ODOO_URL = "https://your-odoo-instance.com"
+    API_KEY = "YOUR_ODOO_API_KEY"
+
+    response = requests.get(
+      f"{ODOO_URL}/api/health",
+      headers={"Authorization": f"Bearer {API_KEY}"}
+    )
+    print(response.json())
+    ```
+  </Tab>
+</Tabs>
+
+## Initial Integration Setup
+
+Connect your first service using the dashboard tools.
+
+<CodeGroup tabs="Linnworks,Odoo">
+```javascript
+// Linnworks API setup
+const LINNWORKS_API_KEY = "YOUR_LINNWORKS_KEY";
+const response = await fetch("https://api.example.com/linnworks/inventory", {
+  method: "POST",
+  headers: {
+    "Authorization": `Bearer ${LINNWORKS_API_KEY}`,
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({ channel: "amazon" })
+});
+```
+
+```javascript
+// Odoo integration example
+const ODOO_URL = "https://your-odoo.com";
+const API_KEY = "YOUR_ODOO_KEY";
+
+const data = await fetch(`${ODOO_URL}/xmlrpc/2/object`, {
+  method: "POST",
+  body: JSON.stringify({
+    service: "object",
+    method: "execute_kw",
+    args: ["database", API_KEY, "res.partner", "search", [[]]]
+  })
+});
+```
+</CodeGroup>
+
+<ParamField path="apikey" param-type="string" required="true">
+Your Rishvi API key from dashboard settings.
+</ParamField>
+
+<ParamField header="Authorization" param-type="string" required="true">
+Format: `Bearer YOUR_API_KEY`
+</ParamField>
+
+## Explore Core Dashboard Tools
+
+Once set up, navigate the dashboard:
+
+<Columns cols={3}>
+  <Card title="Inventory Sync" icon="package" href="#inventory">
+    Monitor multichannel stock levels in real-time.
+  </Card>
+
+  <Card title="ERP Analytics" icon="bar-chart-3" href="#analytics">
+    View sales, finance, and operations insights.
+  </Card>
+
+  <Card title="Marketing Hub" icon="trending-up" href="#marketing">
+    Track campaign performance and ROI.
+  </Card>
+</Columns>
+
+## Next Steps
+
+<Expandable title="Troubleshooting Common Issues" default-open="false">
+
+- **Login fails?** Check spam for verification email.
+- **API errors?** Verify `YOUR_API_KEY` is active.
+
+</Expandable>
+
+Explore more in our [Introduction](/introduction), [Authentication](/authentication), or [Changelog](/changelog). Request support via dashboard chat for personalized help.

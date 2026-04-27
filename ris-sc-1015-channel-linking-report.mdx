@@ -1,0 +1,150 @@
+---
+title: Channel Linking Report
+description: >-
+  Retrieves product listings from multiple sales channels, checks SKU linkage,
+  and consolidates data into a single report.
+---
+## Overview
+
+The **RIS-SC-1015 – Channel Linking Report** script provides a unified view of listings from multiple channels, showing which listings are linked to internal SKUs and which are missing.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  Shows which product listings from Marketplace1 and Marketplace2 are properly linked to system SKUs and which are missing.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Collects listings from Marketplace1 and Marketplace2 channels
+
+- Verifies mapping of each listing to an internal SKU
+
+- Combines all listings into a single consolidated report
+
+- Highlights unlinked or missing SKU mappings
+
+## When It Runs
+
+Used manually by managers or analysts.
+
+**Typically runs:**
+
+- During SKU mapping audits
+
+- Channel integration checks
+
+- Identifying unlinked listings
+
+## Parameters
+
+<ParamField path="Source1" param-type="string" required="true" deprecated="false">
+  Marketplace1 with  subsource
+</ParamField>
+
+<ParamField path="Source2" param-type="string" required="true" deprecated="false">
+  Marketplace2 website channel
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  This version uses fixed filters and does not accept dynamic input.
+</Callout>
+
+<Callout kind="info" collapsed="false">
+  The script consolidates channel data to verify SKU mapping and generates a unified report.
+</Callout>
+
+## Process Flow Step-by-Step
+
+<Steps>
+  <Step title="Get Marketplace1  Listings" icon="list" title-type="p">
+    Fetch channel SKU, title, and listing ID. Attempt to map each listing to an internal SKU.
+  </Step>
+
+  <Step title="Get Marketplace2 Listings" icon="list" title-type="p">
+    Repeat the same process for website listings.
+  </Step>
+
+  <Step title="Combine Data" icon="shuffle" title-type="p">
+    Merge datasets from both channels into one consolidated report.
+  </Step>
+
+  <Step title="Map Channel SKU to Internal SKU" icon="link" title-type="p">
+    Check mapping table. If mapping exists, display internal SKU; otherwise, leave blank.
+  </Step>
+
+  <Step title="Handle Missing Mapping" icon="alert-circle" title-type="p">
+    Include records even if listing ID is missing to ensure completeness.
+  </Step>
+
+  <Step title="Assign Row Number" icon="hash" title-type="p">
+    Add a row number to each record for reporting purposes.
+  </Step>
+
+  <Step title="Group Results" icon="grid" title-type="p">
+    Ensure clean and structured output for easy interpretation.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  Report containing:
+
+  - Channel SKU
+
+  - Channel Title
+
+  - Listing ID
+
+  - Internal SKU (if mapped)
+
+  - Source (Marketplace1 or Marketplace2)
+
+  - Subsource
+
+  Provides a clear view of linked and unlinked listings across multiple channels.
+</Callout>
+
+## Usefulness
+
+- **Mapping Validation** – Identify listings not linked to internal SKUs
+
+- **Multi-Channel Visibility** – View marketplace and website listings together
+
+- **Data Cleanup** – Fix missing or incorrect mappings
+
+- **Integration Monitoring** – Ensure proper channel synchronization
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Works only for Marketplace1 and Marketplace2 channels as defined
+
+  - Depends on accurate SKU mapping in Stock\_ChannelSKU
+
+  - Read-only script; does not modify data
+
+  - Large datasets may impact performance
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Multi-Channel SKU Audit Example" default-open="false">
+  Business sells on CDISCOUNT and its website.\
+  Manager wants to verify mapping status:
+
+  - **Channel SKU CD123** → Internal SKU ITEM1 → Source CDISCOUNT
+
+  - **Channel SKU WEB999** → Internal SKU blank → Source MAGENTO
+
+  **Insight:** WEB999 is not linked and needs mapping.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By combining listings from multiple channels and highlighting missing mappings, this script improves data accuracy, ensures proper integration, and helps maintain consistent SKU linking across all sales platforms.
+</Callout>
+

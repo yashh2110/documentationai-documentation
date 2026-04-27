@@ -1,0 +1,201 @@
+---
+title: Shopee Connector configuration
+description: >-
+  Odoo can be integrated with a Shopee seller account to synchronize orders and
+  data. Before starting, users must have both a Shopee Seller account and access
+  to the Shopee Open Platform.
+---
+To begin, create and configure your Shopee Open Platform account:
+
+1. Visit the <a href="https://open.shopee.com/" target="_blank" rel="noopener noreferrer">**Shopee Open Platform**</a>
+
+2. Click **Get Access (Now)**
+
+3. Follow the registration steps using the <a href="https://open.shopee.com/developer-guide/12" target="_blank" rel="noopener noreferrer">**Shopee Developer Guide**</a>
+
+Once your Open Platform account is ready, proceed with the integration steps below.
+
+**Important**
+
+Shopee Open Platform access depends on your region. Requirements such as seller eligibility, account type, and API access vary by country.
+
+Before configuring Odoo, make sure your account meets all regional requirements.
+
+### **Key considerations**
+
+- **Seller account status**: You must have an active Shopee seller account (individual or business)
+
+- **Eligibility requirements**: Some regions require minimum order volume or a specific seller tier (e.g., Preferred, Mall)
+
+### **Recommended steps**
+
+1. Identify your Shopee region
+
+2. Review the official <a href="https://open.shopee.com/developer-guide/12" target="_blank" rel="noopener noreferrer">**Shopee documentation**</a>
+
+3. Confirm your account meets all criteria
+
+4. Proceed with Odoo configuration only after validation
+
+## **Connect Shopee seller account to Odoo**
+
+First, <a href="https://www.odoo.com/documentation/19.0/applications/general/apps_modules.html#general-install" target="_blank" rel="noopener noreferrer">**install**</a> the **Shopee Connector** (`sale_shoppe`) from the **Apps** menu.
+
+Then:
+
+1. Navigate to **Sales app ‣ Configuration ‣ Shopee ‣ Accounts**
+
+2. Click **New** to create a new account
+
+In the **Credentials** tab:
+
+- Select the appropriate **API Endpoint**
+
+- Enter your **Partner ID** and **Partner Key**
+
+- Click **Save and Authorize**
+
+### **Choosing the correct API endpoint**
+
+Shopee provides different endpoints depending on region and usage:
+
+- **Production (Singapore)**: Default option for most APAC regions
+
+- **Production (China)**: For mainland China sellers
+
+- **Production (Brazil)**: For Brazil-based sellers
+
+- **Testing endpoints**: For development only (not for live use)
+
+Selecting the correct endpoint is essential for a successful connection.
+
+### **Find your Partner ID and Partner Key**
+
+To retrieve your credentials:
+
+1. Log in to the <a href="https://open.shopee.com/" target="_blank" rel="noopener noreferrer">**Shopee Open Platform**</a>
+
+2. Go to **App Management → App List**
+
+3. Select your app (test or production)
+
+4. Copy the **Partner ID** and **Partner Key**
+
+**Note**
+
+- Ensure values are copied exactly (case-sensitive)
+
+- Keep your Partner Key secure
+
+## **Authorization and account registration**
+
+After clicking **Save and Authorize**, Odoo redirects you to Shopee.
+
+### **Login or select account**
+
+- If already logged in, select your Shopee account
+
+- Otherwise, enter your login credentials
+
+### **Grant access**
+
+Approve the authorization request to allow Odoo to access your Shopee account data.
+
+Once confirmed, you are redirected back to Odoo and the account is successfully linked.
+
+## **Post-connection setup**
+
+After connecting your account, configure the following:
+
+1. **Rename account (optional)**\
+   Assign a meaningful name for easier identification
+
+2. **Set last sync date**\
+   Define the starting point for importing orders
+
+3. **Enable inventory sync (optional)**\
+   Automatically update stock from Odoo to Shopee
+
+4. **Assign a sales team**\
+   Useful for reporting and performance tracking
+
+Connected shops will appear under the **Shops** button.
+
+## **Shopee orders in Odoo**
+
+When orders are imported:
+
+- Each product appears as a line in the sales order
+
+- No separate lines are created for shipping or fees
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/shopee-sales-odoo.png" width="933" height="606" alt="Shopee synchronized sale order in Odoo." />
+
+Product matching is done using:
+
+- **Internal Reference (Odoo)** ↔ **Shopee SKU**
+
+If no match is found, Odoo assigns a default product (*Shopee Item*).
+
+**Note**
+
+To modify default products:
+
+- Enable <a href="https://www.odoo.com/documentation/19.0/applications/general/developer_mode.html#developer-mode" target="_blank" rel="noopener noreferrer">**developer mode**</a>
+
+- Go to **Sales app ‣ Configuration ‣ Settings → Shopee Sync → Default Products**
+
+## **Product tax configuration**
+
+Taxes applied to Shopee orders are based on:
+
+- Product tax settings
+
+- <a href="https://www.odoo.com/documentation/19.0/applications/finance/fiscal_localizations.html" target="_blank" rel="noopener noreferrer">**Fiscal positions**</a>
+
+Ensure these are configured correctly to avoid mismatches between Odoo and Shopee.
+
+**Note**
+
+Small differences in totals may occur due to Shopee’s tax calculations. These can be resolved using write-offs during reconciliation.
+
+## **Add a new marketplace**
+
+To connect additional Shopee marketplaces:
+
+1. Go to **Sales ‣ Configuration ‣ Shopee ‣ Accounts**
+
+2. Click **New**
+
+3. Select the correct API endpoint
+
+4. Enter your Partner ID and Partner Key
+
+5. Provide a clear name (e.g., `Shopee Malaysia`)
+
+6. Assign a sales team
+
+7. Authorize the account
+
+If needed, use **Log in with another account** to connect a new shop.
+
+### **Automatic synchronization**
+
+Once connected, marketplaces are automatically added to the synchronization list.
+
+If a marketplace does not appear:
+
+- It may not be supported by the Shopee Open Platform
+
+- Or it may not be enabled for your seller account
+
+**Important**
+
+Although Odoo allows creating multiple entries for the same Shopee shop, only one connection will function properly due to API token limitations.
+
+To avoid issues:
+
+- Connect each shop only once
+
+- If reconnecting, fetch existing orders before re-authorizing
+

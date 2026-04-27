@@ -1,0 +1,205 @@
+---
+title: 'RIS-CS-2279-Purchase Price Report '
+description: >-
+  Calculates total purchase price for bundle (composite) SKUs by summing the
+  cost of all child items, with optional filtering for a specific SKU.
+---
+## Overview
+
+The **RIS-CS-2279 – Purchase Price Report** calculates the total purchase cost of bundle (composite) SKUs by aggregating the cost of their child components.
+
+It ensures accurate costing by considering supplier-specific prices where available.
+
+<Callout kind="tip" collapsed="false">
+  Uses default supplier cost (KnownPurchasePrice) when available, otherwise falls back to PurchasePrice.
+</Callout>
+
+---
+
+## Purpose
+
+This report:
+
+- Calculates **bundle SKU purchase price**
+
+- Aggregates **child item costs**
+
+- Supports **single SKU filtering**
+
+- Ensures **accurate cost fallback logic**
+
+👉 In short:\
+Get true cost of bundle products.
+
+---
+
+## When It Runs
+
+Executed on-demand (SQL report)
+
+Typically used:
+
+- Cost analysis
+
+- Bundle pricing validation
+
+- Profit margin calculation
+
+- Inventory valuation
+
+---
+
+## Parameters
+
+<ParamField path="@SKU" param-type="string" required="false" deprecated="false">
+  Optional SKU filter.\
+  Leave NULL to return all bundle SKUs.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Example: SET @SKU = 'BND001'
+</Callout>
+
+---
+
+## How It Works
+
+<Steps>
+  <Step title="Prepare Child Item Costs" icon="database" title-type="p">
+    Creates a dataset of child items with cost priority:
+
+    - KnownPurchasePrice (default supplier)
+
+    - PurchasePrice (fallback)
+
+    - 0 if missing
+  </Step>
+
+  <Step title="Identify Bundle SKUs" icon="package" title-type="p">
+    Filters only items where:
+    bContainsComposites = 1
+  </Step>
+
+  <Step title="Join Composition Data" icon="layers" title-type="p">
+    Links:
+
+    - Parent SKU (bundle)
+
+    - Child SKUs
+
+    - Composition quantities
+  </Step>
+
+  <Step title="Apply SKU Filter" icon="search" title-type="p">
+    If @SKU is provided:
+
+    - Return only that SKU\
+      Else:
+
+    - Return all bundle SKUs
+  </Step>
+
+  <Step title="Calculate Bundle Cost" icon="calculator" title-type="p">
+    Formula:
+    Bundle Cost = SUM(Child Cost × Quantity)
+  </Step>
+
+  <Step title="Group Results" icon="list" title-type="p">
+    Groups by:
+
+    - SKU
+
+    - Title
+  </Step>
+
+  <Step title="Sort Output" icon="arrow-down" title-type="p">
+    Orders results by SKU for readability.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Bundle SKU purchase price calculated
+
+  - Child item costs aggregated accurately
+
+  - Supplier-based pricing applied
+
+  - Optional SKU filtering supported
+
+  - Clean and structured output
+</Callout>
+
+---
+
+## Usefulness
+
+This report is highly beneficial for:
+
+- Bundle cost validation
+
+- Profit margin analysis
+
+- Pricing strategy decisions
+
+- Supplier cost comparison
+
+- Financial reporting accuracy
+
+---
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Only composite (bundle) SKUs are included
+
+  - Cost priority:
+
+    1. KnownPurchasePrice (supplier)
+
+    2. PurchasePrice
+
+    3. Default = 0
+
+  - Missing supplier mapping may affect accuracy
+
+  - Performance depends on number of composite items
+</Callout>
+
+---
+
+## Example Scenario
+
+<Expandable title="Bundle Cost Calculation Example" default-open="false">
+  Bundle SKU: BND001
+
+  Contains:
+
+  - Item A → Qty 2 → Cost £10
+
+  - Item B → Qty 1 → Cost £20
+
+  👉 Calculation:
+
+  (2 × 10) + (1 × 20) = £40
+
+  Result:
+
+  - SKU → BND001
+
+  - Bundle Purchase Price → £40
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  The key strength of this report is its cost fallback strategy combined with composition-based calculation.
+
+  By prioritizing supplier pricing and aggregating child item costs, it ensures accurate bundle valuation without manual calculation.
+</Callout>
+

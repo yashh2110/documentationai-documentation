@@ -1,0 +1,117 @@
+---
+title: Stream Tech Integration – Quick Start Guide
+---
+<Card title="End User Guide" href="/stream-30" icon="activity-square" horizontal="false" target="_self">
+  Check the documentation guide for end users
+</Card>
+
+## Overview
+
+The Stream Tech Integration connects your Linnworks account to Stream, a logistics and delivery management platform. Once set up, it automatically handles the full shipping process — from sending orders through to receiving tracking numbers — without any manual handoff.
+
+---
+
+## What You Can Do
+
+- Send orders from Linnworks to Stream automatically
+
+- Create shipments and assign them to delivery runs
+
+- Generate shipping labels directly from Linnworks
+
+- Receive tracking numbers back on each order
+
+- View delivery status updates as orders are collected or delivered
+
+- See run and sequence assignments as routes are planned
+
+---
+
+## Before You Start
+
+Make sure you have:
+
+- A Linnworks account with integration access
+
+- A Stream account with your **Client ID** and **Client Secret**
+
+- Shipping services configured in Stream (depot and delivery method)
+
+- Orders with complete delivery addresses in Linnworks
+
+---
+
+## Basic Setup
+
+1. Install the Stream Integration in your Linnworks account
+
+2. Enter your Stream API credentials (Client ID, Client Secret, and API URL)
+
+3. Add your sender address and contact details
+
+4. Map your shipping services — select the correct depot and delivery method for each
+
+5. Enable order synchronisation to start the automated flow
+
+---
+
+## How It Works
+
+Once set up, the process runs automatically:
+
+- Assign a shipping service to an order in Linnworks
+
+- The order is picked up and sent to Stream
+
+- Stream creates a shipment (called a **consignment**)
+
+- A shipping label and tracking number are generated
+
+- Tracking details and delivery updates sync back to Linnworks automatically
+
+<Image src="https://blob-cdn.documentation.ai/org-87fb0951-1e07-4f5d-a887-8a7327c7777d/doc-98941d2e-0032-424f-8414-3034ac5fa6ee/1775743336366-27b9r884iic-1a15e8fc-276d-48e9-8324-2327dcda558c79f.jpg?fm=auto&auto=compress%2Cformat" width="800" height="533" alt="" />
+
+<Image src="https://blob-cdn.documentation.ai/org-87fb0951-1e07-4f5d-a887-8a7327c7777d/doc-98941d2e-0032-424f-8414-3034ac5fa6ee/1775743353625-7iluy6jqup4-29b98c2c-a3c4-4c19-b88f-245fafghg7adcb3.jpg?fm=auto&auto=compress%2Cformat" width="800" height="533" alt="" />
+
+---
+
+## What to Check First
+
+If something looks wrong, verify:
+
+- A shipping service is assigned to the order
+
+- The delivery address is complete (street, city, postcode, country)
+
+- There is no **"Error from Stream"** identifier on the order
+
+- The tracking number has been received (appears after the consignment is created)
+
+---
+
+## Common Issues
+
+| Problem                      | Likely Cause                                                         |
+| ---------------------------- | -------------------------------------------------------------------- |
+| Order not sent to Stream     | No shipping service assigned                                         |
+| "Error from Stream" on order | Invalid or incomplete order data — check the order notes for details |
+| No tracking number           | Shipment not yet created — wait for the next sync cycle              |
+| Label won't generate         | Order not yet confirmed in Stream                                    |
+
+---
+
+## Quick Tips
+
+- Always assign a shipping service **before** the sync cycle runs
+
+- Make sure each shipping service maps to the correct depot
+
+- Check order notes whenever you see an error — Stream error details are written there
+
+- When testing, process a small batch of orders first
+
+---
+
+## Summary
+
+The Stream Tech Integration automates your entire shipping workflow. Linnworks and Stream stay in sync automatically — from order submission through to delivery confirmation.

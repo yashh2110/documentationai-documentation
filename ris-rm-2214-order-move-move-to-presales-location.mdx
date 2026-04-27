@@ -1,0 +1,161 @@
+---
+title: Order Move (Move to Presales Location)
+description: >-
+  Check stock availability across multiple warehouses and move orders to the
+  appropriate location, especially to the PreSales warehouse when stock is
+  unavailable elsewhere.
+---
+## Overview
+
+The **RIS-RM-2214 – Order Move (Move to Presales Location)** macro intelligently routes orders to the correct warehouse based on stock availability across multiple locations.
+
+<Callout kind="tip" collapsed="false">
+  Ensure all warehouse locations are correctly configured and passed in parameters before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Checks stock availability across multiple warehouses
+
+- Determines the best fulfillment location
+
+- Moves orders to the appropriate warehouse
+
+- Handles out-of-stock scenarios efficiently
+
+👉 In short:\
+Check stock → decide location → move order if needed.
+
+## When It Runs
+
+Typically executed:
+
+- After order import
+
+- Before picking and packing
+
+- During stock validation
+
+- In multi-warehouse environments
+
+- To handle out-of-stock situations
+
+- Manually or via automation workflows
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of order IDs to process.
+</ParamField>
+
+<ParamField path="CheckLocation01" param-type="string" required="true" deprecated="false">
+  Default warehouse location.
+</ParamField>
+
+<ParamField path="CheckLocation02" param-type="string" required="true" deprecated="false">
+  Secondary (backup) warehouse location.
+</ParamField>
+
+<ParamField path="CheckLocation03" param-type="string" required="true" deprecated="false">
+  PreSales warehouse location.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  All location parameters and OrderIds must be provided for proper execution.
+</Callout>
+
+## Simple Explanation
+
+The macro checks stock across multiple warehouses and ensures each order is assigned to the most suitable location where stock is available.
+
+## Step-by-Step Flow
+
+<Steps>
+  <Step title="Fetch Locations" icon="download" title-type="p">
+    Retrieve all warehouse locations and match them with the provided parameter names.
+  </Step>
+
+  <Step title="Validate Locations" icon="alert-circle" title-type="p">
+    Stop execution if any required location is missing.
+  </Step>
+
+  <Step title="Loop Through Orders" icon="list" title-type="p">
+    Process each order individually.
+  </Step>
+
+  <Step title="Check Parked Status" icon="pause-circle" title-type="p">
+    If the order is on hold, temporarily remove the hold.
+  </Step>
+
+  <Step title="Check Default Warehouse Stock" icon="home" title-type="p">
+    If stock is available → keep order in the current location.
+  </Step>
+
+  <Step title="Check Secondary Warehouse" icon="shuffle" title-type="p">
+    If not available in default:
+  </Step>
+
+  <Step title="Check PreSales Warehouse" icon="archive" title-type="p">
+    If stock is unavailable in both:
+  </Step>
+
+  <Step title="Restore Order Status" icon="refresh-cw" title-type="p">
+    Reapply parked status if it was removed earlier.
+  </Step>
+
+  <Step title="Logging" icon="file-text" title-type="p">
+    Track stock checks, movements, and any errors.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Orders assigned to the correct warehouse
+
+  - Stock utilized efficiently across locations
+
+  - Orders ready for fulfillment
+</Callout>
+
+## Usefulness
+
+- **Smart Routing** – Automatically selects correct warehouse
+
+- **Stock Optimization** – Uses available inventory efficiently
+
+- **Automation** – Eliminates manual stock checks
+
+- **Faster Processing** – Prevents fulfillment delays
+
+- **Operational Efficiency** – Improves warehouse utilization
+
+## Example Scenario
+
+<Expandable title="Multi-Warehouse Stock Handling" default-open="false">
+  Orders cannot be fulfilled from the main warehouse.\
+  The macro automatically:
+
+  - Checks stock across all warehouses
+
+  - Identifies available location
+
+  - Moves the order if required
+
+  Result:
+
+  - Faster fulfillment
+
+  - No manual intervention
+
+  - Optimized stock usage
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By dynamically checking stock across warehouses and routing orders accordingly, this macro ensures efficient inventory usage, prevents delays, and streamlines multi-location order fulfillment.
+</Callout>
+

@@ -1,0 +1,126 @@
+---
+title: Column Search Results
+description: >-
+  Searches across all database tables to find columns that match a specific name
+  pattern, helping developers and analysts locate fields quickly.
+---
+## Overview
+
+The **RIS-SC-1030 – Column Search Results** script allows analysts and developers to quickly locate which tables contain columns matching a given pattern.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  Find which tables contain the column or keyword you are searching for.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Searches all database tables for columns matching a pattern  
+- Shows table names and corresponding columns  
+- Supports partial matching for flexible search  
+
+---
+
+## When It Runs
+
+Used for database exploration, debugging, and impact analysis.
+
+**Typically runs:**
+
+- Manually executed by developers or analysts  
+- During query debugging  
+- For database exploration  
+- Before making schema changes  
+
+---
+
+## Parameters
+
+<ParamField path="ColumnNamePattern" param-type="string" required="true" deprecated="false">
+  Pattern used to search column names (supports partial matching).
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  The script can return multiple results if the pattern matches multiple columns or all columns if no specific filter is applied.
+</Callout>
+
+---
+
+## Simple Explanation
+
+The script scans all tables and columns in the database, applies the search pattern, and displays where matching columns exist.
+
+---
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Get All Tables" icon="list" title-type="p">
+    Retrieve all table names from system metadata (sys.tables).
+  </Step>
+
+  <Step title="Get All Columns" icon="columns" title-type="p">
+    Retrieve all column names from system metadata (sys.columns).
+  </Step>
+
+  <Step title="Join Tables and Columns" icon="link" title-type="p">
+    Link each column to its respective table.
+  </Step>
+
+  <Step title="Apply Search Filter" icon="search" title-type="p">
+    Filter columns based on the provided pattern (partial match supported).
+  </Step>
+
+  <Step title="Select Output" icon="table" title-type="p">
+    Display table name and column name for all matches.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+The script generates a report containing:
+
+- Table name  
+- Column name  
+
+Shows all locations where the searched column exists.
+</Callout>
+
+---
+
+## Usefulness
+
+- **Faster Development** – Quickly locate required fields  
+- **Impact Analysis** – Identify affected tables before changes  
+- **Debugging Support** – Find missing or incorrectly named columns  
+- **Database Understanding** – Helps new users explore schema  
+
+---
+
+## Example Scenario
+
+<Expandable title="Column Search Example" default-open="false">
+**Scenario:** Find all SKU-related columns  
+
+**Search pattern:** `SKU`  
+
+**Result:**  
+- Table `StockItem` → Column `ItemNumber`  
+- Table `OrderItem` → Column `ChannelSKU`  
+- Table `ChannelSKU` → Column `ChannelSKU`  
+
+**Insight:** Shows all SKU-related fields and helps choose the correct tables for queries.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+By providing a quick way to locate columns across the entire database, this script improves development efficiency, reduces errors, and helps users better understand database structure.
+</Callout>

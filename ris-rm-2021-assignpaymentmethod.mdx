@@ -1,0 +1,180 @@
+---
+title: 'Assign Payment Method '
+description: >-
+  Automatically assign payment methods to orders based on Source, SubSource, and
+  specific order notes for accurate marketplace payment mapping.
+---
+## Overview
+
+The **RIS-RM-2021 – AssignPaymentMethod** macro assigns payment methods dynamically using multiple conditions such as Source, SubSource, and Order Notes.
+
+It is particularly useful for marketplace integrations (e.g., Mirakl), where payment identification depends on multiple order attributes.
+
+<Callout kind="tip" collapsed="false">
+  Ensure all mapping parameters (Source, SubSource, Note, PaymentMethods) are aligned correctly before execution.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Evaluates order Source and SubSource
+
+- Checks specific note content
+
+- Maps to corresponding payment method
+
+- Updates order payment details
+
+👉 In short:\
+Assign payment method using multi-condition matching (Source + SubSource + Note).
+
+## When It Runs
+
+Used for advanced payment mapping
+
+Typically runs:
+
+- Manual execution (on selected orders)
+
+- Triggered via Rules Engine
+
+- During automation workflows
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of order IDs to process.
+</ParamField>
+
+<ParamField path="Source" param-type="string" required="true" deprecated="false">
+  Order source values (comma-separated).
+</ParamField>
+
+<ParamField path="SubSource" param-type="string" required="true" deprecated="false">
+  Order subsource values (comma-separated).
+</ParamField>
+
+<ParamField path="Note" param-type="string" required="true" deprecated="false">
+  Specific note text to match within the order (comma-separated).
+</ParamField>
+
+<ParamField path="PaymentMethods" param-type="string" required="true" deprecated="false">
+  Payment methods mapped to each condition set.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Example:\
+  Source → "MIRAKL,MIRAKL"\
+  SubSource → "UK,FR"\
+  Note → "Paid via Channel,Paid via Channel"\
+  PaymentMethods → "MiraklPayUK,MiraklPayFR"
+
+  Meaning:\
+  Each combination of Source + SubSource + Note maps to a specific payment method.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Load Payment Methods" icon="credit-card" title-type="p">
+    Retrieve all available payment methods from the system.
+  </Step>
+
+  <Step title="Prepare Mappings" icon="settings" title-type="p">
+    Split Source, SubSource, Note, and PaymentMethods into structured lists.
+  </Step>
+
+  <Step title="Process Orders" icon="list" title-type="p">
+    Loop through each OrderId and retrieve full order details.
+  </Step>
+
+  <Step title="Apply Matching Logic" icon="search" title-type="p">
+    For each mapping rule:
+
+    - Match Source
+
+    - Match SubSource
+
+    - Check if order contains the specified Note
+  </Step>
+
+  <Step title="Assign Payment Method" icon="check-circle" title-type="p">
+    If all conditions match:
+
+    - Identify corresponding payment method
+
+    - Update PaymentMethodId and PaymentMethod
+  </Step>
+
+  <Step title="Save Changes" icon="save" title-type="p">
+    Update order totals using system API.
+  </Step>
+
+  <Step title="Log Execution" icon="file-text" title-type="p">
+    Record successful updates and unmatched conditions.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Orders evaluated against multi-condition rules
+
+  - Matching orders assigned correct payment method
+
+  - Payment details updated automatically
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Automating complex payment mapping
+
+- Supporting marketplace integrations (e.g., Mirakl)
+
+- Reducing manual errors
+
+- Improving financial reporting accuracy
+
+- Handling multi-condition workflows
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - All conditions (Source, SubSource, Note) must match exactly
+
+  - Note matching is strict (exact text required)
+
+  - All parameter lists must be aligned in order
+
+  - Payment method must exist in the system
+
+  - Existing payment method will be overwritten
+
+  - No update occurs if no match is found
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Assign Payment for Mirakl Orders" default-open="false">
+  Orders come from a marketplace with specific note indicators.
+
+  👉 The macro:
+
+  - Matches Source and SubSource
+
+  - Verifies note content
+
+  - Assigns corresponding payment method
+
+  Result: Orders are assigned accurate payment methods automatically.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Combining multiple order attributes for mapping enables precise payment assignment, ensuring accurate financial data and seamless marketplace integration.
+</Callout>
+

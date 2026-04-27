@@ -1,0 +1,138 @@
+---
+title: Multi-employee management
+description: >-
+  Enable multiple employees to access the POS register with controlled
+  permissions, allowing secure operations and better tracking of user activity.
+---
+Odoo Point of Sale allows multiple employees to log into the same POS register using the **Log in with Employees** feature. This helps control access, assign roles, and track employee activity for each transaction.
+
+## **Key capabilities**
+
+When enabled, this feature allows you to:
+
+- Define which employees can access the POS
+
+- Assign different permission levels (minimal, basic, advanced)
+
+- Track which employee handled each order for reporting and analytics
+
+## **Configuration**
+
+To enable multi-employee access:
+
+1. Go to <a href="https://www.odoo.com/documentation/19.0/applications/sales/point_of_sale/use.html#pos-use-settings" target="_blank" rel="noopener noreferrer">**POS Settings**</a>
+
+2. Scroll to the **PoS Interface** section
+
+3. Enable **Log in with Employees**
+
+Then assign employees based on their access level:
+
+- **Minimal rights** → limited POS access
+
+- **Basic rights** → standard POS usage
+
+- **Advanced rights** → extended features and permissions
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/activate-setting.png" width="380" height="135" alt="Enable multi-employee login in POS." />
+
+**Note**
+
+- Leaving **Minimal** and **Basic** fields empty allows all employees to log in
+
+- Leaving **Advanced rights** empty grants advanced access only to Odoo users
+
+**Tip**
+
+You can also access these settings directly from the POS dashboard by clicking the (**⋮**) menu on a POS card and selecting **Edit**.
+
+## **Permission levels**
+
+### **Minimal rights**
+
+Employees with minimal access can:
+
+- Lock or unlock the POS register
+
+- Reload POS data
+
+- Process standard sales
+
+- Assign customers to orders
+
+- Add notes to orders
+
+- Enter promotional codes
+
+### **Basic rights**
+
+Employees can perform standard POS operations, including sales and general order handling.
+
+### **Advanced rights**
+
+Employees have extended capabilities, including advanced operations and administrative actions within POS.
+
+## **Usage**
+
+### **Logging in**
+
+Once enabled, employees must log in before accessing the POS:
+
+- Scan their badge
+
+- Select their name from the user list
+
+- Enter their PIN code
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/log-in.png" width="432" height="86" alt="POS login screen." />
+
+To switch users:
+
+- Click the current user’s name in the top-right corner
+
+- Select another employee
+
+**Tip**
+
+If no barcode scanner is available, use the camera option to scan barcodes.
+
+## **Login with badges**
+
+To allow employees to log in using badges:
+
+1. Go to the **Employees** module
+
+2. Open an employee record
+
+3. Navigate to the **Settings** tab
+
+Then:
+
+- Enter a **Badge ID** manually\
+  **or**
+
+- Click **Generate** to create one automatically
+
+You can also click **Print Badge** to generate a barcode for scanning.
+
+To switch users using badges:
+
+1. Lock the POS register (click the lock icon)
+
+2. Return to the login screen
+
+3. Scan the new employee’s badge
+
+## **PIN code login**
+
+For additional security, assign a PIN code:
+
+1. Open the employee form in the **Employees** module
+
+2. Go to the **Settings** tab
+
+3. Enter a numeric value in the **PIN Code** field
+
+**Note**
+
+The PIN must contain digits only (no letters or special characters).

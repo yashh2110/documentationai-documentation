@@ -1,0 +1,179 @@
+---
+title: Get Price
+description: >-
+  Fetches stock, purchase price, and Amazon retail price for all SKUs, including
+  composite items, generates a CSV report, and uploads it to an FTP server.
+---
+## Overview
+
+The **RIS-SM-2145 – Get Price** macro automates the extraction of SKU-wise purchase and selling prices and shares them via FTP for reporting or external system integration.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  It fetches SKU data, calculates purchase prices, retrieves retail prices, and automatically uploads a CSV to an FTP server.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Retrieves stock, purchase price, and retail price for all SKUs
+
+- Supports simple and composite (bundle) items
+
+- Generates a structured CSV report with pricing details
+
+- Uploads the CSV to a specified FTP server
+
+- Logs success or failure of the operation
+
+---
+
+## When It Runs
+
+Typically executed:
+
+- On daily or weekly schedules
+
+- Before marketplace price sync
+
+- During pricing audits
+
+- For integration with external systems
+
+---
+
+## Parameters
+
+<ParamField path="ftpuser" param-type="string" required="true" deprecated="false">
+  FTP username for authentication.
+</ParamField>
+
+<ParamField path="ftppass" param-type="string" required="true" deprecated="false">
+  FTP password for authentication.
+</ParamField>
+
+<ParamField path="ftphost" param-type="string" required="true" deprecated="false">
+  FTP server address.
+</ParamField>
+
+<ParamField path="ftpssl" param-type="bool" required="false" deprecated="false">
+  Enable or disable secure FTP connection.
+</ParamField>
+
+<ParamField path="ftpport" param-type="int" required="false" deprecated="false">
+  FTP server port.
+</ParamField>
+
+<ParamField path="ftpfolder" param-type="string" required="true" deprecated="false">
+  Destination folder path for the CSV file.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  These parameters are required to securely connect to the FTP server and upload the generated CSV file.
+</Callout>
+
+---
+
+## Simple Explanation
+
+The macro:
+
+1. Retrieves SKU data including stock, quantity, and current prices
+
+2. Calculates purchase price for each SKU
+
+3. Combines component values for composite SKUs
+
+4. Generates a CSV file listing SKU, purchase price, retail price, and category
+
+5. Uploads the CSV file to a configured FTP server
+
+This automates SKU price reporting for internal or external use.
+
+---
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Fetch Pricing Data" icon="database" title-type="p">
+    Retrieve SKU, stock value, quantity, and pricing information from inventory.
+  </Step>
+
+  <Step title="Calculate Purchase Price" icon="calculator" title-type="p">
+    Compute Purchase Price as Stock Value divided by Quantity. Ensure divide-by-zero errors are avoided.
+  </Step>
+
+  <Step title="Handle Composite Items" icon="layers" title-type="p">
+    Aggregate component values to calculate total purchase price for bundle products.
+  </Step>
+
+  <Step title="Process Data" icon="broom" title-type="p">
+    Ensure SKUs are valid, clean data, and format decimal values correctly.
+  </Step>
+
+  <Step title="Generate CSV File" icon="file-text" title-type="p">
+    Create a CSV file with columns: SKU, Purchase Price, Retail Price, and Category. Format values to two decimal places.
+  </Step>
+
+  <Step title="Prepare File Name" icon="file" title-type="p">
+    Format: QueryResults\_YYYYMMDD\_HHMMSS.csv for unique identification.
+  </Step>
+
+  <Step title="Upload to FTP" icon="cloud-upload" title-type="p">
+    Connect to the FTP server using the provided credentials and upload the CSV file.
+  </Step>
+
+  <Step title="Logging & Error Handling" icon="alert-circle" title-type="p">
+    Log query execution, FTP upload status, and handle any errors safely.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  The macro generates and uploads a CSV file containing:
+
+  - **SKU** – Stock Keeping Unit identifier
+
+  - **Purchase Price** – Calculated cost per SKU
+
+  - **Retail Price** – Selling price per SKU
+</Callout>
+
+---
+
+## Usefulness
+
+- **Automated Reporting** – Eliminates manual price extraction
+
+- **Accurate Pricing** – Supports both simple and composite items
+
+- **Marketplace Ready** – Data can be used for Amazon or other platform sync
+
+- **Integration Friendly** – FTP output for external system consumption
+
+---
+
+## Example Scenario
+
+<Expandable title="Scenario: Amazon Price Sync (dfurniturestore)" default-open="false">
+  **Need:** SKU-wise purchase and selling price
+
+  **Action:**\
+  Macro fetches pricing data, generates a CSV file, and uploads it to FTP.
+
+  **Result:**\
+  External systems read the file and update pricing automatically.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This macro connects inventory and pricing data with external systems by automating extraction and sharing, ensuring accurate SKU prices, reducing manual effort, and preventing inconsistencies across marketplaces.
+</Callout>
+

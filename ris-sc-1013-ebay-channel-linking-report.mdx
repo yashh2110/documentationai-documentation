@@ -1,0 +1,158 @@
+---
+title: eBay Channel Linking Report
+description: >-
+  Retrieves Etsy channel listings, checks SKU linkage, and consolidates multiple
+  Etsy accounts into a single report.
+---
+## Overview
+
+The **RIS-SC-1013 – eBay Channel Linking Report** script provides visibility of Etsy channel listings, showing which listings are correctly mapped to internal SKUs and which are missing.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  Shows which Etsy listings are properly linked to internal system SKUs and which are missing.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Collects listings from multiple Etsy accounts
+
+- Verifies mapping of each listing to an internal SKU
+
+- Combines all listings into a single consolidated report
+
+- Highlights unlinked or missing mappings
+
+## When It Runs
+
+Used manually by managers or analysts.
+
+**Typically runs:**
+
+- During SKU mapping checks
+
+- Listing audits
+
+- Identifying unlinked products
+
+## Parameters
+
+<ParamField path="Source" param-type="string" required="true" deprecated="false">
+  Fixed as ETSY
+</ParamField>
+
+<ParamField path="Subsource1" param-type="string" required="true" deprecated="false">
+  Etsy-TS
+</ParamField>
+
+<ParamField path="Subsource2" param-type="string" required="true" deprecated="false">
+  Etsy-WD
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  This version uses fixed values and does not accept dynamic input.
+</Callout>
+
+## Tables Used
+
+- **Stock\_ChannelList** → Channel listing data including SKU, title, and listing ID
+
+- **Stock\_ChannelSKU** → Mapping between channel SKU and internal SKU
+
+- **StockItem** → Internal product details
+
+<Callout kind="info" collapsed="false">
+  The script combines data from multiple Etsy accounts, checking SKU linkage and generating a consolidated report.
+</Callout>
+
+## Process Flow Step-by-Step
+
+<Steps>
+  <Step title="Get Listings for Etsy-TS" icon="list" title-type="p">
+    Fetch channel SKU, title, and listing ID. Attempt to map each listing to an internal SKU.
+  </Step>
+
+  <Step title="Get Listings for Etsy-WD" icon="list" title-type="p">
+    Repeat the same process for the second Etsy account.
+  </Step>
+
+  <Step title="Combine Results" icon="shuffle" title-type="p">
+    Merge datasets from both Etsy accounts into one consolidated report.
+  </Step>
+
+  <Step title="Map Channel SKU to Internal SKU" icon="link" title-type="p">
+    Check mapping table. If mapping exists, display internal SKU; otherwise, leave blank.
+  </Step>
+
+  <Step title="Handle Missing Links" icon="alert-circle" title-type="p">
+    Include records even if listing ID is missing to ensure all listings are accounted for.
+  </Step>
+
+  <Step title="Add Row Number" icon="hash" title-type="p">
+    Assign a row number to each record for reporting purposes.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  Report containing:
+
+  - Channel SKU
+
+  - Channel Title
+
+  - Listing ID
+
+  - Internal SKU (if mapped)
+
+  - Source
+
+  - Subsource
+
+  Provides a clear view of linked and unlinked Etsy listings.
+</Callout>
+
+## Usefulness
+
+- **Mapping Validation** – Identify unlinked Etsy listings
+
+- **Channel Visibility** – View multiple Etsy accounts together
+
+- **Error Detection** – Detect missing or incorrect mappings
+
+- **Data Cleanup** – Maintain accurate SKU linking
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Works only for Etsy channel listings
+
+  - Depends on accurate mapping in Stock\_ChannelSKU
+
+  - Read-only script; does not modify data
+
+  - Large datasets may impact performance
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Etsy Listing Audit Example" default-open="false">
+  Business operates two Etsy stores: Etsy-TS and Etsy-WD.\
+  Manager wants to verify mapping status of listings:
+
+  - **Channel SKU ETSY123** → Internal SKU ITEM1 → Subsource Etsy-TS
+
+  - **Channel SKU ETSY999** → Internal SKU blank → Subsource Etsy-WD
+
+  **Insight:** ETSY999 is not linked and needs to be mapped.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By highlighting linked and unlinked listings across multiple Etsy accounts, this script helps maintain accurate SKU mapping, improves channel data consistency, and ensures smooth inventory synchronization.
+</Callout>
+

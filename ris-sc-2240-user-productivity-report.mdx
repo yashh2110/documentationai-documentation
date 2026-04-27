@@ -1,0 +1,137 @@
+---
+title: 'User Productivity Report [INTERNAL]'
+description: >-
+  Track warehouse user performance in picking operations by analyzing completed
+  work, efficiency, speed, and productivity metrics.
+---
+## Overview
+
+The **RIS-SC-2240 – User Productivity Report&#x20;**&#x20;provides a detailed analysis of warehouse picking performance by evaluating user efficiency, speed, and output.
+
+<Callout kind="tip" collapsed="false">
+  Use date filters to focus on specific periods for more accurate performance analysis.
+</Callout>
+
+## Purpose
+
+This report:
+
+- Tracks picking activity per user
+
+- Measures efficiency and completion rates
+
+- Calculates time-based performance metrics
+
+- Provides insights into productivity
+
+👉 In short:\
+Track picking work → measure time → calculate efficiency → analyze performance.
+
+## When It Runs
+
+Typically executed:
+
+- Daily or weekly productivity reviews
+
+- Staff performance analysis
+
+- Warehouse management reporting
+
+- Team efficiency monitoring
+
+- Training and improvement evaluation
+
+- Manually or via scheduled reports
+
+## Parameters
+
+<ParamField path="@fromDate" param-type="DateTime" required="false" deprecated="false">
+  Start date filter for the report.
+</ParamField>
+
+<ParamField path="@toDate" param-type="DateTime" required="false" deprecated="false">
+  End date filter for the report.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  If both parameters are NULL, the report returns all available data.
+</Callout>
+
+## Simple Explanation
+
+The report analyzes picking activities, calculates time and output, and summarizes productivity metrics for each warehouse user.
+
+## Step-by-Step Flow
+
+<Steps>
+  <Step title="Get All Pickwaves" icon="database" title-type="p">
+    Fetch all picking activities including completed and incomplete waves.
+  </Step>
+
+  <Step title="Get Picking Details" icon="list" title-type="p">
+    Calculate:
+  </Step>
+
+  <Step title="Combine Data" icon="shuffle" title-type="p">
+    Join picking wave and item data to calculate time taken and work completed.
+  </Step>
+
+  <Step title="Group by User" icon="users" title-type="p">
+    Aggregate all data based on individual users.
+  </Step>
+
+  <Step title="Calculate Metrics" icon="bar-chart" title-type="p">
+    For each user, compute:
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Clear productivity summary per user
+
+  - Detailed efficiency and performance metrics
+
+  - Actionable insights for warehouse management
+</Callout>
+
+## Usefulness
+
+- **Performance Tracking** – Monitor individual efficiency
+
+- **Identify Top Performers** – Recognize best employees
+
+- **Training Insights** – Identify users needing improvement
+
+- **Productivity Analysis** – Measure speed and output
+
+- **Better Planning** – Optimize warehouse operations
+
+## Example Scenario
+
+<Expandable title="Warehouse Performance Review" default-open="false">
+  A warehouse manager needs visibility into staff productivity.\
+  The report:
+
+  - Tracks all picking activity
+
+  - Measures completion rates and speed
+
+  - Summarizes performance per user
+
+  Result:
+
+  - Clear performance insights
+
+  - Identification of strong and weak performers
+
+  - Improved team productivity
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This report follows a simple logic: User → Work Done → Time Taken → Performance Metrics.\
+  It helps prevent unknown performance issues, slow picking processes, workload imbalance, and inefficient warehouse operations.
+</Callout>
+

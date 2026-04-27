@@ -1,0 +1,154 @@
+---
+title: Evaluating eBay Variation Data
+description: >-
+  Analyzes eBay listings, extracts variation attributes, and maps them to
+  Linnworks SKUs and TSINs.
+---
+## Overview
+
+The **RIS-SC-1037 – Evaluating eBay Variation Data** script helps analysts understand eBay listing variations and their mapping to internal SKUs and TSINs.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  See how eBay variation listings are structured and linked to inventory.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Extracts variation attributes from eBay listings XML
+
+- Maps variation SKUs to Linnworks SKUs and TSINs
+
+- Provides structured reporting of variations for catalog analysis and troubleshooting
+
+---
+
+## When It Runs
+
+Used for eBay audits, integration checks, and variation mapping validation.
+
+**Typically runs:**
+
+- Manually executed by analysts
+
+- During eBay listing audits
+
+- While troubleshooting variation mapping issues
+
+- For catalog validation or migration projects
+
+---
+
+## Parameters
+
+<ParamField path="SiteId" param-type="string" required="true" deprecated="false">
+  Marketplace filter .
+</ParamField>
+
+<ParamField path="Account" param-type="string" required="true" deprecated="false">
+  eBay account name .
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Filters are hardcoded but can be modified for different regions or accounts.
+</Callout>
+
+---
+
+## Simple Explanation
+
+The script retrieves eBay listings and their variations, extracts attributes like color and size from XML, maps variation SKUs to Linnworks SKUs and TSINs, and presents a structured overview for reporting or auditing purposes.
+
+---
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Fetch Listings and Variations" icon="database" title-type="p">
+    Join main listing and variation tables to get all eBay listings and associated variations.
+  </Step>
+
+  <Step title="Map to Linnworks SKU" icon="key" title-type="p">
+    Use variation SKU mapping logic; fallback to barcode when variation SKU is missing.
+  </Step>
+
+  <Step title="Extract Variation Attributes" icon="edit" title-type="p">
+    Parse XML to retrieve attributes such as color, size, and other variation details.
+  </Step>
+
+  <Step title="Get Category Info" icon="tag" title-type="p">
+    Retrieve category details for each listing from category mapping table.
+  </Step>
+
+  <Step title="Rank Variations" icon="sort" title-type="p">
+    Assign order to variations per listing for reporting purposes.
+  </Step>
+
+  <Step title="Map SKU and TSIN" icon="barcode" title-type="p">
+    Use barcode as TSIN and map to internal SKU for accurate linkage.
+  </Step>
+
+  <Step title="Include Listing Metadata" icon="info" title-type="p">
+    Add listing title, status, site, and account information to the report.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  The report contains:
+
+  - Listing SKU
+
+  - Variation SKU
+
+  - Linnworks SKU
+
+  - TSIN
+
+  - Variation attributes (e.g., color, size)
+
+  - Category and listing details
+
+  - Variation ranking
+</Callout>
+
+---
+
+## Usefulness
+
+- **Variation Mapping Validation** – Ensures correct SKU linkage
+
+- **Catalog Structure Analysis** – Understand hierarchy of eBay variations
+
+- **Marketplace Debugging** – Identify missing or incorrect mappings
+
+- **XML Data Extraction** – Converts XML variation data into readable format
+
+---
+
+## Example Scenario
+
+<Expandable title="Variation Mapping Issue Example" default-open="false">
+  **Scenario:** Variation not syncing correctly
+
+  - Variation SKU: SKU RED M
+
+  - Linnworks SKU: Not linked
+
+  **Insight:**\
+  Mapping is missing or incorrect; needs correction in the system before re-sync.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By extracting and structuring eBay variation data, this script provides deep visibility into product variations, ensures accurate SKU mapping, and helps resolve complex marketplace integration issues.
+</Callout>
+

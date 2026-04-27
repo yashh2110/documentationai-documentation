@@ -1,0 +1,142 @@
+---
+title: Order Identification
+description: >-
+  Identify orders containing a specific SKU and automatically tag them with an
+  extended property, internal note, and identifier for tracking and classification.
+---
+## Overview
+
+The **RIS-RM-1018 – OrderIdentification** macro scans selected orders to find a specific SKU and enriches those orders with metadata.
+
+It adds an extended property, creates an internal note, and assigns an identifier—making SKU-based tracking and filtering easier.
+
+<Callout kind="tip" collapsed="false">
+  Ensure identifiers are available in the system before running this macro for proper assignment.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Identifies orders containing a specific SKU  
+- Adds an extended property for tracking  
+- Creates an internal note with order details  
+- Assigns an identifier to matched orders  
+
+👉 In short:  
+Find orders by SKU and tag them for easy tracking.
+
+## When It Runs
+
+Used for SKU-based order classification
+
+Typically runs:
+
+- Manually triggered (on selected orders)  
+- During order processing workflows  
+- For reporting and tracking purposes  
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of order IDs to process.
+</ParamField>
+
+<ParamField path="sku" param-type="string" required="true" deprecated="false">
+  SKU to search within order items (ChannelSKU).
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Example:  
+  sku = ABC-123  
+
+  Meaning:  
+  Only orders containing this SKU will be processed.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Process Orders" icon="list" title-type="p">
+    Loop through each OrderId and retrieve full order details.
+  </Step>
+
+  <Step title="Check Matching SKU" icon="search" title-type="p">
+    Identify items where ChannelSKU matches the input SKU.
+  </Step>
+
+  <Step title="Add Extended Property" icon="settings" title-type="p">
+    Create order-level property:  
+    Name: SKU  
+    Value: Input SKU
+  </Step>
+
+  <Step title="Create Internal Note" icon="edit" title-type="p">
+    Add note with:
+    - Customer Full Name  
+    - Total item quantity  
+    Example: "John Smith 3"  
+    (Marked as Internal)
+  </Step>
+
+  <Step title="Collect Matching Orders" icon="layers" title-type="p">
+    Store matched orders for further processing.
+  </Step>
+
+  <Step title="Assign Identifier" icon="tag" title-type="p">
+    Fetch available identifiers and assign the first available one to all matched orders.
+  </Step>
+
+  <Step title="Log Results" icon="file-text" title-type="p">
+    Record execution details including matched orders and errors.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Orders containing specified SKU are identified  
+  - Extended property ("SKU") added  
+  - Internal notes created with order details  
+  - Orders tagged with an identifier  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Identifying SKU-specific orders quickly  
+- Enabling filtering and reporting  
+- Enhancing operational visibility  
+- Automating tagging and classification  
+- Supporting downstream workflows  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Matches only ChannelSKU (not internal SKU)  
+  - Uses the first available identifier (not fixed)  
+  - Internal notes may overwrite existing notes  
+  - Extended property is always added (no duplicate check)  
+  - If no identifier exists, assignment will not occur  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Tag Orders by SKU" default-open="false">
+  You need to identify all orders containing a specific SKU.
+
+  👉 The macro:
+
+  - Searches for the SKU in order items  
+  - Adds tracking property and note  
+  - Assigns an identifier  
+
+  Result: Orders are clearly tagged and easy to filter for reporting or processing.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Combining SKU-based filtering with metadata tagging enables efficient order tracking, improves visibility, and supports automated classification across workflows.
+</Callout>

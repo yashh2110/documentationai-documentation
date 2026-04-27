@@ -1,0 +1,134 @@
+---
+title: Add Last Name to Orders
+description: >-
+  Automatically ensure every order has a complete customer name by appending a default last name if missing.
+---
+
+## Overview
+
+The **RIS-RM-2042 – Add Last Name** macro standardizes customer names by ensuring every order has both a first and last name.  
+
+If only a single name is present, it automatically appends a predefined default last name.
+
+<Callout kind="tip" collapsed="false">
+  Ensure the default last name is correctly configured before executing this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Checks customer names in orders  
+- Adds a default last name if missing  
+- Updates the order automatically  
+
+👉 In short:  
+Ensure full names are complete for all orders.
+
+## When It Runs
+
+Used for order processing and data cleanup  
+
+Typically runs:
+
+- During order processing  
+- Before shipping label generation  
+- Before courier integration  
+- Manual execution when needed  
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of orders to process.
+</ParamField>
+
+<ParamField path="SetLastName" param-type="string" required="true" deprecated="false">
+  Default last name to append when missing.
+</ParamField>
+
+## How It Works
+
+<Steps>
+  <Step title="Start Macro" icon="play-circle" title-type="p">
+    Loop through all provided Order IDs and fetch each order.
+  </Step>
+
+  <Step title="Read Customer Name" icon="user" title-type="p">
+    Read: `order.CustomerInfo.Address.FullName`.
+  </Step>
+
+  <Step title="Split Name" icon="split" title-type="p">
+    Split the name using space " " and store parts in an array.
+  </Step>
+
+  <Step title="Check if Last Name is Missing" icon="alert-circle" title-type="p">
+    If array contains only one word → last name is missing.
+  </Step>
+
+  <Step title="Add Default Last Name" icon="edit" title-type="p">
+    Update name to: `FirstName + " " + SetLastName`.  
+    Mark order as modified.
+  </Step>
+
+  <Step title="Update Order" icon="sync" title-type="p">
+    Save updated customer details back to the order.
+  </Step>
+
+  <Step title="Logging" icon="check-circle" title-type="p">
+    Log:
+    - Order number  
+    - Original name  
+    - Updated name (if changed)  
+    - No change message (if already valid)  
+    - Errors
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Missing last names are added automatically  
+  - Full name format ensured (First + Last)  
+  - Customer data standardized  
+  - Orders ready for shipping systems
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Preventing courier and shipping issues  
+- Ensuring proper label formatting  
+- Improving customer data quality  
+- Eliminating manual corrections  
+- Supporting integrations requiring full names
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Does not modify names that already contain multiple words  
+  - Default last name must be properly configured  
+  - Works only on FullName field (not separate fields)  
+  - Assumes space-separated naming format  
+  - Lightweight and fast execution
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Add Last Name Example" default-open="false">
+  Orders may have customers with only a first name.  
+
+  👉 The macro:
+
+  - Reads each order’s customer name  
+  - Appends the default last name if missing  
+  - Updates the order automatically  
+
+  Result: All orders now have full customer names without manual effort.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Automating last name addition ensures standardized customer data, reduces manual corrections, and avoids shipping or courier issues.
+</Callout>

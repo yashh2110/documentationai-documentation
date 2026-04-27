@@ -1,0 +1,135 @@
+---
+title: IOSS Note
+description: >-
+  Extract IOSS and Tax ID information from order extended properties and add it
+  as an order note for improved visibility and compliance.
+---
+## Overview
+
+The **RIS-RM-1028 – IOSS Note** macro extracts tax-related identifiers from order extended properties and stores them as order notes.
+
+It ensures that critical compliance data such as IOSS and Tax ID is clearly visible within the order for fulfilment and shipping processes.
+
+<Callout kind="tip" collapsed="false">
+  Ensure extended properties (MARKETPLACE_IOSS and MARKETPLACE_TAXID) exist before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Reads IOSS and Tax ID from extended properties  
+- Creates a formatted note using extracted values  
+- Saves the note to the order  
+
+👉 In short:  
+Convert hidden tax data into visible order notes.
+
+## When It Runs
+
+Used for tax visibility and compliance
+
+Typically runs:
+
+- Manually triggered  
+- Via Rules Engine  
+- Before shipping or fulfilment  
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of orders to process.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  This macro does not require additional configuration parameters.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Process Orders" icon="list" title-type="p">
+    Iterate through each order provided in OrderIds.
+  </Step>
+
+  <Step title="Fetch Order Details" icon="download" title-type="p">
+    Retrieve full order information including extended properties.
+  </Step>
+
+  <Step title="Read Tax Properties" icon="search" title-type="p">
+    Extract values for:
+    - MARKETPLACE_IOSS  
+    - MARKETPLACE_TAXID  
+  </Step>
+
+  <Step title="Build Note Content" icon="edit" title-type="p">
+    Format extracted values into a readable note string.
+  </Step>
+
+  <Step title="Save Order Note" icon="file-text" title-type="p">
+    Add the generated note to the order as an external note.
+  </Step>
+
+  <Step title="Log Execution" icon="file" title-type="p">
+    Record execution status including success and completion.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - IOSS and Tax ID values extracted successfully  
+
+  - Order note created with tax information  
+
+  - Notes are visible for fulfilment and shipping  
+
+  - Execution logged for tracking  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Improving tax data visibility  
+- Supporting international shipping compliance  
+- Reducing manual lookup effort  
+- Ensuring correct documentation during fulfilment  
+- Enhancing operational efficiency  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Works only if extended properties exist  
+
+  - Adds a new note on every execution (no duplicate check)  
+
+  - Notes are saved as external  
+
+  - Combines multiple values into a single note  
+
+  - Depends on exact property naming conventions  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="IOSS Data Extraction Example" default-open="false">
+  An order contains:
+
+  - MARKETPLACE_IOSS = IM123456789  
+  - MARKETPLACE_TAXID = TAX987654  
+
+  👉 The macro:
+
+  - Extracts both values  
+  - Formats them into a note  
+  - Saves the note to the order  
+
+  Result: Tax information becomes clearly visible for shipping and compliance.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By converting hidden tax identifiers into visible order notes, this macro ensures compliance-critical data is always accessible—reducing errors and improving international fulfilment accuracy.
+</Callout>

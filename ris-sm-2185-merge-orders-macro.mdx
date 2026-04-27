@@ -1,0 +1,131 @@
+---
+title: Merge Orders Macro
+description: >-
+  Identifies similar open orders, validates them, and merges eligible ones into
+  a single consolidated order automatically to optimize warehouse operations.
+---
+## Overview
+
+The **RIS-SM-2185 – Merge Orders Macro** finds similar open orders based on customer and address, validates them according to business rules, and merges eligible orders into a single consolidated order.
+
+<Callout kind="tip" collapsed="false">
+  Automates merging of duplicate or similar orders to reduce shipments and improve warehouse efficiency.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Identifies similar open orders
+
+- Validates orders against conditions (paid, not Amazon, not parked/locked, etc.)
+
+- Merges eligible orders into a single order
+
+- Assigns identifiers and updates label printed status
+
+👉 In short:\
+Automatically combines duplicate or similar orders into one order.
+
+## When It Runs
+
+Typically used:
+
+- Automatically or manually during order processing
+
+- After order import
+
+- Before picking and packing
+
+- During warehouse optimization
+
+- In automation workflows
+
+- To reduce multiple shipments
+
+## Parameters
+
+<ParamField path="IdentifiersName" param-type="string" required="true" deprecated="false">
+  Identifier used to exclude orders from merging.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Note: Orders with this identifier will not be considered for merging.
+</Callout>
+
+## Simple Explanation
+
+The macro identifies orders with the same customer and address, validates them, and merges all eligible orders into a single consolidated order while managing labels and identifiers.
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Fetch Open Orders" icon="shopping-cart" title-type="p">
+    Use Api.Orders.GetOpenOrders to retrieve all open orders.
+  </Step>
+
+  <Step title="Filter Eligible Orders" icon="filter" title-type="p">
+    Exclude unpaid orders, Amazon orders, parked/locked orders, orders with invoice printed, and orders with the given identifier.
+  </Step>
+
+  <Step title="Group Orders" icon="layers" title-type="p">
+    Group by customer name, address, source & subsource, postal service, and currency.
+  </Step>
+
+  <Step title="Validate Group Conditions" icon="check-circle" title-type="p">
+    Skip groups if invoice printed exists, identifier exists, or multiple orders have label printed.
+  </Step>
+
+  <Step title="Handle Label Printed Case" icon="alert-circle" title-type="p">
+    If only one order has label printed, clear label using API.
+  </Step>
+
+  <Step title="Merge Orders" icon="git-merge" title-type="p">
+    Use Api.Orders.MergeOrders to consolidate eligible orders into one.
+  </Step>
+
+  <Step title="Assign Identifier" icon="tag" title-type="p">
+    Assign “Merged Orders” identifier to the new order; create identifier if not exists.
+  </Step>
+
+  <Step title="Update Final Status" icon="check-square" title-type="p">
+    Mark merged order as label printed.
+  </Step>
+
+  <Step title="Error Handling" icon="alert-triangle" title-type="p">
+    Log failures per group and continue execution safely.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  The macro merges multiple similar orders into a single consolidated order, reducing shipments, improving warehouse efficiency, and maintaining proper labels and identifiers.
+</Callout>
+
+## Usefulness
+
+- **Reduced Shipping Cost** – Single shipment instead of multiple
+
+- **Warehouse Efficiency** – Fewer picking tasks
+
+- **Automation** – No manual merging required
+
+- **Cleaner Order Management** – Avoid duplicates
+
+- **Faster Fulfillment** – Streamlined processing
+
+## Example Scenario
+
+<Expandable title="Customer Places Multiple Orders" default-open="false">
+  **Scenario:** Same customer places multiple orders with identical address.\
+  **Action:** Macro groups matching orders, validates conditions, merges them.\
+  **Result:** One consolidated shipment instead of multiple.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This macro optimizes order processing by intelligently merging similar orders, reducing operational costs, minimizing duplicate work, and improving fulfillment efficiency while ensuring strict validation to prevent incorrect merges.
+</Callout>
+

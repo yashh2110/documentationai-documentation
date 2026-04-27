@@ -1,0 +1,129 @@
+---
+title: Print Shipping Label Macro
+description: >-
+  Identifies eligible open orders, generates shipping labels in PDF format, and 
+  moves processed orders into a designated folder automatically.
+---
+## Overview
+
+The **RIS-SM-2186 – Print Shipping Label Macro** automates the printing of shipping labels and organizes processed orders into a specific folder for better warehouse workflow management.
+
+<Callout kind="tip" collapsed="false">
+  Ensures that shipping labels are generated correctly and processed orders are moved to a dedicated folder.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Identifies eligible open orders
+
+- Generates shipping label PDFs
+
+- Moves processed orders into a “Printed Orders” folder
+
+👉 In short:\
+Prints shipping labels automatically and organizes processed orders.
+
+## When It Runs
+
+Typically used:
+
+- Automatically or manually during warehouse operations
+
+- Before dispatch
+
+- During packing workflow
+
+- After order verification
+
+- In warehouse automation
+
+- When orders are ready to ship
+
+## Parameters
+
+<ParamField path="folderName" param-type="string" required="true" deprecated="false">
+  Folder name where printed orders will be assigned.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Note: Default folder is usually “Printed Orders”.
+</Callout>
+
+## Simple Explanation
+
+The macro identifies orders ready for shipping, prints their labels, and moves them into a designated folder to mark them as processed.
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Start Macro" icon="play-circle" title-type="p">
+    Initialize execution and log start.
+  </Step>
+
+  <Step title="Fetch Open Orders" icon="shopping-cart" title-type="p">
+    Use Api.Orders.GetOpenOrders to retrieve all open orders.
+  </Step>
+
+  <Step title="Filter Eligible Orders" icon="filter" title-type="p">
+    Select orders not already in “Printed Orders” folder and with identifier “Test2”.
+  </Step>
+
+  <Step title="Collect Order IDs" icon="list" title-type="p">
+    Store eligible orders and log their order numbers.
+  </Step>
+
+  <Step title="Generate Shipping Labels" icon="printer" title-type="p">
+    Use Api.PrintService.CreatePDFfromJobForceTemplate with template “Shipping Labels” to generate PDFs.
+  </Step>
+
+  <Step title="Capture Processed Orders" icon="check-circle" title-type="p">
+    Identify successfully printed orders.
+  </Step>
+
+  <Step title="Check/Create Folder" icon="folder" title-type="p">
+    Use Api.Orders.GetAvailableFolders; create folder if it does not exist using SetAvailableFolders.
+  </Step>
+
+  <Step title="Assign Orders to Folder" icon="folder-plus" title-type="p">
+    Use Api.Orders.AssignToFolder to move printed orders to folder.
+  </Step>
+
+  <Step title="Error Handling" icon="alert-triangle" title-type="p">
+    Log exceptions and ensure safe execution.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  The macro prints shipping labels in PDF format for eligible orders and moves processed orders to the “Printed Orders” folder.
+</Callout>
+
+## Usefulness
+
+- **Automation** – Eliminates manual label printing
+
+- **Order Organization** – Clearly separates processed orders
+
+- **Warehouse Efficiency** – Improves workflow clarity
+
+- **Error Reduction** – Prevents duplicate printing
+
+- **Tracking** – Easy identification of printed orders
+
+## Example Scenario
+
+<Expandable title="Ready-to-Ship Orders" default-open="false">
+  **Scenario:** Warehouse needs to print labels for selected orders.\
+  **Action:** Macro filters orders with identifier “Test2”, generates shipping labels, and moves them to “Printed Orders”.\
+  **Result:** Orders are ready for dispatch with labels printed.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This macro streamlines the dispatch process by automating label generation and organizing processed orders, ensuring smooth workflow, reducing manual effort, and preventing errors in shipping operations.
+</Callout>
+

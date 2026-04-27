@@ -1,0 +1,175 @@
+---
+title: Auto Billing Details Update
+description: >-
+  Automatically update billing address details based on order SubSource using
+  predefined mapped configurations.
+---
+## Overview
+
+The **RIS-RM-2013 – Auto Billing Details Update** macro updates billing address details dynamically based on the order’s SubSource.
+
+It uses predefined mappings to assign correct billing information, ensuring consistency across orders from different sales channels.
+
+<Callout kind="tip" collapsed="false">
+  Ensure all comma-separated parameter values are properly aligned to avoid incorrect billing updates.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Identifies order SubSource  
+- Matches it with predefined configurations  
+- Applies mapped billing details  
+- Updates billing information automatically  
+
+👉 In short:  
+Update billing address based on order source using predefined mappings.
+
+## When It Runs
+
+Used for billing data automation and validation
+
+Typically runs:
+
+- Manually triggered (per order)  
+- During order processing  
+- During order validation workflows  
+
+## Parameters
+
+<ParamField path="OrderId" param-type="string" required="true" deprecated="false">
+  Order ID to be updated.
+</ParamField>
+
+<ParamField path="Subsource" param-type="string" required="true" deprecated="false">
+  Comma-separated list of order subsources.
+</ParamField>
+
+<ParamField path="EmailAddress" param-type="string" required="true" deprecated="false">
+  Billing email addresses mapped to each subsource.
+</ParamField>
+
+<ParamField path="Address1" param-type="string" required="true" deprecated="false">
+  Billing address line 1.
+</ParamField>
+
+<ParamField path="Address2" param-type="string" required="false" deprecated="false">
+  Billing address line 2.
+</ParamField>
+
+<ParamField path="Address3" param-type="string" required="false" deprecated="false">
+  Billing address line 3.
+</ParamField>
+
+<ParamField path="Town" param-type="string" required="true" deprecated="false">
+  City.
+</ParamField>
+
+<ParamField path="Region" param-type="string" required="true" deprecated="false">
+  State / Region.
+</ParamField>
+
+<ParamField path="PostCode" param-type="string" required="true" deprecated="false">
+  Postal code.
+</ParamField>
+
+<ParamField path="Company" param-type="string" required="false" deprecated="false">
+  Company name.
+</ParamField>
+
+<ParamField path="Country" param-type="string" required="true" deprecated="false">
+  Country.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Example:  
+  Subsource = Amazon,eBay  
+  EmailAddress = billing@amazon.com,billing@ebay.com  
+
+  Meaning:  
+  Each value corresponds by index position to its respective SubSource.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Prepare Data" icon="settings" title-type="p">
+    Split all comma-separated parameters into structured lists.
+  </Step>
+
+  <Step title="Fetch Order" icon="download" title-type="p">
+    Retrieve the order using the provided OrderId.
+  </Step>
+
+  <Step title="Identify SubSource" icon="search" title-type="p">
+    Determine the SubSource of the order.
+  </Step>
+
+  <Step title="Match Configuration" icon="link" title-type="p">
+    Find the matching index from the SubSource list.
+  </Step>
+
+  <Step title="Build Billing Address" icon="edit" title-type="p">
+    Construct billing details using matched values:
+    - Ignore fields marked as "NA"  
+    - Retain existing Full Name and Phone Number  
+  </Step>
+
+  <Step title="Update Order" icon="save" title-type="p">
+    Apply updated billing address using the API.
+  </Step>
+
+  <Step title="Log Results" icon="file-text" title-type="p">
+    Record execution details including success and errors.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Billing address updated automatically  
+  - Correct details applied per SubSource  
+  - Manual data entry reduced  
+  - Execution results logged for tracking  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Automating billing address management  
+- Maintaining consistent billing data across channels  
+- Reducing manual errors and effort  
+- Supporting multi-channel scalability  
+- Improving operational efficiency  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - SubSource values must match exactly  
+  - All parameter lists must be aligned correctly  
+  - Values marked as "NA" are ignored  
+  - Processes one order at a time  
+  - Incorrect mapping may result in wrong billing details  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="SubSource-Based Billing Update" default-open="false">
+  An order is received from a specific SubSource such as Amazon.
+
+  👉 The macro:
+
+  - Identifies the SubSource  
+  - Matches it with predefined configuration  
+  - Applies corresponding billing details  
+
+  Result: Billing address is automatically updated without manual input.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Mapping SubSource-specific configurations to billing data ensures consistency, improves accuracy, and enables seamless automation across multiple sales channels.
+</Callout>

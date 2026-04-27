@@ -1,0 +1,202 @@
+---
+title: Process Order Report (Detailed Export with Shipping, Tax & Payment Info)
+description: >-
+  Extracts processed order data with customer, shipping, SKU, tax,
+  accounting, and payment method details for reporting, export,
+  and accounting system integration.
+---
+
+## Overview
+
+The **RIS-CS-2280 – Process Order Report** provides a detailed export of processed orders, including customer details, item-level data, shipping methods, tax handling, and payment information.
+
+It is commonly used for accounting, ERP integration, and operational reporting.
+
+<Callout kind="tip" collapsed="false">
+  This report transforms raw order data into a structured format suitable for accounting systems and external integrations.
+</Callout>
+
+---
+
+## Purpose
+
+This report:
+
+- Retrieves processed orders within a time range  
+- Provides full customer and shipping address details  
+- Includes SKU-level item data (quantity, price, tax)  
+- Maps shipping methods into standardized codes  
+- Extracts payment methods from XML based on sales channel  
+- Assigns accounting codes based on sales channel  
+
+👉 In short:  
+Generate a complete order export for accounting and operational use.
+
+---
+
+## When It Runs
+
+Executed on-demand (SQL report)
+
+Typically used:
+
+- Accounting system import  
+- Financial reconciliation  
+- Order export for ERP systems  
+- Shipping and fulfilment reporting  
+- Channel-based sales analysis  
+
+---
+
+## Parameters
+
+<ParamField path="startDate" param-type="datetime" required="true">
+  Start date and time for processed orders.
+</ParamField>
+
+<ParamField path="endDate" param-type="datetime" required="true">
+  End date and time for processed orders.
+</ParamField>
+
+---
+
+## How It Works
+
+<Steps>
+  <Step title="Filter Processed Orders" icon="filter" title-type="p">
+    Selects orders processed within the given date range.
+  </Step>
+
+  <Step title="Prepare Customer & Address Data" icon="user" title-type="p">
+    Extracts:
+    - Customer name  
+    - Address lines  
+    - City, state, postcode  
+    - Country  
+    - Contact details (phone, email)  
+  </Step>
+
+  <Step title="Join Order Items" icon="layers" title-type="p">
+    Retrieves SKU-level details:
+    - Item number  
+    - Quantity  
+    - Price  
+    - Tax rate  
+  </Step>
+
+  <Step title="Map Shipping Method" icon="truck" title-type="p">
+    Converts postal service names into standardized short codes
+    (e.g., TRS, DPD ND, CRL24).
+  </Step>
+
+  <Step title="Assign Financial Fields" icon="calculator" title-type="p">
+    Calculates and assigns:
+    - Shipping cost  
+    - Currency  
+    - Tax values  
+    - Sales tax code (S/Z)  
+  </Step>
+
+  <Step title="Assign Accounting Codes" icon="book" title-type="p">
+    Maps SubSource values to accounting codes:
+    - eBay → 1050  
+    - Performance Lights → 1080  
+    - Watch Band Warehouse → 1180  
+    - Default → 1071  
+  </Step>
+
+  <Step title="Extract Payment Method from XML" icon="code" title-type="p">
+    Uses XML parsing based on channel:
+    - Shopify → Gateway  
+    - eBay → Payment Method  
+    - Amazon → Static value "AMAZON"  
+    - Others → Generic payment method node  
+  </Step>
+
+  <Step title="Format Output" icon="file-text" title-type="p">
+    Formats dates and prepares final structured dataset.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Complete processed order dataset  
+
+  - Customer and shipping details included  
+
+  - SKU-level item breakdown  
+
+  - Standardized shipping method codes  
+
+  - Tax and accounting fields prepared  
+
+  - Payment method extracted dynamically  
+
+  - Ready for accounting/ERP integration  
+</Callout>
+
+---
+
+## Usefulness
+
+This report is highly beneficial for:
+
+- Accounting system imports (e.g., Sage, Xero)  
+- Financial reconciliation  
+- Multi-channel sales tracking  
+- Shipping and logistics reporting  
+- Payment method analysis  
+
+---
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Includes only processed orders within date range  
+
+  - Payment method extraction depends on XML structure  
+
+  - Shipping method mapping is hardcoded  
+
+  - Accounting codes are based on SubSource logic  
+
+  - SKU is taken from processed SKU field  
+
+  - Multiple rows per order (one per SKU)  
+
+  - XML parsing may return NULL if structure differs  
+</Callout>
+
+---
+
+## Example Scenario
+
+<Expandable title="Order Export Example" default-open="false">
+  Order:
+  - Channel: Shopify  
+  - SKU: ABC123  
+  - Qty: 2  
+  - Price: £50  
+  - Shipping: £5  
+
+  👉 Output:
+  - Customer and address included  
+  - Shipping mapped to code (e.g., TRS)  
+  - Payment Method extracted (e.g., Stripe)  
+  - Accounting Code assigned  
+
+  Insight:
+  Data is ready for direct accounting system import.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This report acts as a bridge between order processing and financial systems by combining operational, financial, and payment data into a single structured export.  
+  Its dynamic XML parsing and channel-based logic make it highly adaptable for multi-channel eCommerce environments.
+</Callout>

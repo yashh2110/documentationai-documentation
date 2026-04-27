@@ -1,0 +1,149 @@
+---
+title: Label Print in FTP
+description: >-
+  Automatically generate shipping labels for eligible orders and upload them to
+  an FTP server for centralized access and automation.
+---
+## Overview
+
+The **RIS-SM-1012 – Label Print in FTP** macro generates shipping labels in PDF format for eligible orders and uploads them to an FTP server.
+
+It ensures that fulfilment-ready orders are processed automatically, labels are generated using a predefined template, and stored securely for downstream use.
+
+<Callout kind="tip" collapsed="false">
+  Ensure FTP configuration and print templates are correctly set up before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Retrieves eligible fulfilment-ready orders
+
+- Generates shipping label PDFs
+
+- Uploads labels to an FTP server
+
+👉 In short:\
+Automatically generate and store shipping labels on FTP.
+
+## When It Runs
+
+Used for shipping automation & label management
+
+Typically runs:
+
+- Scheduled execution (daily automation)
+
+- Manually triggered when needed
+
+## Parameters
+
+<Callout kind="info" collapsed="false">
+  No input parameters required.
+
+  The macro operates based on system configuration and recent open orders.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Fetch Orders" icon="download" title-type="p">
+    Retrieve open orders from the last 24 hours.
+  </Step>
+
+  <Step title="Filter Eligible Orders" icon="filter" title-type="p">
+    Select fulfilment-ready orders without existing labels.
+  </Step>
+
+  <Step title="Generate Labels" icon="printer" title-type="p">
+    Create shipping labels using the “Shipping Labels” template.
+  </Step>
+
+  <Step title="Get Download URL" icon="link" title-type="p">
+    Obtain the downloadable URL for each label.
+  </Step>
+
+  <Step title="Download PDF" icon="download-cloud" title-type="p">
+    Download label files and convert to byte data.
+  </Step>
+
+  <Step title="Upload to FTP" icon="upload-cloud" title-type="p">
+    Upload files using naming format: OrderNumber.pdf.
+  </Step>
+
+  <Step title="Assign Identifier" icon="tag" title-type="p">
+    Apply “Shipping Label Printed” identifier to processed orders.
+  </Step>
+
+  <Step title="Log Results" icon="file-text" title-type="p">
+    Record success and failure events for tracking.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Shipping labels generated automatically
+
+  - PDF files uploaded to FTP server
+
+  - Orders marked as “Shipping Label Printed”
+
+  - Processing logs available for monitoring
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Automating shipping label generation
+
+- Eliminating manual file handling
+
+- Centralising label storage
+
+- Improving warehouse efficiency
+
+- Preventing duplicate processing
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Processes only fulfilment-ready orders
+
+  - Skips orders with existing labels
+
+  - Requires correct FTP configuration
+
+  - Uses fixed template: “Shipping Labels”
+
+  - Network/FTP failures may interrupt processing
+
+  - Logging is critical for troubleshooting
+</Callout>
+
+## Example Scenario
+
+<Expandable title="GLS Label FTP Upload Example" default-open="false">
+  Orders are ready for dispatch.
+
+  👉 The macro:
+
+  - Retrieves eligible orders
+
+  - Generates shipping labels
+
+  - Uploads PDFs to FTP
+
+  - Marks orders as processed
+
+  Result: Labels are available on FTP without manual effort.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Automating label generation and FTP upload ensures consistent fulfilment workflows, reduces manual intervention, and improves operational scalability.
+</Callout>
+

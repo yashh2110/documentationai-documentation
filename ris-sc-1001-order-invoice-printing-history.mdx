@@ -1,0 +1,157 @@
+---
+title: Order Invoice Printing History
+description: >-
+  Tracks invoice printing activity for orders by retrieving records from system
+  history, showing when invoices were printed and by which user.
+---
+## Overview
+
+The **RIS-SC-1001 – Order Invoice Printing History** script monitors invoice printing activity for orders. It retrieves system history to display when invoices were printed and which user performed the action.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  Check order history → Find invoice print events → Display details
+</Callout>
+
+## Purpose
+
+This script:
+
+- Tracks invoice printing events
+
+- Shows timestamp of printing
+
+- Identifies the user who performed the action
+
+👉 Provides full visibility of invoice printing activity for auditing and operational monitoring.
+
+## When It Runs
+
+Used for auditing, monitoring, and investigations.
+
+**Typically runs:**
+
+- Manual execution by users or analysts
+
+- For specific date or shift analysis
+
+- During audits or investigations
+
+- To review past invoice printing activity
+
+## Parameters
+
+<ParamField path="fromDate" param-type="datetime" required="true" deprecated="false">
+  Start date and time for filtering invoice print records.
+</ParamField>
+
+<ParamField path="toDate" param-type="datetime" required="true" deprecated="false">
+  End date and time for filtering invoice print records.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Example:
+
+  - **fromDate:** 2022-11-07 00:00:00
+
+  - **toDate:** 2022-11-07 18:00:00
+
+
+
+  The script reads order history and extracts invoice printing events.
+</Callout>
+
+## Process Flow Step-by-Step
+
+<Steps>
+  <Step title="Set Date Format" icon="calendar" title-type="p">
+    Set date format to `ymd` for consistent date handling.
+  </Step>
+
+  <Step title="Define Date Range" icon="clock" title-type="p">
+    Declare `fromDate` and `toDate` to filter records within the desired time window.
+  </Step>
+
+  <Step title="Join Tables" icon="link" title-type="p">
+    Join the Order table with Order\_LifeHistory table to match orders with their history records.
+  </Step>
+
+  <Step title="Filter Data" icon="filter" title-type="p">
+    Select records where history type is `INVOICE_PRINTED` and within the specified date range.
+  </Step>
+
+  <Step title="Fetch Required Data" icon="list" title-type="p">
+    Retrieve the following for each record:
+
+    - Order ID
+
+    - History note
+
+    - Print timestamp
+
+    - User who printed
+  </Step>
+
+  <Step title="Sort Results" icon="sort" title-type="p">
+    Order results by `DateStamp` to show chronological sequence.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - List of all invoice print events within the selected period
+
+  - Each record includes order, timestamp, and user
+
+  - Provides full visibility of invoice printing activity
+</Callout>
+
+## Usefulness
+
+This script is highly beneficial for:
+
+- Supporting audit tracking
+
+- Identifying missing or duplicate prints
+
+- Providing accountability by tracking user actions
+
+- Assisting warehouse and finance monitoring
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Only retrieves invoice printing events
+
+  - Depends on accurate history logging
+
+  - Date range must be defined correctly
+
+  - Large date ranges may impact performance
+
+  - Read-only operation; no data changes performed
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Warehouse Shift Audit Example" default-open="false">
+  Scenario: Warehouse manager wants to review invoice printing between 9 AM and 1 PM.
+
+  Processing:
+
+  - Run script with `fromDate` = 9 AM, `toDate` = 1 PM
+
+  **Result:**
+
+  - List of all invoices printed during the shift
+
+  - Shows which orders were processed and who printed them
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This script provides a clear audit trail of invoice printing activity, enabling better operational control, accountability, and error detection in order processing workflows.
+</Callout>
+

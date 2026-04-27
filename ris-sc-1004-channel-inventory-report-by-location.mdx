@@ -1,0 +1,170 @@
+---
+title: Channel Inventory Report by Location
+description: >-
+  Provides a detailed inventory report for products on a specific sales channel,
+  filtered by subsource and location, combining product, pricing, and
+  fulfillment details.
+---
+## Overview
+
+The **RIS-SC-1004 – Channel Inventory Report by Location** script aggregates inventory data for a selected sales channel and location. It combines product details, pricing, and stock availability into a single comprehensive report.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  Select a channel and location → View stock levels with product details
+</Callout>
+
+## Purpose
+
+This script:
+
+- Retrieves channel-specific inventory
+
+- Maps channel SKUs to internal SKUs
+
+- Includes pricing, fulfillment type, and stock levels
+
+- Provides location-specific insights
+
+👉 Supports inventory visibility and replenishment planning.
+
+## When It Runs
+
+Used for inventory monitoring and reporting.
+
+**Typically runs:**
+
+- Manual execution for inventory checks
+
+- Stock reconciliation
+
+- Amazon FBA inventory review
+
+- Replenishment planning
+
+## Parameters
+
+<ParamField path="Subsource" param-type="nvarchar" required="true" deprecated="false">
+  Channel account to filter inventory (e.g., Amazon FBA account).
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Version 1: Fixed parameter for channel account selection.
+</Callout>
+
+<Callout kind="info" collapsed="false">
+  The script pulls channel data, maps it to internal SKUs, and retrieves stock levels for a specific location.
+</Callout>
+
+## Process Flow Step-by-Step
+
+<Steps>
+  <Step title="Set Parameters" icon="settings" title-type="p">
+    Define subsource, source, and fulfillment type.
+  </Step>
+
+  <Step title="Get Channel Data" icon="download" title-type="p">
+    Retrieve SKU, barcode, product title, and price from channel tables.
+  </Step>
+
+  <Step title="Map to Internal SKU" icon="link" title-type="p">
+    Use Stock\_ChannelSKU table to map channel SKU to Linnworks SKU.
+  </Step>
+
+  <Step title="Get Stock Information" icon="box" title-type="p">
+    Fetch available stock from StockLevel table and match with StockLocation for the correct warehouse.
+  </Step>
+
+  <Step title="Apply Filters" icon="filter" title-type="p">
+    Filter by:
+
+    - Source (e.g., AMAZON)
+
+    - Subsource account
+
+    - Fulfillment type (e.g., FBA)
+
+    - Matching location
+  </Step>
+
+  <Step title="Sort Results" icon="sort" title-type="p">
+    Sort by available stock in ascending order to quickly identify low-stock items.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Report displaying:
+
+    - Internal SKU
+
+    - Channel SKU
+
+    - Barcode or ASIN
+
+    - Product title
+
+    - Price
+
+    - Fulfillment type
+
+    - Available stock
+
+  - Provides a clear, location-specific view of channel inventory
+</Callout>
+
+## Usefulness
+
+This script is highly beneficial for:
+
+- Tracking inventory in channel-specific warehouses
+
+- Supporting replenishment planning
+
+- Improving stock visibility across channels
+
+- Ensuring stock accuracy between systems
+
+- Assisting operational decision making
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Depends on correct mapping between channel SKU and internal SKU
+
+  - Requires accurate stock location setup
+
+  - Filters must be set correctly for meaningful results
+
+  - Large datasets may impact performance
+
+  - Primarily used for channel-specific inventory tracking
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Amazon FBA Inventory Check Example" default-open="false">
+  Scenario: Business uses Amazon account "Trimming Shop"
+
+  Processing:
+
+  - Manager runs report to check stock levels
+
+  **Result:**
+
+  - ITEM1 → ASIN B001 → Price 10.99 → Available 5
+
+  - ITEM2 → ASIN B002 → Price 15.99 → Available 50
+
+  **Insight:**
+
+  - ITEM1 has low stock and requires replenishment
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Provides a unified view of channel-specific inventory, helping businesses maintain accurate stock levels, plan replenishment effectively, and ensure smooth fulfillment operations.
+</Callout>
+

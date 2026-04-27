@@ -1,0 +1,1127 @@
+---
+title: Full System Architecture and Service Interaction Guide
+---
+**Project:** Messina AI Product — 3-Service Image Processing and AI Pipeline\
+**Document Type:** Master Architecture and Cross-Service Integration Guide
+
+---
+
+## Table of Contents
+
+1. [System Overview](#1-system-overview)
+
+2. [High-Level Architecture](#2-high-level-architecture)
+
+3. [Responsibilities of Each Service](#3-responsibilities-of-each-service)
+
+4. [How the 3 Services Communicate](#4-how-the-3-services-communicate)
+
+5. [End-to-End Request Flows](#5-end-to-end-request-flows)
+
+6. [End-to-End Image Processing Flow](#6-end-to-end-image-processing-flow)
+
+7. [End-to-End AI Flow](#7-end-to-end-ai-flow)
+
+8. [Shared Contracts and Parameters](#8-shared-contracts-and-parameters)
+
+9. [Dependency Graph](#9-dependency-graph)
+
+10. [Failure Points and Recovery Paths](#10-failure-points-and-recovery-paths)
+
+11. [Security and Validation Review](#11-security-and-validation-review)
+
+12. [Performance and Scalability Notes](#12-performance-and-scalability-notes)
+
+13. [Operational Concerns](#13-operational-concerns)
+
+14. [Onboarding Guide for New Developers](#14-onboarding-guide-for-new-developers)
+
+15. [Suggested Improvements](#15-suggested-improvements)
+
+---
+
+## 1. System Overview
+
+This system is an **AI-powered garment image processing pipeline** for an e-commerce platform. It takes raw product images and metadata as input and produces:
+
+1. A structured set of \~44 product attributes (brand, category, fabric, colour, style tags, eBay category, etc.)
+
+2. A retouch-ready enhancement prompt tailored to the specific garment
+
+3. An enhanced, background-removed, colour-corrected product image stored in S3
+
+The system is designed as three independent microservices that hand off data through a combination of:
+
+- HTTP calls (synchronous)
+
+- AWS SQS message queues (asynchronous)
+
+- AWS S3 object storage (asynchronous shared state)
+
+- AWS DynamoDB (job state management)
+
+### The Three Services
+
+| Service               | Folder               | Port | Runtime Model                    |
+| --------------------- | -------------------- | ---- | -------------------------------- |
+| **AI-Tagging**        | `AI-Tagging/`        | 9000 | HTTP API + background SQS worker |
+| **Prompt-Gen**        | `Prompt-Gen/`        | 8000 | HTTP API only                    |
+| **AI-Image-Enhancer** | `AI-Image-Enhancer/` | 9090 | HTTP API only                    |
+
+### Data Flow Summary
+
+```
+E-commerce Platform → AI-Tagging API → [SQS Queue] → AI-Tagging Worker
+                                                             │
+                                                        Gemini AI
+                                                             │
+                                               AI-Tagging Worker → Prompt-Gen API
+                                                             │          │
+                                                             │     OpenAI / Gemini
+                                                             │
+                                          S3 (enhance-profiles/{job_id}-{orientation}.json)
+                                                             │
+                          AI-Image-Enhancer API ─────────────┘
+                                    │
+                          fal.ai → Background Removal API → S3 (enhanced image)
+```
+
+---
+
+## 2. High-Level Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                              CLIENT (E-commerce Platform)                       │
+│  1. POST /garment-tagging/upload     4. GET /garment-tagging/query?uuid=...     │
+│  5. POST /image-enhance/v1/flux-*   (called when job complete + profile ready)  │
+└──────────────────────────────────────────────────────────────────────────────────┘
+         │                                    ▲                   │
+         │ HTTP                               │ HTTP              │ HTTP
+         ▼                                    │                   ▼
+┌────────────────────┐              ┌────────────────────┐   ┌─────────────────────┐
+│   AI-Tagging API   │              │   AI-Tagging API   │   │  AI-Image-Enhancer  │
+│   main_api.py      │              │   main_api.py      │   │  app.py             │
+│   Port: 9000       │              │   Port: 9000       │   │  Port: 9090         │
+└────────────────────┘              └────────────────────┘   └─────────────────────┘
+         │                                                              │
+         │ SQS publish                                                  │ reads
+         ▼                                                              │
+┌─────────────────────────────────────────────────────────────────────┐│
+│  AWS SQS                                                             ││
+│  OpenAI-Clothes-Attribute (normal queue)                             ││
+│  OpenAI-Clothes-Attribute-Priority (priority queue)                  ││
+└──────────────────────┬──────────────────────────────────────────────┘│
+                       │ SQS consume                                    │
+                       ▼                                                │
+              ┌─────────────────┐                                       │
+              │ AI-Tagging      │                                       │
+              │ Worker          │   HTTP POST /generate-prompt         │
+              │ worker.py       ├──────────────────────────────────────┤▲
+              │                 │                                  ┌───┘│
+              └───────┬─────────┘                                  │    │
+                      │                                      ┌─────┴────┴──────────┐
+                      │ reads/writes                         │  Prompt-Gen Service  │
+                      │                                      │  server.py           │
+┌─────────────────────┼─────────────────────────┐           │  Port: 8000          │
+│  AWS Services       │                         │           └──────────────────────┘
+│  ┌───────────────┐  │  ┌───────────────┐      │                    │
+│  │  DynamoDB     │◄─┘  │     S3        │      │         OpenAI     │ Gemini API
+│  │  GarmentJobs  │     │  Buckets      │      │         Responses  │
+│  │  (job state)  │     │  - prompts/   │      │         API        │
+│  └───────────────┘     │  - EditedFiles│      │                    │
+│                        └──────┬────────┘      │
+└───────────────────────────────┼───────────────┘
+                                │ reads (enhance profiles)
+                                │ writes (enhanced images)
+                                │
+                         ┌──────┴──────────────────────────┐
+                         │  AI-Image-Enhancer               │
+                         │  - reads prompt/profile from S3  │
+                         │  - calls fal.ai                  │
+                         │  - calls background removal API  │
+                         │  - writes result to S3           │
+                         └─────────────────────────────────┘
+                                          │
+                                    fal.ai Platform
+                                    (6 diffusion models)
+                                          │
+                               External Background Removal
+                               http://77.68.113.204:4000
+```
+
+---
+
+## 3. Responsibilities of Each Service
+
+### AI-Tagging
+
+**What it owns:**
+
+- The job lifecycle state machine (pending → queued → processing → complete/error)
+
+- All attribute extraction logic (Gemini 2-pass pipeline)
+
+- Priority queue management
+
+- The bridge to Prompt-Gen (calling it and assembling the result into an enhance profile)
+
+- Writing enhance profiles to S3
+
+**What it does NOT own:**
+
+- Image enhancement (no fal.ai calls)
+
+- Prompt generation logic (delegates to Prompt-Gen)
+
+- Image enhancement execution (delegates to Image-Enhancer)
+
+**Data it produces:**
+
+- DynamoDB record with `state=complete` and full attribute JSON
+
+- S3 objects: `prompts/{job_id}-front.json` and `prompts/{job_id}-back.json`
+
+---
+
+### Prompt-Gen
+
+**What it owns:**
+
+- The logic to generate a retouch instruction prompt from an image and garment description
+
+- LLM backend selection and routing (OpenAI vs Gemini)
+
+- Back-view vs front-view prompt differentiation
+
+- Denim special handling
+
+**What it does NOT own:**
+
+- Any state, storage, or caching
+
+- Anything about the job lifecycle
+
+- Anything about image enhancement execution
+
+**Data it produces:**
+
+- A single string: the retouch prompt
+
+---
+
+### AI-Image-Enhancer
+
+**What it owns:**
+
+- The image enhancement execution pipeline
+
+- Background removal integration
+
+- fal.ai model invocation and result handling
+
+- LAB colour correction
+
+- Final S3 image upload
+
+**What it does NOT own:**
+
+- Attribute extraction (no Gemini attribute calls)
+
+- Prompt generation (reads prompts from S3, doesn't generate them)
+
+- Job state tracking (no DynamoDB)
+
+**Data it produces:**
+
+- Enhanced image file stored in S3
+
+- Public S3 URL of the enhanced image
+
+---
+
+## 4. How the 3 Services Communicate
+
+### Communication Matrix
+
+| From              | To                     | Method           | Protocol         | Auth                    |
+| ----------------- | ---------------------- | ---------------- | ---------------- | ----------------------- |
+| Client            | AI-Tagging API         | Synchronous HTTP | REST/JSON        | None                    |
+| AI-Tagging API    | SQS                    | AWS SDK          | SQS API          | IAM credentials         |
+| AI-Tagging Worker | SQS                    | AWS SDK          | SQS API          | IAM credentials         |
+| AI-Tagging Worker | DynamoDB               | AWS SDK          | DynamoDB API     | Named AWS profile       |
+| AI-Tagging Worker | Prompt-Gen             | Synchronous HTTP | REST/JSON        | `X-API-Key` header      |
+| AI-Tagging Worker | S3                     | AWS SDK          | S3 API           | IAM credentials         |
+| AI-Tagging Worker | Gemini API             | Google SDK       | HTTPS            | API key                 |
+| Client            | AI-Image-Enhancer      | Synchronous HTTP | REST/JSON        | None                    |
+| AI-Image-Enhancer | S3                     | AWS SDK          | S3 API           | Named AWS profile / IAM |
+| AI-Image-Enhancer | fal.ai                 | fal SDK          | HTTPS            | `FAL_KEY`               |
+| AI-Image-Enhancer | Background Removal     | `requests.post`  | HTTP (not HTTPS) | None                    |
+| Client            | AI-Tagging API (query) | Synchronous HTTP | REST/JSON        | None                    |
+
+---
+
+### Service Communication Topology
+
+**AI-Tagging → Prompt-Gen** (synchronous HTTP call):
+
+```
+From: enhance_profile.py → build_enhance_profile()
+To:   server.py → POST /generate-prompt
+Auth: X-API-Key header (PROMPT_GEN_API_KEY)
+Body: {image_url, orientation, item_type, fabric_type}
+Response: {"prompt": "retouch instruction string"}
+```
+
+**Client → AI-Image-Enhancer** (synchronous HTTP call — not initiated by AI-Tagging):
+
+```
+From: client (independent trigger, not AI-Tagging)
+To:   app.py → POST /image-enhance/v1/<model>
+Auth: None
+Body: {url, bucketName, filePath, prompt (S3 key), width, height, ...}
+```
+
+**Key architectural point:** AI-Tagging and AI-Image-Enhancer do **not** directly call each other. The handoff is through **S3** — AI-Tagging writes an enhance profile to S3, and the client is expected to then call AI-Image-Enhancer with the S3 path of that profile. This is a **shared-state async decoupling** pattern.
+
+---
+
+## 5. End-to-End Request Flows
+
+### Flow 1: Standard Garment Processing (Full Pipeline)
+
+```
+Step 1 — Client submits garment job
+  POST /garment-tagging/upload
+  {uuid, image_url: [...], attribute: {brand, category, gender, material, studio}}
+  
+  → main_api.py writes DynamoDB: {job_id, state=pending, data=...}
+  → main_api.py sends SQS message: {job_id, data}
+  ← Returns: {status: true, data: {job_id, null_attributes}}
+
+Step 2 — Client polls for job completion
+  GET /garment-tagging/query?uuid=<job_id>
+  ← Returns current state {state: pending|processing|complete|error}
+  (Client repeats until state=complete or state=error)
+
+Step 3 — Worker picks up job from SQS (asynchronous)
+  worker.py SQS receive_message
+  → DynamoDB: state=processing
+  → Downloads images: image_url[1:-1] → image grid, image_url[0] → front, image_url[-1] → label
+  → Pass 1: Gemini classify eBay Category
+  → Pass 2: Gemini extract 44 attributes (category-specific valid values)
+  → validate_response: strip hallucinations
+  
+  → [if PROMPT_GEN_URL set]
+      → enhance_profile.build_enhance_profile(image_url[0], "front", ...)
+          → POST Prompt-Gen /generate-prompt (front view)
+          ← {"prompt": "front retouch instruction"}
+      → enhance_profile.build_enhance_profile(image_url[1], "back", ...)
+          → POST Prompt-Gen /generate-prompt (back view)  
+          ← {"prompt": "back retouch instruction"}
+      → Assemble: {prompt, lora_prompt, guidance_scale, guidance_scale_lora, loras, metadata}
+      → S3.put_object: prompts/{job_id}-front.json
+      → S3.put_object: prompts/{job_id}-back.json
+  
+  → DynamoDB: state=complete, result=json.dumps(final_output)
+  → SQS.delete_message
+
+Step 4 — Client retrieves completed attributes
+  GET /garment-tagging/query?uuid=<job_id>
+  ← Returns: full tag JSON with 44 attributes, measurements, description
+
+Step 5 — Client triggers image enhancement (manual/orchestrated)
+  POST /image-enhance/v1/flux-kontext-pro
+  {
+    url:        "https://...s3.../files/product.jpg",
+    bucketName: "my-bucket",
+    filePath:   "EditedFiles/product.jpeg",
+    prompt:     "prompts/{job_id}-front.json",
+    width:      2116,
+    height:     2700,
+    colour_match: true
+  }
+
+  → Background removal: POST http://77.68.113.204:4000/api/image/upload-url-v4
+  → request.url rewritten: "files" → "EditedFiles", extension → ".jpeg"
+  → S3.get_object: prompts/{job_id}-front.json → enhance profile
+  → fal_client.submit_async("fal-ai/flux-pro/kontext", {prompt, loras?, ...})
+  → handler.get() → result image URL
+  → colour_match_bytes(original, result) [if colour_match=True]
+  → PIL resize to 2116×2700
+  → S3.upload_fileobj: EditedFiles/product.jpeg
+  ← Returns: {result_url: "https://...s3.../EditedFiles/product.jpeg", ...}
+```
+
+---
+
+### Flow 2: Priority Job Processing
+
+```
+Step 1 — Client marks a job as priority
+  POST /garment-tagging/upload → gets job_id
+  GET /garment-tagging/priority?uuid=<job_id>  ← marks job priority=true in DynamoDB
+  
+Step 2 — Worker sees it in next scan cycle
+  worker.py infinite loop → DynamoDB.scan (state=pending AND priority=true)
+  → DynamoDB.update_item state=queued (conditional, race-safe)
+  → SQS.send_message to PRIORITY_QUEUE_URL (bypasses normal queue)
+  
+Step 3 — Worker checks priority queue first each iteration
+  SQS.receive_message from PRIORITY_QUEUE_URL
+  → Submits to ThreadPoolExecutor first
+  → Skips normal queue for this iteration
+  
+Result: Priority jobs cut the queue and are processed before all pending normal jobs
+```
+
+---
+
+## 6. End-to-End Image Processing Flow
+
+### Image Handling Through the Pipeline
+
+```
+                   Raw Image URLs (from client)
+                           │
+                           │ image_url array
+                           ▼
+                   AI-Tagging Worker
+                   ┌─────────────────────────────────┐
+                   │ validate_image_url()             │
+                   │  → MIME type check from URL      │
+                   │                                  │
+                   │ download_and_load_image()        │
+                   │  → HTTP GET with timeout (10,30) │
+                   │  → PIL Image object              │
+                   │                                  │
+                   │ make_image_grid()                │
+                   │  → Thumbnail each to 1024×1024   │
+                   │  → Paste into 2×N grid           │
+                   │  → Draw black borders            │
+                   │  → Save to ./temp/{job_id}_grid  │
+                   └─────────┬───────────────────────┘
+                             │ PIL Image objects (not bytes)
+                             ▼
+                   Gemini API
+                   (images as inline bytes)
+                             │
+                             ▼
+                   Structured JSON attributes
+                   (images are consumed; not stored)
+                             
+                   [Separate flow for enhancement:]
+                             
+                   Raw image URL (from client)
+                           │
+                           ▼
+                   AI-Image-Enhancer
+                   ┌─────────────────────────────────────────────┐
+                   │ Background removal API call                  │
+                   │  → POST external API (hardcoded IP)         │
+                   │  → Result stored in S3 at EditedFiles/      │
+                   │                                             │
+                   │ URL rewrite: files/ → EditedFiles/.jpeg     │
+                   │                                             │
+                   │ fal.ai submission                           │
+                   │  → Image sent as URL (not bytes)            │
+                   │  → fal.ai fetches image server-side         │
+                   │  → Diffusion model processes it             │
+                   │  → Returns URL to generated image           │
+                   │                                             │
+                   │ decode_image_from_url_or_data_uri()         │
+                   │  → HTTP GET → bytes (in memory)             │
+                   │                                             │
+                   │ [optional] LAB colour correction            │
+                   │  → Download original bytes                  │
+                   │  → BGR → LAB colour space                   │
+                   │  → Reinhard transfer                        │
+                   │  → LAB → BGR bytes                          │
+                   │                                             │
+                   │ PIL resize (LANCZOS) to width×height        │
+                   │  → JPEG quality 95                          │
+                   │                                             │
+                   │ S3 upload                                   │
+                   │  → upload_fileobj                           │
+                   │  → head_object verification                 │
+                   └─────────────────────────────────────────────┘
+                             │
+                             ▼
+                   Enhanced image in S3
+                   Public URL returned to client
+```
+
+### Image Format Transformations
+
+| Stage                     | Format                   | Notes                                    |
+| ------------------------- | ------------------------ | ---------------------------------------- |
+| Client input              | Any URL (JPG, PNG, WEBP) | No format validation                     |
+| Background removal result | JPEG                     | Extension `.jpeg` — hardcoded            |
+| fal.ai output             | JPEG                     | `output_format: "jpeg"` in fal arguments |
+| After colour match        | JPEG                     | `cv2.imencode(".jpg", ...)` quality 95   |
+| After resize              | JPEG                     | `PIL save(format="JPEG", quality=95)`    |
+| S3 result                 | JPEG                     | `ContentType: "image/jpeg"`              |
+
+---
+
+## 7. End-to-End AI Flow
+
+### AI Models Used Across the System
+
+| Service           | Model                               | Purpose                              | Input                                                  | Output                     |
+| ----------------- | ----------------------------------- | ------------------------------------ | ------------------------------------------------------ | -------------------------- |
+| AI-Tagging        | `gemini-2.5-flash-lite`             | Pass 1: eBay Category classification | Grid + front + label images                            | `{"ebay Category": "..."}` |
+| AI-Tagging        | `gemini-2.5-flash-lite`             | Pass 2: Full 44-attribute extraction | Grid + front + label images + category-specific prompt | 44-key JSON                |
+| Prompt-Gen        | `gpt-5-mini` (default)              | Retouch prompt generation            | Image URL + garment description + orientation + fabric | Prompt string              |
+| Prompt-Gen        | `gpt-4.1-mini` (optional)           | Same as above                        | Same                                                   | Same                       |
+| Prompt-Gen        | `gemini-2.5-flash-lite` (optional)  | Same as above                        | Image bytes + prompt                                   | Prompt string              |
+| AI-Image-Enhancer | `fal-ai/flux-pro/kontext`           | Image enhancement                    | Image URL + prompt                                     | Enhanced image URL         |
+| AI-Image-Enhancer | `fal-ai/flux-pro/kontext/max`       | High-quality enhancement             | Same                                                   | Same                       |
+| AI-Image-Enhancer | `fal-ai/gemini-25-flash-image/edit` | Gemini-based enhancement             | Image URL list + prompt                                | Enhanced image URL         |
+| AI-Image-Enhancer | `fal-ai/nano-banana/edit`           | Fast enhancement                     | Image URL list + prompt                                | Enhanced image URL         |
+| AI-Image-Enhancer | `fal-ai/flux-2/edit`                | FLUX-2 enhancement                   | Image URL list + prompt                                | Enhanced image URL         |
+| AI-Image-Enhancer | `fal-ai/flux-2/lora/edit`           | LoRA-guided enhancement              | Image URL list + prompt + LoRA weights                 | Enhanced image URL         |
+
+### AI API Keys Required Per Service
+
+| Service           | API Keys Needed                                                        |
+| ----------------- | ---------------------------------------------------------------------- |
+| AI-Tagging        | `GEMINI_API_KEY1`, `GEMINI_API_KEY2`, ... (one or more)                |
+| Prompt-Gen        | `OPENAI_API_KEY` (for GPT models) AND/OR `GEMINI_API_KEY` (for Gemini) |
+| AI-Image-Enhancer | `FAL_KEY`                                                              |
+
+---
+
+### AI Pipeline Decisions and Tradeoffs
+
+**Why two Gemini passes instead of one?**\
+The second pass uses dynamically selected allowed-value lists that depend on the eBay category determined in pass 1. If this were done in one pass, the prompt would need to include all possible valid values for every category (\~3,000+ values), which would overload Gemini's context window and reduce accuracy.
+
+**Why Gemini for tagging, not OpenAI?**\
+README notes this was migrated from OpenAI to Gemini. Multiple API keys support rate-limit distribution. Gemini's JSON output mode (`response_mime_type="application/json"`) with `temperature=0` gives highly consistent structured outputs.
+
+**Why fal.ai for enhancement, not direct Stable Diffusion?**\
+fal.ai provides managed GPU inference, eliminating the need to host GPU infrastructure. The `fal_client` SDK provides async submission with result polling. Multiple model variants (kontext, FLUX-2, LoRA, etc.) are all available through a unified API surface.
+
+**Why LoRA for some enhancements?**\
+LoRA (Low-Rank Adaptation) files fine-tune a base diffusion model for specific garment types. The `mh-flatlay` LoRA trains the model to correctly lay items flat. Category-specific LoRAs (mh-tops, mh-bottoms, etc.) train it for specific garment silhouettes. Stacking them gives better results for category-specific enhancement.
+
+---
+
+## 8. Shared Contracts and Parameters
+
+### The Enhance Profile (Shared S3 Contract)
+
+This JSON structure is the **primary shared contract** between AI-Tagging (writer) and AI-Image-Enhancer (reader):
+
+```json
+{
+  "prompt": "Lay this navy slim-fit T-shirt perfectly flat...",
+  "lora_prompt": "mh-flatlay mh-tops Lay this navy slim-fit T-shirt...",
+  "guidance_scale": 3.0,
+  "guidance_scale_lora": 3.2,
+  "loras": [
+    {
+      "url": "https://s3.eu-west-2.amazonaws.com/...mh-flatlay.safetensors",
+      "scale": 0.3
+    },
+    {
+      "url": "https://s3.eu-west-2.amazonaws.com/...mh-tops.safetensors",
+      "scale": 0.3
+    }
+  ],
+  "metadata": {
+    "uuid": "job-abc123",
+    "image_url": "https://...",
+    "orientation": "front",
+    "garment_description": "Slim-fit cotton crew-neck T-shirt..."
+  }
+}
+```
+
+**S3 location convention:**
+
+- Written by: AI-Tagging worker (`worker.py` via `build_enhance_profile`)
+
+- Read by: AI-Image-Enhancer (`app.py` → `get_enhance_profile`)
+
+- Key pattern: `prompts/{job_id}-{orientation}.json` where `orientation` is `"front"` or `"back"`
+
+**Breaking this contract = silent failure.** If AI-Tagging writes a malformed profile, AI-Image-Enhancer will fail with an S3 or JSON parse error (HTTP 400). There is no validation of the profile structure on either side.
+
+---
+
+### Key Shared Parameters
+
+| Parameter            | Defined In                 | Written By             | Read By                           | Type         | Notes                                              |
+| -------------------- | -------------------------- | ---------------------- | --------------------------------- | ------------ | -------------------------------------------------- |
+| `job_id` / `uuid`    | Client                     | Client                 | All services                      | `str`        | Cross-service correlation ID                       |
+| `image_url`          | Client → AI-Tagging        | Client                 | AI-Tagging worker                 | `List[str]`  | Array; order matters (first=front, last=label)     |
+| `ebay_category`      | prompting.py               | Gemini (Pass 1)        | enhance\_profile.py, prompting.py | `str`        | Controls LoRA selection and allowed value lists    |
+| `fabric_type`        | Gemini output              | Gemini (Pass 2)        | enhance\_profile.py, Prompt-Gen   | `str`        | Controls guidance scale and denim special handling |
+| `orientation`        | Hardcoded "front"/"back"   | AI-Tagging worker      | Prompt-Gen, enhance\_profile.py   | `str`        | Controls back-view stripping in Prompt-Gen         |
+| `prompt` (S3 key)    | AI-Image-Enhancer request  | Client                 | AI-Image-Enhancer                 | `str`        | Must match S3 key written by AI-Tagging            |
+| `loras` (in profile) | enhance\_profile.py        | AI-Tagging worker → S3 | AI-Image-Enhancer                 | `List[dict]` | `{url, scale}` per LoRA                            |
+| `guidance_scale`     | enhance\_profile.py config | AI-Tagging worker      | AI-Image-Enhancer                 | `float`      | Could be 3.0 (default) or 2.5 (denim)              |
+
+---
+
+### Gemini Output → Enhance Profile Field Mapping
+
+```
+Gemini Pass 2 output:
+  "ebay Category": "T-Shirts"
+  "fabric Type": "Cotton"
+  
+  ↓ processed by AI-Tagging worker ↓
+  
+enhance_profile.build_enhance_profile(
+  image_url    = image_url[0],
+  orientation  = "front",
+  ebay_category = "T-Shirts",     ← from Gemini
+  fabric_type   = "Cotton",        ← from Gemini
+  item_type     = tag["item Type"], ← from Gemini (renamed from item SubType)
+  prompt_gen_url = PROMPT_GEN_URL,
+  metadata      = {...}
+)
+
+  ↓ inside build_enhance_profile ↓
+  
+  POST Prompt-Gen /generate-prompt:
+    orientation  = "front"
+    fabric_type  = "Cotton"        ← from Gemini
+    item_type    = tag["item Type"] ← from Gemini
+    image_url    = image_url[0]
+
+  EBAY_TO_LORA["T-Shirts"] = "tops"  ← maps eBay category to LoRA category
+  
+  ↓ saved to S3 as enhance profile ↓
+  
+  guidance_scale      = GUIDANCE["vanilla"]["default"] = 3.0  (Cotton is not denim)
+  guidance_scale_lora = GUIDANCE["lora"]["default"] = 3.2
+```
+
+---
+
+## 9. Dependency Graph
+
+### Startup Dependencies
+
+```
+AI-Tagging API (port 9000)
+  Requires:
+  ├── AWS SQS accessible
+  ├── AWS DynamoDB accessible (via local_aws profile)
+  ├── AWS env vars: AWS_ACCESS_KEY, AWS_SECRECT_KEY (typo)
+  └── Named AWS profile: local_aws (for DynamoDB)
+
+AI-Tagging Worker
+  Requires:
+  ├── GEMINI_API_KEY1 (at minimum one)
+  ├── AWS SQS accessible
+  ├── AWS DynamoDB accessible (via local_aws profile)
+  ├── AWS S3 accessible (for writing enhance profiles)
+  ├── ./temp/ directory exists
+  └── [optional] PROMPT_GEN_URL and PROMPT_S3_BUCKET (for enhance profiles)
+
+Prompt-Gen (port 8000)
+  Requires:
+  ├── PROMPT_GEN_API_KEY (or all requests return 401)
+  └── At runtime (lazy):
+      ├── OPENAI_API_KEY (for GPT model calls)
+      └── GEMINI_API_KEY (for Gemini model calls)
+
+AI-Image-Enhancer (port 9090)
+  Requires:
+  ├── FAL_KEY (hard startup guard — fails immediately if missing)
+  ├── AWS S3 accessible
+  ├── Named AWS profile: rishvi (or SERVER=true with explicit creds)
+  └── At runtime:
+      └── Background removal service at http://77.68.113.204:4000 (for 5 endpoints)
+```
+
+### Runtime Call Chain
+
+```
+Client
+  └──► AI-Tagging API (port 9000)         [no upstream deps at request time]
+         │
+         └──► AWS SQS (normal queue)
+                │
+                └──► AI-Tagging Worker
+                       │
+                       ├──► AWS DynamoDB  (state tracking)
+                       ├──► Image URLs    (HTTP download)
+                       ├──► Google Gemini (Pass 1 + Pass 2)
+                       │
+                       └──► [if env vars set]
+                              │
+                              ├──► Prompt-Gen API (port 8000)
+                              │      │
+                              │      └──► OpenAI Responses API
+                              │           OR
+                              │           httpx → Image host + Gemini API
+                              │
+                              └──► AWS S3 (write enhance profile)
+
+Client
+  └──► AI-Image-Enhancer API (port 9090)
+         │
+         ├──► Background Removal API (http://77.68.113.204:4000)
+         │
+         ├──► AWS S3 (read enhance profile)
+         │
+         ├──► fal.ai API
+         │      └──► (internally) fal.ai fetches image from S3/URL
+         │
+         ├──► [if colour_match] Image host (HTTP download of original)
+         │
+         └──► AWS S3 (write enhanced image)
+```
+
+---
+
+## 10. Failure Points and Recovery Paths
+
+### Failure Point Map
+
+| Component                  | Failure Mode                   | Impact                                                        | Current Recovery                                                           | Recommended                                                |
+| -------------------------- | ------------------------------ | ------------------------------------------------------------- | -------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| **AWS SQS**                | Service unavailable            | New jobs not queued; upload returns 500. Worker can't consume | Job marked error in DynamoDB                                               | Retry with backoff on SQS send; circuit breaker            |
+| **AWS DynamoDB**           | Service unavailable            | Status queries return 500; state updates fail                 | One retry on upload put\_item; none on updates                             | Add DynamoDB error handling in worker with retry           |
+| **Google Gemini API**      | Rate limit (429)               | Processing delayed                                            | Key rotation + exponential backoff (implemented)                           | Add alert when all keys exhausted                          |
+| **Google Gemini API**      | Model unavailable (503)        | Processing delayed                                            | Exponential backoff retry (implemented)                                    | Monitor retry frequency                                    |
+| **Prompt-Gen API**         | Service down                   | Enhance profiles not generated                                | Exception caught → logged as warning → job still completes without profile | Alert on enhance profile failure; consider making it fatal |
+| **Prompt-Gen API**         | Timeout                        | Same as above                                                 | 30s timeout → exception caught                                             | —                                                          |
+| **OpenAI API**             | Service unavailable            | Prompt generation fails                                       | Bubbles up as HTTP 500 from Prompt-Gen to AI-Tagging                       | Retry in `build_enhance_profile()`                         |
+| **Background Removal API** | Service down                   | All 5 enhancement endpoints return 500                        | None — raises immediately                                                  | Circuit breaker; fallback to proceeding without removal    |
+| **fal.ai API**             | Service down                   | Enhancement requests return 500                               | None                                                                       | Retry with backoff                                         |
+| **fal.ai API**             | Slow response                  | Enhancement request hangs                                     | None — no timeout on `handler.get()`                                       | `asyncio.wait_for()` with timeout                          |
+| **S3**                     | Write failure                  | Enhancement result lost                                       | `HTTPException(500)` with no retry                                         | Retry on S3 upload                                         |
+| **S3**                     | Read failure (enhance profile) | Enhancement returns 400                                       | None                                                                       | Display helpful error, prompt to re-run tagging            |
+
+### State Machine for Jobs (AI-Tagging)
+
+```
+                    ┌─────┐
+                    │     │ POST /upload
+                    ▼     │
+              ┌─────────────┐      DynamoDB.scan + priority=true
+              │   pending   │─────────────────────────────────► resent to PRIORITY queue
+              └─────────────┘
+                    │
+                    │ SQS message sent at upload time
+                    │ OR worker picks up from normal queue
+                    ▼
+              ┌─────────────┐
+              │   queued    │   (conditional update — prevents race condition)
+              └─────────────┘
+                    │
+                    │ Worker picks up from SQS (Priority or Normal)
+                    ▼
+              ┌─────────────┐
+              │ processing  │
+              └─────────────┘
+                    │
+         ┌──────────┴──────────┐
+         │                     │
+         ▼                     ▼
+   ┌──────────┐           ┌──────────┐
+   │ complete │           │  error   │
+   └──────────┘           └──────────┘
+```
+
+**No state for "enhance profile writing failed"** — this is silently folded into `complete`. Jobs that complete without an enhance profile cannot be distinguished from jobs that succeed fully.
+
+---
+
+### Failure Propagation
+
+```
+Gemini API failure 
+  → AI-Tagging Worker retry (with backoff + key rotation)
+  → After all retries exhausted: job state = error in DynamoDB
+  → Enhance profile NOT written to S3
+  → AI-Image-Enhancer: if called with prompts/{job_id}-front.json → S3 get_object fails → HTTP 400
+
+Prompt-Gen failure
+  → AI-Tagging Worker: exception CAUGHT, logs warning
+  → Job still completes with state=complete in DynamoDB
+  → Enhance profile NOT written to S3  
+  → AI-Image-Enhancer: if called with prompts/{job_id}-front.json → S3 get_object fails → HTTP 400
+  → Client sees: tagging succeeded, enhancement fails with 400 and no explanation
+
+Background Removal failure
+  → AI-Image-Enhancer: raises HTTP 500 immediately
+  → No enhancement performed
+  → No S3 write
+  → Client must retry entire enhancement request
+
+fal.ai failure
+  → AI-Image-Enhancer: raises HTTP 500
+  → Same as above
+```
+
+---
+
+## 11. Security and Validation Review
+
+### Authentication Summary
+
+| Endpoint                        | Auth               | Notes                                           |
+| ------------------------------- | ------------------ | ----------------------------------------------- |
+| `POST /garment-tagging/upload`  | **None**           | Any caller can submit jobs                      |
+| `GET /garment-tagging/query`    | **None**           | Any caller can query any job by UUID            |
+| `GET /garment-tagging/priority` | **None**           | Any caller can escalate any job                 |
+| `POST /generate-prompt`         | `X-API-Key` header | Correctly implemented; key from env var         |
+| `GET /health` (Prompt-Gen)      | None               | Standard for health endpoints                   |
+| `POST /image-enhance/v1/*`      | **None**           | Any caller can trigger paid fal.ai jobs         |
+| `GET, DELETE /cache/prompts`    | **None**           | Any caller can read or destroy the prompt cache |
+
+**Most critical gap:** The `DELETE /cache/prompts` endpoint has no authentication. Any client on the network can wipe the prompt cache, causing all subsequent requests to re-fetch from S3 (performance impact + increased S3 costs).
+
+**Second critical gap:** The enhancement endpoints call fal.ai (a paid service) with no auth. Any caller with network access to port 9090 can trigger billable AI jobs.
+
+### Input Validation Gaps
+
+| Service           | Field                | Issue                                                                                                               |
+| ----------------- | -------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| AI-Tagging        | `uuid`               | Not checked for uniqueness; duplicates silently overwrite DynamoDB records                                          |
+| AI-Tagging        | `image_url` items    | Not validated as valid URLs (only MIME type guess from path)                                                        |
+| AI-Tagging        | `attribute.category` | Not validated against `CONDITIONAL_VALUES["category"]` at API layer (only in worker later)                          |
+| Prompt-Gen        | `orientation`        | Any string accepted; only `"front"` and `"back"` are meaningful                                                     |
+| Prompt-Gen        | `item_type`          | Unsanitized; injected into LLM prompt directly (prompt injection risk)                                              |
+| AI-Image-Enhancer | `url`                | Not validated as valid URL; `data:` URI accepted without content type validation                                    |
+| AI-Image-Enhancer | `bucketName`         | Not validated; arbitrary S3 bucket name accepted — could be used to read from any bucket the IAM role has access to |
+| AI-Image-Enhancer | `filePath`           | Not validated; S3 path traversal not possible in S3, but unexpected key structures could occur                      |
+
+### Credential Management Issues
+
+| Issue                                                    | Location                   | Risk                                                                              |
+| -------------------------------------------------------- | -------------------------- | --------------------------------------------------------------------------------- |
+| `AWS_SECRECT_KEY` typo in env var name                   | `main_api.py`, `worker.py` | Must be typo'd in `.env` — invisible bug                                          |
+| Mixed credential strategies (env vars vs named profiles) | All files                  | SQS uses env vars; DynamoDB uses named profile — inconsistent, breaks differently |
+| LoRA S3 URLs hardcoded (non-configurable)                | `enhance_profile.py`       | S3 bucket/key changes require code changes                                        |
+| Background removal URL hardcoded                         | `app.py`                   | Service address changes require code changes                                      |
+| `FAL_KEY` only in env                                    | `app.py`                   | Exposed in process environment; use secrets manager                               |
+
+### Transport Security
+
+- AI-Tagging → Prompt-Gen: HTTP (protocol not specified, assumed HTTP internally) \[Needs Verification]
+
+- AI-Image-Enhancer → Background Removal: Explicitly `http://` (no TLS) — sensitive image URLs transmitted unencrypted
+
+- All external API calls (Gemini, OpenAI, fal.ai): HTTPS (enforced by SDKs)
+
+---
+
+## 12. Performance and Scalability Notes
+
+### Latency Profile Per Service
+
+| Service                     | Bottleneck                        | Typical Latency |
+| --------------------------- | --------------------------------- | --------------- |
+| AI-Tagging API              | DynamoDB write + SQS send         | \< 500ms        |
+| AI-Tagging Worker (per job) | Gemini 2 passes + image downloads | 5–30 seconds    |
+| Prompt-Gen                  | LLM inference: 4–10s              | 4–10 seconds    |
+| AI-Image-Enhancer           | fal.ai inference                  | 15–60 seconds   |
+
+### Concurrency Models
+
+**AI-Tagging Worker:**
+
+- `ThreadPoolExecutor(max_workers=len(GEMINI_KEYS))`
+
+- Parallelism limited to number of API keys
+
+- Each thread processes one job at a time (download frames → Gemini 2 passes → S3 write)
+
+- Adding more Gemini keys directly increases throughput
+
+**AI-Image-Enhancer:**
+
+- FastAPI handles requests with `async def` handlers
+
+- Multiple enhancement requests can be in-flight simultaneously (async I/O)
+
+- Actual fal.ai inference is serialized per request but Python doesn't block during `await handler.get()`
+
+- FastAPI + uvicorn default worker count applies
+
+**Prompt-Gen:**
+
+- FastAPI with sync handlers (`def generate_prompt`, not `async def`)
+
+- Under high concurrency, sync handlers may block uvicorn workers
+
+- Recommended: run with multiple uvicorn workers or use `async def` with `asyncio.to_thread` for blocking LLM calls \[Needs Verification: some OpenAI SDK calls may be synchronous]
+
+### Known Performance Bottlenecks
+
+1. **DynamoDB full-table scan per worker loop iteration** — `O(n)` where n = number of all jobs ever processed. Grows unboundedly without TTL.
+
+2. **`prompt_cache`****&#x20;in AI-Image-Enhancer** — unbounded growth. In a long-running process processing many unique prompts, memory usage grows indefinitely.
+
+3. **AI-Image-Enhancer synchronous S3 read on every enhancement request** — enhance profiles are not cached. If the same profile is used for 100 images (common batch scenario), S3 is read 100 times. \[Inconsistency: `.txt` prompts ARE cached, but S3 `.json` enhance profiles are NOT]
+
+4. **Sequential Prompt-Gen calls for front and back** — `build_enhance_profile` is called twice sequentially in the worker. These could be parallelized with `asyncio.gather` or `concurrent.futures`.
+
+5. **Image grid saved to disk then reloaded** — `make_image_grid()` saves to a temp file then the file is read back as PIL Image. This is disk I/O that could be eliminated by keeping the PIL Image in memory.
+
+### Scaling Characteristics
+
+| Scale Factor              | Effect                                                                                         |
+| ------------------------- | ---------------------------------------------------------------------------------------------- |
+| More concurrent clients   | AI-Tagging API scales horizontally; SQS and DynamoDB are managed services with high throughput |
+| More jobs in queue        | Worker throughput is bounded by `len(GEMINI_KEYS)`                                             |
+| More Gemini keys          | Linear throughput increase in worker                                                           |
+| Larger DynamoDB table     | Linear increase in scan cost — must add GSI                                                    |
+| More enhancement requests | AI-Image-Enhancer scales horizontally; fal.ai handles GPU concurrency                          |
+
+---
+
+## 13. Operational Concerns
+
+### Process Management
+
+**Systemd units defined for AI-Tagging:**
+
+- `image_tagging.service` → `uvicorn main_api:app --host 0.0.0.0 --port 9000`
+
+- `image_tagging_worker.service` → `python3 worker.py`
+
+- Both: `Restart=on-failure`, `Environment=ENV=stage`
+
+**No systemd units defined for Prompt-Gen or AI-Image-Enhancer.** These services need deployment configuration created. \[Needs Verification: may exist in separate repos]
+
+**Required directories:**
+
+- `AI-Tagging/`: `./temp/` must exist before worker starts
+
+- All services: `.env` file must exist at working directory (or service dir for Prompt-Gen)
+
+### Observability Gaps
+
+| Metric                     | AI-Tagging                | Prompt-Gen              | AI-Image-Enhancer                  |
+| -------------------------- | ------------------------- | ----------------------- | ---------------------------------- |
+| Request logging            | Partial (DynamoDB writes) | **None**                | Partial (Python logging to stdout) |
+| Error rate                 | Logged to `worker.log`    | Only uvicorn access log | Python logging to stdout           |
+| Latency tracking           | **None**                  | **None**                | **None**                           |
+| Queue depth                | Not monitored             | N/A                     | N/A                                |
+| Gemini key rotation events | WARNING log               | N/A                     | N/A                                |
+| S3 write failures          | Logged + HTTP 500         | N/A                     | Logged + HTTP 500                  |
+| fal.ai failures            | N/A                       | N/A                     | Logged + HTTP 500                  |
+
+**No distributed tracing across services.** A `job_id` / `uuid` exists and flows through the system (stored in DynamoDB, in S3 key names, in enhance profile metadata), but it is never forwarded as a request header between services. Logs cannot be correlated across the three services for a single job.
+
+### Environment Variables — Complete Reference
+
+**AI-Tagging:**
+
+```bash
+AWS_ACCESS_KEY=...          # SQS and S3 client auth
+AWS_SECRECT_KEY=...         # NOTE: typo — must match exactly
+GEMINI_API_KEY1=...         # Primary Gemini key (required)
+GEMINI_API_KEY2=...         # Additional keys (optional, one per number)
+PROMPT_GEN_URL=http://...   # Optional — enables enhance profile generation
+PROMPT_S3_BUCKET=...        # Optional — required if PROMPT_GEN_URL is set
+PROMPT_GEN_API_KEY=...      # Optional — sent as X-API-Key to Prompt-Gen
+```
+
+**Prompt-Gen:**
+
+```bash
+OPENAI_API_KEY=...          # Required for gpt-* model calls
+GEMINI_API_KEY=...          # Required for gemini-* model calls
+PROMPT_GEN_API_KEY=...      # Required — all requests return 401 without it
+```
+
+**AI-Image-Enhancer:**
+
+```bash
+FAL_KEY=...                 # Required — service refuses to start without it
+AWS_REGION=eu-west-2        # Default value if not set
+SERVER=true/false           # true = explicit key/secret, false = named profile "rishvi"
+AWS_ACCESS_KEY_ID=...       # Required if SERVER=true
+AWS_SECRET_ACCESS_KEY=...   # Required if SERVER=true
+```
+
+### Log Files
+
+| Service                   | Log Destination                                        |
+| ------------------------- | ------------------------------------------------------ |
+| AI-Tagging API and Worker | stdout + `./worker.log` (appended)                     |
+| Prompt-Gen                | stdout only (uvicorn access log + no application logs) |
+| AI-Image-Enhancer         | stdout only                                            |
+
+---
+
+## 14. Onboarding Guide for New Developers
+
+### Prerequisites
+
+- Python 3.10+ recommended (for `str | None` type union syntax used in Prompt-Gen)
+
+- AWS CLI configured with appropriate profiles (`local_aws` for DynamoDB, `rishvi` for AI-Image-Enhancer)
+
+- Access to AWS account `711027389361` (SQS, DynamoDB, S3 all in `eu-west-2`)
+
+- Gemini API keys (at least one: `GEMINI_API_KEY1`)
+
+- OpenAI API key
+
+- fal.ai API key
+
+- Access to the background removal service (or ability to disable it)
+
+### Step-by-Step Setup Sequence
+
+```
+1. Set up Python virtual environments
+   cd AI-Tagging && python -m venv venv && venv\Scripts\activate (Windows)
+   pip install -r requirements.txt
+   
+   cd Prompt-Gen && python -m venv venv && ...
+   pip install -r requirements.txt
+   
+   cd AI-Image-Enhancer && python -m venv venv && ...
+   pip install -r requirements.txt
+
+2. Create ./temp/ directory in AI-Tagging
+   mkdir AI-Tagging/temp
+
+3. Configure AWS credentials
+   # For AI-Tagging: add to .env files
+   # For DynamoDB: aws configure --profile local_aws
+   # For AI-Image-Enhancer: aws configure --profile rishvi
+   
+4. Create .env files
+   # AI-Tagging/.env
+   AWS_ACCESS_KEY=<your_key>
+   AWS_SECRECT_KEY=<your_secret>   # Note the typo — must match
+   GEMINI_API_KEY1=<your_gemini_key>
+   PROMPT_GEN_URL=http://localhost:8000
+   PROMPT_S3_BUCKET=<your_bucket>
+   PROMPT_GEN_API_KEY=<api_key>
+   
+   # Prompt-Gen/.env
+   OPENAI_API_KEY=<your_openai_key>
+   GEMINI_API_KEY=<your_gemini_key>
+   PROMPT_GEN_API_KEY=<api_key>   # Must match AI-Tagging's PROMPT_GEN_API_KEY
+   
+   # AI-Image-Enhancer/.env
+   FAL_KEY=<your_fal_key>
+   SERVER=false             # Use named AWS profile "rishvi"
+
+5. Start Prompt-Gen first (AI-Tagging depends on it)
+   cd Prompt-Gen
+   uvicorn server:app --port 8000
+
+6. Start AI-Tagging API
+   cd AI-Tagging
+   uvicorn main_api:app --host 0.0.0.0 --port 9000
+
+7. Start AI-Tagging Worker (separate terminal)
+   cd AI-Tagging
+   python3 worker.py
+
+8. Start AI-Image-Enhancer
+   cd AI-Image-Enhancer
+   # FIRST: fix the SyntaxError in app.py (enhance_image_by_gemine_nano_banana)
+   uvicorn app:app --port 9090
+
+9. Test with Postman collection
+   Import: AI-Image-Enhancer/FLUX_Image_Enhancement_API.postman_collection.json
+   Target: http://localhost:9090
+```
+
+### Understanding the Codebase — Recommended Reading Order
+
+1. **Start with&#x20;****`AI-Tagging/FLOW_LEGEND.txt`** — 19-step numbered description of the full flow
+
+2. **Read&#x20;****`AI-Tagging/README.md`** — architecture overview
+
+3. **Trace through&#x20;****`AI-Tagging/main_api.py`** — understand the 3 HTTP endpoints
+
+4. **Read&#x20;****`AI-Tagging/worker.py`** key functions:
+
+   - `worker()` — the main loop
+
+   - `process_job()` — the per-job pipeline
+
+   - `ProductAttributeExtractor.extract_attributes_gemini()` — the AI extraction
+
+5. **Read&#x20;****`Prompt-Gen/server.py`****&#x20;and&#x20;****`Prompt-Gen/prompt_gen.py`** — together, 100% of the service logic
+
+6. **Read&#x20;****`AI-Image-Enhancer/app.py`** — focus on `process_image_enhancement()` and `process_lora_enhancement()`
+
+7. **Read&#x20;****`AI-Image-Enhancer/lab_colour_match.py`** — the colour correction algorithm
+
+### Common Dev Mistakes to Avoid
+
+| Mistake                                                     | Result                                                             |
+| ----------------------------------------------------------- | ------------------------------------------------------------------ |
+| Not creating `./temp/` directory in AI-Tagging              | Worker crashes with `FileNotFoundError` on first job               |
+| Using `AWS_SECRET_KEY` instead of `AWS_SECRECT_KEY`         | Worker silently gets no AWS credentials; all S3 and SQS calls fail |
+| Setting `PROMPT_GEN_APIKEY` instead of `PROMPT_GEN_API_KEY` | Prompt-Gen returns 401 for all AI-Tagging requests                 |
+| Starting only the API without the Worker                    | Jobs pile up in SQS; status always shows `pending`                 |
+| Not fixing SyntaxError in AI-Image-Enhancer before starting | Service fails to start; no helpful error message                   |
+| Sending a UUID that was already used                        | DynamoDB record silently overwritten — old job result lost         |
+| Calling enhancement endpoint before tagging completes       | S3 enhance profile doesn't exist yet → HTTP 400                    |
+
+---
+
+## 15. Suggested Improvements
+
+### High Priority (Fix Before Production)
+
+1. **Fix SyntaxError in&#x20;****`AI-Image-Enhancer/app.py`** — the `enhance_image_by_gemine_nano_banana` function has a malformed f-string comment that prevents the module from loading
+
+2. **Add authentication to AI-Tagging and AI-Image-Enhancer** — at minimum, shared API key checking. Without this, anyone on the network can trigger paid AI jobs and read/modify job data
+
+3. **Move ALL hardcoded values to env vars:**
+
+   - `AWS_SECRECT_KEY` → fix typo to `AWS_SECRET_KEY`
+
+   - `http://77.68.113.204:4000` → `BACKGROUND_REMOVAL_URL`
+
+   - `IS_BACKGROUND_REMOVAL = True` → `BACKGROUND_REMOVAL_ENABLED` env var
+
+   - `BACKGROUND_TEMP_BUCKET = "test-rishvi"` → env var
+
+   - LoRA `.safetensors` S3 URLs in `enhance_profile.py`
+
+4. **Add DynamoDB TTL** — configure a TTL field to auto-expire completed jobs, preventing unbounded table growth and improving scan performance
+
+5. **Replace DynamoDB scan with GSI** — create a Global Secondary Index on `{priority, state}` so the worker can query instead of scan
+
+### Medium Priority (Before Scaling)
+
+1. **Add timeout to all outbound HTTP calls:**
+
+   - `requests.post()` in background removal: add `timeout=30`
+
+   - `httpx.get()` in Prompt-Gen: add `timeout=30`
+
+   - `handler.get()` in fal.ai calls: wrap with `asyncio.wait_for(..., timeout=120.0)`
+
+2. **Add distributed tracing / correlation ID** — forward `job_id` as `X-Request-ID` header in all inter-service HTTP calls; include it in all log lines
+
+3. **Cache enhance profiles (****`.json`****) in AI-Image-Enhancer** — currently `.txt` prompts are cached but `.json` profiles are not. For batch processing, this means N S3 reads for N images of the same garment.
+
+4. **Parallelize front and back Prompt-Gen calls** — `build_enhance_profile` is called twice sequentially in `process_job`. Use `asyncio.gather` or `concurrent.futures.ThreadPoolExecutor` for both calls simultaneously.
+
+5. **Add structured logging across all services** — use a JSON log format with: `timestamp`, `service`, `job_id`, `operation`, `duration_ms`, `status`. This enables log aggregation.
+
+6. **Create systemd units for Prompt-Gen and AI-Image-Enhancer** — currently only AI-Tagging has systemd service definitions.
+
+### Architecture Improvements
+
+1. **Consider event-driven decoupling for AI-Image-Enhancer** — currently a client must call AI-Image-Enhancer separately after AI-Tagging completes. An alternative: have the AI-Tagging worker publish a completion event to SQS/SNS that triggers enhancement automatically. This would make the pipeline fully automated end-to-end.
+
+2. **Add schema versioning to the enhance profile** — add a `version` field to the S3 JSON. This allows AI-Image-Enhancer to handle profile format changes gracefully without breaking existing profiles.
+
+3. **Validate the enhance profile at write time** — AI-Tagging should validate the profile JSON before writing to S3, not silently write malformed data that failures silently in AI-Image-Enhancer.
+
+4. **Circuit breaker on background removal dependency** — implement a simple circuit breaker in AI-Image-Enhancer. If background removal fails N times in a row, stop calling it for T seconds (open circuit). This prevents cascading failures when the background removal service is down.
+

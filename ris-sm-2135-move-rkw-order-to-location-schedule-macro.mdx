@@ -1,0 +1,153 @@
+---
+title: Move Order to Location Schedule Macro
+description: >-
+  Identifies open orders by supplier and automatically moves them to the correct
+  warehouse/location for fulfillment.
+---
+## Overview
+
+The **RIS-SM-2135 – Move Order to Location Schedule Macro** automates warehouse allocation based on supplier, ensuring orders are moved to the correct location without manual intervention.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  It checks the supplier of an order and moves it to the right warehouse automatically.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Identifies open orders based on supplier
+
+- Moves eligible orders to the target warehouse/location
+
+- Marks orders as processed to avoid duplicates
+
+- Optimizes execution using direct queries for faster processing
+
+---
+
+## When It Runs
+
+Typically executed:
+
+- On scheduled intervals (hourly/daily)
+
+- During warehouse allocation and fulfillment routing
+
+- Before picking and packing stage
+
+- To handle supplier-specific order movement
+
+---
+
+## Parameters
+
+<ParamField path="LocationName" param-type="string" required="true" deprecated="false">
+  Target warehouse or location name where orders should be moved.
+</ParamField>
+
+<ParamField path="Supplier" param-type="string" required="true" deprecated="false">
+  Supplier name used to filter which orders should be processed.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  These parameters define which supplier orders to process and the warehouse they should be moved to.
+</Callout>
+
+---
+
+---
+
+## Simple Explanation
+
+The macro identifies open orders, checks their supplier, and moves matching orders to a specified warehouse automatically while marking them as processed.
+
+---
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Fetch Open Orders" icon="inbox" title-type="p">
+    Pull all currently open orders in the system.
+  </Step>
+
+  <Step title="Filter Processed Orders" icon="filter" title-type="p">
+    Ignore any orders that have already been marked with a processing identifier to prevent duplicate actions.
+  </Step>
+
+  <Step title="Assign Identifier" icon="tag" title-type="p">
+    Stamp active orders with a tracking identifier to log that they are being handled.
+  </Step>
+
+  <Step title="Check Supplier" icon="users" title-type="p">
+    Stamp active orders with a tracking identifier to log that they are being handled.
+  </Step>
+
+  <Step title="Collect Orders" icon="list" title-type="p">
+    Store matching orders for movement to the target warehouse.
+  </Step>
+
+  <Step title="Fetch Locations" icon="map-pin" title-type="p">
+    Look up the physical warehouse database ID corresponding to the requested location name.
+  </Step>
+
+  <Step title="Move Orders" icon="truck" title-type="p">
+    Automatically move the matching orders directly to the targeted warehouse queue.
+  </Step>
+
+  <Step title="Optimized Execution" icon="zap" title-type="p">
+    New version uses direct SQL query to fetch order and supplier data in a single step for faster processing.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  The macro automatically moves eligible orders to the correct warehouse:
+
+  - Orders filtered by supplier
+
+  - Orders moved to the target location
+
+  - Orders marked as processed
+</Callout>
+
+## Usefulness
+
+- **Automation** – Eliminates manual order movement
+
+- **Accuracy** – Ensures correct warehouse allocation
+
+- **Efficiency** – Saves time in order processing
+
+- **Scalability** – Handles bulk orders easily
+
+---
+
+## Example Scenario
+
+<Expandable title="Scenario: Supplier-Based Fulfillment" default-open="false">
+  **Supplier:** DS-RKW Ltd\
+  **Target Location:** RKW Ltd
+
+  **Insight:**\
+  Orders from this supplier must be fulfilled from a specific warehouse.
+
+  **Action:**\
+  Macro detects supplier, moves orders automatically.
+
+  **Result:**\
+  Orders are routed correctly for fulfillment.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This macro ensures the correct mapping between supplier and warehouse, enabling smooth and automated fulfillment while preventing errors like wrong warehouse picking, shipping delays, and manual intervention mistakes.
+</Callout>
+

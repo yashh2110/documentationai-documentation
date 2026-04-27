@@ -1,0 +1,215 @@
+---
+title: Tax Breakdown Report
+description: >-
+  Automatically calculate taxes (GST, PST, HST, Quebec PST) for processed
+  orders, generate CSV reports, upload them to FTP, and send via email.
+---
+## Overview
+
+The **RIS-SM-2030 –TaxBreakdown** macro automates tax reporting for Canadian orders by calculating province-wise taxes and generating structured CSV reports.
+
+It processes recent orders, handles refunds, and distributes reports via FTP and email—ensuring accurate and timely financial reporting.
+
+<Callout kind="tip" collapsed="false">
+  Ensure province tax rates and FTP/SMTP configurations are correctly set before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Calculates GST, PST, HST, and Quebec PST
+
+- Generates CSV tax reports
+
+- Uploads reports to FTP
+
+- Sends reports via email
+
+👉 In short:\
+Calculate taxes → generate reports → share automatically.
+
+## When It Runs
+
+Used for tax reporting and accounting
+
+Typically runs:
+
+- Scheduled execution (recommended daily)
+
+- Manually triggered
+
+## Parameters
+
+<ParamField path="ProvinceTaxRates" param-type="string" required="true" deprecated="false">
+  GST, PST, HST values configured for each province.
+</ParamField>
+
+<ParamField path="FTP_server" param-type="string" required="true" deprecated="false">
+  FTP server URL.
+</ParamField>
+
+<ParamField path="FTP_user" param-type="string" required="true" deprecated="false">
+  FTP username.
+</ParamField>
+
+<ParamField path="FTP_password" param-type="string" required="true" deprecated="false">
+  FTP password.
+</ParamField>
+
+<ParamField path="ServerName" param-type="string" required="true" deprecated="false">
+  SMTP server name.
+</ParamField>
+
+<ParamField path="port" param-type="number" required="true" deprecated="false">
+  SMTP port number.
+</ParamField>
+
+<ParamField path="username" param-type="string" required="true" deprecated="false">
+  Email account username.
+</ParamField>
+
+<ParamField path="password" param-type="string" required="true" deprecated="false">
+  Email account password.
+</ParamField>
+
+<ParamField path="fromEmail" param-type="string" required="true" deprecated="false">
+  Sender email address.
+</ParamField>
+
+<ParamField path="toEmail" param-type="string" required="true" deprecated="false">
+  Recipient email address.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  The macro processes only recently processed orders (last 1 day).
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Fetch Processed Orders" icon="download" title-type="p">
+    Retrieve processed orders from the last 24 hours.
+  </Step>
+
+  <Step title="Fetch Refund Data" icon="rotate-ccw" title-type="p">
+    Retrieve refund orders for adjustment calculations.
+  </Step>
+
+  <Step title="Split by Currency" icon="dollar-sign" title-type="p">
+    Separate orders into USD and CAD groups.
+  </Step>
+
+  <Step title="Prepare CSV Structure" icon="file" title-type="p">
+    Define headers and format for report generation.
+  </Step>
+
+  <Step title="Calculate Taxes" icon="calculator" title-type="p">
+    Apply province-wise tax rules:
+
+    - GST
+
+    - PST
+
+    - HST
+
+    - Quebec PST
+  </Step>
+
+  <Step title="Handle Refunds" icon="minus-circle" title-type="p">
+    Convert refund values to negative and adjust totals.
+  </Step>
+
+  <Step title="Build CSV Rows" icon="list" title-type="p">
+    Create one row per order with calculated values.
+  </Step>
+
+  <Step title="Calculate Totals" icon="bar-chart" title-type="p">
+    Summarize totals at the end of each report.
+  </Step>
+
+  <Step title="Upload to FTP" icon="upload-cloud" title-type="p">
+    Upload generated USD and CAD CSV files to FTP server.
+  </Step>
+
+  <Step title="Send Email Reports" icon="mail" title-type="p">
+    Send reports as email attachments to recipients.
+  </Step>
+
+  <Step title="Log Execution" icon="file-text" title-type="p">
+    Record processing status, success, and errors.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Taxes calculated for all eligible orders
+
+  - CSV reports generated for USD and CAD
+
+  - Files uploaded to FTP server
+
+  - Email sent with report attachments
+
+  - Execution logs available for tracking
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Automating tax reporting
+
+- Ensuring accurate tax calculations
+
+- Handling refunds correctly
+
+- Reducing manual accounting effort
+
+- Providing ready-to-use financial reports
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Processes only recent orders (last 1 day)
+
+  - Requires accurate province tax configuration
+
+  - Depends on correct province data in orders
+
+  - Refund matching is based on Order ID
+
+  - FTP and email credentials must be secured
+
+  - No retry mechanism for failed email delivery
+
+  - Large datasets may impact performance
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Canadian Tax Report Generation Example" default-open="false">
+  Orders from Ontario and Quebec are processed.
+
+  👉 The macro:
+
+  - Applies HST for Ontario
+
+  - Applies GST + Quebec PST for Quebec
+
+  - Generates CSV reports
+
+  - Uploads files to FTP
+
+  - Sends email with reports
+
+  Result: Accurate tax reports are generated and shared automatically.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By automating province-wise tax calculations and report distribution, this macro ensures compliance with Canadian tax regulations while significantly reducing manual accounting effort.
+</Callout>
+

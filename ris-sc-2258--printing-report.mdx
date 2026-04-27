@@ -1,0 +1,252 @@
+---
+title: RIS-SC-2258 – Printing Report (Printwear Orders Extraction)
+description: >-
+  Extracts printwear orders based on identifiers, formats invoice references,
+  includes customization details, and filters valid orders for printing
+  workflows.
+---
+## Overview
+
+The **RIS-SC-2258 – Printing Report** retrieves printwear-related orders using specific identifiers, formats invoice numbers, and extracts item customization details and external notes.
+
+It ensures only relevant orders are included for printing workflows while excluding already processed ones.
+
+<Callout kind="tip" collapsed="false">
+  Uses identifier-based filtering and XML string aggregation to extract customization and notes efficiently.
+</Callout>
+
+---
+
+## Purpose
+
+This report:
+
+- Filters **printwear-specific orders**
+
+- Formats **invoice reference with prefix (IE / COM)**
+
+- Extracts **item customization details**
+
+- Includes **external order notes only**
+
+- Excludes **already exported orders**
+
+👉 In short:\
+Get clean, print-ready order data with customization.
+
+---
+
+## When It Runs
+
+Executed on-demand (SQL report)
+
+Typically used:
+
+- Printing workflows
+
+- Custom product processing
+
+- Order export for production
+
+- Pre-dispatch preparation
+
+---
+
+## Parameters
+
+<ParamField path="@RequiredIdentifier" param-type="string" required="true" deprecated="false">
+  Identifier used to include relevant orders.
+</ParamField>
+
+<ParamField path="@RequiredIdentifierExclude" param-type="string" required="true" deprecated="false">
+  Identifier used to exclude already processed/exported orders.
+</ParamField>
+
+<ParamField path="@FromDate" param-type="datetime" required="false" deprecated="false">
+  Start date filter for orders.
+</ParamField>
+
+<ParamField path="@ToDate" param-type="datetime" required="false" deprecated="false">
+  End date filter for orders.
+</ParamField>
+
+---
+
+## How It Works
+
+<Steps>
+  <Step title="Fetch Open Orders" icon="database" title-type="p">
+    Retrieves open orders and their items.
+  </Step>
+
+  <Step title="Filter Parent Items Only" icon="filter" title-type="p">
+    Uses:
+    fkCompositeParentRowId IS NULL\
+    👉 Prevents duplicate rows from bundle components.
+  </Step>
+
+  <Step title="Apply Identifier Filter" icon="tag" title-type="p">
+    Includes orders with:
+
+    - Required Identifier
+
+    Excludes orders with:
+
+    - Exported Identifier
+  </Step>
+
+  <Step title="Apply Date Filters" icon="calendar" title-type="p">
+    Filters orders between:
+
+    - FromDate
+
+    - ToDate
+  </Step>
+
+  <Step title="Filter by Sales Channel" icon="globe" title-type="p">
+    Includes only:
+
+    - Source (.COM) Website
+
+    - Source (.IE) Website
+  </Step>
+
+  <Step title="Format Invoice Number" icon="hash" title-type="p">
+    Creates prefixed invoice:
+
+    - IE → Irish website
+
+    - COM → Global website
+
+    Example:
+    \#IE96462
+  </Step>
+
+  <Step title="Extract Customisation Data" icon="settings" title-type="p">
+    Uses XML aggregation to combine:
+
+    - Property
+
+    - Value
+
+    Format:
+    Size: M | Color: Red
+  </Step>
+
+  <Step title="Extract External Notes" icon="file-text" title-type="p">
+    Retrieves only:
+
+    - Non-empty notes
+
+    - External notes (Internal = 0)
+  </Step>
+
+  <Step title="Sort Output" icon="list" title-type="p">
+    Orders sorted by:
+
+    - Order ID
+
+    - SKU
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Printwear orders extracted
+
+  - Invoice numbers formatted with prefix
+
+  - Customisation details included
+
+  - External notes displayed
+
+  - Duplicate and processed orders excluded
+
+  - Clean, print-ready dataset generated
+</Callout>
+
+---
+
+## Usefulness
+
+This report is highly beneficial for:
+
+- Printing and production workflows
+
+- Custom order processing
+
+- Avoiding duplicate exports
+
+- Improving order clarity
+
+- Reducing manual data extraction
+
+---
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Only orders with required identifier are included
+
+  - Orders with export identifier are excluded
+
+  - SubSource filter is strict (COM / IE only)
+
+  - XML aggregation may impact performance on large datasets
+
+  - Composite child items are excluded
+
+  - ExternalReference must exist for proper invoice formatting
+</Callout>
+
+---
+
+## Example Scenario
+
+<Expandable title="Printwear Order Example" default-open="false">
+  Order Details:
+
+  - SubSource → example Sports (.IE) Website
+
+  - External Reference → 96462
+
+  - Identifier → Printwear Order Identifier
+
+  Items:
+
+  - SKU → TS-001
+
+  - Qty → 2
+
+  - Customisation:
+
+    - Size: M
+
+    - Color: Blue
+
+  Notes:
+
+  - "Urgent order"
+
+  👉 Result:
+
+  - Invoice → #IE96462
+
+  - Customisation → Size: M | Color: Blue
+
+  - Note → Urgent order
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  The most powerful aspect of this report is identifier-driven filtering combined with XML-based aggregation.
+
+  This ensures only relevant orders are processed while presenting customization and notes in a clean, production-ready format—eliminating manual effort and reducing errors.
+</Callout>
+

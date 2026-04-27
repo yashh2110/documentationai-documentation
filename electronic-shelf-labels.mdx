@@ -1,0 +1,163 @@
+---
+title: Electronic shelf labels
+description: >-
+  Electronic shelf labels (ESL) allow product information such as prices and
+  barcodes to be displayed digitally on store shelves and updated remotely from
+  Odoo.
+---
+Electronic shelf labels eliminate the need for manual price updates by syncing product data directly from Odoo to in-store displays.
+
+## **Configuration**
+
+### **Pricer setup**
+
+1. <a href="https://www.pricer.com/contact" target="_blank" rel="noopener noreferrer">**Contact Pricer**</a> to create and configure your account
+
+2. Set up your stores
+
+   - One Pricer store corresponds to one physical location
+
+3. Link transceivers to each store as required
+
+4. Define the following variables in Pricer to map product data:
+
+   - `itemId`: unique product identifier
+
+   - `itemName`: product name
+
+   - `price`: product selling price (including taxes)
+
+   - `presentation`: label template name
+
+   - `currency`: company currency (e.g., USD, EUR)
+
+   - `barcode`: product barcode
+
+**Important**
+
+Variable names must match exactly between Odoo and Pricer.
+
+1. Create a template named `NORMAL` to define how product data appears on labels
+
+2. Ensure your Pricer account has permission to send API requests
+
+## **Odoo setup**
+
+Before configuring, install the **POS Pricer** module (`pos_pricer`).
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/pricer-module.png" width="436" height="169" alt="Installing POS Pricer module." />
+
+### **Configure Pricer stores**
+
+1. Go to **Point of Sale ‣ Configuration ‣ Pricer Stores**
+
+2. Click **New** and enter:
+
+- **Store Name**: internal reference name
+
+- **Pricer Tenant Name**: provided by Pricer (often includes country code)
+
+- **Pricer Login**: account username
+
+- **Pricer Password**: account password
+
+- **Pricer Store ID**: store identifier from Pricer
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/pricer-stores-setup.png" width="1617" height="119" alt="Pricer store configuration." />
+
+**Note**
+
+- The **Pricer Tags** field updates automatically when labels are assigned
+
+- **Last Update** and **Status** fields reflect synchronization activity
+
+### **Assign Pricer tags to products**
+
+To link a product with an electronic label:
+
+1. Go to **Point of Sale ‣ Products ‣ Products**
+
+2. Open or create a product
+
+3. In the **Sales** tab, under **Pricer**:
+
+   - Select the **Pricer Store**
+
+4. Enter the **Pricer Tag IDs**
+
+   - Scan the label barcode or manually input the ID
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/pricer-product.png" width="426" height="177" alt="Assigning Pricer tags to a product." />
+
+**Note**
+
+Pricer tag IDs consist of a letter followed by 16 digits.
+
+**Tip**
+
+- Use a barcode scanner for faster setup
+
+- Start by configuring a single product to validate your setup before scaling
+
+## **Synchronization**
+
+Odoo automatically updates Pricer labels every 12 hours when changes occur in:
+
+- Product name, price, barcode, or taxes
+
+- Currency
+
+- Assigned Pricer store or tags
+
+### **Force update**
+
+To manually update labels:
+
+1. Enable <a href="https://www.odoo.com/documentation/19.0/applications/general/developer_mode.html#developer-mode" target="_blank" rel="noopener noreferrer">**developer mode**</a>
+
+2. Go to **Point of Sale ‣ Configuration ‣ Pricer Stores**
+
+3. Select the store
+
+4. Click:
+
+- **Update tags** (only changed products)
+
+- **Update all tags** (force full synchronization)
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/update-all.png" width="1834" height="231" alt="Updating Pricer tags." />
+
+If successful, the status shows **Update successfully sent to Pricer**. Otherwise, an error message is displayed.
+
+**Warning**
+
+If synchronization fails, Odoo may still mark the product as updated. In this case, manually trigger a full update.
+
+## **Discount labels**
+
+To display discounted prices on labels, assign a pricelist to the product variant:
+
+1. Go to **Point of Sale ‣ Products ‣ Product Variants**
+
+2. Select the product
+
+3. In **General Information**:
+
+   - Set a **Pricer Sales Pricelist**
+
+An **On Sale Price** field will appear, showing the discounted value.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/pricer-sales-pricelist.png" width="1222" height="331" alt="Assigning pricelist for discount labels." />
+
+After synchronization, the label displays a **PROMO** tag with:
+
+- Original (crossed-out) price
+
+- Discounted price
+
+**Note**
+
+- Pricelists based on quantity discounts or other pricelists are not supported
+
+- Discounts shown on labels do not automatically apply during POS checkout
+

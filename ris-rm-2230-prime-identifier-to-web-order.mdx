@@ -1,0 +1,146 @@
+---
+title: Prime Identifier to Web Order
+description: >-
+  Assign a specific identifier (tag) to orders, ensuring the identifier exists
+  before applying it to all selected orders.
+---
+## Overview
+
+The **RIS-RM-2230 – Prime Identifier to Web Order** macro ensures that orders are properly tagged with a specified identifier, such as “Prime Order”, for better visibility and processing.
+
+<Callout kind="tip" collapsed="false">
+  Ensure the identifier name is correctly defined to maintain consistency across orders.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Validates input parameters
+
+- Checks if identifier exists
+
+- Creates identifier if missing
+
+- Assigns identifier to orders
+
+👉 In short:\
+Check tag → create if needed → assign to orders.
+
+## When It Runs
+
+Typically executed:
+
+- After order import
+
+- During order processing
+
+- For identifying special orders (e.g., Prime orders)
+
+- For filtering and reporting
+
+- As part of automation workflows
+
+- Manually when needed
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of order IDs to process.
+</ParamField>
+
+<ParamField path="PrimeIdentifier" param-type="string" required="true" deprecated="false">
+  Name of the identifier/tag to assign.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Both OrderIds and PrimeIdentifier must be provided for proper execution.
+</Callout>
+
+## Simple Explanation
+
+The macro checks if a specific identifier exists, creates it if necessary, and assigns it to all selected orders.
+
+## Step-by-Step Flow
+
+<Steps>
+  <Step title="Start Macro" icon="play-circle" title-type="p">
+    Begin execution and log start of the process.
+  </Step>
+
+  <Step title="Validate Inputs" icon="alert-circle" title-type="p">
+    Ensure OrderIds are provided and identifier name is not empty.\
+    Stop execution if invalid.
+  </Step>
+
+  <Step title="Loop Through Orders" icon="list" title-type="p">
+    Process each order individually and log order details.
+  </Step>
+
+  <Step title="Prepare Order List" icon="clipboard" title-type="p">
+    Collect valid orders and prepare them for tagging.
+  </Step>
+
+  <Step title="Check Identifier Exists" icon="search" title-type="p">
+    Search for the specified identifier (e.g., "Prime Order").
+  </Step>
+
+  <Step title="Create Identifier if Missing" icon="plus-circle" title-type="p">
+    If identifier does not exist → create a new one.
+  </Step>
+
+  <Step title="Assign Identifier" icon="tag" title-type="p">
+    Apply the identifier to all selected orders.
+  </Step>
+
+  <Step title="Logging" icon="file-text" title-type="p">
+    Log success messages and completion status.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - All selected orders are tagged correctly
+
+  - Identifier consistency maintained
+
+  - Orders are easy to identify and filter
+</Callout>
+
+## Usefulness
+
+- **Easy Identification** – Quickly identify special orders
+
+- **Automation** – Eliminates manual tagging
+
+- **Better Filtering** – Useful in reports and dashboards
+
+- **Flexibility** – Works with any identifier name
+
+## Example Scenario
+
+<Expandable title="Tagging Prime Orders" default-open="false">
+  Need to mark Prime orders for priority handling.\
+  The macro automatically:
+
+  - Takes list of orders
+
+  - Assigns "Prime Order" identifier
+
+  Result:
+
+  - Easy filtering
+
+  - Faster processing
+
+  - Improved visibility
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This macro follows a simple flow: Order → Check Identifier → Create (if needed) → Assign Tag.\
+  It prevents missing tags, manual errors, and ensures consistent identification of special orders.
+</Callout>
+

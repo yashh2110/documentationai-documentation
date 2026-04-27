@@ -1,0 +1,156 @@
+---
+title: Phone Number and Email Validation
+description: >-
+  Ensure all orders have valid phone numbers and email addresses by automatically
+  filling missing values with predefined defaults.
+---
+## Overview
+
+The **RIS-RM-2041 – Phone Number and Email** macro validates customer contact details on orders and fills missing or invalid phone numbers and email addresses.
+
+It ensures that all orders meet the minimum requirements for shipping, communication, and system integrations.
+
+<Callout kind="tip" collapsed="false">
+  Configure valid default phone number and email address before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Checks for missing or invalid phone numbers  
+- Checks for missing email addresses  
+- Replaces missing values with defaults  
+- Updates order customer information  
+
+👉 In short:  
+If phone/email missing → replace with default → update order.
+
+## When It Runs
+
+Used for data validation and cleanup workflows
+
+Typically runs:
+
+- During order processing  
+- Manual execution  
+- Before shipping label generation  
+- Before courier API calls  
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of orders to process.
+</ParamField>
+
+<ParamField path="DefualtPhoneNumber" param-type="string" required="true" deprecated="false">
+  Default phone number to assign if missing or invalid.
+</ParamField>
+
+<ParamField path="DefualtEmailAddress" param-type="string" required="true" deprecated="false">
+  Default email address to assign if missing.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Existing valid phone numbers and email addresses are not overwritten.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Process Orders" icon="list" title-type="p">
+    Loop through each order provided in OrderIds.
+  </Step>
+
+  <Step title="Fetch Order Details" icon="download" title-type="p">
+    Retrieve customer information including phone number and email address.
+  </Step>
+
+  <Step title="Validate Phone Number" icon="phone" title-type="p">
+    Check if phone number is:
+    - Empty  
+    - Or equals <code>"Phone number: N/A"</code>  
+
+    If invalid → replace with default phone number.
+  </Step>
+
+  <Step title="Validate Email Address" icon="mail" title-type="p">
+    Check if email address is empty.  
+
+    If missing → replace with default email address.
+  </Step>
+
+  <Step title="Track Changes" icon="check-circle" title-type="p">
+    Mark order as modified if any updates are made.
+  </Step>
+
+  <Step title="Update Order" icon="refresh-cw" title-type="p">
+    Save updated customer details using <code>SetOrderCustomerInfo()</code>.
+  </Step>
+
+  <Step title="Log Execution" icon="file-text" title-type="p">
+    Log execution start, updates, errors, and completion.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Missing phone numbers are filled  
+
+  - Missing email addresses are filled  
+
+  - Orders become valid for shipping and communication  
+
+  - Data consistency is improved  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Preventing courier and shipping errors  
+- Ensuring successful label generation  
+- Avoiding failed email notifications  
+- Maintaining complete customer data  
+- Reducing manual correction effort  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Default values must be valid and properly configured  
+
+  - Does not overwrite existing valid data  
+
+  - Updates only when fields are missing or invalid  
+
+  - Depends on correct API response for updates  
+
+  - Lightweight processing with minimal performance impact  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Missing Contact Details Fix Example" default-open="false">
+  An order contains:
+
+  - Phone Number → "Phone number: N/A"  
+  - Email → (empty)  
+
+  👉 The macro:
+
+  - Replaces phone with default value  
+  - Replaces email with default value  
+  - Updates order  
+
+  Result:
+
+  - Valid phone and email added  
+  - Order ready for shipping and communication  
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By ensuring every order contains valid contact details, this macro acts as a critical data validation layer—preventing downstream failures in shipping, communication, and system integrations.
+</Callout>

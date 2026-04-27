@@ -1,0 +1,150 @@
+---
+title: Stock Item Dimensions and Packaging
+description: >-
+  Retrieves product physical details including dimensions, weight, packaging
+  group, and warehouse bin location for active, non-composite items.
+---
+## Overview
+
+The **RIS-SC-1006 – Stock Item Dimensions and Packaging** script provides a comprehensive report of product size, weight, packaging type, and storage location.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  Get product dimensions, weight, packaging type, and bin location for active items.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Retrieves SKU, depth, width, height, and weight
+
+- Fetches packaging group information
+
+- Retrieves bin or rack location in the warehouse
+
+- Focuses only on active, non-composite items
+
+👉 Supports warehouse packing, shipping calculations, and operational efficiency.
+
+## When It Runs
+
+Used for warehouse and operational reporting.
+
+**Typically runs:**
+
+- Manual execution for packing setup
+
+- During shipping and courier calculation
+
+- For warehouse organization and planning
+
+## Parameters
+
+<ParamField path="None" param-type="none" required="false" deprecated="false">
+  No input parameters required.\
+  Uses fixed filters:
+
+  - Location = Default
+
+  - Only active, non-composite items included
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  The script consolidates product dimensions, packaging info, and storage location into a single report.
+</Callout>
+
+## Process Flow Step-by-Step
+
+<Steps>
+  <Step title="Get Product Details" icon="box" title-type="p">
+    Retrieve SKU, depth, width, height, and weight for active items.
+  </Step>
+
+  <Step title="Get Packaging Info" icon="package" title-type="p">
+    Fetch packaging group from PackageGroups table.
+  </Step>
+
+  <Step title="Get Bin Location" icon="map-pin" title-type="p">
+    Retrieve bin or rack location from ItemLocation.
+  </Step>
+
+  <Step title="Apply Location Filter" icon="filter" title-type="p">
+    Include only items from Default stock location.
+  </Step>
+
+  <Step title="Apply Item Filters" icon="slash" title-type="p">
+    Exclude composite, deleted, and archived items.
+  </Step>
+
+  <Step title="Sort Results" icon="arrow-down" title-type="p">
+    Order results by SKU in ascending order.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Report displaying:
+
+    - SKU
+
+    - Dimensions (Depth x Width x Height)
+
+    - Weight
+
+    - Packaging group
+
+    - Bin or rack location\
+      Provides a complete view of product physical and storage details.
+</Callout>
+
+## Usefulness
+
+This script is highly beneficial for:
+
+- Accurate shipping calculation using correct dimensions
+
+- Helping warehouse staff locate items quickly
+
+- Supporting packing decisions with correct packaging type
+
+- Enhancing operational efficiency in picking and packing
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Works only for Default location
+
+  - Excludes inactive and composite items
+
+  - Depends on accurate dimension and packaging data
+
+  - Mainly used by warehouse and logistics teams
+
+  - Read-only report with no data modifications
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Warehouse Packing Preparation Example" default-open="false">
+  Scenario: Warehouse team prepares for packing
+
+  Processing:
+
+  - Retrieve product details including weight, dimensions, packaging, and bin location
+
+  **Result:**
+
+  - ITEM1 → Weight 1.2 kg, Dimensions 10 x 5 x 3, Packaging Box, Bin A1-02
+
+  **Insight:**\
+  Correct packaging can be selected and the item can be quickly located.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Provides essential physical and storage information for products, enabling efficient warehouse operations, accurate shipping calculations, and optimized packing processes.
+</Callout>
+

@@ -1,0 +1,132 @@
+---
+title: Disabled Channel Exclusions Report
+description: >-
+  Identifies fully or partially disabled sales channels, excluding selected subsources.
+---
+## Overview
+
+The **RIS-SC-1034 – Disabled Channel Exclusions Report** script helps analysts detect misconfigured or disabled channels while ignoring specified subsources.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  Find channels that are disabled or partially configured while excluding certain subsources.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Checks all channel configuration flags  
+- Identifies channels that are disabled or partially configured  
+- Excludes selected subsources from the report  
+- Provides a clear view of problematic channel settings  
+
+---
+
+## When It Runs
+
+Used for channel audits, operational reviews, and troubleshooting integrations.
+
+**Typically runs:**
+
+- Manually executed by analysts  
+- During channel setup validation  
+- While troubleshooting sync issues  
+- For operational audits  
+- Before enabling or disabling integrations  
+
+---
+
+## Parameters
+
+<ParamField path="ExcludedSubsources" param-type="string" required="false" deprecated="false">
+  List of subsources to exclude from the report, passed as a comma-separated string.
+</ParamField>
+
+<ParamField path="DIV" param-type="string" required="false" deprecated="false">
+  Delimiter used in dynamic SQL for splitting subsources.
+</ParamField>
+
+<ParamField path="SQL" param-type="string" required="false" deprecated="false">
+  Holds the dynamically generated query for execution.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  The script uses dynamic SQL for flexible filtering and allows multiple subsources to be excluded.
+</Callout>
+
+---
+
+## Simple Explanation
+
+The script examines channel settings, identifies disabled or partially configured channels, applies exclusion filters, and generates a report highlighting only problematic configurations.
+
+---
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Define Exclusions" icon="filter" title-type="p">
+    Specify subsources that should not appear in the results.
+  </Step>
+
+  <Step title="Build Dynamic Query" icon="code" title-type="p">
+    Check for channels that are disabled or partially configured based on key settings.
+  </Step>
+
+  <Step title="Apply Exclusion Filter" icon="x-circle" title-type="p">
+    Remove specified subsources from the result set.
+  </Step>
+
+  <Step title="Execute Query" icon="play" title-type="p">
+    Run the dynamically created SQL query and retrieve results.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+The report contains:
+
+- Channel ID  
+- Source  
+- Subsource  
+- Enabled status  
+- Inventory sync status  
+- Dispatch notes status  
+
+Only shows channels with disabled or incorrect configurations.
+</Callout>
+
+---
+
+## Usefulness
+
+- **Channel Health Monitoring** – Detect configuration issues  
+- **Integration Troubleshooting** – Identify sync problems  
+- **Operational Control** – Ensure all settings are properly enabled  
+- **Flexible Reporting** – Exclude specific channels as needed  
+
+---
+
+## Example Scenario
+
+<Expandable title="Inventory Sync Issue Example" default-open="false">
+**Scenario:** Inventory not syncing  
+
+- Channel Amazon UK has inventory sync disabled  
+- Excluded channels remain unaffected  
+
+**Insight:**  
+Inventory sync must be enabled to restore proper updates.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+Highlighting disabled or misconfigured channel settings while allowing flexible exclusions ensures smooth integrations, prevents operational issues, and improves overall channel management efficiency.
+</Callout>

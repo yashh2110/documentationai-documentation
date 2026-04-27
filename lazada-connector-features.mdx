@@ -1,0 +1,48 @@
+---
+title: Lazada Connector features
+description: >-
+  The Lazada Connector integrates Lazada with Odoo to synchronize orders,
+  products, and inventory. This reduces manual work and provides better
+  visibility into sales and operations across Southeast Asian marketplaces.
+---
+## **Supported features**
+
+The **Lazada Connector** offers the following capabilities:
+
+- Automatically imports confirmed Lazada orders (<u>FBM</u>) into Odoo with status **READY\_TO\_SHIP** or **PROCESSED**, including:
+
+  - Product name
+
+  - SKU reference
+
+  - Quantity ordered
+
+- Updates product stock levels from Odoo to Lazada for merchant-fulfilled operations (<u>FBM</u>)
+
+- Syncs the Lazada product catalog into Odoo or allows linking existing Odoo products with Lazada SKUs
+
+The table below highlights the differences between fulfillment methods:
+
+|                            | Fulfilled By Lazada (FBL)                                     | Fulfilled By Merchant (FBM)                                       |
+| -------------------------- | ------------------------------------------------------------- | ----------------------------------------------------------------- |
+| **Orders**                 | Imports completed orders only.                                | Imports all confirmed and pending shipment orders.                |
+| **Stock Management**       | Managed by Lazada and tracked in Odoo via a virtual location. | Managed in Odoo Inventory and synchronized with Lazada.           |
+| **Delivery Notifications** | Handled entirely by Lazada.                                   | Delivery updates are retrieved from Lazada and reflected in Odoo. |
+
+**Note**
+
+The **Lazada Connector** is primarily designed for synchronizing order and inventory data. Other processes—such as financial reports, disputes, and refunds—must be handled directly in the *Lazada Seller Center*.
+
+## **Lazada supported marketplaces**
+
+### **Southeast Asia region**
+
+| Country     | Marketplace                                                                                |
+| ----------- | ------------------------------------------------------------------------------------------ |
+| Indonesia   | <a href="http://Lazada.co.id" target="_blank" rel="noopener noreferrer">Lazada.co.id</a>   |
+| Malaysia    | <a href="http://Lazada.com.my" target="_blank" rel="noopener noreferrer">Lazada.com.my</a> |
+| Philippines | <a href="http://Lazada.com.ph" target="_blank" rel="noopener noreferrer">Lazada.com.ph</a> |
+| Singapore   | <a href="http://Lazada.sg" target="_blank" rel="noopener noreferrer">Lazada.sg</a>         |
+| Thailand    | <a href="http://Lazada.co.th" target="_blank" rel="noopener noreferrer">Lazada.co.th</a>   |
+| Vietnam     | <a href="http://Lazada.vn" target="_blank" rel="noopener noreferrer">Lazada.vn</a>         |
+

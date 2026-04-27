@@ -1,0 +1,147 @@
+---
+title: Shipping Label Generate in FTP
+description: >-
+  Automatically generate shipping labels for eligible orders and upload them to
+  an FTP server based on identifier filtering.
+---
+## Overview
+
+The **RIS-SM-1005 – Shipping Label Generate in FTP** macro generates shipping labels for selected orders and uploads them to an FTP server.
+
+It filters orders using identifiers, ensures only valid and unprocessed orders are included, and automates label generation and file transfer.
+
+<Callout kind="tip" collapsed="false">
+  Ensure identifiers and FTP configuration are correctly set up before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Filters orders using identifiers
+
+- Generates shipping label PDFs
+
+- Uploads label files to an FTP server
+
+👉 In short:\
+Generate shipping labels and upload them to FTP for selected orders.
+
+## When It Runs
+
+Used for shipping label automation
+
+Typically runs:
+
+- Manually triggered
+
+- Scheduled execution (daily automation)
+
+## Parameters
+
+<ParamField path="identifier" param-type="string" required="true" deprecated="false">
+  Order tags used to filter eligible orders (comma-separated).
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Example:\
+  identifier = ReadyToShip, Processed
+
+  Meaning:\
+  Only orders containing these identifiers will be processed.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Fetch Orders" icon="download" title-type="p">
+    Retrieve open orders from the last 24 hours.
+  </Step>
+
+  <Step title="Filter by Identifier" icon="filter" title-type="p">
+    Select only orders matching the provided identifiers.
+  </Step>
+
+  <Step title="Exclude Processed Orders" icon="x-circle" title-type="p">
+    Skip orders where labels have already been generated.
+  </Step>
+
+  <Step title="Generate Labels" icon="printer" title-type="p">
+    Create shipping labels using the configured print template.
+  </Step>
+
+  <Step title="Convert File" icon="file" title-type="p">
+    Convert generated labels into byte data format.
+  </Step>
+
+  <Step title="Upload to FTP" icon="upload-cloud" title-type="p">
+    Upload files using naming format: OrderNumber.pdf.
+  </Step>
+
+  <Step title="Log Results" icon="file-text" title-type="p">
+    Record success and failure for each processed order.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Shipping labels generated automatically
+
+  - Files uploaded to FTP server
+
+  - Only valid and unprocessed orders processed
+
+  - Execution results logged for tracking
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Automating label generation workflows
+
+- Reducing manual effort
+
+- Centralising label storage
+
+- Supporting external integrations
+
+- Improving operational efficiency
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Processes only orders from the last 24 hours
+
+  - Filters strictly based on identifiers
+
+  - Skips already processed orders
+
+  - Requires correct FTP configuration
+
+  - Upload failures are logged for review
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Identifier-Based Label Processing Example" default-open="false">
+  Orders contain identifiers such as ReadyToShip.
+
+  👉 The macro:
+
+  - Filters orders using identifiers
+
+  - Generates shipping labels
+
+  - Uploads files to FTP
+
+  Result: Only eligible orders are processed automatically.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Using identifiers to control processing ensures precise automation, prevents duplication, and enables seamless integration with external fulfilment systems.
+</Callout>
+

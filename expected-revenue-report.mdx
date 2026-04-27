@@ -1,0 +1,190 @@
+---
+title: Expected revenue report
+description: >-
+  Expected revenue represents the total potential value of opportunities
+  projected to close within a specific time frame, helping teams forecast and
+  evaluate sales performance.
+---
+*Expected revenue* refers to the total estimated value of opportunities that are likely to close within a defined period — typically by the end of the current month.
+
+An *expected revenue report* gathers all active opportunities with a defined closing date, enabling teams to evaluate projected revenue and identify potential gaps in performance.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/expected-revenue-closing.png" width="669" height="213" alt="Close up of the expected closing date on a lead in the CRM app." />
+
+By reviewing this report regularly, sales managers can:
+
+- Monitor expected revenue against targets
+
+- Identify top-performing salespeople
+
+- Detect risks in the pipeline
+
+- Take action on deals that may require attention
+
+## **Create an expected revenue report**
+
+To get started, navigate to:\
+**CRM app ‣ Reporting ‣ Pipeline**
+
+This opens the **Pipeline Analysis** dashboard.
+
+**Important**\
+Before applying new filters, remove any default filters from the search bar to avoid inaccurate results.
+
+Next:
+
+- Click **Measures**
+
+- Select **Expected Revenue**
+
+Then:
+
+- Click the **🔻 (down arrow)** icon
+
+- Select **Add Custom Filter**
+
+## **Add custom filters**
+
+To generate an accurate expected revenue report, configure the following filters:
+
+### **1. Expected closing date**
+
+- Select **Expected Closing**
+
+- Set condition to **is set**
+
+Then duplicate the rule and:
+
+- Change condition to **is between**
+
+- Choose a start and end date (e.g., current month or quarter)
+
+### **2. Assigned salesperson**
+
+- Field: **Salesperson**
+
+- Condition: **is set**
+
+This ensures only assigned opportunities are included in the report.
+
+### **3. Sales team (optional)**
+
+If you want to filter by team:
+
+- Field: **Sales Team**
+
+- Condition: **is in**
+
+- Select one or more teams
+
+**Tip**\
+You can include multiple teams — results will match any selected team.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/custom-filters1.png" width="768" height="251" alt="Custom filters setup for expected revenue report." />
+
+## **View results**
+
+Ensure the filter condition is set to **Match all rules** before applying.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/match-all-filters.png" width="388" height="269" alt="Match all filters option." />
+
+Click **Add** to generate the report.
+
+## **Understand report views**
+
+The expected revenue report can be explored using different views, each serving a specific purpose.
+
+### **Graph view (visual insights)**
+
+The *graph view* helps visualize expected revenue and identify patterns quickly.
+
+**What you can analyze:**
+
+- Revenue distribution across salespeople
+
+- Value of opportunities in each stage
+
+- Trends over time
+
+**Chart types available:**
+
+- **Bar chart**: compare revenue across categories
+
+- **Line chart**: track changes over time
+
+- **Pie chart**: view proportional contribution
+
+**Best practices:**
+
+- Use stacked bars to compare grouped data
+
+- Switch to line charts for trend analysis
+
+- Use pie charts for smaller datasets
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/graph-view-icons.png" width="620" height="59" alt="Graph view icons." />
+
+### **List view (detailed records)**
+
+The *list view* displays all opportunities included in the report as individual records.
+
+**What you can do:**
+
+- Open any opportunity for detailed review
+
+- Scan deals quickly
+
+- Identify high-value opportunities
+
+**Recommended columns:**
+
+- Expected Closing Date
+
+- Expected Revenue
+
+- Probability
+
+- Salesperson
+
+**Why use it:**
+
+- Ideal for day-to-day sales operations
+
+- Helps track deal progress
+
+- Useful for follow-ups
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/list-icon.png" width="171" height="46" alt="List view icon." />
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/toggle-icon.png" width="529" height="118" alt="Toggle options menu." />
+
+### **Pivot view (advanced analysis)**
+
+The *pivot view* organizes data into a structured table for deeper insights.
+
+**What you can analyze:**
+
+- Revenue grouped by stage, team, or salesperson
+
+- Performance across time periods
+
+- Contribution of different segments
+
+**Key features:**
+
+- Dynamic grouping
+
+- Multiple metrics (Expected Revenue, Count, etc.)
+
+- Axis switching using **Flip Axis**
+
+**Common use cases:**
+
+- Compare team performance
+
+- Analyze revenue by pipeline stage
+
+- Track growth over time
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/pivot-view-icon.png" width="172" height="48" alt="Pivot view icon." />
+

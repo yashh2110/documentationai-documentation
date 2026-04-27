@@ -1,0 +1,152 @@
+---
+title: Open Order Mark As Processed
+description: >-
+  Automatically process eligible open orders based on delivery scheduling logic
+  and predefined timing conditions.
+---
+## Overview
+
+The **RIS-SM-2029 – OpenOrderMarkAsProcessed** macro automates order processing by evaluating delivery dates and processing orders only when they meet defined scheduling criteria.
+
+It ensures that orders are processed neither too early nor too late, improving workflow timing and operational efficiency.
+
+<Callout kind="tip" collapsed="false">
+  Ensure delivery_day extended property is correctly formatted for accurate processing.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Evaluates delivery dates from order data  
+- Applies timing logic using configurable days  
+- Processes only eligible orders  
+
+👉 In short:  
+Process orders automatically on the correct scheduled date.
+
+## When It Runs
+
+Used for scheduled and delayed order processing
+
+Typically runs:
+
+- Scheduled execution (recommended daily)  
+- Manually triggered  
+
+## Parameters
+
+<ParamField path="Vendors" param-type="string" required="true" deprecated="false">
+  Comma-separated list of vendor names to filter orders.
+</ParamField>
+
+<ParamField path="Identifiers" param-type="string" required="true" deprecated="false">
+  Comma-separated order identifiers used for filtering.
+</ParamField>
+
+<ParamField path="Days" param-type="number" required="true" deprecated="false">
+  Number of days added to delivery date to determine processing date.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Only orders matching vendor and identifier conditions will be processed.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Initialize Inputs" icon="settings" title-type="p">
+    Split Vendors and Identifiers into structured lists.
+  </Step>
+
+  <Step title="Fetch Locations" icon="map-pin" title-type="p">
+    Retrieve all inventory locations from the system.
+  </Step>
+
+  <Step title="Retrieve Open Orders" icon="download" title-type="p">
+    Fetch open orders for each location.
+  </Step>
+
+  <Step title="Filter Orders" icon="filter" title-type="p">
+    Select orders where:
+    - Label or picklist is printed  
+    - Status is Open or Parked  
+    - Vendor and identifier match inputs  
+  </Step>
+
+  <Step title="Read Delivery Date" icon="calendar" title-type="p">
+    Extract delivery_day from extended properties and validate format.
+  </Step>
+
+  <Step title="Calculate Processing Date" icon="clock" title-type="p">
+    Add Days to delivery date and compare with current UTC date.
+  </Step>
+
+  <Step title="Identify Eligible Orders" icon="check-circle" title-type="p">
+    Select orders where calculated date matches current date.
+  </Step>
+
+  <Step title="Process Orders" icon="play" title-type="p">
+    Process eligible orders in batch per location.
+  </Step>
+
+  <Step title="Log Execution" icon="file-text" title-type="p">
+    Record success, failures, and invalid data.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Orders are processed automatically based on schedule  
+
+  - Only valid and eligible orders are processed  
+
+  - Batch processing improves performance  
+
+  - Execution logs provide full traceability  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Automating scheduled order processing  
+- Preventing early or delayed fulfilment  
+- Reducing manual workload  
+- Improving workflow accuracy  
+- Enhancing operational efficiency  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Depends on correct delivery_day format  
+
+  - Uses UTC date for comparison  
+
+  - Processes only matching vendor and identifier orders  
+
+  - Ignores orders without valid conditions  
+
+  - Failed orders are logged but not retried  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Scheduled Order Processing Example" default-open="false">
+  An order has delivery_day = 2026-03-25 and Days = 2.
+
+  👉 The macro:
+
+  - Calculates processing date = 2026-03-27  
+  - Matches it with current date  
+  - Processes the order automatically  
+
+  Result: Order is processed at the correct time without manual intervention.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By aligning order processing with delivery scheduling logic, this macro ensures precise timing, reduces operational errors, and improves fulfilment efficiency.
+</Callout>

@@ -1,0 +1,61 @@
+---
+title: Local Network Access
+description: >-
+  Local Network Access (LNA) is a browser security feature that restricts
+  websites from accessing devices on a local network unless permission is
+  explicitly granted. This enables Odoo Point of Sale to communicate directly
+  with local devices such as ePOS printers without requiring SSL certificates.
+---
+Local Network Access allows Odoo POS to securely interact with hardware devices available on the same local network, such as supported printers. Access is controlled by the browser and requires user approval before communication is allowed.
+
+**Note**
+
+Local Network Access is supported in browsers based on <a href="https://developer.chrome.com/release-notes/142" target="_blank" rel="noopener noreferrer">**Chromium version 142**</a> or later, including Google Chrome, Brave, Microsoft Edge, Vivaldi, and Opera.
+
+**Important**
+
+Ensure your ePOS printer is assigned a **static IP address**. Without this, the device may become unreachable. Static IP configuration should be handled through your router settings.
+
+## **Activation**
+
+To enable <u>LNA</u> in Odoo:
+
+1. <a href="https://www.odoo.com/documentation/19.0/applications/general/developer_mode.html#developer-mode" target="_blank" rel="noopener noreferrer">**Enable developer mode**</a>
+
+2. Go to **Settings ‣ Technical ‣ System Parameters**
+
+3. Click **New** and enter:
+
+   - **Key**: `point_of_sale.use_lna`
+
+   - **Value**: `True`
+
+4. Click **Save**
+
+## **Browser permission**
+
+Once LNA is enabled and a local device (e.g., an <a href="https://www.odoo.com/documentation/19.0/applications/sales/point_of_sale/hardware_network/receipt_printers.html#pos-epos-printers-supported-printers" target="_blank" rel="noopener noreferrer">**ePOS printer**</a>) is configured, your browser will display a permission request.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/pos-lna.png" width="400" height="305" alt="Local network access permission popup." />
+
+**Note**
+
+- If the permission popup does not appear, you can manually allow access through your browser’s site settings
+
+- Some browsers require enabling experimental flags:
+
+  - Brave: `brave://flags/#local-network-access-check`
+
+  - Chrome: `chrome://flags/#local-network-access-check`
+
+## **Check LNA status in POS**
+
+To view the current LNA status:
+
+1. <a href="https://www.odoo.com/documentation/19.0/applications/sales/point_of_sale/use.html#pos-use-open-register" target="_blank" rel="noopener noreferrer">**Open the POS register**</a>
+
+2. Click the menu icon (☰) in the top-right corner
+
+3. Select **Local Network Access**
+
+A popup will display the **LNA Permission status**, showing whether access is granted or blocked.

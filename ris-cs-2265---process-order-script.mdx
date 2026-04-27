@@ -1,0 +1,230 @@
+---
+title: RIS-CS-2265 – Process Order Script (Package Summary Report)
+description: >-
+  Generates order-level package summaries including package count, weight, and
+  shipping details using shipping package data with fallback logic.
+---
+## Overview
+
+The **RIS-CS-2265 – Process Order Script** generates a detailed package summary report by combining order data with shipping package information.
+
+It intelligently handles missing data using fallback logic to ensure complete and reliable output.
+
+<Callout kind="tip" collapsed="false">
+  Uses deduplicated package records and fallback logic to ensure accurate package count and weight.
+</Callout>
+
+---
+
+## Purpose
+
+This report:
+
+- Provides **order-level package summary**
+
+- Calculates **package count and total weight**
+
+- Extracts **shipping and tracking details**
+
+- Handles **missing package data using fallback logic**
+
+👉 In short:\
+Get accurate package and shipping summary per order.
+
+---
+
+## When It Runs
+
+Executed on-demand (SQL report)
+
+Typically used:
+
+- Shipping analysis
+
+- Package tracking
+
+- Logistics reporting
+
+- Order fulfillment monitoring
+
+---
+
+## Parameters
+
+<ParamField path="@FromDate" param-type="datetime" required="true" deprecated="false">
+  Start date for processed orders.
+</ParamField>
+
+<ParamField path="@ToDatePlusOne" param-type="datetime" required="true" deprecated="false">
+  End date for processed orders (inclusive via +1 day logic).
+</ParamField>
+
+---
+
+## How It Works
+
+<Steps>
+  <Step title="Fetch Base Order Data" icon="database" title-type="p">
+    Retrieves:
+
+    - Order ID
+
+    - Channel reference
+
+    - Order date
+
+    - Source and SubSource
+
+    - Postal service
+
+    - Tracking number
+
+    - Total value
+
+    - Number of SKUs
+  </Step>
+
+  <Step title="Deduplicate Package Records" icon="filter" title-type="p">
+    Removes duplicate package entries using:
+
+    - OrderItem
+
+    - Shipping
+
+    - Package tables
+  </Step>
+
+  <Step title="Build Package Summary" icon="package" title-type="p">
+    Creates readable summary:
+    Package 1: 2kg; Package 2: 1.5kg
+
+    Uses XML aggregation and row numbering.
+  </Step>
+
+  <Step title="Calculate Package Count" icon="hash" title-type="p">
+    Counts distinct packages per order.
+  </Step>
+
+  <Step title="Calculate Total Weight" icon="bar-chart" title-type="p">
+    Sums all package weights per order.
+  </Step>
+
+  <Step title="Apply Fallback Logic" icon="refresh-cw" title-type="p">
+    If no package data exists:
+
+    - Use OrderPackaging table
+
+    - Default to:
+      Package 1: 0kg
+  </Step>
+
+  <Step title="Finalize Output" icon="list" title-type="p">
+    Combines:
+
+    - Order data
+
+    - Package summary
+
+    - Package count
+
+    - Total weight
+  </Step>
+
+  <Step title="Sort Results" icon="arrow-down" title-type="p">
+    Orders sorted by latest order date.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Order-level package summary generated
+
+  - Package count calculated accurately
+
+  - Total package weight provided
+
+  - Shipping and tracking details included
+
+  - Fallback logic ensures no missing data
+</Callout>
+
+---
+
+## Usefulness
+
+This report is highly beneficial for:
+
+- Logistics tracking
+
+- Shipping verification
+
+- Warehouse operations
+
+- Courier reconciliation
+
+- Performance analysis
+
+---
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Deduplication is critical to avoid incorrect package counts
+
+  - XML aggregation may impact performance on large datasets
+
+  - Fallback logic ensures data completeness but may show default values
+
+  - Date filter uses inclusive end date logic via DATEADD
+
+  - Weight formatting is rounded for readability
+</Callout>
+
+---
+
+## Example Scenario
+
+<Expandable title="Package Summary Example" default-open="false">
+  Order:
+
+  - 2 packages shipped
+
+  Package Data:
+
+  - Package 1 → 2kg
+
+  - Package 2 → 1.5kg
+
+  👉 Result:
+
+  - Package Summary →\
+    Package 1: 2kg; Package 2: 1.5kg
+
+  - Package Count → 2
+
+  - Total Weight → 3.5kg
+
+  Fallback Case:
+
+  - No package data
+
+  👉 Result:
+
+  - Package Summary → Package 1: 0kg
+
+  - Package Count → 1
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  The strength of this script lies in its deduplication + fallback strategy.
+
+  By combining shipping package data with backup sources, it guarantees accurate and complete reporting—even when primary data is missing—making it highly reliable for logistics operations.
+</Callout>
+

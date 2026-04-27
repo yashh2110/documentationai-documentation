@@ -1,0 +1,439 @@
+---
+title: Webflow Linnworks Integration — End User Guide
+description: >-
+  Deep documentation with full explanation of order lifecycle, product sync,
+  inventory logic, pricing, automation, validation, and operations.
+---
+# Overview
+
+This integration connects Webflow (your online storefront) with Linnworks (your order and inventory management system).
+
+It acts as a bridge that automatically transfers and synchronizes data between both systems so that business operations run smoothly without manual effort.
+
+---
+
+# System Purpose
+
+The main purpose of this system is to ensure that both platforms always remain aligned.
+
+This includes:
+
+- Orders created in Webflow are automatically processed in Linnworks
+
+- Product details remain consistent across both systems
+
+- Inventory levels are always accurate and up to date
+
+- Pricing changes are reflected immediately
+
+---
+
+# System Architecture (High Level)
+
+## Components
+
+- Webflow: Where customers place orders
+
+- Linnworks: Where orders are processed and inventory is managed
+
+- Integration Layer: Handles communication and synchronization
+
+---
+
+## Data Flow
+
+- Orders flow from Webflow to Linnworks
+
+- Inventory flows from Linnworks to Webflow
+
+- Pricing updates flow from Linnworks to Webflow
+
+- Product updates can flow both ways
+
+---
+
+# Order Management
+
+## Overview
+
+Order management is the most critical part of this system. It ensures that customer orders are correctly transferred and processed.
+
+---
+
+## Detailed Order Lifecycle
+
+### Step 1: Order Creation
+
+A customer places an order on the Webflow store. The order is stored in Webflow.
+
+---
+
+### Step 2: Order Detection
+
+The integration continuously checks for new orders. Once a new order is detected, it is picked for processing.
+
+---
+
+### Step 3: Validation
+
+Before sending the order, the system checks:
+
+- Customer details are complete
+
+- Address is valid
+
+- Products exist
+
+- Quantity is correct
+
+If validation fails, the order is marked as failed and needs correction.
+
+---
+
+### Step 4: Order Transfer
+
+After validation, the order is sent to Linnworks for processing.
+
+---
+
+### Step 5: Processing
+
+Linnworks processes the order for picking, packing, and fulfillment.
+
+---
+
+### Step 6: Status Synchronization
+
+Once processed, the order status is updated and synced back to Webflow.
+
+---
+
+## Order States
+
+| State      | Description            |
+| ---------- | ---------------------- |
+| New        | Order created          |
+| Pending    | Waiting for processing |
+| Processing | Being handled          |
+| Completed  | Successfully processed |
+| Failed     | Error occurred         |
+
+---
+
+## Business Value
+
+- Reduces manual order entry
+
+- Improves processing speed
+
+- Minimizes errors
+
+- Enhances customer satisfaction
+
+---
+
+# Product Synchronization
+
+## Overview
+
+This module ensures that product information is consistent across both systems.
+
+---
+
+## What is Synced
+
+- Product name
+
+- Description
+
+- Price
+
+- Variations (size, color)
+
+- Images
+
+---
+
+## Detailed Flow
+
+1. Product is created or updated
+
+2. System detects the change
+
+3. Data is validated
+
+4. Product is synced to the other system
+
+5. Confirmation is received
+
+---
+
+## Validation Rules
+
+- Product name must exist
+
+- Category must be assigned
+
+- Price must be valid
+
+- Variations must be correct
+
+---
+
+## Business Value
+
+- Accurate product listings
+
+- Improved customer experience
+
+- Reduced listing errors
+
+---
+
+# Inventory Management
+
+## Overview
+
+Inventory management ensures that stock levels are always accurate.
+
+---
+
+## Detailed Flow
+
+1. Stock changes in Linnworks
+
+2. System detects the change
+
+3. Update is sent to Webflow
+
+4. Store reflects updated stock
+
+---
+
+## Rules
+
+- Stock should never go negative
+
+- Updates must be consistent
+
+- Sync must complete successfully
+
+---
+
+## Business Value
+
+- Prevents overselling
+
+- Maintains accurate inventory
+
+- Improves operational efficiency
+
+---
+
+# Pricing Updates
+
+## Overview
+
+Pricing updates ensure that product prices are always correct across systems.
+
+---
+
+## Detailed Flow
+
+1. Price is updated
+
+2. System detects change
+
+3. Validation is performed
+
+4. Price is synced
+
+5. Confirmation is received
+
+---
+
+## Business Value
+
+- Avoids pricing mismatches
+
+- Maintains consistency
+
+- Supports pricing strategies
+
+---
+
+# Automation
+
+## Overview
+
+The system runs automatically using background processes.
+
+---
+
+## Automated Processes
+
+- Order detection and transfer
+
+- Product synchronization
+
+- Inventory updates
+
+- Price updates
+
+---
+
+## Scheduling Behavior
+
+- Runs continuously
+
+- Processes data in cycles
+
+- Handles operations in batches
+
+---
+
+## Benefits
+
+- No manual intervention required
+
+- Faster operations
+
+- Reduced errors
+
+---
+
+# Retry and Failure Handling
+
+## Retry Logic
+
+If an operation fails:
+
+1. Error is logged
+
+2. Operation is marked as failed
+
+3. System retries automatically
+
+4. Stops after maximum attempts
+
+---
+
+## Failure Types
+
+- Missing data
+
+- Validation errors
+
+- Network issues
+
+---
+
+# Error Handling
+
+## Resolution Process
+
+1. System detects error
+
+2. Error is logged
+
+3. User fixes issue
+
+4. System retries process
+
+---
+
+## Common Issues
+
+- Missing address
+
+- Invalid product data
+
+- Sync failure
+
+---
+
+# Operational Guidelines
+
+## Order Monitoring
+
+- Check new and pending orders
+
+- Ensure orders are syncing correctly
+
+- Verify successful processing
+
+---
+
+## Inventory Monitoring
+
+- Monitor stock levels
+
+- Check for low stock
+
+- Prevent overselling
+
+---
+
+## Product and Pricing Monitoring
+
+- Verify product updates
+
+- Confirm pricing accuracy
+
+---
+
+## Error Monitoring
+
+- Identify failed operations
+
+- Fix issues
+
+- Allow retry
+
+---
+
+## System Health
+
+- Ensure system is running
+
+- Monitor sync cycles
+
+---
+
+# Performance Considerations
+
+- High volume may increase processing time
+
+- Batch processing improves performance
+
+- Retry limits prevent overload
+
+---
+
+# Best Practices
+
+- Maintain accurate data
+
+- Monitor system regularly
+
+- Avoid manual changes during sync
+
+- Resolve errors quickly
+
+---
+
+# Summary
+
+This integration acts as a bridge between Webflow and Linnworks.
+
+It ensures:
+
+- Automated workflows
+
+- Accurate data synchronization
+
+- Reduced manual work
+
+- Scalable operations
+
+The system is designed to improve efficiency and support business growth.

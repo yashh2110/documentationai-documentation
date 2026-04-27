@@ -1,0 +1,147 @@
+---
+title: Last Name Update if Blank in Open Order
+description: >-
+  Ensure all orders have complete customer names by automatically adding a
+  default last name when missing.
+---
+## Overview
+
+The **RIS-RM-2252 – Last Name Update if Blank in Open Order** macro ensures customer name completeness by detecting missing last names and assigning a default value.
+
+<Callout kind="tip" collapsed="false">
+  This macro is essential before shipping label generation to avoid courier-related issues.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Detects missing last names in customer data
+
+- Assigns a default last name
+
+- Updates full name in order address
+
+- Ensures clean and standardized data
+
+👉 In short:\
+Check name → add last name → update order → ensure completeness.
+
+## When It Runs
+
+Typically executed:
+
+- After order import from sales channels
+
+- When customer data is incomplete
+
+- Before shipping label generation
+
+- For courier compliance
+
+- During order processing workflows
+
+- Manually or via automation
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="GUID[]" required="true" deprecated="false">
+  List of orders to process.
+</ParamField>
+
+<ParamField path="SetLastName" param-type="string" required="true" deprecated="false">
+  Default last name to assign when missing.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Example: "John" → "John Customer"
+</Callout>
+
+## Simple Explanation
+
+The macro checks if a customer's name contains only a first name. If so, it appends a default last name and updates the order.
+
+## Step-by-Step Flow
+
+<Steps>
+  <Step title="Start Macro" icon="play" title-type="p">
+    Initialize execution and logging.
+  </Step>
+
+  <Step title="Loop Through Orders" icon="list" title-type="p">
+    Process each order individually and fetch order details.
+  </Step>
+
+  <Step title="Read Customer Name" icon="user" title-type="p">
+    Retrieve FullName from order address and split by space.
+  </Step>
+
+  <Step title="Check Missing Last Name" icon="search" title-type="p">
+    If name contains only one word → last name is missing.
+  </Step>
+
+  <Step title="Update Name" icon="edit" title-type="p">
+    Append default last name.\
+    Example:
+  </Step>
+
+  <Step title="Save Changes" icon="check-circle" title-type="p">
+    Update customer information and save new FullName.
+  </Step>
+
+  <Step title="No Change Case" icon="minus-circle" title-type="p">
+    If name already has first and last name → skip update.
+  </Step>
+
+  <Step title="Logging" icon="file-text" title-type="p">
+    Log order details, old vs new names, and processing status.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - All orders have complete customer names
+
+  - Missing last names are automatically fixed
+
+  - Clean and standardized customer data
+</Callout>
+
+## Usefulness
+
+- **Courier Compliance** – Required for shipping labels
+
+- **Data Quality** – Fix incomplete customer data
+
+- **Automation** – Removes manual corrections
+
+- **Error Prevention** – Avoids shipping issues
+
+## Example Scenario
+
+<Expandable title="Fix Missing Last Names from Marketplace Orders" default-open="false">
+  Orders are received with only first names (e.g., "Rahul").
+
+  The macro:
+
+  - Detects single-word names
+
+  - Adds default last name "Customer"
+
+  Result:
+
+  - "Rahul" → "Rahul Customer"
+
+  - Orders become ready for shipping
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This macro follows a simple flow:\
+  Order → Check Name → Add Missing Last Name → Save.
+
+  It prevents incomplete customer data, shipping label failures, courier rejections, and manual correction effort.
+</Callout>
+

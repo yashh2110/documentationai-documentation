@@ -1,0 +1,227 @@
+---
+title: RIS-SC-2260 –  Sales Value By Brand with SKU
+description: >-
+  Generates a sales summary grouped by brand and SKU, including total orders,
+  quantity sold, and total sales value within a selected date range.
+---
+## Overview
+
+The **RIS-SC-2260 – Sales Value By Brand with SKU** report provides a detailed breakdown of sales performance by brand and SKU.
+
+It aggregates order data to show total orders, quantity sold, and total revenue, helping analyze brand-level performance.
+
+<Callout kind="tip" collapsed="false">
+  Uses extended properties (brand) to dynamically group products without requiring fixed brand fields.
+</Callout>
+
+---
+
+## Purpose
+
+This report:
+
+- Groups sales data by **Brand + SKU**
+
+- Calculates **total orders**
+
+- Calculates **total quantity sold**
+
+- Calculates **total sales value**
+
+- Supports **brand-based filtering**
+
+👉 In short:\
+Analyze brand performance with SKU-level insights.
+
+---
+
+## When It Runs
+
+Executed on-demand (SQL report)
+
+Typically used:
+
+- Sales analysis
+
+- Brand performance tracking
+
+- Revenue reporting
+
+- Product performance evaluation
+
+- Business intelligence dashboards
+
+---
+
+## Parameters
+
+<ParamField path="@fromDate" param-type="datetime" required="true" deprecated="false">
+  Start date for the report.
+</ParamField>
+
+<ParamField path="@toDate" param-type="datetime" required="true" deprecated="false">
+  End date for the report.
+</ParamField>
+
+<ParamField path="@brandName" param-type="string" required="false" deprecated="false">
+  Brand filter (partial match supported).\
+  Leave blank to include all brands.
+</ParamField>
+
+---
+
+## How It Works
+
+<Steps>
+  <Step title="Fetch Orders" icon="database" title-type="p">
+    Retrieves processed orders within the selected date range.
+  </Step>
+
+  <Step title="Join Order Data" icon="layers" title-type="p">
+    Joins:
+
+    - Order
+
+    - OrderItem
+
+    - StockItem
+
+    - StockItem\_ExtendedProperties
+  </Step>
+
+  <Step title="Extract Brand Information" icon="tag" title-type="p">
+    Reads brand from:
+    Extended Property → 'brand'
+  </Step>
+
+  <Step title="Apply Brand Filter" icon="search" title-type="p">
+    Uses case-insensitive matching:
+    LIKE '%brandName%'
+
+    👉 Allows partial matching
+  </Step>
+
+  <Step title="Calculate Total Orders" icon="hash" title-type="p">
+    Counts distinct orders per SKU:
+    COUNT(DISTINCT OrderID)
+  </Step>
+
+  <Step title="Calculate Quantity Sold" icon="box" title-type="p">
+    Total Qty = Sum of item quantities
+  </Step>
+
+  <Step title="Calculate Sales Value" icon="dollar-sign" title-type="p">
+    Total Sales = Qty × Price per unit
+  </Step>
+
+  <Step title="Group Results" icon="list" title-type="p">
+    Groups by:
+
+    - Brand
+
+    - SKU
+
+    - Title
+  </Step>
+
+  <Step title="Sort Output" icon="arrow-down" title-type="p">
+    Orders results by highest sales value.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Brand-wise sales breakdown
+
+  - SKU-level performance insights
+
+  - Total orders per SKU
+
+  - Quantity sold per SKU
+
+  - Revenue (sales value) calculated
+
+  - Sorted by top-performing products
+</Callout>
+
+---
+
+## Usefulness
+
+This report is highly beneficial for:
+
+- Identifying top-performing brands
+
+- Tracking SKU-level sales performance
+
+- Revenue analysis
+
+- Inventory planning
+
+- Business decision-making
+
+---
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Brand is derived from Extended Properties (must exist)
+
+  - Uses LIKE filter → partial matches allowed
+
+  - Case-insensitive comparison applied
+
+  - Uses NOLOCK → may read uncommitted data
+
+  - Only processed orders are included
+
+  - Incorrect or missing brand data may affect results
+</Callout>
+
+---
+
+## Example Scenario
+
+<Expandable title="Brand Sales Example" default-open="false">
+  Brand: Spacex
+
+  Orders:
+
+  - SKU A → Qty 10 → Price £5
+
+  - SKU B → Qty 5 → Price £8
+
+  👉 Result:
+
+  - SKU A:
+
+    - Total Orders → 3
+
+    - Total Qty → 10
+
+    - Total Sales → £50
+
+  - SKU B:
+
+    - Total Orders → 2
+
+    - Total Qty → 5
+
+    - Total Sales → £40
+
+  Insight: Top-performing SKUs within the Spacex brand are clearly visible.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  The strength of this report lies in combining dynamic brand mapping with aggregated sales metrics.
+
+  By leveraging extended properties and flexible filtering, it enables scalable and accurate brand-level performance analysis without requiring structural database changes.
+</Callout>
+

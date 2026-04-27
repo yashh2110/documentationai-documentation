@@ -1,0 +1,156 @@
+---
+title: 'Sales Overview Email '
+description: >-
+  Fetches today’s orders, groups them by sales channel, calculates totals, and
+  sends a formatted daily email report automatically for management and business
+  insights.
+---
+## Overview
+
+The **RIS-SM-2178 – Sales Overview Email&#x20;**&#x20;macro collects today’s open and processed orders, aggregates them by sales channel, calculates total orders and revenue, generates a formatted HTML report, and sends it via email to designated recipients.
+
+<Callout kind="tip" collapsed="false">
+  Automates daily sales reporting, providing management with instant channel-wise insights.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Fetches today’s open and processed orders
+
+- Groups orders by sales channel
+
+- Calculates total orders and revenue per channel
+
+- Generates a professional HTML email report
+
+- Sends the report automatically to recipients
+
+👉 In short:\
+Provides an automated daily sales summary with channel-wise performance.
+
+## When It Runs
+
+Typically used:
+
+- Scheduled (daily) or manual execution
+
+- End-of-day reporting
+
+- Daily automation (cron job)
+
+- Before business review meetings
+
+- During financial tracking
+
+## Parameters
+
+<ParamField path="ServerName" param-type="string" required="true" deprecated="false">
+  SMTP server name
+</ParamField>
+
+<ParamField path="fromEmail" param-type="string" required="true" deprecated="false">
+  Sender email address
+</ParamField>
+
+<ParamField path="password" param-type="string" required="true" deprecated="false">
+  SMTP password
+</ParamField>
+
+<ParamField path="port" param-type="int" required="true" deprecated="false">
+  SMTP port
+</ParamField>
+
+<ParamField path="useSSL" param-type="bool" required="true" deprecated="false">
+  Enable/disable SSL
+</ParamField>
+
+<ParamField path="ToEmailAddress" param-type="string" required="true" deprecated="false">
+  Recipient email address
+</ParamField>
+
+<ParamField path="ToName" param-type="string" required="true" deprecated="false">
+  Recipient name
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Note: These parameters are required to configure and send the email report.
+</Callout>
+
+## Simple Explanation
+
+The macro collects today’s orders, groups them by sales channel, calculates total orders and revenue, generates an HTML report, and sends it via email automatically.
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Initialize Date Range" icon="calendar" title-type="p">
+    Set today’s start and end times to filter orders accurately.
+  </Step>
+
+  <Step title="Fetch Open Orders" icon="shopping-cart" title-type="p">
+    Use Api.Orders.GetOpenOrders to retrieve all open orders for the day.
+  </Step>
+
+  <Step title="Fetch Processed Orders" icon="check-circle" title-type="p">
+    Use Api.ProcessedOrders.SearchProcessedOrders and GetOrderInfo to retrieve detailed processed orders.
+  </Step>
+
+  <Step title="Combine Orders" icon="layers" title-type="p">
+    Merge open and processed orders into a single dataset.
+  </Step>
+
+  <Step title="Group by Sales Channel" icon="pie-chart" title-type="p">
+    Aggregate orders by Source (Shopify, Amazon, eBay, etc.) for reporting.
+  </Step>
+
+  <Step title="Calculate Metrics" icon="calculator" title-type="p">
+    Compute total orders and revenue per channel, as well as grand totals.
+  </Step>
+
+  <Step title="Generate Email Body" icon="file-text" title-type="p">
+    Build HTML report with logo, date, table, and totals.
+  </Step>
+
+  <Step title="Send Email" icon="send" title-type="p">
+    Use ProxyFactory.SendEmail to deliver the report to the recipients.
+  </Step>
+
+  <Step title="Logging & Error Handling" icon="alert-triangle" title-type="p">
+    Track execution steps and handle any failures or errors gracefully.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  A professional daily email report with channel-wise sales summary:
+</Callout>
+
+## Usefulness
+
+- **Business Insights** – Daily visibility of sales performance
+
+- **Channel Performance** – Compare different platforms easily
+
+- **Automation** – Eliminates manual reporting
+
+- **Decision Support** – Supports daily business analysis
+
+- **Professional Output** – Clean HTML report for management
+
+## Example Scenario
+
+<Expandable title="Daily Sales Monitoring" default-open="false">
+  **Scenario:** Management needs daily sales insights.\
+  **Action:** Collect orders → Group by channel → Calculate totals → Generate and send email.\
+  **Result:** Management receives automated daily report with performance metrics.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Converts raw order data into structured daily reports, enabling quick decision-making, improving visibility across sales channels, and eliminating manual reporting effort.
+</Callout>
+

@@ -1,0 +1,168 @@
+---
+title: Increase Open Order Value
+description: >-
+  Restore original order values by reverting item prices from cost back to their
+  original selling prices using XML or stored backup data.
+---
+## Overview
+
+The **RIS-SM-2039 – Increase Open Order Value** macro restores order values that were previously reduced using the Reduce Order Value macro.
+
+It retrieves original pricing data from order XML or extended properties and reapplies it to ensure accurate financial records.
+
+<Callout kind="tip" collapsed="false">
+  Ensure the PriceReducedFlag identifier and backup data (XML or extended properties) exist before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Restores original item prices  
+- Reapplies tax and discounts  
+- Recalculates order totals  
+- Removes reduction tracking flag  
+
+👉 In short:  
+Restore original pricing → recalculate totals → clean up flags.
+
+## When It Runs
+
+Used for financial restoration and post-processing workflows
+
+Typically runs:
+
+- Scheduled / automated execution  
+- After shipping label is printed  
+- After a defined delay  
+- Before financial reconciliation  
+
+## Parameters
+
+<ParamField path="durationInMinutes" param-type="number" required="true" deprecated="false">
+  Minimum time (in minutes) after label printing before restoration starts.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  This delay ensures that price restoration does not interfere with shipping and label generation processes.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Fetch Open Orders" icon="download" title-type="p">
+    Retrieve all open orders across locations.
+  </Step>
+
+  <Step title="Filter Eligible Orders" icon="filter" title-type="p">
+    Select orders where:
+    - Identifier <code>PriceReducedFlag</code> exists  
+    - Shipping label is printed  
+    - Defined delay time has passed  
+  </Step>
+
+  <Step title="Retrieve Order Data" icon="file-code" title-type="p">
+    Fetch order XML and extended properties for restoration.
+  </Step>
+
+  <Step title="Restore Item Prices (Primary)" icon="refresh-cw" title-type="p">
+    Use XML data to restore:
+    - PricePerUnit  
+    - Tax  
+    - DiscountValue  
+    - CostIncTax  
+  </Step>
+
+  <Step title="Restore Totals from XML" icon="calculator" title-type="p">
+    Restore subtotal, tax, total, and discount values from XML and update via API.
+  </Step>
+
+  <Step title="Fallback Restoration" icon="shield" title-type="p">
+    If XML is unavailable:
+    - Use extended properties (e.g., SKU_RetailPrice)  
+    - Recalculate tax and totals  
+  </Step>
+
+  <Step title="Recalculate Totals" icon="plus-circle" title-type="p">
+    Ensure final totals are correctly calculated if fallback method is used.
+  </Step>
+
+  <Step title="Mark Execution" icon="check-circle" title-type="p">
+    Add extended property <code>IncreaseOrderValueMacro = Run</code>.
+  </Step>
+
+  <Step title="Remove Identifier" icon="tag" title-type="p">
+    Remove <code>PriceReducedFlag</code> from processed orders.
+  </Step>
+
+  <Step title="Log Execution" icon="file-text" title-type="p">
+    Log eligibility checks, restoration method, updates, and errors.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Original item prices restored  
+
+  - Order totals recalculated accurately  
+
+  - Taxes and discounts reapplied  
+
+  - Reduction identifier removed  
+
+  - Execution tracked via extended property  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Reversing temporary pricing adjustments  
+- Maintaining financial accuracy  
+- Supporting automated workflows  
+- Preserving audit trails  
+- Preventing incorrect reporting post-dispatch  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Requires <code>PriceReducedFlag</code> identifier  
+
+  - Depends on XML or extended property backup  
+
+  - Delay timing must be correctly configured  
+
+  - Tax recalculation may slightly vary in fallback mode  
+
+  - Should run only after label generation  
+
+  - Large order volumes may impact performance  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Restore Reduced Order Value Example" default-open="false">
+  An order was previously reduced:
+
+  - Item A → £20 → reduced to £12  
+  - Item B → £30 → reduced to £18  
+
+  👉 The macro:
+
+  - Retrieves original values from XML  
+  - Restores item prices  
+  - Recalculates totals  
+
+  Result:
+
+  - Item A → £20  
+  - Item B → £30  
+  - Order totals restored accurately  
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Acting as the reverse mechanism of price reduction, this macro ensures that temporary financial adjustments are safely restored—maintaining accuracy, auditability, and consistency across the entire order lifecycle.
+</Callout>

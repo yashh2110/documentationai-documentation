@@ -1,0 +1,152 @@
+---
+title: Scrap Report by Subsource and Date
+description: >-
+  Identifies resend (scrap) orders, filters by date and subsource, and calculates estimated costs.
+---
+## Overview
+
+The **RIS-SC-1038 – Scrap Report by Subsource and Date** script helps analysts track resend (scrap) orders, filter them by date and channel, and estimate associated financial losses.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  Analyze resend orders and calculate estimated cost impact.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Identifies resend orders from historical data  
+- Filters orders by date range and channel subsource  
+- Calculates estimated cost values at 20%, 30%, and 40%  
+- Provides detailed reporting on order, SKU, and customer information  
+
+---
+
+## When It Runs
+
+Used for loss tracking, resend analysis, and operational audits.
+
+**Typically runs:**
+
+- Manually executed by analysts  
+- During loss analysis  
+- While evaluating defective or returned items  
+- For cost and profitability review  
+
+---
+
+## Parameters
+
+<ParamField path="StartDate" param-type="date" required="true" deprecated="false">
+Start date for filtering resend orders.
+</ParamField>
+
+<ParamField path="EndDate" param-type="date" required="true" deprecated="false">
+End date for filtering resend orders.
+</ParamField>
+
+<ParamField path="Subsource" param-type="string" required="true" deprecated="false">
+Channel subsources to include; must be properly formatted using delimiters.
+</ParamField>
+
+<ParamField path="SQL" param-type="string" required="false" deprecated="false">
+Stores dynamic query for execution.
+</ParamField>
+
+<ParamField path="DIV" param-type="string" required="false" deprecated="false">
+Delimiter used for formatting subsources in dynamic query.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+Subsource values must be correctly delimited to avoid SQL errors.
+</Callout>
+
+---
+
+## Simple Explanation
+
+The script retrieves all resend orders within the specified date range, filters by channel subsource, calculates cost estimates, and produces a detailed report with order, item, and customer details.
+
+---
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Define Date Range" icon="calendar" title-type="p">
+    Filter orders between the provided start and end dates.
+  </Step>
+
+  <Step title="Identify Resend Orders" icon="repeat" title-type="p">
+    Select items marked as resend (scrap) in the order data.
+  </Step>
+
+  <Step title="Filter Processed Records" icon="check-circle" title-type="p">
+    Include only completed resend records.
+  </Step>
+
+  <Step title="Filter Subsources" icon="filter" title-type="p">
+    Limit results to the selected channel subsources.
+  </Step>
+
+  <Step title="Exclude Specific Sources" icon="x-circle" title-type="p">
+    Remove unwanted marketplaces or channels from the report.
+  </Step>
+
+  <Step title="Calculate Cost Estimates" icon="dollar-sign" title-type="p">
+    Compute estimated costs at 20%, 30%, and 40% for each order line.
+  </Step>
+
+  <Step title="Select Output Fields" icon="list" title-type="p">
+    Include order ID, subsource, SKU, quantity, total charge, cost estimates, customer details, and order dates.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+The report contains:
+
+- Order ID  
+- Subsource  
+- SKU and quantity  
+- Total charge  
+- Estimated cost values (20%, 30%, 40%)  
+- Customer details  
+- Order dates  
+
+Only resend or scrap orders are included.
+</Callout>
+
+---
+
+## Usefulness
+
+- **Loss Analysis** – Track cost impact of resend orders  
+- **Channel Performance** – Identify high-risk or problematic channels  
+- **Cost Estimation** – Quantify financial losses from scrapped items  
+- **Operational Improvement** – Highlight process or quality issues for corrective action  
+
+---
+
+## Example Scenario
+
+<Expandable title="High Resend Rate Example" default-open="false">
+**Scenario:** Channel EBAY1 shows high resend volume  
+
+- 50 resend orders  
+- Estimated loss: 10,000  
+
+**Insight:**  
+High resend rates indicate product quality or process issues, requiring investigation and corrective measures.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+By combining resend tracking with estimated cost calculations, this script provides visibility into operational losses, enabling businesses to identify problem areas and improve overall efficiency.
+</Callout>

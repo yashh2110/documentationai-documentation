@@ -1,0 +1,144 @@
+---
+title: SKU Details
+description: >-
+ Retrieves product details including size, colour, and pack quantity using extended properties. Supports SKU search and flexible lookup.
+---
+## Overview
+
+The **RIS-SC-1016 – SKU Details** script consolidates product information, including size, colour, and quantity, into a single view. It allows users to search for specific SKUs and quickly access their attributes.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  Find product details including size, colour, and pack quantity in one report for faster lookup and verification.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Retrieves SKU, title, size, colour, and pack quantity
+
+- Supports search for specific SKUs or patterns
+
+- Consolidates extended property data for easy reporting
+
+## When It Runs
+
+Manually executed by users or analysts.
+
+**Typically used:**
+
+- Responding to customer queries
+
+- Catalog or product verification
+
+- Checking product variations
+
+## Parameters
+
+<ParamField path="search" param-type="string" required="false" deprecated="false">
+  SKU search filter supporting partial matching (e.g., contains text or ending patterns)
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Use flexible patterns for better search results (e.g., `%ITEM1%` or `ITEM%`).
+</Callout>
+
+<Callout kind="info" collapsed="false">
+  The script links base SKU data with extended properties to provide a complete product overview.
+</Callout>
+
+## Process Flow Step-by-Step
+
+<Steps>
+  <Step title="Set Search Filter" icon="search" title-type="p">
+    Apply a search pattern to find relevant SKUs.
+  </Step>
+
+  <Step title="Get Base Product Info" icon="box" title-type="p">
+    Retrieve SKU and product title from StockItem.
+  </Step>
+
+  <Step title="Fetch Size" icon="ruler" title-type="p">
+    Extract size value from extended properties.
+  </Step>
+
+  <Step title="Fetch Colour" icon="droplet" title-type="p">
+    Extract colour value from extended properties.
+  </Step>
+
+  <Step title="Fetch Pack Quantity" icon="package" title-type="p">
+    Retrieve pack size or quantity from extended properties.
+  </Step>
+
+  <Step title="Apply Filters" icon="filter" title-type="p">
+    Exclude deleted and archived items. Filter results based on the search input.
+  </Step>
+
+  <Step title="Sort Results" icon="sort-ascending" title-type="p">
+    Display results ordered by SKU for easy reference.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  Report contains:
+
+  - SKU
+
+  - Product Title
+
+  - Size
+
+  - Colour
+
+  - Pack or Quantity
+
+  Provides a complete overview of product attributes for easy lookup and verification.
+</Callout>
+
+## Usefulness
+
+- **Product Lookup** – Quickly find product details
+
+- **Customer Support** – Answer queries about size, colour, and quantity
+
+- **Catalog Management** – Verify and maintain product attributes
+
+- **Variation Handling** – Useful for products with multiple options
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Relies on properly maintained extended properties
+
+  - Blank results may appear if size, colour, or quantity is missing
+
+  - Search supports flexible patterns for better lookup
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Customer Inquiry Example" default-open="false">
+  A customer wants to know if a product is available in a specific size and colour.
+
+  Search using SKU: `ITEM1`
+
+  - **SKU:** ITEM1
+
+  - **Size:** Large
+
+  - **Colour:** Red
+
+  - **Pack/Quantity:** 10
+
+  **Insight:** The product is available with the required attributes.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By combining core SKU data with extended attributes, this script simplifies product lookup, improves customer response times, and ensures accurate catalog information.
+</Callout>
+

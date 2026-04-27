@@ -1,0 +1,138 @@
+---
+title: Shipping Label Generation & FTP Upload
+description: >-
+  Generate shipping labels for recent open orders and upload them as PDF files
+  to an FTP server for external access and warehouse integrations.
+---
+## Overview
+
+The **RIS-SM-2035 – ShippingLableInFTP** macro generates shipping label PDFs for recent open orders and uploads them to an FTP server.
+
+It enables external systems or warehouses to access shipping labels directly from a centralized FTP location.
+
+<Callout kind="tip" collapsed="false">
+  Ensure FTP configuration and label templates are correctly set before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Fetches recent open orders  
+- Generates shipping label PDFs  
+- Uploads files to FTP server  
+- Automates label distribution  
+
+👉 In short:  
+Generate shipping labels and upload them to FTP.
+
+## When It Runs
+
+Used for label generation and integration workflows
+
+Typically runs:
+
+- Scheduled execution (recommended)  
+- Manual execution  
+- After order import or before dispatch  
+
+## Parameters
+
+<Callout kind="info" collapsed="false">
+  Note:  
+  - This macro does not use dynamic parameters  
+  - FTP configuration and filters are hardcoded inside the macro  
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Initialize Date Filter" icon="calendar" title-type="p">
+    Select orders from the last 1 day.
+  </Step>
+
+  <Step title="Fetch Open Orders" icon="download" title-type="p">
+    Retrieve recent open orders from Linnworks.
+  </Step>
+
+  <Step title="Identify Eligible Orders" icon="filter" title-type="p">
+    Intended to filter orders without printed labels (currently processes all orders due to logic issue).
+  </Step>
+
+  <Step title="Generate Shipping Labels" icon="file-text" title-type="p">
+    Generate PDF labels using shipping label template.
+  </Step>
+
+  <Step title="Download Label Files" icon="download-cloud" title-type="p">
+    Convert label URLs into file byte data.
+  </Step>
+
+  <Step title="Upload to FTP" icon="upload-cloud" title-type="p">
+    Upload files using naming format:
+    OrderNumber.pdf
+  </Step>
+
+  <Step title="Log Execution" icon="file-text" title-type="p">
+    Record success and failure of uploads.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Shipping labels generated successfully  
+
+  - PDF files created for each order  
+
+  - Files uploaded to FTP server  
+
+  - Orders processed automatically  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Automating shipping label generation  
+- Centralizing label storage on FTP  
+- Reducing manual handling  
+- Supporting warehouse integrations  
+- Improving operational efficiency  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Label filtering logic is incorrect (bug present)  
+
+  - File download method may fail (null response issue)  
+
+  - FTP credentials are hardcoded  
+
+  - No retry mechanism for failed uploads  
+
+  - No duplicate file handling  
+
+  - Processes only last 1 day orders  
+
+  - Risk of null reference errors  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Shipping Label FTP Upload" default-open="false">
+  A warehouse system requires access to shipping labels.
+
+  👉 The macro:
+
+  - Fetches recent open orders  
+  - Generates label PDFs  
+  - Uploads files to FTP  
+
+  Result: Labels are available on FTP for external systems to download and print.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  While this macro automates label generation and FTP upload, fixing filtering and file handling issues is critical to ensure reliable and production-ready performance.
+</Callout>

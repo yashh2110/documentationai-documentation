@@ -1,0 +1,154 @@
+---
+title: Amazon  SKU Mapping
+description: >-
+  Retrieves Amazon listing SKUs (custom labels) and maps them to internal
+  Linnworks SKUs to ensure correct linkage between channel listings and
+  inventory.
+---
+## Overview
+
+The **RIS-SC-1043 – Amazon SKU Mapping** script helps analysts and operations teams validate that Amazon SKUs are properly linked to internal Linnworks SKUs.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  See how Amazon SKUs (custom labels) are connected to internal Linnworks SKUs.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Retrieves Amazon custom label SKUs
+
+- Maps them to internal Linnworks SKUs
+
+- Validates SKU mapping accuracy for the Amazon Subsource account
+
+---
+
+## When It Runs
+
+Used for integration checks, catalog audits, and bulk listing validations.
+
+**Typically runs:**
+
+- Manually executed by analysts
+
+- During Amazon integration checks
+
+- While fixing SKU mapping issues
+
+- Before bulk listing updates
+
+- During catalog audits
+
+---
+
+## Parameters
+
+<ParamField path="Source" param-type="string" required="true" deprecated="false">
+  Channel source name. Example: 'AMAZON'.
+</ParamField>
+
+<ParamField path="Subsource" param-type="string" required="true" deprecated="false">
+  Channel subsource or account name.
+</ParamField>
+
+<ParamField path="IncludeUnmapped" param-type="bool" required="false" deprecated="false">
+  Flag to include SKUs that are not yet mapped to internal SKUs. Default is true.
+</ParamField>
+
+<ParamField path="SortBySKU" param-type="bool" required="false" deprecated="false">
+  Flag to sort the report by internal SKU (ItemNumber). Default is true.
+</ParamField>
+
+---
+
+## Simple Explanation
+
+The script retrieves all Amazon SKUs from the Subsource account, checks for mapping to internal Linnworks SKUs, and generates a report showing mapped and unmapped items.
+
+---
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Fetch Channel Listings" icon="download" title-type="p">
+    Use Stock\_ChannelList to get Amazon SKUs (custom labels).
+  </Step>
+
+  <Step title="Match Channel SKU Mapping" icon="link" title-type="p">
+    Join Stock\_ChannelList with Stock\_ChannelSKU using ChannelSKU.
+  </Step>
+
+  <Step title="Link to Internal SKU" icon="database" title-type="p">
+    Use StockItem to retrieve ItemNumber (Linnworks SKU).
+  </Step>
+
+  <Step title="Apply Channel Filter" icon="filter" title-type="p">
+    Filter records for Amazon Subsource account.
+  </Step>
+
+  <Step title="Validate Mapping" icon="check-circle" title-type="p">
+    Identify mapped and unmapped SKUs.
+  </Step>
+
+  <Step title="Sort Output" icon="sort-amount-up" title-type="p">
+    Order results by SKU for clarity.
+  </Step>
+
+  <Step title="Execute Query" icon="play" title-type="p">
+    Generate final mapping report.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  The report contains:
+
+  - Amazon SKU (Custom Label)
+
+  - Linnworks SKU (ItemNumber)
+
+  - Source and Subsource
+
+  - ASIN (if available)
+</Callout>
+
+## Usefulness
+
+- **Mapping Validation** – Ensure all Amazon SKUs are linked
+
+- **Error Detection** – Identify missing or incorrect mappings
+
+- **Integration Debugging** – Fix sync issues
+
+- **Catalog Consistency** – Maintain correct SKU relationships
+
+---
+
+## Example Scenario
+
+<Expandable title="Order Import Issue Example" default-open="false">
+  **Scenario:** Amazon SKU not mapped
+
+  - Amazon SKU: AMZ-999
+
+  - Linnworks SKU: NULL
+
+  **Insight:** SKU is not mapped in the system
+
+  **Action:** Add mapping in Stock\_ChannelSKU and reprocess the order
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Accurate SKU mapping between Amazon and Linnworks is critical for proper order processing, inventory updates, and system synchronization.
+</Callout>
+

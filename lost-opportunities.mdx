@@ -1,0 +1,185 @@
+---
+title: Lost opportunities
+description: >-
+  Not all deals convert into sales. Keeping your pipeline accurate requires
+  identifying and managing lost opportunities. Recording why deals are lost
+  helps uncover patterns, improve team performance, and refine your sales
+  strategy over time.
+---
+Not every deal in your pipeline will close successfully. To maintain a clean and reliable pipeline, it’s important to clearly identify *lost* opportunities. Understanding why deals are lost provides valuable insights, highlights recurring challenges, and helps improve your overall sales approach.
+
+**Note**
+
+**Merging lost opportunities** with active ones will reintroduce them into the pipeline.
+
+## **Mark an opportunity as lost**
+
+To mark an opportunity as lost, open the **CRM app**, then select the relevant opportunity from your pipeline by clicking its Kanban card. This opens the detailed view of the opportunity.
+
+Next, click the **Lost** button located at the top of the record.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/lost-opps-lost-button.png" width="369" height="44" alt="Buttons from the top of an opportunity record with the lost button emphasized." />
+
+A **Mark Lost** dialog box will appear. Here you can:
+
+- Choose a predefined reason from the **Lost Reason** dropdown
+
+- Or create a new reason directly if none match your situation
+
+You can also include additional details in the **Closing Note** field to provide more context.
+
+**Tip**
+
+Although the **Lost Reason** and **Closing Note** fields are optional, adding this information is highly recommended for better tracking, reporting, and future analysis.
+
+Once all details are filled in, click **Mark as Lost** to confirm.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/lost-opps-lost-reason.png" width="768" height="313" alt="Lost reasons popup with sample reasons." />
+
+After confirmation, the opportunity will display a red **Lost** label in the top-right corner, indicating its status.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/lost-banner.png" width="768" height="266" alt="A lost opportunity with the lost banner added." />
+
+**Note**
+
+If an opportunity is archived or inactive, you can mark it as lost by setting its **Probability** to `0%`.
+
+## **Create or edit lost reasons**
+
+To manage lost reasons, navigate to **CRM app ‣ Configuration ‣ Lost Reasons**.
+
+- To update an existing reason, select it and edit the **Description** field
+
+- To add a new reason, click **New** and enter the appropriate description
+
+Maintaining accurate lost reasons ensures more meaningful reporting and analysis.
+
+## **View lost opportunities**
+
+To access lost opportunities:
+
+1. Go to **CRM app ‣ Sales ‣ My Pipeline**
+
+2. Clear any existing filters from the search bar
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/lost-opps-lost-filter.png" width="841" height="718" alt="Search bar with lost filter emphasized." />
+
+1. Click the filter dropdown icon next to the search bar
+
+2. Under the **Filters** section, select **Lost**
+
+Only opportunities marked as lost will now be displayed in the pipeline.
+
+### **Filter opportunities by lost reason**
+
+To analyze specific loss reasons:
+
+1. Open the filter dropdown again
+
+2. Click **Add Custom Filter**
+
+3. In the first field, search and select `Lost Reason`
+
+4. Choose the operator (e.g., **=**)
+
+5. Select the desired reason
+
+6. Click **Add**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/lost-opps-lost-custom-filter.png" width="768" height="284" alt="Search bar with custom filter added for lost reason." />
+
+**Tip**
+
+To filter multiple reasons at once, use the **is in** operator and select multiple values.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/multiple-lost-reasons.png" width="635" height="283" alt="Add Custom Filter pop-up with multiple lost reasons selected." />
+
+## **Restore lost opportunities**
+
+If a lost deal becomes relevant again, it can be restored easily.
+
+1. Open the **CRM app** and navigate to your pipeline
+
+2. Apply the **Lost** filter
+
+**Tip**
+
+Remove the **My Pipeline** filter if you want to see all records.
+
+1. Open the opportunity you want to restore
+
+2. Click **Restore**
+
+This removes the lost status and returns the opportunity to the active pipeline.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/lost-opps-restore.png" width="382" height="242" alt="Lost opportunity with emphasis on the Restore button." />
+
+### **Restore multiple opportunities**
+
+To restore several opportunities at once:
+
+1. Apply the **Lost** filter
+
+2. Switch to list view using the list icon
+
+3. Select the opportunities using checkboxes
+
+4. Click the **Actions** dropdown
+
+5. Choose **Unarchive**
+
+Once restored, these opportunities will no longer appear under the lost filter.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/lost-opps-unarchive.png" width="295" height="392" alt="Action button from list view with the Unarchive option emphasized." />
+
+## **Manage lost leads**
+
+If the *Leads* feature is enabled, leads can be marked as lost in the same way as opportunities. Both use the same set of lost reasons.
+
+**Note**
+
+To enable leads, go to **CRM app ‣ Configuration ‣ Settings** and activate the **Leads** option. This will add a **Leads** menu to your navigation bar.
+
+### **Mark a lead as lost**
+
+1. Navigate to **CRM app ‣ Leads**
+
+2. Open a lead record
+
+3. Click **Lost**
+
+In the pop-up window:
+
+- Select or create a **Lost Reason**
+
+- Optionally add details in the **Closing Note**
+
+Click **Mark as Lost** to confirm.
+
+### **Restore lost leads**
+
+To restore a lead:
+
+1. Go to **CRM app ‣ Leads**
+
+2. Apply the **Lost** filter
+
+3. Open the lead
+
+4. Click **Restore**
+
+This removes the lost label and reactivates the lead.
+
+### **Restore multiple leads**
+
+To restore multiple leads:
+
+1. Apply the **Lost** filter in the Leads view
+
+2. Select multiple leads using checkboxes
+
+3. Click **Actions**
+
+4. Choose **Unarchive**
+
+After this, remove the filter to view the restored leads in your list.

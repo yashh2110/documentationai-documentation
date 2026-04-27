@@ -1,0 +1,176 @@
+---
+title: Update SKU Identifier
+description: >-
+  Extract SKU and barcode data, generate identifier mappings in CSV format,
+  and upload the file to an FTP server for external integrations.
+---
+## Overview
+
+The **RIS-SM-1035 – Update SKU Identifier** macro extracts SKU and barcode data from Linnworks inventory and generates a structured CSV file.
+
+It creates identifier mappings such as EAN and custom IDs, making the data ready for external systems and integrations.
+
+<Callout kind="tip" collapsed="false">
+  Ensure barcode data is properly maintained in inventory and FTP configuration is valid before execution.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Extracts SKU and barcode data  
+- Generates identifier mappings (Custom ID & EAN)  
+- Creates a structured CSV file  
+- Uploads the file to FTP  
+
+👉 In short:  
+Get SKU + barcode → create identifier CSV → upload to FTP.
+
+## When It Runs
+
+Used for product data export and integration workflows
+
+Typically runs:
+
+- Scheduled automation (daily / periodic)  
+- Manual execution  
+- During marketplace synchronization  
+- For barcode and identifier exports  
+
+## Parameters
+
+<ParamField path="Server" param-type="string" required="true" deprecated="false">
+  FTP server URL.
+</ParamField>
+
+<ParamField path="Username" param-type="string" required="true" deprecated="false">
+  FTP username.
+</ParamField>
+
+<ParamField path="Password" param-type="string" required="true" deprecated="false">
+  FTP password.
+</ParamField>
+
+<ParamField path="remoteFolderPath" param-type="string" required="true" deprecated="false">
+  Destination folder path on FTP server.
+</ParamField>
+
+<ParamField path="Port" param-type="number" required="true" deprecated="false">
+  FTP port number.
+</ParamField>
+
+<ParamField path="isSSL" param-type="boolean" required="true" deprecated="false">
+  Enable or disable secure FTP (SSL).
+</ParamField>
+
+## How It Works
+
+<Steps>
+  <Step title="Start Macro" icon="play" title-type="p">
+    Begin execution and run SQL query to fetch stock item data.
+  </Step>
+
+  <Step title="Fetch SKU Data" icon="database" title-type="p">
+    Retrieve SKU and barcode data while applying filters:
+    - Exclude archived, deleted, and composite items  
+    - Remove duplicates using ROW_NUMBER  
+  </Step>
+
+  <Step title="Prepare CSV Structure" icon="file-text" title-type="p">
+    Create CSV headers:
+    SKU, Barcode, IdentifierName, IdentifierType
+  </Step>
+
+  <Step title="Process SKU Data" icon="list" title-type="p">
+    For each item:
+    - Extract SKU and barcode  
+    - Use SKU as fallback if barcode is missing  
+  </Step>
+
+  <Step title="Generate Identifiers" icon="tag" title-type="p">
+    Create two identifier entries:
+    - Custom ID → uses SKU  
+    - EAN → uses barcode  
+  </Step>
+
+  <Step title="Build CSV Content" icon="edit" title-type="p">
+    Append identifier rows and build CSV content in memory.
+  </Step>
+
+  <Step title="Upload to FTP" icon="upload-cloud" title-type="p">
+    Upload file <code>SKUIdentifiers.csv</code> to FTP server.
+  </Step>
+
+  <Step title="Validate Upload" icon="check-circle" title-type="p">
+    Verify upload success and log result.
+  </Step>
+
+  <Step title="Log Execution" icon="file-text" title-type="p">
+    Record execution status, data processing, and errors.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - CSV file generated with SKU identifiers  
+
+  - Includes both Custom ID and EAN mappings  
+
+  - File uploaded successfully to FTP  
+
+  - Data ready for external integrations  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Centralizing SKU identifier data  
+- Supporting marketplace integrations  
+- Automating barcode exports  
+- Ensuring consistent product data  
+- Reducing manual effort and errors  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Depends on accurate barcode data in inventory  
+
+  - Uses SKU as fallback if barcode is missing  
+
+  - SQL query must be maintained for correctness  
+
+  - FTP credentials must be valid  
+
+  - Large datasets may impact performance  
+
+  - File overwrite behavior depends on FTP configuration  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="SKU Identifier Export Example" default-open="false">
+  Inventory contains:
+
+  - SKU: ABC123 → Barcode: 8901234567890  
+  - SKU: XYZ789 → No Barcode  
+
+  👉 The macro:
+
+  - Creates Custom ID using SKU  
+  - Creates EAN using barcode (or SKU fallback)  
+  - Generates CSV file  
+
+  Result:
+
+  - ABC123 → Custom ID + EAN  
+  - XYZ789 → Custom ID + SKU fallback as EAN  
+  - File uploaded to FTP for integration  
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By standardizing SKU identifier mappings and automating CSV generation, this macro ensures consistent, integration-ready product data while eliminating manual processing and data inconsistencies.
+</Callout>

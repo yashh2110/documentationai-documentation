@@ -1,0 +1,124 @@
+---
+title: Lead mining
+description: >-
+  Lead mining enables CRM users to generate new leads directly within the
+  system. By applying filters such as location, company size, and industry,
+  businesses can target and capture high-quality prospects efficiently.
+---
+*Lead mining* allows users to automatically generate new leads inside the *CRM* system. By applying specific filters—such as region, company size, or industry—you can ensure that the leads generated match your target audience and business goals.
+
+## **Configuration**
+
+To enable lead mining:
+
+1. Navigate to **CRM app ‣ Configuration ‣ Settings**
+
+2. Activate the **Lead Mining** option
+
+3. Click **Save**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/activate-lead-mining.png" width="540" height="250" alt="Activate lead mining in Odoo CRM settings." />
+
+## **Generate leads**
+
+Once enabled, a **Generate Leads** button becomes available in multiple locations:
+
+- **CRM app ‣ Sales ‣ My Pipeline**
+
+- **CRM app ‣ Leads**
+
+- **CRM app ‣ Configuration ‣ Lead Mining Requests**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/generate-leads-button.png" width="609" height="138" alt="The Generate Leads button to use the lead mining feature." />
+
+Click **Generate Leads** to open a configuration window where you can define your targeting criteria.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/generate-leads-popup.png" width="768" height="470" alt="The pop-up window with the selection criteria in order to generate leads in Odoo." />
+
+### **Target selection**
+
+You can choose the type of leads you want to generate:
+
+- **Companies**: retrieves general company-level information
+
+- **Companies and their Contacts**: includes both company data and individual contact details
+
+**Note**
+
+When selecting **Companies and their Contacts**, additional filters such as **Role** and **Seniority** become available.
+
+### **Filtering options**
+
+To refine your results, use the following filters:
+
+- **Countries**: target specific geographic regions
+
+- **States**: narrow results further within a country
+
+- **Industries**: focus on particular business sectors
+
+- **Company Size**: enable this option to define a range based on employee count
+
+- **Sales Team**: assign generated leads to a specific team
+
+- **Salesperson**: assign leads directly to a user
+
+- **Tags**: automatically apply tags to categorize leads
+
+**Important**
+
+Ensure compliance with data protection regulations (such as GDPR) when collecting and using contact information.
+
+## **View generated leads**
+
+Once leads are generated, they are automatically assigned based on your selected configuration.
+
+To access them:
+
+- Go to **CRM app ‣ Leads**
+
+- Open a record to review detailed information
+
+The activity thread (chatter) may include additional insights such as:
+
+- Company size
+
+- Technologies used
+
+- Timezone
+
+- Contact details
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/generated-lead.png" width="768" height="522" alt="The chatter thread of a newly generated lead." />
+
+**Note**
+
+If the *Leads* feature is disabled, generated records will appear as opportunities instead.
+
+To enable leads, go to **CRM app ‣ Configuration ‣ Settings**, activate **Leads**, and save.
+
+## **Pricing**
+
+Lead mining operates on a credit-based system.
+
+- Each generated lead consumes **one credit**
+
+- Selecting **Companies and their Contacts** may use additional credits per contact
+
+For detailed pricing, refer to the lead generation service.
+
+To purchase credits:
+
+- Go to **CRM app ‣ Configuration ‣ Settings**
+
+- Locate the Lead Mining section
+
+- Click **Buy Credits**
+
+Alternatively, credits can be managed via the **Settings app** under the services section.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/view-my-services-setting.png" width="712" height="175" alt="Buy credits in the Odoo IAP settings." />
+
+**Note**
+
+Some users may receive complimentary credits for testing purposes, depending on their subscription or environment.

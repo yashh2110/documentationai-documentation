@@ -1,190 +1,125 @@
 ---
-title: Release Notes
-description: 'Changes, fixes, and improvements across versions'
+title: Changelog
+description: Stay updated with the latest releases, enhancements, and changes to Rishvi's services and platform.
 ---
-<Update label="2026-04-10" description="Collections, container pages, JWT/OAuth access control, and cookie consent" tags={["feature"]}>
-  ## CollectionList and CollectionContent components
 
-  Two new components are now available to help you build help center-style navigation directly within your documentation pages.
+## Recent Releases
 
-  [**CollectionList**](/components/collection-list) renders a grid or list of topic collections, each linking to a dedicated content page. Think of it as the landing page of a typical help center where users see categories like "Getting Started," "Billing," or "Account Settings" laid out as clickable tiles.
+<Callout kind="info">
+  Check this changelog regularly to stay informed about new features, bug fixes, and improvements across Rishvi's Linnworks integrations, Odoo ERP solutions, digital marketing tools, and custom software development services.
+</Callout>
 
-  [**CollectionContent**](/components/collection-content) displays the articles or entries within a single collection. Use it on a collection detail page to list all related articles with titles, descriptions, and links, giving readers a familiar browse-and-drill-down experience.
+Rishvi releases updates frequently to enhance multichannel sales automation, ERP optimization, and growth tools. You receive notifications via email and the dashboard at `https://dashboard.example.com/notifications`.
 
-  **When to use them**
+<Columns cols={3}>
+  <Card title="v1.3.0" icon="zap" href="#v1-3-0">
+    Enhanced Linnworks automation.
+  </Card>
+  <Card title="v1.2.0" icon="trending-up" href="#v1-2-0">
+    Odoo ERP improvements.
+  </Card>
+  <Card title="v1.1.0" icon="shield" href="#v1-1-0">
+    Security and performance fixes.
+  </Card>
+</Columns>
 
-  - You want a help center, knowledge base, or support hub layout where users browse by topic rather than following a fixed sidebar.
+<Update id="v1-3-0" label="2024-12-15" description="v1.3.0" tags={["feature", "improvement"]}>
 
-  - You need a category landing page that groups related articles visually, similar to Zendesk, Intercom, or Freshdesk help centers.
+## New Features
 
-  - You want to complement your main documentation with a self-service support section that feels distinct from your API reference or guides.
+- Added real-time inventory syncing for Linnworks multichannel orders
+- Introduced Odoo ERP dashboard widgets for sales analytics
 
-  Together, these components let you create the classic help center pattern, a top-level collection grid that drills down into per-topic article lists, without leaving Documentation.AI or writing custom code.
+## Improvements
 
-  ## Pages for containers
+- Optimized digital marketing campaign tracking by `>30%`
+- Enhanced software deployment pipelines for faster CI/CD
 
-  Groups and other containers in your navigation can now have their own full pages instead of only acting as folders. This lets you introduce a section, provide context, or add navigation helpers at the top level of a group. Existing structures continue to work, and you can progressively add container pages where they add value. See [Pages](/organize/pages) and [Groups](/organize/groups) for setup details and examples.
+## Bug Fixes
 
-  ## JWT and OAuth access control
+- Fixed Linnworks order import delays during peak hours
+- Resolved Odoo inventory reconciliation errors
 
-  Access control now supports JWT and OAuth 2.0 so you can protect documentation with the same identity providers and tokens you use in your product. Use JWT to gate docs behind signed tokens you issue from your app, or connect an OAuth 2.0 provider to require sign-in via your existing SSO flow. Both options work alongside existing password protection and integrate with your project-level access settings. Get started in [JWT access control](/customize/access-control/jwt) and [OAuth 2.0 access control](/customize/access-control/oauth).
-
-  ## Cookie consent
-
-  Cookie consent tooling gives you a configurable banner and preference controls that help align your docs with privacy requirements. Decide which analytics and third-party scripts require consent and how they behave before and after a user accepts. Configure options in the dashboard and learn more in [Cookie Consent](/customize/cookie-consent).
 </Update>
 
-<Update label="2026-03-25" description="Site Config in Editor, integrations, polish, and unpublish support" tags={["feature","improvement","fix"]}>
-  ## Integrations
+<Update id="v1-2-0" label="2024-11-20" description="v1.2.0" tags={["feature", "bugfix"]}>
 
-  Connect analytics platforms and chat widgets to your documentation with zero-code setup. Built-in support for 17 providers including Google Tag Manager, Google Analytics, PostHog, Amplitude, Mixpanel, Segment, Hotjar, Intercom, Crisp, and more. Just provide your project ID and publish. See [Integrations](/integrations/overview).
+## New Features
 
-  ## Custom scripts
+- Launched AI-powered product recommendations in digital marketing module
+- Integrated webhook support for custom software notifications
 
-  Add custom script files directly to your documentation project as local assets, then reference them from your site configuration to run custom logic. You can also directly add custom scripts directly those from the dashboard. This will be helpful if you want to add any 3rd party integration other that what we support.  See [Custom Scripts](/customize/custom-scripts).
+## Improvements
 
-  ## Site Config Moved to Editor
+- Streamlined Linnworks custom script execution
 
-  Documentation configuration i.e  theme, branding, SEO, navigation, integrations, scripts, and more  is now accessible directly from the Editor instead of Settings. Click **Site Config** in the Editor top toolbar. Changes appear in the Changes panel alongside content edits and deploy when you publish. Learn more in <a href="/customize/site-configuration" target="_blank" rel="noopener noreferrer">Site Configuration</a>.
+## Bug Fixes
+
+- Corrected Odoo ERP finance module rounding issues
+- Patched digital marketing report export failures
+
+To apply these fixes, update your integration:
+
+<CodeGroup tabs="JavaScript,Python">
+  ```javascript
+  // Update Rishvi SDK
+  npm update rishvi-sdk@latest
+  await rishvi.init({ apiKey: 'YOUR_API_KEY' });
+  ```
+  ```python
+  # Update Rishvi Python client
+  pip install --upgrade rishvi-client
+  client = RishviClient(api_key='YOUR_API_KEY')
+  ```
+</CodeGroup>
+
 </Update>
 
-<Update label="2026-03-12" description="API Playground request formats, security UI, and GitHub context UX" tags={["improvement","fix"]}>
-  ## API Playground enhancements
+<Update id="v1-1-0" label="2024-10-10" description="v1.1.0" tags={["bugfix", "security"]}>
 
-  API Playground now supports `multipart/form-data` and `application/x-www-form-urlencoded` bodies in the request builder, including correct cURL and JavaScript code generation and proxy handling for multipart uploads.
+## Security Updates
 
-  Response and code example groups support a dropdown mode for multi-example responses, so you can show multiple variants without overwhelming the page layout.
+- Implemented OAuth 2.0 refresh tokens for Linnworks API
+- Added rate limiting to prevent abuse in Odoo endpoints
 
-  ## GitHub Integration UX&#x20;
+## Bug Fixes
 
-  GitHub AI context and source repository has a clearer user experience and a more direct navigation path from workspace settings to integrations.
+- Fixed software development template rendering glitches
+- Resolved digital marketing A/B test data inconsistencies
+
+## Improvements
+
+- Reduced API latency for inventory queries by `<50ms`
+
 </Update>
 
-<Update label="2026-03-05" description="Page Actions and API Playground enhancements" tags={["feature","improvement"]}>
-  ## Page Actions
+## Upgrading to the Latest Version
 
-  Page Actions add context-aware tools in the table of contents sidebar so you can move content between tools without leaving the reader view. Learn how to configure actions like copy page markdown, view source, open in external LLMs, and copy MCP URLs in [Page Actions](/page-actions).
+Follow these steps to upgrade your Rishvi instance:
 
-  ## API Playground
+<Steps>
+  <Step title="Backup Data" icon="database">
+    Export your configurations and data from `https://dashboard.example.com/export`.
+  </Step>
+  <Step title="Update SDK" icon="download">
+    Use the CodeGroup example above for your language.
+  </Step>
+  <Step title="Test Integrations" icon="check-circle">
+    Verify Linnworks, Odoo, and other services in staging.
+  </Step>
+  <Step title="Deploy" icon="rocket">
+    Switch to production and monitor logs.
+  </Step>
+</Steps>
 
-  You’re no longer limited to generating API docs only from your OpenAPI spec. You now have more control over each API page, for example, you can embed a playground for a specific endpoint from your OpenAPI spec, and then customize the rest of the page content manually; see <a href="https://documentation.ai/docs/api-documentation-and-playground/openapi-import" target="_blank" rel="noopener noreferrer">API Documentation</a>
+## Upcoming Enhancements
 
-  ## Page Feedback
+<Expandable title="Planned Features" default-open="true">
+  - Full AI automation for Linnworks order fulfillment (Q1 2025)
+  - Advanced Odoo custom modules marketplace
+  - Enhanced digital marketing SEO tools with real-time insights
+</Expandable>
 
-  Page Feedback now supports custom feedback fields (not only like or dislike) and optional redirects to your GitHub project feedback flow for open source docs. Feedback analytics are richer and roll up into your dashboards; see [User Feedback](/analytics/overview) and [Analytics overview](/analytics/overview).
-
-  ## Ask AI Analytics
-
-  Ask AI Analytics lets admins review and export the questions users ask in Ask AI so you can see where docs are unclear or missing. This is the first step toward automatically updating documentation from real user intent; explore details in [Search and AI assistant analytics](/analytics/overview) and [AI Assistant](/ai/ai-assistant).
-
-  ## Other improvements
-
-  - Add helper text to password-gated pages with markdown support, including inline links; see [Access Control](/customize/access-control/overview).
-
-  - Enable click-to-zoom on images so readers can inspect diagrams and screenshots in more detail.
-
-  - The API Playground now uses OpenAPI `example` values to prefill parameter inputs so readers can run operations with realistic defaults.
-
-  - Many other bug fixes and minor improvements
-</Update>
-
-<Update label="2026-01-15" description="Access control (Private/Partial docs )" tags={["feature","security"]}>
-  ## Access control options
-
-  You can now configure access control for your docs at the project level to match how you share content with different audiences. Learn more in the [Access Control documentation](/customize/access-control/overview).
-
-  **Access levels and example use cases**
-
-  - **Public** — Make your entire documentation site visible to anyone.
-
-    - Ideal for fully public product docs and API reference that should be discoverable by customers and search engines.
-
-  - **Partial** — Keep few docs public and few docs private.&#x20;
-
-    - Gate a few pages for internal teams such as Support, Success, or Sales while keeping the rest of your docs public.
-
-  - **Private** — Require authentication for all documentation.
-
-    - Store internal code documentation, architecture notes, and engineering guides.
-
-    - Centralize internal SOPs, runbooks, and operational checklists for on-call and support teams.
-</Update>
-
-<Update label="2026-01-07" description="Documentation Templates" tags={["feature"]}>
-  ## Documentation Templates
-
-  Choose from pre-built templates to customize the layout and style of your documentation site.
-
-  **Available Templates**
-
-  - **Classic** - Traditional documentation layout with a clean, focused reading experience. Ideal for technical documentation and API references.
-
-  - **Atlas** - Modern, visually rich layout with enhanced navigation and content presentation. Perfect for product documentation and user guides.
-
-  **How to use**
-
-  - Select templates from **Settings → General → Brand & Theme** in your dashboard
-
-  - Configure templates directly in your `documentation.json` file using the `template` property
-
-  - Further customize your selected template with colors, typography, branding, and navigation settings
-
-  Learn more in our [Templates documentation](/customize/templates).
-</Update>
-
-<Update label="2025-12-06" description="Default docs domain change" tags={["infrastructure"]}>
-  The default docs domain is migrating from `*.documentationai.io` to `*.documentatioai.com`.
-
-  - Existing links automatically redirect; no action needed for most users.
-
-  - Update references only if you hard‑code the old domain in firewalls, allowlists, scripts, or integrations.
-
-  - Custom domains are unaffected and will continue to work as usual.&#x20;
-</Update>
-
-<Update label="2025-12-04" description="AI Documentation Agent Launch (Beta)" tags={["feature","beta"]}>
-  ## AI Documentation Agent (beta)
-
-  The AI Documentation agent is now available in beta for all workspaces. It helps you generate pages, apply rich visual components, and keep content aligned with your Documentation.AI configuration.
-
-  **Where can you find it?**
-
-  - Use the agent from the web editor (using "AI Agent" icon in the editor interface).
-
-  \*\*What can you do today? \*\*
-
-  - Draft new documentation pages from scratch or from short briefs.
-
-  - Make existing docs more visually appealing using rich components (Cards, Columns, Callouts, Tabs, Steps, and more).
-
-  - Generate and refine code samples or usage snippets for your APIs and SDKs.
-
-  - Use web search inside the agent to bring in up-to-date external information when needed.
-
-  **Current limitations (beta)**
-
-  - The agent is currently available only on the web. You can use coding agents like Cursor or GitHub Copilot if you are updating using an IDE.
-
-  - The agent understands Documentation.AI’s visual components and documentation structure, but does **not** yet take context from your codebases or support systems; these integrations are coming soon.
-
-  - The agent cannot yet run in the background or autonomously; background workflows are coming soon.
-
-  - All AI-generated content should be reviewed and edited before publishing
-</Update>
-
-<Update label="2025-12-02" description="MCP server for your docs" tags={["feature"]}>
-  ## MCP Server for Your Docs
-
-  You can now expose your own documentation/knowledge as a Model Context Protocol server. This makes your published docs directly accessible to your end users, internal teams, and LLM‑powered tools.
-
-  **Key capabilities**
-
-  - MCP server for your docs is available by default when you publish your documentation
-
-  - Let end users, IDE agents, and chat assistants query your docs through an MCP endpoint you control
-
-  - Use structured page and API metadata to give agents more grounded and context‑aware responses
-
-  - Help product teams deliver LLM‑native support and troubleshooting experiences directly inside their apps
-</Update>
-
+<Callout kind="tip">
+  Provide feedback on upcoming features via `https://dashboard.example.com/feedback`.
+</Callout>

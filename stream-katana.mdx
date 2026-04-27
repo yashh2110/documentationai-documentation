@@ -1,0 +1,428 @@
+---
+title: 'Stream Katana Integration: End-User Guide'
+---
+
+<Card title="New User Guide" href="/stream-katana-new-user-guide" icon="zap" horizontal="false" target="_self">
+  Check the documentation guide for new users
+</Card>
+
+## Overview
+
+The Stream Katana Integration connects **Katana** (your ERP and production management system) with **Stream** (your logistics and delivery execution platform). When a sales order is ready for shipment in Katana, the integration automatically sends the order details to Stream, where delivery or collection jobs are created and dispatched.
+
+Once Stream processes the shipment, tracking information is written back into Katana so your team always has an up-to-date view of each order's delivery status without manual data entry.
+
+The integration handles two distinct order flows:
+
+- **Delivery orders** — outbound shipments for standard sales orders
+
+- **Collection orders** — inbound pickups for sales returns
+
+Both flows are supported with full tracking, multi-package (split fulfillment) handling, and automatic depot assignment.
+
+---
+
+## Who Should Use This Integration
+
+| Team                           | Relevance                                                                                |
+| ------------------------------ | ---------------------------------------------------------------------------------------- |
+| **Warehouse**                  | Confirm orders are picked and fulfilled in Katana before sync; monitor shipment creation |
+| **Production / Operations**    | Ensure sales orders are at the correct status before dispatch                            |
+| **Dispatch / Logistics**       | Verify Stream orders are created and labels are available; track delivery progress       |
+| **Integration Administrators** | Configure credentials, manage webhook registration, monitor sync health                  |
+| **Support Teams**              | Investigate missing shipments, tracking gaps, and sync failures                          |
+
+---
+
+## Key Features
+
+- **Webhook-driven real-time sync** — Katana automatically notifies the integration whenever a sales order is created, updated, packed, delivered, or has its availability changed. Orders are sent to Stream without any manual trigger.
+
+- **On-demand single-order sync** — Any individual order can be pushed to Stream immediately by providing its order number, without waiting for the next automatic cycle.
+
+- **Delivery and Collection order support** — Standard outbound shipments are created as Delivery orders in Stream. Sales returns generate Collection orders, which schedule a pickup from the customer.
+
+- **Split-package / multi-fulfillment support** — If a Katana order has multiple fulfillment records (e.g., items shipped in separate batches), each fulfillment group becomes its own Stream order. This keeps shipment tracking accurate at the package level.
+
+- **Automatic depot assignment** — The integration maps Katana warehouse locations to Stream depots by name, with intelligent fallback to a default depot when an exact match is not available.
+
+- **Tracking writeback to Katana** — Once Stream creates a shipment, the tracking number, tracking URL, and consignment number are automatically written back to the corresponding Katana fulfillment record.
+
+- **Safe re-processing (idempotent)** — The integration remembers which order rows have already been sent to Stream. Re-running a sync for an already-processed order returns the existing result without creating duplicates.
+
+- **Full sync with change detection and cleanup** — When the background full-sync is enabled, the integration compares all Katana orders against Stream, creates missing orders, updates changed orders, and removes Stream orders for orders that no longer exist in Katana.
+
+---
+
+## Order / Production Lifecycle
+
+The following describes the complete journey of a sales order through the integration.
+
+```
+Katana: Sales Order Created
+         ↓
+Katana: Items Picked → Fulfillment Records Created
+         ↓
+Trigger: Webhook fired (or manual sync)
+         ↓
+Integration: Fetches full order details + fulfillments from Katana
+         ↓
+Integration: Resolves warehouse location → Stream depot
+         ↓
+Integration: Creates one Stream order per fulfillment group (package)
+         ↓
+Stream: Assigns Consignment No + Tracking ID
+         ↓
+Integration: Writes tracking back to Katana fulfillment (status → "PACKED")
+         ↓
+Stream: Delivery executed
+         ↓
+Katana: Order status updated to "Delivered" → Integration records completion
+```
+
+**Return order lifecycle:**
+
+```
+Katana: Sales Return created against original order
+         ↓
+Integration: Retrieves returnable items and associated rows
+         ↓
+Integration: Creates one Collection order per return row in Stream
+         ↓
+Stream: Assigns Consignment No + Tracking ID for collection
+         ↓
+Integration: Writes tracking back to Katana fulfillment
+```
+
+---
+
+## How Orders Are Sent to Stream
+
+### Trigger Mechanisms
+
+Orders reach Stream through one of three methods:
+
+**1. Katana Webhooks (primary method)**
+Katana sends an automatic notification to the integration whenever any of these events occur on a sales order:
+
+| Katana Event                       | Description                               |
+| ---------------------------------- | ----------------------------------------- |
+| `sales_order.created`              | A new sales order is created              |
+| `sales_order.updated`              | Any field on the order changes            |
+| `sales_order.packed`               | The order is marked as packed             |
+| `sales_order.delivered`            | The order is marked as delivered          |
+| `sales_order.availability_updated` | Product availability on the order changes |
+| `sales_order.deleted`              | The order is deleted in Katana            |
+
+When the webhook fires, the integration fetches the complete order from Katana and processes it immediately.
+
+**2. On-Demand Sync**
+An administrator or support team member can trigger a sync for a single order by providing its Katana order number. This is useful for recovering from errors or re-processing a specific order without affecting others.
+
+**3. Background Full Sync (if enabled)**
+A scheduled background process can run at a configurable interval (default: every 5 minutes) to compare all Katana orders against what is in Stream. It creates orders that are missing, updates orders that have changed, and removes Stream orders for any Katana order that has been deleted. This service is disabled by default and must be explicitly enabled by an administrator.
+
+### Eligibility Conditions
+
+For an order to be synced to Stream, it must:
+
+- Exist in Katana with a valid order number
+
+- Have at least one fulfillment record (Stream orders are built from fulfillment groups, not just the header order)
+
+### Idempotency
+
+The integration maintains a local record of every order row that has been sent to Stream. If a sync is triggered for an order where all rows have already been processed, the integration returns the existing Stream order details immediately without making any new requests to Stream. This means re-triggering a sync is always safe.
+
+### Sync Outcomes
+
+| Outcome        | Meaning                                                               |
+| -------------- | --------------------------------------------------------------------- |
+| `SplitCreated` | All packages in the order were successfully created in Stream         |
+| `Partial`      | Some packages succeeded and some failed                               |
+| `Failed`       | No packages were created; an error message is available               |
+| `Created`      | A single package was created successfully (single-fulfillment orders) |
+| `Updated`      | An existing Stream order was updated following a webhook change event |
+
+---
+
+## Service / Delivery Configuration
+
+### Depot Assignment
+
+Each Katana sales order is associated with a **warehouse location** in Katana. The integration maps this location to a **depot** in Stream using the following logic:
+
+1. **Exact name match** — The integration looks for a Stream depot whose stock location name exactly matches the Katana location name (case-insensitive). If found, that depot is used.
+
+2. **Fallback to "Main location"** — If no exact match is found, the integration looks for a depot named "Main location" in Stream. A warning is attached to the sync response to inform administrators that a fallback was used.
+
+3. **Fallback to first available depot** — If neither an exact match nor a "Main location" depot exists, the first depot returned by Stream is used. A warning is again attached to the response.
+
+4. **Error — no depots configured** — If Stream has no depots at all, the sync fails with the message: *"Stream has no depots configured. Please create at least one depot in Stream."*
+
+**Best practice:** Ensure each Katana warehouse location has a corresponding depot in Stream with the same name to avoid fallback behaviour.
+
+### Order Type and Category
+
+| Field          | Value                                                        | Source                  |
+| -------------- | ------------------------------------------------------------ | ----------------------- |
+| Order Type     | `DELIVERY` (standard orders) or `COLLECTION` (return orders) | Derived from order type |
+| Order Category | `Freight`                                                    | Fixed for all orders    |
+
+### Delivery Address
+
+The shipping address from Katana is used as the delivery address in Stream. If a shipping address is not present on the order, the billing address is used as a fallback. The address includes the recipient's name (or company name combined with the individual's name), street details, and contact information including phone number and email.
+
+---
+
+## Shipment Creation and Label Generation
+
+### Shipment Creation
+
+A Stream shipment is created automatically as part of the sync process. The timing depends on the trigger:
+
+- **Webhook-triggered:** The shipment is created within seconds of the Katana event firing.
+
+- **On-demand sync:** The shipment is created immediately when the sync request is submitted.
+
+- **Background full sync (if enabled):** The shipment is created during the next scheduled sync cycle.
+
+### Multi-Package Orders
+
+When a Katana sales order has been fulfilled in multiple batches (i.e., multiple fulfillment records exist), the integration creates a separate Stream order for each fulfillment group. These are referred to as packages and are numbered sequentially. For example, an order `SO-1001` with two fulfillments will produce Stream orders `SO-1001-PKG-1` and `SO-1001-PKG-2`.
+
+### Label Generation
+
+Label generation is managed within the **Stream platform** and is not handled by this integration. Once a Stream shipment is created, your logistics team can access Stream to print and download shipping labels as per your normal Stream workflow.
+
+---
+
+## Tracking Number and Shipment Updates
+
+### Tracking Information Returned from Stream
+
+When the integration successfully creates a shipment in Stream, Stream returns the following tracking details:
+
+| Field              | Description                                                 |
+| ------------------ | ----------------------------------------------------------- |
+| Consignment Number | Unique shipment reference assigned by Stream                |
+| Tracking ID        | Carrier-level tracking identifier                           |
+| Tracking URL       | Web link the customer or team can use to track the shipment |
+
+### Writeback to Katana
+
+The integration automatically writes this tracking information back to the Katana fulfillment record associated with the shipment:
+
+- **Tracking Number** — set to the Tracking ID (or Consignment Number if no Tracking ID is available)
+
+- **Tracking URL** — set to the Stream tracking link
+
+- **Tracking Carrier** — set to `STREAM`
+
+- **Tracking Method** — set to `delivery`
+
+- **Katana Fulfillment Status** — set to `PACKED`
+
+This writeback happens immediately after Stream confirms the shipment, so the tracking details are visible in Katana without any manual steps.
+
+### Delivery Completion
+
+When a Katana order is marked as `Delivered` (either via webhook or detected during a full sync), the integration records the delivery completion in its local database. No additional Stream API call is made for this status change, as the delivery is already managed within Stream's dispatch workflow.
+
+---
+
+## Run, Day, and Sequence Identifiers
+
+Not applicable. This integration does not implement run-based, day-based, or route-sequence scheduling. Split shipments are identified internally using a sequential package number (e.g., `-PKG-1`, `-PKG-2`) that is assigned during the sync process and recorded in the integration's database for tracking purposes only.
+
+---
+
+## Order / Fulfillment Status Tracking
+
+### Internal Workflow States
+
+The integration maintains a processing status for each order item row it manages. These states show exactly where each item is in the sync pipeline:
+
+| Status                    | Meaning                                                   |
+| ------------------------- | --------------------------------------------------------- |
+| `PendingImport`           | Item is waiting to be pulled from Katana                  |
+| `ReadyToSendToStream`     | Item has been verified and is queued for Stream           |
+| `SendingToStream`         | Request to Stream is in progress                          |
+| `SentToStream`            | Stream confirmed receipt; tracking info available         |
+| `WaitingStreamCompletion` | Awaiting delivery completion from Stream                  |
+| `ReadyToUpdateKatana`     | Tracking has been received; ready to write back to Katana |
+| `UpdatingKatana`          | Writeback to Katana is in progress                        |
+| `KatanaUpdated`           | Katana fulfillment has been updated with tracking data    |
+| `Completed`               | End-to-end sync is fully complete                         |
+| `Error`                   | A failure occurred; check the error message for details   |
+
+### Item-Level Outcomes
+
+In addition to the workflow state, each order item record tracks an outcome status:
+
+| Status    | Meaning                                                               |
+| --------- | --------------------------------------------------------------------- |
+| `Created` | This item's shipment was successfully created in Stream               |
+| `Failed`  | This item's shipment could not be created; an error message is stored |
+| `Pending` | Default state; processing has not yet started                         |
+
+### Katana-Side Status Mapping
+
+| Katana Status | Integration Behaviour                                                |
+| ------------- | -------------------------------------------------------------------- |
+| `Delivered`   | Recorded in integration database; no additional Stream call          |
+| `Packed`      | Katana fulfillment status set to this value after tracking writeback |
+| (deleted)     | Stream order is removed; integration database records are cleared    |
+
+---
+
+## Configuration Settings
+
+The following settings control the behaviour of the integration. These are configured by your integration administrator, typically during initial setup or when credentials change.
+
+| Setting                                | Type    | Required | Description                                                                                           | Default |
+| -------------------------------------- | ------- | -------- | ----------------------------------------------------------------------------------------------------- | ------- |
+| `Integrations:Katana:ApiKey`           | String  | Yes      | API key for authenticating requests to the Katana API                                                 | —       |
+| `Integrations:Stream:ClientId`         | String  | Yes      | Client ID used for Stream OAuth authentication                                                        | —       |
+| `Integrations:Stream:ClientSecret`     | String  | Yes      | Client secret used for Stream OAuth authentication                                                    | —       |
+| `SyncSettings:FullSyncIntervalMinutes` | Integer | No       | How often (in minutes) the background full sync runs, if enabled                                      | 5       |
+| `Webhooks:PublicBaseUrl`               | String  | No       | The publicly accessible base URL of the integration service, used when registering webhooks in Katana | —       |
+
+**Note on credentials:** Katana and Stream credentials are stored securely in AWS Parameter Store under the `StreamBackend/{environment}` path and are loaded at application startup. They should never be stored in plain text.
+
+---
+
+## Daily Operational Workflow
+
+The following describes a typical day of operation for teams using this integration.
+
+**Step 1 — Create or confirm the sales order in Katana**
+Your sales or operations team creates a sales order in Katana and assigns the correct customer, products, quantities, and delivery address. Ensure the shipping address is complete, as this becomes the delivery address in Stream.
+
+**Step 2 — Pick and fulfil the order**
+Your warehouse team picks the items and records the fulfillment in Katana. Each fulfillment group (a set of items picked together) will become one Stream shipment.
+
+**Step 3 — Integration sends the order to Stream automatically**
+Once a fulfillment is created or the order is packed, Katana fires a webhook. The integration receives this, fetches the full order details, and creates the corresponding Stream order(s) within seconds. No manual action is required.
+
+**Step 4 — Tracking is written back to Katana**
+Stream assigns a consignment number and tracking ID. The integration immediately writes these back to the Katana fulfillment record and sets the fulfillment status to `PACKED`. Your team can see the tracking information directly in Katana.
+
+**Step 5 — Label is printed via Stream**
+Your dispatch or logistics team logs into Stream and prints the shipping label for the created shipment. Label printing is managed within Stream and is not part of the integration.
+
+**Step 6 — Delivery is completed**
+The carrier delivers the parcel. Stream records the delivery event. When Katana is updated to reflect the delivered status (either manually or via your broader workflow), the integration captures this and marks the order as complete in its internal records.
+
+**Step 7 — Monitor for exceptions**
+Administrators should periodically review any orders with a `Failed` or `Error` status in the integration. Common causes include missing fulfillment records, unmatched depot names, or temporary connectivity issues with either API. Most failures can be resolved by correcting the underlying data and re-triggering the sync for the affected order.
+
+---
+
+## Validation Errors and Common Causes
+
+The integration validates requests before sending data to Stream. The following errors can occur and indicate what must be corrected before a sync will succeed.
+
+| Error Message                                                                | Cause                                                                                   | Resolution                                                                           |
+| ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| Katana credentials are required.                                             | No Katana credentials were provided in the sync request.                                | Ensure the Katana API key is configured in the integration settings.                 |
+| Katana API key is required.                                                  | The Katana API key field is empty.                                                      | Provide a valid Katana API key in the configuration.                                 |
+| Stream credentials are required.                                             | No Stream credentials were provided.                                                    | Ensure both the Stream Client ID and Client Secret are configured.                   |
+| Stream client id is required.                                                | The Stream Client ID is missing.                                                        | Set a valid Stream Client ID in the integration settings.                            |
+| Stream client secret is required.                                            | The Stream Client Secret is missing.                                                    | Set a valid Stream Client Secret in the integration settings.                        |
+| Katana order number is required.                                             | No order number was supplied for the sync request.                                      | Provide the Katana order number (e.g., `SO-1001`) when triggering an on-demand sync. |
+| Katana order not found with the specified order number.                      | The order number provided does not match any order in Katana.                           | Verify the order number is correct and the order exists in Katana.                   |
+| No return order found in Katana.                                             | A collection (return) sync was requested but no matching return order exists in Katana. | Confirm the return has been created in Katana before triggering the sync.            |
+| No items found inside sales order rows.                                      | The sales order exists but contains no line items.                                      | Ensure the order has at least one product line before syncing.                       |
+| Stream has no depots configured. Please create at least one depot in Stream. | The Stream account has no depots set up.                                                | Create at least one depot in Stream before processing any orders.                    |
+
+---
+
+## Troubleshooting Guide
+
+| Issue                                 | Symptoms                                                          | Cause                                                                                          | Resolution                                                                                                                                                                      |
+| ------------------------------------- | ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Order not syncing to Stream           | Sync response shows `Failed`; no Stream order number returned     | Missing credentials, order not found in Katana, or no fulfillment records exist                | Verify the order exists in Katana with at least one fulfillment. Check that all credentials are correctly configured. Re-trigger the sync after correcting the issue.           |
+| Shipment not created                  | Order was synced but no consignment number appears                | Stream rejected the order request; error details in sync response                              | Review the error message in the sync response. Common causes are invalid address data or a Stream API issue. Correct the data and re-sync.                                      |
+| Tracking number missing               | Stream order exists but no Tracking ID in Katana                  | Stream has not yet assigned a tracking number, or the writeback to Katana failed               | Wait for Stream to assign tracking. If the writeback failed, the sync response will contain a warning message. Re-triggering the sync will attempt the writeback again.         |
+| Depot assignment warning in response  | Sync succeeded but a depot warning is attached                    | No Stream depot name matches the Katana location name                                          | Create a depot in Stream with a name matching the Katana location, or rename the existing Stream depot to match.                                                                |
+| Webhook not triggering syncs          | Orders change in Katana but nothing is sent to Stream             | The Katana webhook is not registered or the registration URL is incorrect                      | Verify the webhook is registered in Katana pointing to the integration's public URL. Check the `Webhooks:PublicBaseUrl` configuration setting.                                  |
+| Rate limit errors (HTTP 429)          | Sync log shows 429 responses from Stream; orders queued for retry | Too many requests sent to Stream in a short period                                             | The integration handles this automatically by waiting 60 seconds before retrying. No manual action is required. If the problem persists, reduce the volume of concurrent syncs. |
+| Order appears to sync twice           | Two Stream orders created for the same Katana order               | Each Katana fulfillment group creates its own Stream order by design (split-package behaviour) | This is expected behaviour for orders with multiple fulfillment records. Each fulfillment group is a separate physical shipment.                                                |
+| Deleted order still appears in Stream | Katana order was deleted but Stream order remains                 | Webhook for `sales_order.deleted` was not received or the cleanup has not run                  | Trigger the "cleanup missing in Katana" operation to remove Stream orders for orders that no longer exist in Katana.                                                            |
+| Delivery updates not reflected        | Katana shows "Delivered" but integration shows no record          | Delivered status is captured via webhook or full sync; event may not have fired yet            | Ensure the `sales_order.delivered` webhook event is registered. If using the background full sync, wait for the next cycle to run.                                              |
+
+---
+
+## Best Practices
+
+**Ensure orders are fully ready before they are fulfilled**
+The integration creates Stream shipments based on Katana fulfillment records. An order that has no fulfillment records will not generate a Stream shipment. Complete the picking and fulfillment step in Katana before expecting a Stream order to appear.
+
+**Match Katana location names to Stream depot names**
+The integration maps Katana warehouse locations to Stream depots by name. If the names do not match, the integration falls back to the "Main location" depot or the first available depot, which may result in orders being assigned to the wrong depot. Maintain consistent, matching names on both platforms.
+
+**Keep credentials current**
+Both Katana and Stream credentials are required for every sync operation. When API keys or client secrets are rotated, update the integration configuration immediately to avoid sync failures.
+
+**Monitor failed syncs regularly**
+Any order with a `Failed` or `Partial` status indicates that one or more packages were not created in Stream. Review these orders daily and re-trigger the sync after resolving the underlying issue. Failed orders are not automatically retried.
+
+**Register all relevant Katana webhook events**
+For real-time sync, register all six supported sales order webhook events in Katana (`created`, `updated`, `packed`, `delivered`, `availability_updated`, `deleted`). Missing event registrations will cause some order changes to go undetected until the next full sync cycle.
+
+**Use the cleanup operation after bulk deletions**
+If multiple Katana orders are deleted at once, run the "cleanup missing in Katana" operation to remove the corresponding Stream orders. This keeps the Stream platform tidy and prevents orphaned delivery records.
+
+**Avoid editing an order in Katana while a sync is in progress**
+The integration locks order records during active sync and update operations. Editing an order in Katana at the exact moment it is being processed by the integration may result in the edit not being captured until the next webhook event fires.
+
+---
+
+## FAQ
+
+**When is a Stream shipment created?**
+A Stream shipment is created the moment the integration receives a Katana webhook event (such as `sales_order.packed` or any update event) for an order that has fulfillment records. For on-demand syncs, the shipment is created immediately upon the request. Shipments are built from fulfillment groups, so if the order has not yet been picked and fulfilled in Katana, no shipment will be created.
+
+**Why is my order not syncing?**
+The most common causes are: (1) the order has no fulfillment records in Katana — ensure the order has been picked and at least one fulfillment created; (2) credentials are missing or incorrect; (3) the Katana webhook is not registered. Review the sync response status and error message for the specific reason.
+
+**When do I receive tracking information?**
+Tracking information is returned from Stream at the same moment the shipment is created. The integration immediately writes the tracking number, tracking URL, and consignment number back to the Katana fulfillment record. Your team should see this in Katana within seconds of the sync completing.
+
+**Can I sync an order manually if the webhook didn't fire?**
+Yes. Any order can be synced on demand by providing its Katana order number. This is the standard recovery path when a webhook is missed or the integration was temporarily unavailable.
+
+**What happens if an order has multiple fulfillments?**
+Each fulfillment group becomes a separate Stream order. For example, an order fulfilled in two batches will produce two Stream orders (`SO-1001-PKG-1` and `SO-1001-PKG-2`), each with its own consignment number, tracking ID, and label. Both are written back to Katana individually.
+
+**Can I generate a label immediately?**
+Labels are generated and managed within the Stream platform. Once the integration creates the shipment in Stream, the label is available in Stream for printing immediately. The integration itself does not generate or serve labels.
+
+**What happens when an order is deleted in Katana?**
+When the `sales_order.deleted` webhook fires, the integration removes the corresponding Stream order and clears the order records from its internal database. If the webhook was not received, the "cleanup missing in Katana" operation can be run to detect and remove any orphaned Stream orders.
+
+**What happens if a Stream depot does not match my Katana location?**
+The integration falls back first to a depot named "Main location" in Stream, then to the first available depot. In both cases, a warning message is included in the sync response. The order is still created in Stream — you should then review the depot assignment in Stream and correct it if needed. To prevent this, create Stream depots with names that match your Katana warehouse location names.
+
+**Is it safe to re-trigger a sync for an already-processed order?**
+Yes. The integration checks which order rows have already been sent to Stream before creating any new shipments. If all rows are already processed, the existing Stream order details are returned without any new requests being made.
+
+**What is the background full sync and when does it run?**
+The background full sync is an optional scheduled process that compares all Katana sales orders against Stream at a configurable interval (default: every 5 minutes). It creates missing orders, updates changed orders, and removes orders deleted from Katana. This process is disabled by default and must be enabled by an administrator. Webhooks are the preferred mechanism for real-time sync.
+
+**Does the integration support sales returns?**
+Yes. Sales returns are handled as Collection orders in Stream, which schedule a pickup from the customer's address. The integration retrieves the return rows from Katana, creates one Collection order per return row in Stream, and writes tracking information back to Katana in the same way as for delivery orders.
+
+**What does the "Partial" sync status mean?**
+A `Partial` status means that a multi-package order had at least one package successfully created in Stream but one or more packages failed. The sync response will list each package with its individual outcome and error message. Administrators should review the failed packages and re-trigger the sync for the affected order after resolving the issue.
+
+---
+
+## Summary
+
+The Stream Katana Integration provides an automated, reliable bridge between Katana's production and order management capabilities and Stream's logistics execution platform. Orders flow from Katana to Stream automatically through Katana's webhook system, with each fulfillment group creating a distinct shipment in Stream. Tracking information is immediately written back to Katana, giving your entire team visibility without manual data entry.
+
+The integration is built to handle real-world complexity: multi-package orders, return collections, depot fallback, rate limiting, idempotent processing, and automatic cleanup of deleted orders. Configuration is minimal — valid API credentials for both platforms and correctly named Stream depots are the primary requirements for the integration to operate correctly.
+
+For day-to-day operations, no manual intervention should be required. Administrators should monitor for `Failed` or `Partial` sync statuses, ensure webhook registrations remain active, and keep credentials up to date. When issues occur, the on-demand sync endpoint provides a direct and safe way to process any individual order.

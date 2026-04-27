@@ -1,0 +1,74 @@
+---
+title: Inventory Low Stock Report
+description: >-
+  Identifies low stock SKUs from the default warehouse and provides bin locations for replenishment.
+---
+
+## Overview
+
+The **RIS-SC-1041 – Inventory Low Stock Report** script helps analysts quickly identify low stock items in the default warehouse and locate their bin positions for efficient restocking.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  Track low inventory and know exactly where items are stored for fast replenishment.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Detects SKUs with low stock  
+- Excludes invalid or composite items  
+- Shows bin/rack locations for efficient picking  
+
+---
+
+## When It Runs
+
+Used for daily stock monitoring, warehouse audits, and replenishment planning.
+
+**Typically runs:**
+
+- Manually executed by analysts  
+- During daily stock checks  
+- Before purchase planning  
+- During warehouse audits  
+- For replenishment decisions  
+
+---
+
+## Parameters
+
+<ParamField path="LowStockThreshold" param-type="int" required="true" deprecated="false">
+  The numeric threshold to consider a SKU as low stock (e.g., 20 units).
+</ParamField>
+
+<ParamField path="WarehouseLocation" param-type="string" required="true" deprecated="false">
+  The default warehouse location to filter stock levels.
+</ParamField>
+
+<ParamField path="BinFilter" param-type="string" required="false" deprecated="false">
+  Optional filter for bin or rack codes (e.g., bins starting with "B").
+</ParamField>
+
+<ParamField path="IncludeCompositeItems" param-type="bool" required="false" deprecated="false">
+  Flag to include or exclude composite/bundled SKUs. Default is false (exclude).
+</ParamField>
+
+<ParamField path="IncludeInactiveItems" param-type="bool" required="false" deprecated="false">
+  Flag to include inactive or archived SKUs. Default is false (exclude).
+</ParamField>
+
+---
+
+## Simple Explanation
+
+The report checks all active products, filters those below the low stock threshold in the default warehouse, applies bin filters if provided, and outputs a list of SKUs with their bin locations for easy replenishment.
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+By combining stock quantity thresholds with warehouse bin locations, this script enables fast decision-making for restocking while improving warehouse organization and efficiency.
+</Callout>

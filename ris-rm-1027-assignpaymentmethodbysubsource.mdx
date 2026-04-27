@@ -1,0 +1,147 @@
+---
+title: Assign Payment Method by SubSource
+description: >-
+  Automatically assign payment methods to orders based on their Source and
+  SubSource, ensuring consistent financial data handling across channels.
+---
+## Overview
+
+The **RIS-RM-1027 – AssignPaymentMethodBySubsource** macro standardizes payment method assignment by mapping order Source and SubSource to predefined payment methods.
+
+It ensures that each order is assigned the correct payment method automatically after import or during processing.
+
+<Callout kind="tip" collapsed="false">
+  Ensure Source, SubSource, and PaymentMethods mappings are aligned correctly before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Identifies order Source and SubSource  
+- Maps them to corresponding payment methods  
+- Updates payment details automatically  
+- Ensures consistency in financial data  
+
+👉 In short:  
+Assign correct payment method based on order origin.
+
+## When It Runs
+
+Used for payment data standardization
+
+Typically runs:
+
+- Manually triggered (on selected orders)  
+- Via Rules Engine (automation workflows)  
+- After order import  
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of order IDs to process.
+</ParamField>
+
+<ParamField path="Source" param-type="string" required="true" deprecated="false">
+  Comma-separated list of order sources.
+</ParamField>
+
+<ParamField path="SubSource" param-type="string" required="true" deprecated="false">
+  Comma-separated list of order subsources.
+</ParamField>
+
+<ParamField path="PaymentMethods" param-type="string" required="true" deprecated="false">
+  Payment methods mapped to each Source and SubSource.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Example:  
+  Source → "AMAZON,EBAY"  
+  SubSource → "UK,US"  
+  PaymentMethods → "AmazonPay,PayPal"  
+
+  Meaning:  
+  Each Source/SubSource pair maps to a corresponding payment method.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Load Payment Methods" icon="credit-card" title-type="p">
+    Retrieve all available payment methods from the system.
+  </Step>
+
+  <Step title="Parse Inputs" icon="settings" title-type="p">
+    Split Source, SubSource, and PaymentMethods into structured lists.
+  </Step>
+
+  <Step title="Process Orders" icon="list" title-type="p">
+    Loop through each OrderId and retrieve order details.
+  </Step>
+
+  <Step title="Match Source & SubSource" icon="search" title-type="p">
+    Compare order Source and SubSource with configured mappings.
+  </Step>
+
+  <Step title="Assign Payment Method" icon="check-circle" title-type="p">
+    If a match is found:
+    - Identify corresponding payment method  
+    - Update order payment details  
+  </Step>
+
+  <Step title="Save Changes" icon="save" title-type="p">
+    Update order totals and payment information in the system.
+  </Step>
+
+  <Step title="Log Execution" icon="file-text" title-type="p">
+    Record successful updates and any unmatched cases.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Orders assigned correct payment method  
+  - Mapping applied based on Source and SubSource  
+  - Financial data standardized automatically  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Standardizing payment methods across channels  
+- Reducing manual corrections  
+- Improving financial reporting accuracy  
+- Supporting accounting integrations  
+- Enhancing data consistency  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Source, SubSource, and PaymentMethods must align in order  
+  - Matching is case-sensitive and exact  
+  - Payment methods must exist in the system  
+  - Orders remain unchanged if no match is found  
+  - Multiple matches may overwrite previous values  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Assign Payment Method Based on Channel" default-open="false">
+  Orders come from multiple sources and subsources.
+
+  👉 The macro:
+
+  - Matches Source and SubSource  
+  - Assigns corresponding payment method  
+  - Updates order automatically  
+
+  Result: Payment methods are consistent across all orders.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Mapping order origin to payment methods ensures consistent financial processing, reduces manual effort, and improves accuracy in multi-channel operations.
+</Callout>

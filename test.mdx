@@ -1,0 +1,157 @@
+---
+title: Bill To Change Based on SubSource
+description: >-
+  Automatically update billing address based on order source (SubSource) for
+  improved accuracy and automation.
+---
+## Overview
+
+The **RIS-RM-2001 – Bill To Change Based on SubSource** macro updates the billing address of orders dynamically based on their originating sales channel (SubSource).
+
+It ensures that orders from platforms like Amazon or eBay are assigned predefined billing details automatically, maintaining consistency across all channels.
+
+<Callout kind="tip" collapsed="false">
+  Ensure that SubSource values and address mappings are correctly aligned in comma-separated format to avoid mismatches.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Detects the order source (SubSource)
+
+- Matches it with predefined billing configurations
+
+- Replaces existing billing details automatically
+
+👉 In short:\
+Orders from specific platforms get the correct billing address automatically.
+
+## When It Runs
+
+Used for billing automation & order standardization
+
+Typically runs:
+
+- Manually when triggered by a user
+
+- Automatically during order processing workflow
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of order IDs to be updated.
+</ParamField>
+
+<ParamField path="SubSource" param-type="string" required="true" deprecated="false">
+  Order origin (e.g., Amazon, eBay).
+</ParamField>
+
+<ParamField path="EmailAddress" param-type="string" required="false" deprecated="false">
+  Email address assigned to billing.
+</ParamField>
+
+<ParamField path="Address1" param-type="string" required="false" deprecated="false">
+  Address line 1.
+</ParamField>
+
+<ParamField path="Address2" param-type="string" required="false" deprecated="false">
+  Address line 2.
+</ParamField>
+
+<ParamField path="Address3" param-type="string" required="false" deprecated="false">
+  Address line 3.
+</ParamField>
+
+<ParamField path="Town" param-type="string" required="false" deprecated="false">
+  City name.
+</ParamField>
+
+<ParamField path="PostCode" param-type="string" required="false" deprecated="false">
+  ZIP / PIN code.
+</ParamField>
+
+<ParamField path="Company" param-type="string" required="false" deprecated="false">
+  Company name.
+</ParamField>
+
+<ParamField path="Country" param-type="string" required="false" deprecated="false">
+  Country name.
+</ParamField>
+
+<ParamField path="FullName" param-type="string" required="false" deprecated="false">
+  Customer full name.
+</ParamField>
+
+<Callout kind="warning" collapsed="false">
+  All parameter values must be provided in comma-separated format and mapped sequentially to ensure correct alignment between SubSource and corresponding address details.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Fetch Orders" icon="download" title-type="p">
+    Retrieve the list of orders to process using provided OrderIds.
+  </Step>
+
+  <Step title="Identify Source" icon="search" title-type="p">
+    Detect the SubSource of each order.
+  </Step>
+
+  <Step title="Match Configuration" icon="filter" title-type="p">
+    Compare SubSource with predefined mapping values.
+  </Step>
+
+  <Step title="Apply Address" icon="edit" title-type="p">
+    Select and assign corresponding billing address details.
+  </Step>
+
+  <Step title="Update Order" icon="save" title-type="p">
+    Replace existing billing address and save the order.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Billing address updated automatically
+
+  - No manual intervention required
+
+  - Consistent and accurate data maintained
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- B2B and wholesale workflows
+
+- Multi-channel order management
+
+- Reducing manual effort
+
+- Ensuring billing consistency
+
+## Example Scenario
+
+<Expandable title="Amazon Order Billing Update Example" default-open="false">
+  An order is received from **Amazon**.
+
+  - The system detects SubSource = Amazon
+
+  - Matches it with predefined Amazon billing configuration
+
+  - Automatically replaces the billing address
+
+  👉 Result: Correct billing details applied instantly without manual work.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Automating billing address updates based on SubSource improves operational efficiency, minimizes human errors, and ensures consistent data across all sales channels.
+
+
+</Callout>
+

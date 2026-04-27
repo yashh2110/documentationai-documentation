@@ -1,0 +1,150 @@
+---
+title: Channel Listing Count Pivot
+description: >-
+  Counts how many times each SKU is listed across different sales channels and
+  presents the data in a pivot (matrix) format.
+---
+## Overview
+
+The **RIS-SC-1040 – Channel Listing Count Pivot** script helps analysts understand marketplace coverage by showing how widely SKUs are listed across different sales channels.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  See which products are listed on which marketplaces and how many times, in a clear pivot/matrix view.
+</Callout>
+
+---
+
+## Purpose
+
+This script:
+
+- Identifies all active SKUs
+
+- Checks which sales channels each SKU is listed on
+
+- Counts the number of listings per channel
+
+- Converts the results into a dynamic pivot table where each channel becomes a column
+
+---
+
+## When It Runs
+
+Used for catalog audits, marketplace analysis, and listing management.
+
+**Typically runs:**
+
+- Manually executed by analysts
+
+- During listing audits
+
+- For marketplace coverage analysis
+
+- While identifying missing listings
+
+- For catalog expansion planning
+
+---
+
+## Parameters
+
+<ParamField path="cols" param-type="string" required="true" deprecated="false">
+  Dynamic column list for pivot table; stores the generated channel columns.
+</ParamField>
+
+<ParamField path="query" param-type="string" required="true" deprecated="false">
+  Holds the dynamic SQL query for pivot execution.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  These parameters allow dynamic generation of pivot columns and execution of the query without manually updating channel names.
+</Callout>
+
+---
+
+## Simple Explanation
+
+The script takes all active SKUs, counts their listings per sales channel, and converts rows into columns so that each channel becomes a pivot column.
+
+---
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Generate Channel List" icon="list" title-type="p">
+    Collect all distinct channel names from Stock\_ChannelSKU for pivot columns.
+  </Step>
+
+  <Step title="Create Dynamic Columns" icon="code" title-type="p">
+    Build the column string dynamically and assign to the cols parameter.
+  </Step>
+
+  <Step title="Prepare Base Data" icon="database" title-type="p">
+    Combine SKU and channel information to form the dataset for pivoting.
+  </Step>
+
+  <Step title="Apply Pivot Logic" icon="grid" title-type="p">
+    Use the query parameter to count listings per channel and convert rows into pivot columns.
+  </Step>
+
+  <Step title="Execute Query" icon="play" title-type="p">
+    Run the dynamic SQL stored in query to generate the final report.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  The report contains:
+
+  - SKU (ItemNumber)
+
+  - Channel-wise listing counts (e.g., Amazon, eBay, Etsy)
+</Callout>
+
+---
+
+## Usefulness
+
+- **Channel Coverage Analysis** – See where products are listed
+
+- **Gap Identification** – Find missing channel listings
+
+- **Catalog Expansion** – Identify new listing opportunities
+
+- **Marketplace Strategy** – Balance listings across platforms
+
+---
+
+## Example Scenario
+
+<Expandable title="Missing Listings on Etsy" default-open="false">
+  **Scenario:** SKU ABC123 is not listed on Etsy.
+
+  - Amazon: 5 listings
+
+  - eBay: 3 listings
+
+  - Etsy: 0 listings
+
+  **Insight:**\
+  Product is active on Amazon and eBay but missing on Etsy.
+
+  **Action:**
+
+  - List product on Etsy
+
+  - Increase visibility and potential sales
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This is a dynamic pivot report: new channels are automatically added as columns. The cols and query parameters ensure the report stays up-to-date without manual query updates.
+</Callout>
+

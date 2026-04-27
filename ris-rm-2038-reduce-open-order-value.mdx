@@ -1,0 +1,159 @@
+---
+title: Reduce Open Order Value
+description: >-
+  Reduce open order values by replacing item selling prices with purchase prices,
+  while backing up original values for tracking and recovery.
+---
+## Overview
+
+The **RIS-RM-2038 – Reduce Open Order Value** macro adjusts open orders by replacing item selling prices with their purchase (cost) prices.
+
+It ensures that original financial values are preserved for audit and recovery while updating the order totals accordingly.
+
+<Callout kind="tip" collapsed="false">
+  Ensure purchase prices are correctly maintained in inventory before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Replaces selling price with purchase price  
+- Backs up original order values  
+- Recalculates order totals  
+- Tags orders for tracking  
+
+👉 In short:  
+Reduce order value using cost price while keeping original data safe.
+
+## When It Runs
+
+Used for financial adjustment and export workflows
+
+Typically runs:
+
+- Manual execution  
+- Run-on-demand  
+- Before financial exports or pricing adjustments  
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of orders to process.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  No additional parameters are required for this macro.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Process Orders" icon="list" title-type="p">
+    Iterate through each order provided in OrderIds.
+  </Step>
+
+  <Step title="Fetch Order Details" icon="download" title-type="p">
+    Retrieve full order details including items, totals, and shipping.
+  </Step>
+
+  <Step title="Validate Order" icon="check-circle" title-type="p">
+    Skip processing if the shipping label has already been printed.
+  </Step>
+
+  <Step title="Backup Original Values" icon="save" title-type="p">
+    Store original subtotal, tax, shipping, and total as extended properties.
+  </Step>
+
+  <Step title="Update Item Prices" icon="edit" title-type="p">
+    Fetch purchase price from inventory and replace each item’s selling price.
+  </Step>
+
+  <Step title="Backup Item Prices" icon="archive" title-type="p">
+    Store original item prices per SKU for recovery purposes.
+  </Step>
+
+  <Step title="Recalculate Totals" icon="calculator" title-type="p">
+    Recalculate subtotal, tax, and total based on updated item prices.
+  </Step>
+
+  <Step title="Update Order" icon="refresh-cw" title-type="p">
+    Apply recalculated totals back to the order using API.
+  </Step>
+
+  <Step title="Assign Identifier" icon="tag" title-type="p">
+    Assign identifier <code>PriceReducedFlag</code> for tracking processed orders.
+  </Step>
+
+  <Step title="Log Execution" icon="file-text" title-type="p">
+    Record execution details, success, and any errors.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Item prices replaced with purchase prices  
+
+  - Order totals recalculated  
+
+  - Original values backed up safely  
+
+  - Identifier added for tracking  
+
+  - Order ready for further processing  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Performing controlled pricing adjustments  
+- Maintaining audit trails of original values  
+- Supporting export or integration workflows  
+- Enabling reversible pricing strategies  
+- Improving financial control and visibility  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Does not process orders with printed labels  
+
+  - Depends on accurate purchase price in inventory  
+
+  - Tax recalculation depends on system logic  
+
+  - Extended properties must be preserved for rollback  
+
+  - No automatic restore mechanism is provided  
+
+  - May impact performance for large orders  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Order Value Reduction Example" default-open="false">
+  An order contains:
+
+  - Item A → Selling Price £20 (Cost £12)  
+  - Item B → Selling Price £30 (Cost £18)  
+
+  👉 The macro:
+
+  - Replaces selling prices with cost prices  
+  - Recalculates totals  
+  - Stores original values  
+
+  Result:
+
+  - Item A → £12  
+  - Item B → £18  
+  - Order total reduced  
+  - Original values محفوظ for recovery  
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By safely reducing order values while preserving original data, this macro enables flexible and reversible financial adjustments—making it ideal for controlled pricing workflows and integrations.
+</Callout>

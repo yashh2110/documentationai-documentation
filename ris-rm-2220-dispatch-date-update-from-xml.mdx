@@ -1,0 +1,156 @@
+---
+title: Dispatch Date Update from XML
+description: >-
+  Read dispatch date from order XML and update the Despatch By Date, using a
+  fallback date if XML data is missing or invalid.
+---
+## Overview
+
+The **RIS-RM-2220 – Dispatch Date Update from XML** macro ensures that all orders have a valid dispatch date by extracting it from XML data or applying a default fallback when necessary.
+
+<Callout kind="tip" collapsed="false">
+  Ensure the default fallback date is correctly configured to avoid incorrect scheduling.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Reads dispatch date from order XML
+
+- Validates the extracted date
+
+- Updates the order’s Despatch By Date
+
+- Applies a fallback date if needed
+
+- Tags processed orders
+
+👉 In short:\
+Read XML date → validate → update dispatch date → fallback if needed.
+
+## When It Runs
+
+Typically executed:
+
+- After order import from Magento
+
+- Before order processing
+
+- Before shipping / dispatch planning
+
+- When dispatch date is received from external systems
+
+- For delivery scheduling and planning
+
+- Manually or via automation workflows
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of order IDs to process.
+</ParamField>
+
+<ParamField path="DefualtDate" param-type="string" required="true" deprecated="false">
+  Fallback date used when XML dispatch date is missing or invalid.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Both OrderIds and DefualtDate must be provided for proper execution.
+</Callout>
+
+## Simple Explanation
+
+The macro reads the dispatch date from XML, validates it, and updates the order. If the date is missing or invalid, it applies a default date to ensure the order remains processable.
+
+## Step-by-Step Flow
+
+<Steps>
+  <Step title="Start Processing Orders" icon="play-circle" title-type="p">
+    Take OrderIds and process each order individually.
+  </Step>
+
+  <Step title="Fetch Order & XML Data" icon="download" title-type="p">
+    Retrieve order details and associated XML data.
+  </Step>
+
+  <Step title="Check Order Source" icon="filter" title-type="p">
+    Process only Magento orders and skip others.
+  </Step>
+
+  <Step title="Read Dispatch Date from XML" icon="search" title-type="p">
+    Extract value from the custom\_dispatch\_date field.
+  </Step>
+
+  <Step title="Validate Date" icon="check-circle" title-type="p">
+    If valid → use it.\
+    If invalid → log error.
+  </Step>
+
+  <Step title="Handle Missing Date" icon="alert-circle" title-type="p">
+    If date is missing or empty → apply Default Date.
+  </Step>
+
+  <Step title="Update Order" icon="edit" title-type="p">
+    Set Despatch By Date and save changes.
+  </Step>
+
+  <Step title="Track Updated Orders" icon="list" title-type="p">
+    Store processed order IDs for tracking.
+  </Step>
+
+  <Step title="Assign Identifier" icon="tag" title-type="p">
+    Assign tag "Despatch By Date" and create if not exists.
+  </Step>
+
+  <Step title="Logging" icon="file-text" title-type="p">
+    Log errors, successful updates, and completion status.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - All orders have valid dispatch dates
+
+  - Missing or invalid dates are handled automatically
+
+  - Orders are ready for accurate scheduling
+</Callout>
+
+## Usefulness
+
+- **Automation** – Eliminates manual date updates
+
+- **Accurate Scheduling** – Ensures proper dispatch planning
+
+- **Error Handling** – Manages missing or invalid data
+
+- **Workflow Improvement** – Keeps orders moving on time
+
+## Example Scenario
+
+<Expandable title="Dispatch Date from XML" default-open="false">
+  Dispatch date exists in XML but is not reflected in the system.\
+  The macro automatically:
+
+  - Reads XML data
+
+  - Extracts dispatch date
+
+  - Updates the order
+
+  Result:
+
+  - Accurate dispatch scheduling
+
+  - No manual intervention required
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This macro ensures a smooth flow: Order → Read XML → Validate Date → Update Dispatch Date → Tag Order.\
+  It prevents missing dispatch dates, incorrect scheduling, manual errors, and delays in order processing.
+</Callout>
+

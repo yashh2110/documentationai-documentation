@@ -1,0 +1,215 @@
+---
+title: Cost of Goods Sold Report
+description: >-
+  Generates a sales report with accurate net values, correct cost calculation
+  (including composite items), and ensures shipping cost is not duplicated.
+---
+## Overview
+
+The **Cost of Goods Sold Report** script provides accurate sales data at the item level while avoiding duplication issues.
+
+It ensures correct cost calculation for both normal and composite items and includes shipping cost at the order level without repeating it across rows.
+
+<Callout kind="tip" collapsed="false">
+  Uses composite item logic and parent item filtering to avoid duplicate data and incorrect cost calculations.
+</Callout>
+
+---
+
+## Purpose
+
+This report:
+
+- Calculates accurate **net sales value**
+
+- Handles **composite item cost calculation**
+
+- Prevents **duplicate shipping cost**
+
+- Filters only **parent items (no component duplication)**
+
+👉 In short:\
+Accurate sales + correct cost + no duplication.
+
+---
+
+## When It Runs
+
+Executed on-demand (SQL report)
+
+Typically used:
+
+- Sales analysis
+
+- Profit calculation
+
+- Financial reporting
+
+- SKU-level performance tracking
+
+---
+
+## Parameters
+
+<ParamField path="@StartDate" param-type="datetime" required="true" deprecated="false">
+  Start date for the report.
+</ParamField>
+
+<ParamField path="@EndDate" param-type="datetime" required="true" deprecated="false">
+  End date for the report.
+</ParamField>
+
+<ParamField path="@Source" param-type="string" required="false" deprecated="false">
+  Filter by order source (use "All" for no filtering).
+</ParamField>
+
+---
+
+## How It Works
+
+<Steps>
+  <Step title="Fetch Orders" icon="database" title-type="p">
+    Retrieves orders within the selected date range.
+  </Step>
+
+  <Step title="Join Order Data" icon="layers" title-type="p">
+    Joins:
+
+    - Order
+
+    - OrderItem
+
+    - StockItem
+  </Step>
+
+  <Step title="Filter Parent Items" icon="filter" title-type="p">
+    Uses:
+    fkCompositeParentRowId IS NULL\
+    👉 Prevents duplicate rows from composite child items.
+  </Step>
+
+  <Step title="Calculate Cost Per Unit" icon="calculator" title-type="p">
+    - If composite item → Sum of child item cost × quantity
+
+    - Else → Direct item cost
+  </Step>
+
+  <Step title="Calculate Total Cost" icon="bar-chart" title-type="p">
+    Total Cost = Quantity × Cost per unit
+  </Step>
+
+  <Step title="Calculate Net Sales" icon="dollar-sign" title-type="p">
+    Net Sale = Price per unit × Quantity
+  </Step>
+
+  <Step title="Handle Shipping Cost" icon="truck" title-type="p">
+    Shipping cost is taken from order level\
+    👉 Ensures no duplication across items
+  </Step>
+
+  <Step title="Apply Source Filter" icon="search" title-type="p">
+    Filters by source if provided\
+    Else includes all sources
+  </Step>
+
+  <Step title="Sort Results" icon="list" title-type="p">
+    Orders sorted by:
+
+    - Order Number
+
+    - SKU
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Accurate net sales values
+
+  - Correct cost calculation (including composites)
+
+  - No duplicate shipping cost
+
+  - Clean item-level report (parent items only)
+
+  - Reliable data for financial analysis
+</Callout>
+
+---
+
+## Usefulness
+
+This report is highly beneficial for:
+
+- Profit margin analysis
+
+- SKU-level cost tracking
+
+- Financial reporting accuracy
+
+- Eliminating duplicate data issues
+
+- Understanding true revenue vs cost
+
+---
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Composite cost is calculated dynamically (may impact performance)
+
+  - Shipping cost appears per row but represents order-level value
+
+  - Only parent items are included (child components excluded)
+
+  - Requires correct PurchasePrice setup for accuracy
+
+  - Date filter is mandatory
+</Callout>
+
+---
+
+## Example Scenario
+
+<Expandable title="Sales Calculation Example" default-open="false">
+  Order:
+
+  - SKU A → Qty 2 → Price £50 → Cost £20
+
+  - Composite SKU B → Qty 1 → Child cost total £30
+
+  Shipping = £10
+
+  👉 Result:
+
+  - SKU A Net Sale → £100
+
+  - SKU A Cost → £40
+
+  - SKU B Net Sale → £50
+
+  - SKU B Cost → £30
+
+  - Shipping → £10 (not duplicated logically)
+
+  Result: Clean and accurate sales + cost visibility.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  The most critical part of this report is the combination of:
+
+  - Composite cost calculation
+
+  - Parent item filtering
+
+  - Order-level shipping handling
+
+  This ensures accurate financial reporting while eliminating duplicate and misleading data.
+</Callout>
+

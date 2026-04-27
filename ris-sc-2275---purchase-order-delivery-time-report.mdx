@@ -1,0 +1,194 @@
+---
+title: Purchase Order Delivery Time Report (Lead Time Analysis)
+description: >-
+  Tracks purchase order delivery timelines by measuring the time taken from PO creation
+  to first receipt and final completion, with supplier and brand-level insights.
+---
+
+## Overview
+
+The **RIS-SC-2275 – Purchase Order Delivery Time Report** provides detailed insights into how long suppliers take to deliver goods.
+
+It calculates the time between PO creation and stock receipt events, helping evaluate supplier performance and delivery efficiency.
+
+<Callout kind="tip" collapsed="false">
+  This report measures both <b>first delivery time</b> and <b>full completion time</b>, giving a complete view of supplier performance.
+</Callout>
+
+---
+
+## Purpose
+
+This report:
+
+- Tracks PO delivery timelines  
+- Measures supplier performance  
+- Identifies delays in procurement  
+- Provides item-level delivery completion insights  
+
+👉 In short:  
+See how fast suppliers deliver—from first item to full completion.
+
+---
+
+## When It Runs
+
+Executed on-demand (SQL report)  
+
+Typically used:
+
+- Supplier performance analysis  
+- Procurement monitoring  
+- Delivery delay investigation  
+- Lead time optimization  
+- Brand-level supplier tracking  
+
+---
+
+## Parameters
+
+<ParamField path="FromDate" param-type="datetime" required="true">
+  Start date for purchase orders.
+</ParamField>
+
+<ParamField path="ToDate" param-type="datetime" required="true">
+  End date for purchase orders.
+</ParamField>
+
+<ParamField path="BrandName" param-type="string" required="false">
+  Filter by product brand. Use <b>"All"</b> to include all brands.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Brand filtering is optional and applied using StockItem extended properties.
+</Callout>
+
+---
+
+## How It Works
+
+<Steps>
+  <Step title="Fetch Purchase Orders" icon="database" title-type="p">
+    Retrieves PO details including supplier, value, and creation date.
+  </Step>
+
+  <Step title="Filter Data" icon="filter" title-type="p">
+    Applies filters:
+    - Date range  
+    - Excludes cancelled POs  
+    - Optional brand filter  
+  </Step>
+
+  <Step title="Calculate PO Metrics" icon="bar-chart" title-type="p">
+    Computes:
+    - Total items on PO  
+    - Fully delivered items (Delivered ≥ Quantity)  
+    - Total PO value  
+  </Step>
+
+  <Step title="Map PO Items" icon="list" title-type="p">
+    Extracts distinct SKU-level items for each PO.
+  </Step>
+
+  <Step title="Track Stock Receipts" icon="download" title-type="p">
+    Uses StockChange data to identify when stock was received.
+  </Step>
+
+  <Step title="Identify First & Last Receipt" icon="clock" title-type="p">
+    Determines:
+    - First item received date  
+    - Final item received date  
+  </Step>
+
+  <Step title="Calculate Delivery Time" icon="timer" title-type="p">
+    Computes:
+    - Hours from PO open → first receipt  
+    - Hours from PO open → full completion  
+  </Step>
+
+  <Step title="Prepare Final Output" icon="file-text" title-type="p">
+    Combines supplier, PO, and timing data into final report.
+  </Step>
+
+  <Step title="Sort Results" icon="arrow-down" title-type="p">
+    Orders by most recent purchase orders first.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Supplier-wise purchase order data  
+
+  - PO value and item counts  
+
+  - Delivered vs total item comparison  
+
+  - First delivery timestamp  
+
+  - Final completion timestamp  
+
+  - Delivery time in hours (start → first, start → complete)  
+</Callout>
+
+---
+
+## Usefulness
+
+This report is highly beneficial for:
+
+- Measuring supplier lead times  
+- Identifying slow or delayed suppliers  
+- Improving procurement planning  
+- Monitoring partial vs full deliveries  
+- Evaluating brand-level supply performance  
+
+---
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Only non-cancelled POs are included  
+
+  - Delivered items are counted only when Delivered ≥ Quantity  
+
+  - Receipt dates are derived from StockChange records  
+
+  - Partial deliveries will show earlier "First Received" but later "Completed"  
+
+  - If no stock receipt exists, dates may be NULL  
+
+  - Time is calculated in hours using DATEDIFF  
+
+  - Brand filter depends on extended property "brand"  
+</Callout>
+
+---
+
+## Example Scenario
+
+<Expandable title="PO Delivery Timeline Example" default-open="false">
+  Scenario:
+
+  - PO created on Jan 1  
+  - First item received on Jan 3  
+  - Final item received on Jan 6  
+
+  👉 The report shows:
+
+  - Hours (Open → First Received) → ~48 hours  
+  - Hours (Open → Completed) → ~120 hours  
+
+  Insight:  
+  Supplier took 2 days to start delivery and 5 days to fully complete the PO.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  The most powerful aspect of this report is its ability to measure both partial and full delivery timelines. This dual insight helps distinguish between suppliers who deliver quickly but incompletely and those who complete orders efficiently—enabling smarter procurement decisions.
+</Callout>

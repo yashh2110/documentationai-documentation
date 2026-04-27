@@ -1,0 +1,140 @@
+---
+title: Purchase Order Creation
+description: >-
+  Automatically create purchase orders for items with insufficient stock by
+  analyzing selected orders and grouping required items by supplier.
+---
+## Overview
+
+The **RIS-RM-1019 – PurchaseOrderCreation** macro automates stock replenishment by identifying items with insufficient inventory and generating purchase orders.
+
+It groups required items by supplier and creates separate purchase orders, ensuring efficient procurement and stock management.
+
+<Callout kind="tip" collapsed="false">
+  Ensure supplier details and item configurations are properly set up before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Checks stock availability for order items  
+- Identifies items requiring replenishment  
+- Retrieves supplier details  
+- Creates purchase orders grouped by supplier  
+
+👉 In short:  
+Automatically generate purchase orders for low-stock items.
+
+## When It Runs
+
+Used for inventory and procurement automation
+
+Typically runs:
+
+- Manually triggered (on selected orders)  
+- During replenishment workflows  
+- For stock planning and supply management  
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of order IDs to process.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Example:  
+  OrderIds = 3001,3002,3003  
+
+  Meaning:  
+  Only these specific orders will be checked for stock shortages.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Process Orders" icon="list" title-type="p">
+    Retrieve full details for each provided OrderId.
+  </Step>
+
+  <Step title="Check Stock Availability" icon="box" title-type="p">
+    Compare available stock with ordered quantity.  
+    If insufficient → mark for purchase.
+  </Step>
+
+  <Step title="Fetch Supplier Details" icon="truck" title-type="p">
+    Retrieve default supplier, purchase price, and required quantity.
+  </Step>
+
+  <Step title="Group Items by Supplier" icon="layers" title-type="p">
+    Group items based on SupplierId to create separate purchase orders.
+  </Step>
+
+  <Step title="Create Purchase Orders" icon="file-plus" title-type="p">
+    Generate purchase orders with supplier, location, currency (GBP), and dates.
+  </Step>
+
+  <Step title="Handle Bundles" icon="package" title-type="p">
+    Split composite/bundle items into individual components if required.
+  </Step>
+
+  <Step title="Add Items to PO" icon="plus-circle" title-type="p">
+    Add items with quantity, cost, and pack size.
+  </Step>
+
+  <Step title="Submit Purchase Orders" icon="send" title-type="p">
+    Send all items in bulk to the respective purchase orders.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Purchase orders created automatically  
+  - Items grouped by supplier  
+  - Low-stock items replenished efficiently  
+  - Bundle items handled correctly  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Automating stock replenishment  
+- Preventing stock shortages  
+- Reducing manual PO creation effort  
+- Improving procurement efficiency  
+- Supporting supply chain operations  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Uses default stock location  
+  - Uses default supplier only  
+  - Creates separate purchase orders per supplier  
+  - Bundle items are split into components  
+  - Does not merge duplicate items across orders  
+  - Currency is fixed to GBP  
+  - No validation if supplier is missing  
+  - Does not check for existing open purchase orders  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Auto Create Purchase Orders for Low Stock" default-open="false">
+  Multiple orders contain items with insufficient stock.
+
+  👉 The macro:
+
+  - Identifies low-stock items  
+  - Groups them by supplier  
+  - Creates purchase orders automatically  
+
+  Result: Stock is replenished without manual intervention.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Linking order demand directly with supplier-based purchasing enables automated procurement, reduces delays, and ensures consistent stock availability.
+</Callout>

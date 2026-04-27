@@ -1,0 +1,205 @@
+---
+title: USA to Default Stock Adjustment Mirror
+description: >-
+  Mirrors stock adjustments from a source warehouse to a target warehouse by
+  applying inverse updates, ensuring synchronization, accuracy, and prevention
+  of duplicate or negative stock issues.
+---
+## Overview
+
+The **RIS-SM/SC-2321 – USA → Default Stock Adjustment Mirror** macro ensures stock consistency across warehouses by mirroring adjustments from one location to another.
+
+It reads stock changes from the source warehouse and applies inverse updates to the target warehouse while maintaining data integrity and preventing duplicate processing.
+
+<Callout kind="tip" collapsed="false">
+  Ensure correct warehouse names and allowed users are configured before execution.
+</Callout>
+
+---
+
+## Purpose
+
+This macro:
+
+- Mirrors stock adjustments between warehouses
+
+- Applies inverse quantity updates
+
+- Prevents duplicate processing
+
+- Protects against negative stock
+
+👉 In short:\
+Copy stock changes from USA → apply opposite in Default.
+
+---
+
+## When It Runs
+
+Scheduled daily or periodically
+
+Typically used:
+
+- After stock adjustments in source warehouse
+
+- In multi-location inventory environments
+
+- During stock synchronization workflows
+
+- For maintaining inventory accuracy
+
+---
+
+## Parameters
+
+<ParamField path="SourceLocationName" param-type="string" required="true" deprecated="false">
+  Source warehouse (e.g., USA).
+</ParamField>
+
+<ParamField path="TargetLocationName" param-type="string" required="true" deprecated="false">
+  Target warehouse (e.g., Default).
+</ParamField>
+
+<ParamField path="AllowedUserList" param-type="string" required="false" deprecated="false">
+  Comma-separated list of users whose adjustments should be mirrored.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Only direct stock adjustments from allowed users are processed.
+</Callout>
+
+---
+
+## How It Works
+
+<Steps>
+  <Step title="Validate Locations" icon="map-pin" title-type="p">
+    Fetch all stock locations and validate source and target warehouses. Stop if not found.
+  </Step>
+
+  <Step title="Prepare User Filter" icon="users" title-type="p">
+    Build allowed user list and filter stock changes accordingly.
+  </Step>
+
+  <Step title="Check Last Execution" icon="clock" title-type="p">
+    Retrieve last execution timestamp and process only new stock changes.
+  </Step>
+
+  <Step title="Fetch Stock Changes" icon="database" title-type="p">
+    Retrieve stock adjustments from source warehouse and filter:
+
+    - Direct adjustments only
+
+    - Exclude previous mirrored entries
+
+    - Apply user filter
+  </Step>
+
+  <Step title="Group by SKU" icon="layers" title-type="p">
+    Group stock changes per SKU for efficient processing.
+  </Step>
+
+  <Step title="Apply Mirror Logic" icon="repeat" title-type="p">
+    Convert each adjustment to its inverse value:
+    +5 → -5\
+    -5 → +5
+  </Step>
+
+  <Step title="Negative Stock Protection" icon="shield" title-type="p">
+    Check if update will cause negative stock and adjust values if required.
+  </Step>
+
+  <Step title="Prepare Updates" icon="edit" title-type="p">
+    Build update list using delta-based calculations for each SKU.
+  </Step>
+
+  <Step title="Apply Updates" icon="check-circle" title-type="p">
+    Execute batch stock updates and add note: "USA Mirror SQL".
+  </Step>
+
+  <Step title="Logging & Completion" icon="file-text" title-type="p">
+    Log processed SKUs, errors, and execution summary.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Stock changes mirrored from source to target warehouse
+
+  - Opposite adjustments applied automatically
+
+  - Duplicate processing prevented
+
+  - Negative stock avoided
+
+  - Warehouses remain synchronized and accurate
+</Callout>
+
+---
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Automating multi-warehouse stock synchronization
+
+- Maintaining inventory accuracy
+
+- Reducing manual stock updates
+
+- Preventing stock inconsistencies
+
+- Supporting scalable warehouse operations
+
+---
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Only direct adjustments are processed
+
+  - User filtering is applied based on AllowedUserList
+
+  - Negative stock is automatically prevented
+
+  - Duplicate processing is avoided using timestamp tracking
+
+  - Incorrect location names will stop execution
+
+  - Performance depends on volume of stock changes
+</Callout>
+
+---
+
+## Example Scenario
+
+<Expandable title="Stock Adjustment Mirroring Example" default-open="false">
+  USA Warehouse:
+
+  - SKU A → +10 (stock added)
+
+  - SKU B → -5 (stock removed)
+
+  👉 Default Warehouse (after macro):
+
+  - SKU A → -10 applied
+
+  - SKU B → +5 applied
+
+  Result: Both warehouses remain balanced with mirrored stock movement.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This macro uses incremental tracking and inverse stock logic to ensure reliable
+  synchronization between warehouses. By processing only new adjustments and
+  preventing negative stock, it delivers a robust and automated inventory
+  alignment system.
+</Callout>
+

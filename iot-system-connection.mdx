@@ -1,0 +1,63 @@
+---
+title: IoT system connection
+description: >-
+  Connect Odoo Point of Sale with an IoT system to enable communication with
+  hardware devices such as printers, scanners, and payment terminals.
+---
+To link your POS with an <a href="https://www.odoo.com/documentation/19.0/applications/general/iot.html" target="_blank" rel="noopener noreferrer">**IoT system**</a>, follow these steps:
+
+## **Setup process**
+
+1. Ensure both the **Point of Sale** and **IoT** apps are installed in your database
+
+2. Configure your IoT environment:
+
+   - <a href="https://www.odoo.com/documentation/19.0/applications/general/iot/iot_box.html" target="_blank" rel="noopener noreferrer">**IoT Box**</a>
+
+   - or <a href="https://www.odoo.com/documentation/19.0/applications/general/iot/windows_iot.html" target="_blank" rel="noopener noreferrer">**Windows virtual IoT**</a>
+
+## **Connect devices**
+
+Attach your hardware devices to the IoT system:
+
+| Device               | Setup instructions                                                                                                                                                                                                                                                               |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Printer**          | Connect a compatible receipt printer via USB or network and power it on. See <a href="https://www.odoo.com/documentation/19.0/applications/sales/point_of_sale/restaurant.html#pos-restaurant-orders-printing" target="_blank" rel="noopener noreferrer">**order printing**</a>. |
+| **Cash drawer**      | Connect the drawer to the printer using an RJ25 cable.                                                                                                                                                                                                                           |
+| **Barcode scanner**  | Ensure the scanner appends an `ENTER` key (keycode 28) at the end of each scan. This is usually enabled by default.                                                                                                                                                              |
+| **Scale**            | <a href="https://www.odoo.com/documentation/19.0/applications/sales/point_of_sale/hardware_network/scale.html" target="_blank" rel="noopener noreferrer">**Connect and power on the scale**</a>.                                                                                 |
+| **Customer display** | <a href="https://www.odoo.com/documentation/19.0/applications/sales/point_of_sale/hardware_network/customer_display.html" target="_blank" rel="noopener noreferrer">**Connect a display screen**</a> to show POS orders.                                                         |
+| **Payment terminal** | Setup depends on the device. Refer to <a href="https://www.odoo.com/documentation/19.0/applications/sales/point_of_sale/payment_methods.html" target="_blank" rel="noopener noreferrer">**payment terminal documentation**</a>.                                                  |
+
+## **Connect IoT to Odoo**
+
+1. <a href="https://www.odoo.com/documentation/19.0/applications/general/iot/connect.html" target="_blank" rel="noopener noreferrer">**Connect the IoT system to your Odoo database**</a>
+
+2. When prompted, select the **Associated POS** and click **Continue**
+
+The IoT system and connected devices will be automatically linked to your POS.
+
+**Tip**
+
+You can also configure this manually:
+
+1. Go to <a href="https://www.odoo.com/documentation/19.0/applications/sales/point_of_sale/use.html#pos-use-settings" target="_blank" rel="noopener noreferrer">**POS Settings**</a>
+
+2. Open your POS configuration
+
+3. Enable **IoT Box**
+
+4. Select the devices to use
+
+5. Click **Save**
+
+## **Related resources**
+
+- <a href="https://www.odoo.com/page/point-of-sale-hardware" target="_blank" rel="noopener noreferrer">**Supported hardware list**</a>
+
+- <a href="https://www.odoo.com/documentation/19.0/applications/general/iot.html" target="_blank" rel="noopener noreferrer">**IoT documentation**</a>
+
+## **Setup example**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/pos-connections.png" width="768" height="576" alt="Example POS setup with IoT devices." />
+

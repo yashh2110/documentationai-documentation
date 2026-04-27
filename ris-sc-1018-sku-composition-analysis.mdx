@@ -1,0 +1,135 @@
+---
+title: SKU Composition Analysis
+description: >-
+  Identifies parent (composite) products that include a specific child SKU and
+  shows the quantity used in each parent product.
+---
+## Overview
+
+The **RIS-SC-1018 – SKU Composition Analysis** script helps track how a specific SKU is used within composite products. It provides insights into parent-child relationships and quantity usage.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  See which composite products include a specific SKU and how many units are used.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Identifies all parent products containing the specified child SKU
+
+- Displays the quantity of the child SKU used in each parent
+
+- Helps understand SKU dependencies and inventory impact
+
+## When It Runs
+
+Manually executed by users or analysts.
+
+**Typically used:**
+
+- During bundle or composite product audits
+
+- For inventory impact analysis
+
+- Investigating stock consumption issues
+
+## Parameters
+
+<ParamField path="stockItem" param-type="string" required="true" deprecated="false">
+  Child SKU to search for in composite products
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  This parameter defines which SKU will be analyzed across all composite products.
+</Callout>
+
+<Callout kind="info" collapsed="false">
+  Links child SKUs to parent products and retrieves relevant details for reporting.
+</Callout>
+
+## Process Flow Step-by-Step
+
+<Steps>
+  <Step title="Set SKU Parameter" icon="settings" title-type="p">
+    Define the child SKU to analyze.
+  </Step>
+
+  <Step title="Identify Parent SKUs" icon="search" title-type="p">
+    Find all parent products that include the selected child SKU.
+  </Step>
+
+  <Step title="Get Parent Details" icon="package" title-type="p">
+    Retrieve parent SKU and product title.
+  </Step>
+
+  <Step title="Get Child Details" icon="cube" title-type="p">
+    Retrieve child SKU and product title.
+  </Step>
+
+  <Step title="Get Quantity Used" icon="hash" title-type="p">
+    Show the number of units of the child SKU used in each parent product.
+  </Step>
+
+  <Step title="Add Row Number" icon="list-number" title-type="p">
+    Assign a row number for clean reporting.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  Report containing:
+
+  - Parent SKU
+
+  - Parent Title
+
+  - Child SKU
+
+  - Child Title
+
+  - Quantity used
+</Callout>
+
+## Usefulness
+
+- **Bundle Analysis** – Understand product composition
+
+- **Stock Planning** – Know how one SKU affects multiple products
+
+- **Inventory Impact** – Track dependencies between products
+
+- **Troubleshooting** – Identify which products rely on a specific SKU
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Only considers active parent and child SKUs
+
+  - Depends on accurate Stock\_ItemComposition data
+
+  - Read-only report; no modifications are made to inventory
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Component Shortage Example" default-open="false">
+  A product **ITEM A** is out of stock.
+
+  Manager wants to check which products depend on it:
+
+  - Parent SKU **BUNDLE1** → Child SKU ITEM A → Quantity 2
+
+  - Parent SKU **KIT5** → Child SKU ITEM A → Quantity 1
+
+  **Insight:** Selling BUNDLE1 or KIT5 will consume ITEM A, so it needs urgent restocking.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This script reveals how a single SKU is used across multiple composite products, helping prevent stock shortages, support better planning, and improve visibility of product dependencies.
+</Callout>
+

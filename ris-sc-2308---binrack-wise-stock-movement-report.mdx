@@ -1,0 +1,267 @@
+---
+title: BinRack Wise Stock Movement Report
+description: >-
+  Provides detailed batch-level stock movements within WMS, including Inward,
+  Outward, Transfers, Returns, and Adjustments. Supports filtering by warehouse,
+  item search, and category, and calculates running balances per bin.
+---
+## Overview
+
+The **BinRack Wise Stock Movement Report&#x20;**&#x67;ives a complete view of stock movements at the batch and bin level in the warehouse management system (WMS).
+
+It tracks all inbound, outbound, return, adjustment, and transfer transactions, while providing running balance calculations per batch, warehouse, and bin.
+
+<Callout kind="tip" collapsed="false">
+  Balance Quantity = Running total of Qty per Item / Batch / Warehouse / Bin
+</Callout>
+
+---
+
+## Purpose
+
+This report:
+
+- Tracks batch-level stock movements
+
+- Classifies movements into Transaction Types: Inward, Outward, Return, Adjustment, Transfer
+
+- Provides detailed bin-level inventory tracking
+
+- Includes running balance calculations
+
+- Supports filtering by warehouse, item, and category
+
+👉 In short:\
+Understand exactly how stock moves across batches and bins over time.
+
+---
+
+## When It Runs
+
+Executed on-demand (SQL report)
+
+Typically used:
+
+- Warehouse inventory tracking
+
+- Bin-level stock reconciliation
+
+- Batch movement analysis
+
+- Return & RMA monitoring
+
+- Operational audits and reporting
+
+---
+
+## Parameters
+
+<ParamField path="DateFrom" param-type="datetime" required="true" deprecated="false">
+  Start date for transaction filtering.
+</ParamField>
+
+<ParamField path="DateTo" param-type="datetime" required="true" deprecated="false">
+  End date for transaction filtering.
+</ParamField>
+
+<ParamField path="Warehouse" param-type="string" required="false" deprecated="false">
+  Warehouse filter. Use "ALL" to include all warehouses.
+</ParamField>
+
+<ParamField path="ItemSearch" param-type="string" required="false" deprecated="false">
+  Search by SKU or item title. Leave blank for all items.
+</ParamField>
+
+<ParamField path="Category" param-type="string" required="false" deprecated="false">
+  Item category filter. Use "ALL" for all categories.
+</ParamField>
+
+---
+
+## How It Works
+
+<Steps>
+  <Step title="Step 1: Define Date Range" icon="calendar" title-type="p">
+    Converts input dates into a datetime range:
+
+    - Start → @DateFrom
+
+    - End → @DateTo + 1 day minus 1 millisecond for inclusivity
+  </Step>
+
+  <Step title="Step 2: Extract Batch Audit Data" icon="database" title-type="p">
+    Pulls batch audit records from `batch_audit` table:
+
+    - Includes quantity and value changes
+
+    - Resolves source and destination bins using `warehouse_binrack`
+
+    - Filters out zero-quantity movements
+  </Step>
+
+  <Step title="Step 3: Identify Transfer Jobs" icon="git-branch" title-type="p">
+    Flags jobs where:
+
+    - `fkJobId` is present
+
+    - Sum of QuantityDelta = 0 (internal transfer)
+
+    - Movement occurs across 2 or more bins
+
+    - Used to classify movements as Transfer
+  </Step>
+
+  <Step title="Step 4: Classify Transaction Types" icon="tag" title-type="p">
+    Determines movement type for each record:
+
+    - Transfer → flagged from transfer\_jobs
+
+    - Adjustment → ChangeNote contains 'Adjustment'
+
+    - Return → Order ID exists and QuantityDelta > 0
+
+    - Inward → QuantityDelta > 0
+
+    - Outward → all others
+  </Step>
+
+  <Step title="Step 5: Join Batch and Item Data" icon="link" title-type="p">
+    Adds metadata:
+
+    - SKU, Item Title, Barcode
+
+    - Category Name
+
+    - Warehouse
+
+    - Bin Rack
+
+    - Reference number (Order / Job / Batch)
+  </Step>
+
+  <Step title="Step 6: Calculate Running Balance" icon="plus-circle" title-type="p">
+    Computes running balance per:
+
+    - SKU
+
+    - Batch
+
+    - Warehouse
+
+    - Bin Rack\
+      Uses `SUM() OVER (PARTITION BY ... ORDER BY ChangeDate, fkBatchInventoryId)`
+  </Step>
+
+  <Step title="Step 7: Apply Filters" icon="filter" title-type="p">
+    Filters final results using parameters:
+
+    - Warehouse = selected warehouse or ALL
+
+    - ItemSearch = SKU or Title pattern
+
+    - Category = selected category or ALL
+  </Step>
+
+  <Step title="Step 8: Sort Output" icon="arrow-down" title-type="p">
+    Orders results by:
+
+    - Transaction Date descending
+
+    - Item Code ascending
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Detailed batch-level transaction report
+
+  - Includes Transaction Type, Quantity In / Out, Running Balance
+
+  - Bin-level visibility
+
+  - Reference number for traceability (Order / Job / Batch)
+
+  - User / System attribution
+
+  - Supports filtering by warehouse, SKU, and category
+</Callout>
+
+---
+
+## Usefulness
+
+This report is highly beneficial for:
+
+- Warehouse and bin-level inventory management
+
+- Tracking returns, RMAs, and adjustments
+
+- Operational audit of batch movements
+
+- Stock reconciliation and variance analysis
+
+- Reporting for warehouse KPIs and compliance
+
+---
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Only non-zero quantity movements are included
+
+  - Transfer jobs are identified and flagged separately
+
+  - Running balance is cumulative per SKU / Batch / Bin / Warehouse
+
+  - Barcode is included for client reporting format
+
+  - User attribution replaces RMA returns with 'RMA Process'
+
+  - Filtering parameters are optional, use 'ALL' or empty string for full inclusion
+</Callout>
+
+---
+
+## Example Scenario
+
+<Expandable title="Batch Movement Example" default-open="false">
+  SKU: XYZ123\
+  Warehouse: Main DC\
+  Bin: A-12
+
+  Transactions:
+
+  - 01-Dec → Inward → Qty = 50
+
+  - 03-Dec → Customer Order → Qty = -10
+
+  - 05-Dec → Adjustment → Qty = -2
+
+  - 07-Dec → Return (RMA) → Qty = 5
+
+  Running Balance:
+
+  - 01-Dec → 50
+
+  - 03-Dec → 40
+
+  - 05-Dec → 38
+
+  - 07-Dec → 43
+
+  Insight:
+  Provides full visibility of stock movements, including adjustments, returns, and transfers at batch/bin level.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This report enables precise warehouse control by combining batch, bin, and transaction-level data into a single view.
+  It is crucial for WMS operational analysis, inventory reconciliation, and audit compliance.
+</Callout>
+

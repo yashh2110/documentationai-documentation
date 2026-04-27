@@ -1,0 +1,177 @@
+---
+title: Auto PO Creation & Email
+description: >-
+  Automate direct delivery order processing by validating suppliers, creating
+  purchase orders, adding delivery details, emailing suppliers, and moving
+  orders through workflow stages.
+---
+## Overview
+
+The **RIS-SM-2283 – Auto PO Creation & Email** macro streamlines direct delivery workflows by automatically generating purchase orders, sending them to suppliers, and updating order status.
+
+<Callout kind="tip" collapsed="false">
+  Use this macro for direct delivery orders to ensure fast supplier communication and eliminate manual PO handling.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Validates supplier consistency across items
+
+- Creates purchase orders automatically
+
+- Adds delivery and customer details to PO
+
+- Sends PO to supplier via email
+
+- Moves orders to appropriate workflow folders
+
+👉 In short:\
+Validate → create PO → add details → email → move order.
+
+## When It Runs
+
+Typically executed:
+
+- After order import
+
+- For direct delivery orders
+
+- Before supplier fulfillment
+
+- During PO automation workflows
+
+- When supplier-based dispatch is required
+
+- Manually or via automation
+
+## Parameters
+
+<ParamField path="emailTemplate" param-type="string" required="true" deprecated="false">
+  Email template used to send purchase orders to suppliers.
+</ParamField>
+
+## Simple Explanation
+
+The macro processes direct delivery orders, validates suppliers, creates purchase orders with delivery details, emails them to suppliers, and updates order workflow status.
+
+## Step-by-Step Flow
+
+<Steps>
+  <Step title="Start Macro" icon="play" title-type="p">
+    Log execution start and initialize configuration.
+  </Step>
+
+  <Step title="Fetch Locations" icon="map" title-type="p">
+    Retrieve Direct Delivery warehouse/location.
+  </Step>
+
+  <Step title="Get Open Orders" icon="database" title-type="p">
+    Fetch all open orders for the selected location.
+  </Step>
+
+  <Step title="Filter Orders" icon="filter" title-type="p">
+    Process only orders in the Direct Deliveries folder.
+  </Step>
+
+  <Step title="Loop Through Orders" icon="list" title-type="p">
+    Process each order individually.
+  </Step>
+
+  <Step title="Validate Suppliers" icon="shield" title-type="p">
+    Ensure:
+
+    If validation fails → move to Manual Check folder.
+  </Step>
+
+  <Step title="Check Existing PO" icon="search" title-type="p">
+    If purchase order already exists → skip creation.
+  </Step>
+
+  <Step title="Create Purchase Order" icon="shopping-cart" title-type="p">
+    Generate PO with:
+  </Step>
+
+  <Step title="Add Shipping Details to PO" icon="truck" title-type="p">
+    Copy customer name, address, and contact details into PO notes.
+  </Step>
+
+  <Step title="Add Order Items" icon="package" title-type="p">
+    Add all items to PO:
+  </Step>
+
+  <Step title="Add Delivery SKU" icon="plus-circle" title-type="p">
+    Add additional SKU "Direct" using supplier cost.
+  </Step>
+
+  <Step title="Set PO Status" icon="check-circle" title-type="p">
+    Set purchase order status to OPEN.
+  </Step>
+
+  <Step title="Send Email to Supplier" icon="send" title-type="p">
+    Send PO using configured email template:
+
+    If email fails → move order to Manual Check folder.
+  </Step>
+
+  <Step title="Move Processed Order" icon="arrow-right-circle" title-type="p">
+    Remove from Direct Deliveries folder and move to PO Sent to Supplier.
+  </Step>
+
+  <Step title="Logging" icon="file-text" title-type="p">
+    Log processing steps, PO creation, email status, and errors.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Purchase orders created automatically
+
+  - Suppliers receive PO via email
+
+  - Orders moved to processed folder
+
+  - Failed orders routed for manual review
+</Callout>
+
+## Usefulness
+
+- **Full Automation** – Eliminates manual PO creation
+
+- **Supplier Accuracy** – Ensures single supplier per order
+
+- **Faster Processing** – Instant PO generation and email
+
+- **Error Handling** – Routes problematic orders for review
+
+- **Clean Workflow** – Uses folders for tracking progress
+
+## Example Scenario
+
+<Expandable title="Direct Delivery Order Automation" default-open="false">
+  Orders require manual purchase order creation and supplier communication.
+
+  The macro:
+
+  - Detects eligible orders
+
+  - Validates supplier
+
+  - Creates purchase order
+
+  - Sends email to supplier
+
+  - Moves order to processed folder
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This macro follows a structured flow:\
+  Validate Order → Check Supplier → Create PO → Send Email → Move Order.
+
+  It prevents wrong supplier assignment, duplicate PO creation, manual errors, missed communication, and unprocessed orders.
+</Callout>
+

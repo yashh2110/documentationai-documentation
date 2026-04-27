@@ -1,0 +1,192 @@
+---
+title: Dropship Macro
+description: >-
+  Automatically process dropship orders, split them by supplier, and send order
+  details via email.
+---
+## Overview
+
+The **RIS-RM-1007 – Dropship Macro** automates the handling of dropship orders by identifying supplier-based items, splitting orders when required, and sending order details directly to suppliers via email.
+
+It ensures efficient supplier communication and streamlined dropshipping workflows.
+
+<Callout kind="tip" collapsed="false">
+  Ensure supplier names follow the ds- naming convention and have valid email addresses configured.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Identifies dropship items within orders
+
+- Splits orders based on suppliers
+
+- Sends order details to suppliers via email
+
+👉 In short:\
+Automate dropship processing and supplier communication.
+
+## When It Runs
+
+Used for dropshipping automation & supplier communication
+
+Typically runs:
+
+- Scheduled execution (automated processing)
+
+- Manually for selected orders
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of orders to be processed.
+</ParamField>
+
+<ParamField path="ServerName" param-type="string" required="true" deprecated="false">
+  SMTP server used for sending emails.
+</ParamField>
+
+<ParamField path="useSSL" param-type="boolean" required="true" deprecated="false">
+  Enable secure email transmission.
+</ParamField>
+
+<ParamField path="port" param-type="number" required="true" deprecated="false">
+  SMTP port number.
+</ParamField>
+
+<ParamField path="userName" param-type="string" required="true" deprecated="false">
+  Email account username.
+</ParamField>
+
+<ParamField path="password" param-type="string" required="true" deprecated="false">
+  Email account password.
+</ParamField>
+
+<ParamField path="fromEmail" param-type="string" required="true" deprecated="false">
+  Sender email address.
+</ParamField>
+
+<ParamField path="fromName" param-type="string" required="true" deprecated="false">
+  Sender display name.
+</ParamField>
+
+<ParamField path="ccname" param-type="string" required="false" deprecated="false">
+  CC recipient display name.
+</ParamField>
+
+<ParamField path="ccEmail" param-type="string" required="false" deprecated="false">
+  CC recipient email address.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  The macro uses both order data and email configuration to process and communicate dropship orders.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Fetch Orders" icon="download" title-type="p">
+    Retrieve orders and skip already processed ones.
+  </Step>
+
+  <Step title="Identify Dropship Items" icon="search" title-type="p">
+    Detect items where supplier name contains ds-.
+  </Step>
+
+  <Step title="Separate Items" icon="layers" title-type="p">
+    Split dropship and non-dropship items.
+  </Step>
+
+  <Step title="Group by Supplier" icon="users" title-type="p">
+    Organize dropship items based on supplier details.
+  </Step>
+
+  <Step title="Evaluate Split Logic" icon="git-branch" title-type="p">
+    ✔ Only dropship items → process directly\
+    ✔ Mixed/multi-supplier → split order
+  </Step>
+
+  <Step title="Split Orders" icon="copy" title-type="p">
+    Create separate orders for each supplier if required.
+  </Step>
+
+  <Step title="Send Emails" icon="mail" title-type="p">
+    Send order details to suppliers including items, pricing, and delivery info.
+  </Step>
+
+  <Step title="Track Results" icon="check-circle" title-type="p">
+    Log success, failures, and missing emails.
+  </Step>
+
+  <Step title="Update Orders" icon="save" title-type="p">
+    Add notes and assign orders to appropriate folders.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Dropship items identified automatically
+
+  - Orders split by supplier where required
+
+  - Supplier emails sent with order details
+
+  - Orders categorized based on processing outcome
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Automating dropship workflows
+
+- Eliminating manual supplier communication
+
+- Handling multi-supplier orders efficiently
+
+- Reducing operational errors
+
+- Improving tracking via notes and categorisation
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Works only when supplier names contain ds-
+
+  - Requires valid supplier email addresses
+
+  - Skips already processed orders
+
+  - Depends on correct SMTP configuration
+
+  - Supports multi-supplier and mixed orders
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Dropship Order Processing Example" default-open="false">
+  An order contains items from two suppliers:
+
+  - ds-SupplierA
+
+  - ds-SupplierB
+
+  👉 The macro:
+
+  - Splits the order into two
+
+  - Sends separate emails to each supplier
+
+  - Logs results and updates order notes
+
+  Result: Each supplier receives only relevant order details.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Automating dropship processing with supplier-based splitting and email communication significantly improves efficiency, accuracy, and scalability in fulfilment operations.
+</Callout>
+

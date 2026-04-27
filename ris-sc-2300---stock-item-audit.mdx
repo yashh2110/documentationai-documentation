@@ -1,0 +1,232 @@
+---
+title: Combined Stock Movement Report (WMS + Non-WMS)
+description: >-
+  Consolidates stock movement data from both Non-WMS (StockChange) and WMS (Batch Audit) systems,
+  providing a unified view of inventory changes with filtering by date, branch, department, and sub-department.
+---
+
+## Overview
+
+The **Combined Stock Movement Report** provides a unified view of all stock movements across both WMS and Non-WMS systems.
+
+It merges data from:
+- **StockChange (Non-WMS)**
+- **Batch Audit (WMS)**
+
+This allows complete visibility of inventory changes including orders, transfers, adjustments, scrap, and goods-in movements.
+
+<Callout kind="tip" collapsed="false">
+  Total Movement View = WMS Movements + Non-WMS Movements
+</Callout>
+
+---
+
+## Purpose
+
+This report:
+
+- Combines stock movement data from two systems  
+- Standardizes movement types (Order, Transfer, Scrap, Adjustment, etc.)  
+- Tracks quantity and cost impact  
+- Supports filtering by branch, department, and sub-department  
+
+👉 In short:  
+Get a complete picture of how stock is moving across your entire operation.
+
+---
+
+## When It Runs
+
+Executed on-demand (SQL report)
+
+Typically used:
+
+- Inventory audits  
+- Stock reconciliation  
+- Warehouse activity tracking  
+- Financial stock analysis  
+- Operational troubleshooting  
+
+---
+
+## Parameters
+
+<ParamField path="StartDate" param-type="date" required="true">
+  Start date for stock movement filtering.
+</ParamField>
+
+<ParamField path="EndDate" param-type="date" required="true">
+  End date for stock movement filtering.
+</ParamField>
+
+<ParamField path="Branch" param-type="string" required="false">
+  Warehouse/branch filter. Use <b>"ALL"</b> to include all locations.
+</ParamField>
+
+<ParamField path="Department" param-type="string" required="false">
+  Department filter based on item classification.
+</ParamField>
+
+<ParamField path="SubDepartment" param-type="string" required="false">
+  Sub-department filter for more granular classification.
+</ParamField>
+
+---
+
+## How It Works
+
+<Steps>
+
+  <Step title="Prepare Date Filters" icon="calendar" title-type="p">
+    Filters data between selected dates:
+    - Includes full date range  
+    - Uses `< EndDate + 1 day` logic for accuracy  
+  </Step>
+
+  <Step title="Extract Non-WMS Movements" icon="database" title-type="p">
+    Pulls data from **StockChange** table:
+    - Maps movement types using ChangeSource  
+    - Includes quantity and value changes  
+    - Excludes zero quantity movements  
+    - Excludes specific warehouse (e.g., Wolverhampton DC)  
+  </Step>
+
+  <Step title="Classify Non-WMS Movement Types" icon="tag" title-type="p">
+    Converts raw sources into readable types:
+    - Order → Customer Order  
+    - Received → Transfer In  
+    - Transfer → Transfer  
+    - Adjust → Adjustment  
+    - Scrap → Scrap  
+    - Others → Other  
+  </Step>
+
+  <Step title="Extract WMS Movements" icon="layers" title-type="p">
+    Pulls data from **Batch Audit** tables:
+    - Uses batch-level tracking  
+    - Includes batch numbers  
+    - Links with orders where applicable  
+  </Step>
+
+  <Step title="Classify WMS Movement Types" icon="git-branch" title-type="p">
+    Determines movement type using conditions:
+    - Batch Update → Goods In  
+    - Negative qty + order → Customer Order  
+    - Positive qty without order → Transfer In  
+    - Scrap / Adjust keywords → Scrap / Adjustment  
+  </Step>
+
+  <Step title="Enhance with Item Metadata" icon="info" title-type="p">
+    Adds additional item details:
+    - SKU and item title  
+    - Supplier code and name  
+    - Department & Sub-department (via extended properties)  
+  </Step>
+
+  <Step title="Apply Filters" icon="filter" title-type="p">
+    Applies dynamic filters:
+    - Branch  
+    - Department  
+    - Sub-department  
+  </Step>
+
+  <Step title="Combine Data Sources" icon="plus-circle" title-type="p">
+    Merges both datasets using:
+    - `UNION ALL`  
+    - Keeps all records without aggregation  
+  </Step>
+
+  <Step title="Sort Results" icon="arrow-down" title-type="p">
+    Final output sorted by:
+    - Date (latest first)  
+    - SKU  
+  </Step>
+
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Unified stock movement report (WMS + Non-WMS)  
+
+  - Includes quantity and cost impact  
+
+  - Movement type classification  
+
+  - Batch tracking (WMS only)  
+
+  - Supplier and item-level details  
+
+  - Fully filterable by branch and category  
+
+  - Chronologically sorted output  
+</Callout>
+
+---
+
+## Usefulness
+
+This report is highly beneficial for:
+
+- Full inventory visibility across systems  
+- Identifying stock discrepancies  
+- Tracking warehouse activity  
+- Financial stock valuation analysis  
+- Root cause analysis for stock changes  
+
+---
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Combines two different systems (WMS & Non-WMS)  
+
+  - Uses `UNION ALL` (no deduplication)  
+
+  - Zero quantity movements are excluded  
+
+  - Movement type is derived (not stored directly)  
+
+  - Department/Sub-department come from extended properties  
+
+  - Some fields (Reference/Narrative) depend on source data quality  
+
+  - Batch number is only available for WMS data  
+</Callout>
+
+---
+
+## Example Scenario
+
+<Expandable title="Stock Movement Example" default-open="false">
+
+  SKU: XYZ789  
+
+  Non-WMS:
+  - Adjustment → Qty = +10  
+
+  WMS:
+  - Customer Order → Qty = -4  
+
+  👉 Combined View:
+  - Adjustment: +10  
+  - Customer Order: -4  
+
+  Result:
+  Both movements appear separately with full traceability  
+
+  Insight:
+  Helps track both operational adjustments and sales impact together.
+
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This report bridges the gap between WMS and Non-WMS systems, giving a single source of truth for stock movements.  
+  It is essential for accurate inventory tracking, auditing, and operational transparency.
+</Callout>

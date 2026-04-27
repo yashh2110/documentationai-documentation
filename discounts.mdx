@@ -1,0 +1,75 @@
+---
+title: Discounts
+description: >
+  The Discounts feature enables users to adjust pricing on sales quotations or
+  orders by applying percentage-based increases or reductions. These adjustments
+  are calculated based on the product’s sales price.
+
+
+  To enable discounts, go to Sales app ‣ Configuration ‣ Settings. Under the
+  Pricing section, activate the Discounts option, then click Save.
+
+
+  Once enabled, open a quotation via Sales app ‣ Orders ‣ Quotations and select
+  the desired record.
+---
+## **Apply discounts on product lines**
+
+After enabling the feature, a new column labeled **Disc.%** appears in the **Order Lines** section of the quotation form. This field allows you to define a discount for each individual product.
+
+Enter the desired percentage for any line item, and the updated pricing will automatically reflect in the total at the bottom of the page.
+
+**Tip**
+
+Discounts can also be applied directly to confirmed sales orders. Navigate to **Sales app ‣ Orders ‣ Orders**, open an order, and enter values in the **Disc.%** column just like in quotations.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/discount-on-sales-order.png" width="1299" height="140" alt="The Dis.% heading will now appear in Order Lines." />
+
+**Note**
+
+- Entering a positive value in **Disc.%** reduces the price (discount).
+
+- Entering a negative value increases the price (markup).
+
+**Important**
+
+Customers will see price reductions (positive discounts). However, price increases (negative discounts) are not shown as discounts—instead, they modify the unit price directly.
+
+## **Using the Discount button**
+
+When the Discounts feature is active, a **Discount** button is available at the bottom of sales orders.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/discount-button-sales-order.png" width="500" height="244" alt="The discount button located at the bottom of a sales order form in the Odoo Sales app." />
+
+Clicking this button opens a configuration window where you can choose how the discount should be applied:
+
+### **Available options**
+
+- **On All Order Lines**\
+  Applies the entered discount percentage to every existing product line in the order.
+
+- **Global Discount**\
+  Adds a separate line to the order representing the total discount amount based on the selected percentage.
+
+  **Example**
+
+  If a 10% global discount is applied to an order totaling $4,200, a new line is added showing -$420.
+
+  <Image src="https://www.odoo.com/documentation/19.0/_images/global-discount-option.png" width="1140" height="293" alt="The sales order with the applied global discount option in the Odoo Sales application." />
+
+  **Important**
+
+  The global discount value does not automatically update if products are added or removed afterward. To recalculate, delete the discount line and apply it again.
+
+- **Fixed Amount**\
+  Applies a specific monetary discount. This creates a new line item with a negative value that reduces the total.
+
+  **Example**
+
+  A fixed discount of $20 will appear as a separate line with a negative unit price.
+
+  <Image src="https://www.odoo.com/documentation/19.0/_images/fixed-discount-on-sales-order.png" width="1138" height="185" alt="The sales order with the applied fixed discount option in the Odoo Sales application." />
+
+**Note**
+
+For better accuracy, apply **Fixed Amount** discounts only after all products have been added. If the order changes afterward, you may need to manually adjust or reapply the discount line.

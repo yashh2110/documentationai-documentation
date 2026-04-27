@@ -1,0 +1,90 @@
+---
+title: Invoices
+description: >-
+  Use Odoo Point of Sale to generate, print, and retrieve invoices for customer
+  transactions.
+---
+**Note**
+
+When an invoice is created from a POS order, it is automatically recorded in the corresponding <a href="https://www.odoo.com/documentation/19.0/applications/finance/accounting/get_started/cheat_sheet.html#cheat-sheet-journals" target="_blank" rel="noopener noreferrer">**accounting journal**</a> configured in the <a href="https://www.odoo.com/documentation/19.0/applications/sales/point_of_sale/use/pos_invoices.html#pos-invoices-invoice-configuration" target="_blank" rel="noopener noreferrer">**POS settings**</a>.
+
+## **Configuration**
+
+To set default journals for a POS:
+
+1. Open <a href="https://www.odoo.com/documentation/19.0/applications/sales/point_of_sale/use.html#pos-use-settings" target="_blank" rel="noopener noreferrer">**POS Settings**</a>
+
+2. Scroll to the **Accounting** section
+
+3. Under **Default Journals**, select the journals for:
+
+   - Orders
+
+   - Invoices
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/invoice-config.png" width="927" height="408" alt="Accounting section in POS settings." />
+
+**Note**
+
+You can also assign specific journals to each <a href="https://www.odoo.com/documentation/19.0/applications/sales/point_of_sale/payment_methods.html" target="_blank" rel="noopener noreferrer">**payment method**</a>.
+
+## **Invoice a customer**
+
+To create an invoice from a POS order:
+
+1. Ensure a <a href="https://www.odoo.com/documentation/19.0/applications/sales/point_of_sale/use.html#pos-use-customers" target="_blank" rel="noopener noreferrer">**customer is assigned**</a> to the order
+
+2. Process the payment as usual
+
+3. Click **Invoice** below the customer’s name
+
+Then:
+
+- Select a payment method
+
+- Click **Validate**
+
+The invoice is generated automatically and can be downloaded or printed.
+
+## **Retrieve invoices**
+
+To access previously generated invoices:
+
+1. Go to **Point of Sale ‣ Orders ‣ Orders**
+
+2. Select the relevant order
+
+3. Click the **Invoice** smart button
+
+**Tip**
+
+- Orders that have been invoiced display the **Fully Invoiced** status
+
+- Use the search bar filter (**Invoiced**) to quickly find invoiced orders
+
+## **QR codes for invoice requests**
+
+Customers can generate invoices themselves by scanning a QR code printed on the receipt.
+
+Steps:
+
+1. The customer scans the QR code
+
+2. Enters billing details in the form
+
+3. Clicks **Get my invoice**
+
+The invoice is then created and made available for download. The order status updates to **Fully Invoiced**.
+
+### **Enable QR code on receipts**
+
+To activate this feature:
+
+1. Go to **Point of Sale ‣ Configuration ‣ Settings**
+
+2. Select your POS under **Point of Sale**
+
+3. Scroll to **Bills & Receipts**
+
+4. Enable **Use QR code on ticket**
+

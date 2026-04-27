@@ -1,0 +1,139 @@
+---
+title: Apply Discount If Order Item Value is Zero
+description: >-
+  Automatically correct zero-value items by applying discounts while maintaining
+  overall order total.
+---
+## Overview
+
+The **RIS-RM-1003 – Apply Discount If Order Item Value is Zero** macro corrects orders where one or more items have zero or incorrect pricing.
+
+It applies a defined discount and adjusts another item within the order to ensure that the overall order value remains accurate and balanced.
+
+<Callout kind="tip" collapsed="false">
+  Ensure discountValue is configured correctly to avoid unintended pricing adjustments.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Detects items with zero or incorrect value
+
+- Applies a defined discount
+
+- Adjusts another item to maintain total order value
+
+👉 In short:\
+Fix zero-value items while keeping total order amount unchanged.
+
+## When It Runs
+
+Used for order validation & pricing correction
+
+Typically runs:
+
+- Manually triggered
+
+- During order processing workflows
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of orders to be evaluated.
+</ParamField>
+
+<ParamField path="discountValue" param-type="number" required="true" deprecated="false">
+  Discount percentage to be applied (e.g., 50 = 50%).
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Example:\
+  discountValue = 50 → Applies a 50% discount
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Process Orders" icon="download" title-type="p">
+    Iterate through all selected orders.
+  </Step>
+
+  <Step title="Identify Zero-Value Items" icon="search" title-type="p">
+    Detect items where price is less than or equal to zero.
+  </Step>
+
+  <Step title="Apply Discount" icon="percent" title-type="p">
+    Replace 100% discount with configured discount value.\
+    Example: 100% → 50%
+  </Step>
+
+  <Step title="Mark Item Updated" icon="tag" title-type="p">
+    Add flag ItemValueChanged = Yes to prevent reprocessing.
+  </Step>
+
+  <Step title="Calculate Adjustment" icon="calculator" title-type="p">
+    Compute total value difference after discount updates.
+  </Step>
+
+  <Step title="Adjust Another Item" icon="edit" title-type="p">
+    Reduce price of a positive-value item to balance order total.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Zero-value items corrected
+
+  - Discounts applied accurately
+
+  - Total order value remains unchanged
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Fixing pricing discrepancies automatically
+
+- Preventing incorrect order totals
+
+- Eliminating manual corrections
+
+- Ensuring accurate accounting and reporting
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Only applies to items where price ≤ 0
+
+  - Applies when discount is 100%
+
+  - Another item is adjusted to maintain total value
+
+  - Flag ItemValueChanged = Yes prevents repeated updates
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Zero-Value Item Correction Example" default-open="false">
+  An order contains an item with price = 0 and discount = 100%.
+
+  👉 The macro:
+
+  - Updates discount to configured value (e.g., 50%)
+
+  - Marks item as updated
+
+  - Adjusts another item’s price
+
+  Result: Order total remains unchanged and pricing is corrected.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By correcting zero-value items while preserving total order value, this macro ensures financial accuracy and reduces operational effort.
+</Callout>
+

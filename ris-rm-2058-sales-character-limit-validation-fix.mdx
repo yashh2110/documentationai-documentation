@@ -1,0 +1,187 @@
+---
+title: Sales Order Character Limit Validation & Fix
+description: >-
+  Ensures that customer address fields do not exceed defined character limits.
+  Trims long fields and saves the original values in order notes for
+  traceability.
+---
+## Overview
+
+The **RIS-RM-2058 – Sales – Character Limit Validation & Fix** macro validates customer address fields against a predefined character limit.
+
+Fields exceeding the limit are trimmed, and original values are stored in order notes to maintain traceability.
+
+<Callout kind="tip" collapsed="false">
+  Proper configuration of character limits is crucial to avoid unintended trimming.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Checks address field lengths (Town/City, Company, Region/State)
+
+- Trims fields exceeding the allowed character count
+
+- Stores original values in order notes
+
+- Ensures orders comply with external system restrictions
+
+👉 In short:\
+Automatically trim long address fields and preserve original values in notes.
+
+## When It Runs
+
+Used for order validation and shipping/courier compliance
+
+Typically runs:
+
+- Manual execution
+
+- During order validation
+
+- Before shipping label generation
+
+- Before exporting to courier systems
+
+- During DFS or fulfillment processing
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of orders to process
+</ParamField>
+
+<ParamField path="Charcount" param-type="integer" required="true" deprecated="false">
+  Maximum allowed characters per address field
+</ParamField>
+
+## How It Works
+
+<Steps>
+  <Step title="Start Macro" icon="play-circle" title-type="p">
+    Log macro start and loop through each order.
+  </Step>
+
+  <Step title="Fetch Order Data" icon="download" title-type="p">
+    Retrieve order using GetOrderById. Extract address fields:
+
+    - Town or City
+
+    - Company Name
+
+    - Region or State
+  </Step>
+
+  <Step title="Check Character Limits" icon="ruler" title-type="p">
+    Compare each field length against the Charcount parameter.
+  </Step>
+
+  <Step title="Handle Violations" icon="edit" title-type="p">
+    If a field exceeds the limit:
+
+    - Store original value in order note
+
+    - Trim field to maximum allowed characters
+
+    - Mark the order as modified
+  </Step>
+
+  <Step title="Apply Updates" icon="save" title-type="p">
+    If changes were made:
+
+    - Save notes using SetOrderNotes
+
+    - Update customer info using SetOrderCustomerInfo\
+      Preserve all other buyer details.
+  </Step>
+
+  <Step title="No Changes Case" icon="check-circle" title-type="p">
+    If all fields are within limits:
+
+    - Log that no changes were required
+
+    - No API calls are made
+  </Step>
+
+  <Step title="Logging" icon="file-text" title-type="p">
+    Log field lengths, changes applied, order processed, and macro start/end.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Address fields are trimmed to allowed length
+
+  - Original values stored in order notes
+
+  - Orders become compliant for external systems
+
+  - Traceability is maintained without data loss
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Ensuring compatibility with courier systems
+
+- Standardizing address field lengths
+
+- Preventing API and integration errors
+
+- Maintaining audit trail of original data
+
+- Improving automation reliability
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Only modifies fields exceeding the character limit
+
+  - Original data is preserved in notes for reference
+
+  - Correct Charcount configuration is required
+
+  - Does not affect other customer details
+
+  - Should be used before shipping or export processes
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Address Trimming Example" default-open="false">
+  Input Order:
+
+  - Town: AhmedabadCityVeryLongName
+
+  - Company: ABC Company Private Limited Very Long Name
+
+  - Region: GujaratRegionNameTooLong
+
+  Charcount: 10
+
+  Processing:
+
+  - Town trimmed to AhmedabadC
+
+  - Company trimmed to ABC Compan
+
+  - Region trimmed to GujaratReg
+
+  Order Notes:
+
+  - City or Town: AhmedabadCityVeryLongName
+
+  - Company: ABC Company Private Limited Very Long Name
+
+  - County or Region: GujaratRegionNameTooLong
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Protects order processing workflows from failures due to field length restrictions while preserving original data, ensuring compliance and traceability.
+</Callout>
+

@@ -1,0 +1,79 @@
+---
+title: Stock Item Channel SKU Pivot
+description: >-
+  Maps internal SKUs to their respective channel-specific SKUs and displays them
+  in a pivot format across marketplaces.
+---
+## Overview
+
+The **RIS-SC-1042 – Stock Item Channel SKU Pivot** script helps analysts visualize how internal SKUs are represented on different sales channels and detect missing or incorrect mappings.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  See which SKU name is used for each product on each sales channel.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Maps internal SKUs to channel-specific SKUs
+
+- Converts channel mappings into a pivot table format
+
+- Highlights missing or inconsistent SKU mappings
+
+---
+
+## When It Runs
+
+Used for SKU mapping audits, integration checks, and catalog maintenance.
+
+**Typically runs:**
+
+- Manually executed by analysts
+
+- During SKU mapping audits
+
+- While troubleshooting channel sync issues
+
+- Before bulk SKU updates
+
+- For marketplace consistency checks
+
+---
+
+## Parameters
+
+<ParamField path="IncludeInactiveItems" param-type="bool" required="false" deprecated="false">
+  Flag to include inactive or archived SKUs. Default is false (exclude).
+</ParamField>
+
+<ParamField path="PivotByChannels" param-type="bool" required="true" deprecated="false">
+  Determines whether the pivot should dynamically generate a column per active channel/subsource. Default is true.
+</ParamField>
+
+<ParamField path="AggregationMethod" param-type="string" required="false" deprecated="false">
+  Method to aggregate multiple ChannelSKU values per channel (e.g., 'MAX', 'MIN', 'FIRST'). Default is 'MAX'.
+</ParamField>
+
+<ParamField path="FilterActiveSKUsOnly" param-type="bool" required="false" deprecated="false">
+  Flag to filter only active SKUs from the StockItem table. Default is true.
+</ParamField>
+
+---
+
+## Simple Explanation
+
+The report examines each internal SKU, checks its channel-specific mappings, and outputs a pivot table where each channel becomes a column showing the corresponding ChannelSKU.
+
+---
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Dynamic channel columns ensure that new marketplaces are automatically included, making it easy to maintain up-to-date SKU mapping visibility and detect missing or incorrect mappings.
+</Callout>
+

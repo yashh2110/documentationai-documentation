@@ -1,0 +1,181 @@
+---
+title: Processed Orders Tracking Report (With SKU, Tracking & Resend Flag)
+description: >-
+  Retrieves processed orders with tracking numbers, SKU-level quantities,
+  customer and shipping details, and identifies resend orders for operational
+  tracking and analysis.
+---
+
+## Overview
+
+The **Processed Orders Tracking Report** provides a detailed view of all processed orders that have valid tracking numbers.
+
+It combines order, item, customer, shipping, and resend information into a single dataset for complete visibility.
+
+<Callout kind="tip" collapsed="false">
+  Only orders with tracking numbers are included to ensure accurate shipment tracking and reporting.
+</Callout>
+
+---
+
+## Purpose
+
+This report:
+
+- Retrieves processed orders within a date range  
+- Displays SKU-level quantities per order  
+- Includes customer, shipping, and location details  
+- Identifies resend orders using order relations  
+
+👉 In short:  
+Track shipped orders with full details and resend visibility.
+
+---
+
+## When It Runs
+
+Executed on-demand (SQL report)
+
+Typically used:
+
+- Shipment tracking  
+- Customer order analysis  
+- Resend order identification  
+- Operational reporting  
+- Courier and fulfilment validation  
+
+---
+
+## Parameters
+
+<ParamField path="fromProcessed" param-type="datetime" required="true">
+  Start date for processed orders filter.
+</ParamField>
+
+<ParamField path="toProcessed" param-type="datetime" required="true">
+  End date for processed orders filter.
+</ParamField>
+
+---
+
+## How It Works
+
+<Steps>
+  <Step title="Filter Processed Orders" icon="filter" title-type="p">
+    Selects orders that:
+    - Have a processed date  
+    - Fall within the given date range  
+    - Contain a valid tracking number  
+  </Step>
+
+  <Step title="Aggregate Order Items" icon="layers" title-type="p">
+    Groups order items by SKU and calculates total quantity per order.
+  </Step>
+
+  <Step title="Identify Resend Orders" icon="refresh-ccw" title-type="p">
+    Checks <b>Order_Relation</b> table to flag resend orders using:
+    - LinkType = "Order Item Resend%"
+  </Step>
+
+  <Step title="Join Reference Data" icon="database" title-type="p">
+    Enriches data with:
+    - SKU details (StockItem)  
+    - Country (ListCountries)  
+    - Postal service (PostalServices)  
+    - Fulfilment location (StockLocation)  
+  </Step>
+
+  <Step title="Prepare Output Fields" icon="file-text" title-type="p">
+    Formats and derives:
+    - Channel Reference (fallback logic)  
+    - Order Status (Paid or numeric)  
+    - Resend flag (Yes/No)  
+  </Step>
+
+  <Step title="Sort Results" icon="arrow-down" title-type="p">
+    Orders results by:
+    - Processed date (latest first)  
+    - Order ID  
+    - SKU  
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Processed orders with tracking numbers  
+
+  - SKU-level quantity breakdown  
+
+  - Customer and shipping details  
+
+  - Resend orders clearly identified  
+
+  - Fulfilment location visibility  
+
+  - Clean and structured dataset for reporting  
+</Callout>
+
+---
+
+## Usefulness
+
+This report is highly beneficial for:
+
+- Shipment tracking and validation  
+- Customer service investigations  
+- Identifying resend or replacement orders  
+- Courier performance monitoring  
+- Warehouse fulfilment analysis  
+
+---
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Only orders with tracking numbers are included  
+
+  - SKU is resolved using processed SKU fallback logic  
+
+  - Resend detection depends on Order_Relation data accuracy  
+
+  - Status "1" is mapped to "Paid", others remain numeric  
+
+  - Data uses NOLOCK (may include uncommitted reads)  
+
+  - Quantity is aggregated at SKU level per order  
+</Callout>
+
+---
+
+## Example Scenario
+
+<Expandable title="Processed Order with Resend Example" default-open="false">
+  Order:
+  - Order ID: 1001  
+  - SKU: ABC123  
+  - Qty: 2  
+  - Tracking: TRK12345  
+
+  Scenario:
+  - Order has a resend relation  
+
+  👉 Result:
+  - Order appears in report  
+  - Is Resend = Yes  
+  - Includes full customer and shipping details  
+
+  Insight:
+  Helps quickly identify replacement shipments.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This report focuses on shipment-level visibility by combining tracking data, SKU details, and resend logic.  
+  It enables teams to monitor fulfilment accuracy, detect repeat shipments, and improve operational transparency.
+</Callout>

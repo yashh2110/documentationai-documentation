@@ -1,0 +1,113 @@
+---
+title: Rishvi Features and Services
+description: Explore the core features of Rishvi, from inventory management to digital marketing, and how they drive business growth.
+---
+
+## Overview
+
+Rishvi provides comprehensive services to optimize your e-commerce operations. You gain access to advanced tools for multichannel sales automation, ERP implementation, digital marketing, and custom software development. These features help you streamline inventory, boost online presence, and scale your business efficiently.
+
+<Callout kind="info">
+Rishvi integrates seamlessly with platforms like Linnworks and Odoo, ensuring your operations run smoothly across sales channels.
+</Callout>
+
+## Key Services
+
+Discover Rishvi's core offerings through these featured services.
+
+<Columns cols={2}>
+  <Card title="Linnworks Automation" icon="zap" href="/linnworks">
+    Automate multichannel inventory and order management to reduce manual work and errors.
+  </Card>
+  <Card title="Odoo ERP Solutions" icon="database" href="/odoo">
+    Implement a unified ERP system for operations, finance, sales, and inventory.
+  </Card>
+  <Card title="Digital Marketing" icon="trending-up" href="/digital-marketing">
+    Drive growth with targeted strategies across social media, SEO, and paid ads.
+  </Card>
+  <Card title="Software Development" icon="code" href="/software-development">
+    Build custom websites and applications tailored to your business needs.
+  </Card>
+</Columns>
+
+## Linnworks Multichannel Automation
+
+Linnworks handles your sales across platforms like Amazon, eBay, and Shopify. Rishvi customizes scripts to sync inventory in real-time, preventing overselling.
+
+### Getting Started with Linnworks
+
+<Steps>
+  <Step title="Connect Channels" icon="plug">
+    Link your sales channels in the Linnworks dashboard.
+  </Step>
+  <Step title="Configure Rules" icon="settings">
+    Set up automation rules for stock levels and pricing.
+  </Step>
+  <Step title="Deploy Custom Scripts" icon="play">
+    Use Rishvi scripts for advanced workflows.
+  </Step>
+</Steps>
+
+<CodeGroup tabs="JavaScript,Python">
+  ```javascript
+  // Linnworks API integration example
+  const apiKey = 'YOUR_API_KEY';
+  const response = await fetch('https://api.example.com/linnworks/inventory', {
+    headers: { 'Authorization': `Bearer ${apiKey}` }
+  });
+  const data = await response.json();
+  console.log(data.stockLevels);
+  ```
+  ```python
+  # Linnworks inventory sync
+  import requests
+  api_key = 'YOUR_API_KEY'
+  response = requests.get(
+      'https://api.example.com/linnworks/inventory',
+      headers={'Authorization': f'Bearer {api_key}'}
+  )
+  print(response.json()['stockLevels'])
+  ```
+</CodeGroup>
+
+## Odoo ERP Implementation
+
+Odoo unifies your business processes. Rishvi handles setup, migration, and customization.
+
+<Tabs>
+  <Tab title="Sales Module" icon="shopping-cart">
+    Manage orders and customers in one view.
+
+    <ParamField path="customer_id" param-type="string" required="true">
+      Unique customer identifier.
+    </ParamField>
+  </Tab>
+  <Tab title="Inventory Module" icon="package">
+    Track stock levels automatically.
+
+    ```python
+    # Odoo inventory update
+    stock = env['stock.quant'].search([('product_id', '=', product_id)])
+    stock.quantity = new_quantity
+    ```
+  </Tab>
+</Tabs>
+
+<Expandable title="Advanced Odoo Customization" default-open="false">
+Rishvi develops custom modules for unique workflows. Contact support for tailored solutions.
+</Expandable>
+
+## Digital Marketing and Software Capabilities
+
+Leverage Rishvi's digital marketing to increase visibility. Combine with custom software for full-stack solutions.
+
+<Callout kind="tip">
+Monitor campaign performance using integrated analytics dashboards at `https://dashboard.example.com`.
+</Callout>
+
+| Service | Key Benefit | Integration Time |
+|---------|-------------|------------------|
+| Digital Marketing | 30% traffic growth | 1-2 weeks |
+| Software Development | Scalable custom apps | 4-6 weeks |
+
+These features position Rishvi as your partner for sustainable business growth. Start with [Linnworks](/linnworks) for immediate inventory wins.

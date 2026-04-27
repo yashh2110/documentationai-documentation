@@ -1,0 +1,133 @@
+---
+title: Add Extended Property
+description: >-
+  Automatically consolidate SKU and quantity details from order items and store
+  them in a single extended property for easy access and integration.
+---
+## Overview
+
+The **RIS-RM-2011 – Add Extended Property** macro collects SKU and quantity details from order items and stores them in a single extended property.
+
+It simplifies access to item-level data by consolidating it into a structured string format, making it useful for labels, exports, and integrations.
+
+<Callout kind="tip" collapsed="false">
+  Ensure the extended property name is consistent across systems for proper integration.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Retrieves order item details  
+- Extracts SKU and quantity information  
+- Combines data into a formatted string  
+- Stores the result in an extended property  
+
+👉 In short:  
+Create a single field containing all SKUs and quantities for an order.
+
+## When It Runs
+
+Used for order data enrichment and processing
+
+Typically runs:
+
+- Manually triggered (on selected orders)  
+- During order processing workflows  
+- Before labelling or export processes  
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of order IDs to process.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Example:  
+  OrderIds = 2001,2002,2003  
+
+  Meaning:  
+  Only these specific orders will be processed.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Fetch Orders" icon="download" title-type="p">
+    Retrieve orders based on the provided OrderIds.
+  </Step>
+
+  <Step title="Get Order Items" icon="list" title-type="p">
+    Retrieve all items associated with each order.
+  </Step>
+
+  <Step title="Extract SKU & Quantity" icon="box" title-type="p">
+    Collect SKU and quantity for each item.
+  </Step>
+
+  <Step title="Format Data" icon="edit" title-type="p">
+    Construct a string in the format: SKU (Qty), SKU (Qty), ...
+  </Step>
+
+  <Step title="Prepare Property" icon="settings" title-type="p">
+    Define extended property:  
+    Name: LabelRefOrderEP  
+    Value: Combined SKU string
+  </Step>
+
+  <Step title="Assign Property" icon="save" title-type="p">
+    Add or update the extended property using the API.
+  </Step>
+
+  <Step title="Log Results" icon="file-text" title-type="p">
+    Record execution details including success and errors.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Orders contain consolidated SKU and quantity details  
+  - Data stored in LabelRefOrderEP field  
+  - Information available for labels and integrations  
+  - Execution process logged for tracking  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Quick access to SKU summaries at order level  
+- Supporting label generation workflows  
+- Simplifying export and reporting processes  
+- Enabling integration with ERP and shipping systems  
+- Reducing repeated item-level processing  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Processes only orders specified in OrderIds  
+  - Stores data as a single unstructured string  
+  - Property name LabelRefOrderEP must remain consistent  
+  - Updates property only if the existing value is empty (can be customized if required)  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Generate SKU Summary for Labels" default-open="false">
+  An order contains multiple items with different SKUs and quantities.
+
+  👉 The macro:
+
+  - Extracts SKU and quantity from each item  
+  - Combines them into a single string  
+  - Stores the result in an extended property  
+
+  Result: Label systems can easily access all item details without additional processing.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Consolidating item-level data into a single extended property improves accessibility, reduces processing complexity, and enhances integration efficiency across systems.
+</Callout>

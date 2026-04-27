@@ -1,0 +1,169 @@
+---
+title: Discount and loyalty programs
+description: >-
+  The Odoo Sales, eCommerce, and Point of Sale applications allow users to
+  create discount and loyalty programs that customers can use for online and
+  in-store shopping. These programs offer more varied, public, and
+  time-sensitive pricing options than pricelists.
+---
+## **Configure the settings**
+
+To enable discount and loyalty features, go to **Sales ‣ Configuration ‣ Settings**.\
+Under the **Pricing** section, activate **Discounts, Loyalty & Gift Card** by checking the option, then click **Save**.
+
+## **Create and manage programs**
+
+To set up discount or loyalty programs, navigate to:\
+**Sales ‣ Products ‣ Discount & Loyalty**
+
+If no programs exist yet, Odoo displays template options to help you get started. You can select a template or click **New** to build a program manually.
+
+If programs already exist, simply select one to modify it.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/price-discount-loyalty.png" width="933" height="317" alt="Discount and loyalty program template cards." />
+
+**Note**\
+Templates are only shown before the first program is created. Once a program exists, templates are no longer displayed.
+
+Opening a program (new or existing) brings up the configuration form.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/price-programs.png" width="910" height="302" alt="Program options on the loyalty program form." />
+
+### **Program fields**
+
+The program form includes the following options:
+
+- **Program Name**: Internal name used for identification (not visible to customers).
+
+- **Program Type**: Choose the <a href="https://www.odoo.com/documentation/19.0/applications/sales/sales/products_prices/loyalty_discount.html#sales-pricing-management-program-types" target="_blank" rel="noopener noreferrer">**program type**</a>.
+
+- **Currency**: Define the currency used in the program.
+
+- **Pricelist**: Optionally assign the program to specific pricelists. If left empty, it applies to all customers.
+
+- **Points Unit**: Define the name of the points (e.g., *Reward Points*). Visible to customers and only available for **Loyalty Cards**.
+
+- **Start Date / End Date**: Control the validity period. Leave empty for ongoing programs.
+
+- **Limit Usage**: Restrict how many times the program can be used.
+
+- **Company**: Specify the company (for multi-company environments). Leave blank to apply globally.
+
+- **Available On**: Select where the program is applicable (Sales, eCommerce, POS).
+
+- **Website**: Limit the program to a specific website if needed.
+
+- **Point of Sale**: Restrict the program to certain POS configurations.
+
+**Note**\
+Available fields may vary depending on the selected **Program Type**.
+
+All generated items (cards, coupons, codes) can be accessed via the smart button at the top of the form.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/price-programs-items.png" width="458" height="145" alt="Program items smart button on the loyalty program form." />
+
+**Note**\
+In Odoo 17+, if a loyalty card or coupon is linked to a contact, a **Loyalty Cards** smart button appears on the contact form.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/loyalty-cards-smart-button.png" width="914" height="469" alt="The Loyalty Card smart button as it appears on a contact form in Odoo 17." />
+
+This button is only visible when relevant records exist.
+
+### **Program types**
+
+Available program types include:
+
+- **Coupons**: One-time codes that unlock rewards immediately.
+
+- **Loyalty Cards**: Customers earn points from purchases and redeem them later.
+
+- **Promotions**: Automatically apply rewards when certain conditions are met.
+
+- **Discount Code**: Codes entered during checkout to receive discounts.
+
+- **Buy X Get Y**: Earn rewards after purchasing a certain quantity.
+
+- **Next Order Coupons**: Rewards issued for use on a future purchase.
+
+## **Set conditional rules**
+
+Conditional rules define when a program becomes applicable.
+
+In the **Rules & Rewards** tab, click **Add** next to **Conditional rules** to open the configuration window.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/price-conditional-rewards.png" width="768" height="328" alt="Rules & Rewards tab of the loyalty program form." />
+
+**Note**\
+Available rule options depend on the selected **Program Type**.
+
+### **Available conditions**
+
+- **Discount Code**: Custom or auto-generated code (for Discount Code programs).
+
+- **Minimum Quantity**: Minimum number of items required.
+
+- **Minimum Purchase**: Minimum spending amount (tax included or excluded).
+
+- **Products**: Apply the rule to selected products.
+
+- **Categories**: Restrict to specific product categories or all.
+
+- **Product Tag**: Apply based on product tags.
+
+- **Grant**: Define how points are earned (per order, per amount spent, or per product unit).
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/price-conditions.png" width="768" height="416" alt="Conditional rules configuration window for a discount or loyalty program." />
+
+Click **Save & Close** to apply the rule or **Save & New** to add another.
+
+## **Configure rewards**
+
+Rewards define what customers receive when conditions are met.
+
+In the **Rules & Rewards** tab, click **Add** next to **Rewards**.
+
+**Note**\
+Reward options vary depending on the **Program Type**.
+
+### **Reward options**
+
+- **Reward Type**: Choose between:
+
+  - **Free Product**
+
+  - **Discount**
+
+  - **Free Shipping**
+
+#### **Free Product**
+
+- **Quantity Rewarded**: Number of items given
+
+- **Product**: Product to offer
+
+- **Product Tag**: Optional filter
+
+#### **Discount**
+
+- **Discount Value**: Percentage, per point, or per order
+
+- Apply to:
+
+  - Entire order
+
+  - Cheapest product
+
+  - Specific products
+
+- **Max Discount**: Limit the discount amount (0 = no limit)
+
+#### **Free Shipping**
+
+- **Max Discount**: Maximum shipping cost covered
+
+- **In exchange of**: Points required to claim the reward (for loyalty-based programs)
+
+- **Description on order**: Text shown to customers during checkout
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/price-rewards.png" width="768" height="524" alt="Rewards configuration window for a discount or loyalty program." />
+

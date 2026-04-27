@@ -1,0 +1,151 @@
+---
+title: Channel Inventory Aggregation by Source and Subsources
+description: >-
+  Consolidates channel listings from multiple subsources, maps them to internal
+  SKUs, and provides a single report for mapping validation and inventory
+  management.
+---
+## Overview
+
+The **RIS-SC-1012 – Channel Inventory Aggregation by Source and Subsources** script provides a consolidated view of channel listings across multiple accounts, highlighting whether they are linked to internal Linnworks SKUs.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  Shows all channel listings from multiple accounts and whether they are linked to internal SKUs.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Retrieves channel listings from multiple subsources
+
+- Maps channel SKUs to internal SKUs
+
+- Combines listings into a single consolidated report
+
+- Highlights unmapped listings for correction
+
+## When It Runs
+
+Used manually by warehouse managers, analysts, or channel administrators.
+
+**Typically runs:**
+
+- Channel mapping validation
+
+- Listing audits
+
+- Identifying missing SKU mappings
+
+## Parameters
+
+<ParamField path="Source" param-type="string" required="true" deprecated="false">
+  Channel source such as AMAZON
+</ParamField>
+
+<ParamField path="SubSource1" param-type="string" required="true" deprecated="false">
+  First subsource account
+</ParamField>
+
+<ParamField path="SubSource2" param-type="string" required="false" deprecated="false">
+  Second subsource account
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  The script can run with fixed values or dynamic parameters depending on usage.
+</Callout>
+
+<Callout kind="info" collapsed="false">
+  Collects listings from multiple channel accounts, checks mapping to internal SKUs, and combines results into a single view.
+</Callout>
+
+## Process Flow Step-by-Step
+
+<Steps>
+  <Step title="Get Listings for Subsource 1" icon="list" title-type="p">
+    Fetch channel SKU, title, and listing ID. Map each listing to internal SKU.
+  </Step>
+
+  <Step title="Get Listings for Subsource 2" icon="list" title-type="p">
+    Repeat the same process for the second subsource.
+  </Step>
+
+  <Step title="Combine Results" icon="shuffle" title-type="p">
+    Merge datasets from both subsources into one consolidated result.
+  </Step>
+
+  <Step title="Map Channel SKU to Internal SKU" icon="link" title-type="p">
+    Check mapping table. If mapping exists, show internal SKU; otherwise, leave empty.
+  </Step>
+
+  <Step title="Assign Row Number" icon="hash" title-type="p">
+    Add row numbering to each record for tracking.
+  </Step>
+
+  <Step title="Group Data" icon="grid" title-type="p">
+    Ensure unique and clean results for reporting.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  Report containing:
+
+  - Channel SKU
+
+  - Channel Title
+
+  - Listing ID
+
+  - Internal SKU (if mapped)
+
+  - Source
+
+  - Subsource
+
+  Provides visibility of mapped and unmapped listings for better channel management.
+</Callout>
+
+## Usefulness
+
+- **Mapping Validation** – Identify listings not linked to internal SKUs
+
+- **Multi Account Visibility** – View multiple subsources together
+
+- **Data Cleanup** – Fix missing or incorrect mappings
+
+- **Channel Management** – Ensure proper SKU synchronization
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Works only for the specified source and subsources
+
+  - Depends on accurate mapping in Stock\_ChannelSKU
+
+  - Large datasets may affect performance
+
+  - Read-only script; does not modify data
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Amazon Multi Account Audit Example" default-open="false">
+  Business operates two Amazon accounts: Trimming Shop and Wedding Decor UK.\
+  Manager wants to check mapping status of listings:
+
+  - **Channel SKU ABC123** → Internal SKU ITEM1 → Subsource Trimming Shop
+
+  - **Channel SKU XYZ999** → Internal SKU blank → Subsource Wedding Decor UK
+
+  **Insight:** XYZ999 is not mapped and requires correction.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By consolidating listings from multiple subsources and highlighting missing mappings, this script helps maintain accurate SKU linkage, improves channel data integrity, and ensures smooth inventory synchronization across platforms.
+</Callout>
+

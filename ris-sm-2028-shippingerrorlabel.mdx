@@ -1,0 +1,176 @@
+---
+title: Shipping Error Label Monitoring
+description: >-
+  Monitor shipping label generation failures and send automated email alerts
+  for affected orders to ensure quick resolution.
+---
+## Overview
+
+The **RIS-SM-2028 – ShippingErrorLabel** macro monitors recent orders for shipping label failures and notifies stakeholders via email.
+
+It scans open orders, detects label errors, sends alerts, and tags affected orders to prevent duplicate notifications.
+
+<Callout kind="tip" collapsed="false">
+  Ensure SMTP email configuration is correctly set up before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Detects orders with shipping label errors  
+- Sends email alerts with order details  
+- Tags processed orders to avoid duplicate alerts  
+
+👉 In short:  
+Monitor label errors and notify via email.
+
+## When It Runs
+
+Used for error monitoring and alerting
+
+Typically runs:
+
+- Scheduled execution (recommended)  
+- Manually triggered  
+- Before or after label generation workflows  
+
+## Parameters
+
+<ParamField path="locations" param-type="string" required="true" deprecated="false">
+  Comma-separated list of warehouse locations to monitor.
+</ParamField>
+
+<ParamField path="serverName" param-type="string" required="true" deprecated="false">
+  SMTP server name.
+</ParamField>
+
+<ParamField path="useSSL" param-type="boolean" required="true" deprecated="false">
+  Enable or disable SSL for email communication.
+</ParamField>
+
+<ParamField path="port" param-type="number" required="true" deprecated="false">
+  SMTP port number.
+</ParamField>
+
+<ParamField path="userName" param-type="string" required="true" deprecated="false">
+  Email account username.
+</ParamField>
+
+<ParamField path="password" param-type="string" required="true" deprecated="false">
+  Email account password.
+</ParamField>
+
+<ParamField path="fromEmail" param-type="string" required="true" deprecated="false">
+  Sender email address.
+</ParamField>
+
+<ParamField path="fromName" param-type="string" required="true" deprecated="false">
+  Sender display name.
+</ParamField>
+
+<ParamField path="toEmail" param-type="string" required="true" deprecated="false">
+  Recipient email address.
+</ParamField>
+
+<ParamField path="toName" param-type="string" required="true" deprecated="false">
+  Recipient name.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  The macro processes only recent orders (last 1 day) from the specified locations.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Initialize Email Settings" icon="settings" title-type="p">
+    Configure SMTP server, authentication, and email details.
+  </Step>
+
+  <Step title="Fetch Locations" icon="map-pin" title-type="p">
+    Parse input locations and match them with Linnworks locations.
+  </Step>
+
+  <Step title="Retrieve Open Orders" icon="download" title-type="p">
+    Fetch open orders from the last 24 hours for selected locations.
+  </Step>
+
+  <Step title="Identify Error Orders" icon="alert-circle" title-type="p">
+    Filter orders where shipping label errors exist and no identifier is assigned.
+  </Step>
+
+  <Step title="Send Email Alerts" icon="mail" title-type="p">
+    Generate email content with order details and send notifications.
+  </Step>
+
+  <Step title="Track Processed Orders" icon="list" title-type="p">
+    Store order IDs that have been processed.
+  </Step>
+
+  <Step title="Assign Identifier" icon="tag" title-type="p">
+    Assign identifier: "Shipping Label Error" to avoid duplicate alerts.
+  </Step>
+
+  <Step title="Log Execution" icon="file-text" title-type="p">
+    Record processing details, success, and completion.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Orders with label errors are identified  
+
+  - Email alerts are sent to stakeholders  
+
+  - Orders are tagged to prevent duplicate alerts  
+
+  - Monitoring process is logged  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Detecting shipping issues early  
+- Enabling faster issue resolution  
+- Preventing dispatch delays  
+- Automating alert mechanisms  
+- Improving warehouse efficiency  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Processes only orders from the last 1 day  
+
+  - Requires correct SMTP configuration  
+
+  - Uses identifier to prevent duplicate alerts  
+
+  - No retry mechanism for failed emails  
+
+  - Credentials must be handled securely  
+
+  - Depends on LabelError field availability  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Shipping Label Error Alert Example" default-open="false">
+  An order fails during label generation.
+
+  👉 The macro:
+
+  - Detects the label error  
+  - Sends an email alert with order details  
+  - Tags the order with "Shipping Label Error"  
+
+  Result: Issue is quickly identified and resolved without delay.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By proactively monitoring and alerting shipping label failures, this macro ensures rapid issue resolution and prevents operational bottlenecks in the fulfilment process.
+</Callout>

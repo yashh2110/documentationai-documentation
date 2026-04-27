@@ -1,0 +1,152 @@
+---
+title: Amazon Connector configuration
+description: >-
+  Odoo enables integration with Amazon seller accounts, allowing seamless
+  synchronization of orders and data. A valid Amazon Seller account is required
+  before starting the configuration process.
+
+
+  To begin, create a seller account on Amazon by logging in and navigating to
+  Account & Lists ‣ Start a Selling Account. Complete the registration process,
+  then follow the steps below to connect it with Odoo.
+---
+## **Connect Amazon Seller account to Odoo**
+
+To link an Amazon Seller account with Odoo:
+
+1. Go to **Sales app ‣ Configuration ‣ Settings**
+
+2. Locate the **Connectors** section
+
+3. Enable **Amazon Sync**
+
+4. Click **Save**
+
+After saving, return to the same section and click **Amazon Accounts** under the Amazon Sync option.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/amazon-accounts-link-setting.png" width="610" height="309" alt="The Amazon Accounts link beneath the Amazon Sync settings in Odoo Sales." />
+
+This opens the **Amazon Accounts** page. Click **New** to add a new account.
+
+On the account form:
+
+- Enter a name for the account (e.g., `US Marketplace`)
+
+- In the **Credentials** tab, select the **Home Marketplace** where the seller account was originally created
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/amazon-accounts-form-page.png" width="625" height="429" alt="A typical Amazon Account form page in the Odoo Sales application." />
+
+Save the form. The **Credentials** tab will now display a **Link with Amazon** button.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/amazon-accounts-form-link-button.png" width="664" height="346" alt="A typical Amazon Account form page and Link with Amazon button in Odoo Sales." />
+
+Click this button to proceed:
+
+- You will be redirected to Amazon’s login or consent page
+
+- Log in if required
+
+- Approve access so Odoo can connect to your account
+
+After approval, you are redirected back to Odoo, and the account is successfully linked.
+
+All available marketplaces for that account are then automatically synced and visible under the **Marketplaces** tab.
+
+You can remove marketplaces from this list if you want to disable synchronization for specific regions.
+
+## **Amazon orders in Odoo**
+
+When orders are imported from Amazon, Odoo creates up to three lines in the corresponding sales order:
+
+- The main product sold
+
+- Shipping charges (if applicable)
+
+- Gift wrapping fees (if applicable)
+
+Odoo matches these items with products in the database using the **Internal Reference**:
+
+- Amazon SKU → Product internal reference
+
+- Shipping code → Delivery product
+
+- Gift wrap code → Gift wrap product
+
+For marketplace products, these mappings are stored as **Amazon Offers**, accessible via the **Offers** smart button.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/amazon-offers-button.png" width="614" height="216" alt="The Amazon Offers smart button on the account form in Odoo Sales." />
+
+Offers are automatically generated when a match is found and reused for future orders.\
+If no match exists, Odoo falls back to using the internal reference directly.
+
+**Tip**
+
+You can manually adjust or create offers to ensure correct product matching. This is useful when:
+
+- SKUs differ from internal references
+
+- Products are sold under varying conditions
+
+If no matching product is found:
+
+- **Amazon Sale** is used as the default product
+
+- **Amazon Shipping** is used for delivery charges
+
+**Note**
+
+To edit default products, enable <a href="https://www.odoo.com/documentation/19.0/applications/general/developer_mode.html#developer-mode" target="_blank" rel="noopener noreferrer">**developer mode**</a>, then go to:\
+**Sales app ‣ Configuration ‣ Settings ‣ Connectors ‣ Amazon Sync ‣ Default Products**
+
+## **Product tax configuration**
+
+For accurate tax reporting, taxes applied to Amazon orders in Odoo are based on:
+
+- Product tax settings
+
+- Fiscal positions
+
+Ensure these are correctly configured to prevent discrepancies between Odoo and *Amazon Seller Central*.
+
+**Note**
+
+Since Amazon may calculate taxes differently, small differences in totals can occur. These can be adjusted using write-offs during payment reconciliation.
+
+## **Add a new marketplace**
+
+All Amazon marketplaces can be supported. To add one manually:
+
+1. Enable <a href="https://www.odoo.com/documentation/19.0/applications/general/developer_mode.html#developer-mode" target="_blank" rel="noopener noreferrer">**developer mode**</a>
+
+2. Go to **Sales app ‣ Configuration ‣ Settings ‣ Connectors ‣ Amazon Sync ‣ Amazon Marketplaces**
+
+3. Click **New**
+
+Then configure:
+
+- **API Identifier**: Marketplace ID
+
+- **Amazon Region**: Based on Amazon documentation
+
+- **Seller Central URL**: Marketplace-specific URL
+
+Refer to:
+
+- <a href="https://developer-docs.amazon.com/sp-api/docs/marketplace-ids" target="_blank" rel="noopener noreferrer">Amazon marketplace IDs</a>
+
+- <a href="https://developer-docs.amazon.com/sp-api/docs/seller-central-urls" target="_blank" rel="noopener noreferrer">Seller Central URLs</a>
+
+Set the **Name** in the format `Amazon.<country code>` (e.g., `Amazon.in`).
+
+After saving:
+
+1. Go to **Amazon Accounts**
+
+2. Open the relevant account
+
+3. Go to the **Marketplaces** tab
+
+4. Click **Update available marketplaces**
+
+If successful, the new marketplace will appear in the list.\
+If not, it may not be supported or enabled for the seller account.

@@ -1,0 +1,190 @@
+---
+title: ' Change Packaging Type (Dynamic Packaging Override)'
+description: >-
+  Automatically assigns the correct packaging type based on shipping method
+  keywords, applying accurate dimensions and weight for efficient and error-free
+  fulfilment.
+---
+## Overview
+
+The **RIS-SM-2292 – Change Packaging Type (Dynamic Packaging Override)** macro automates packaging selection by mapping shipping methods to predefined packaging rules.
+
+It ensures every order is assigned the correct packaging type with proper dimensions and weight.
+
+<Callout kind="tip" collapsed="false">
+  Ensure KeywordsCsv matches packaging rules under the "Override" packaging group.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Detects shipping method keywords
+
+- Matches them with packaging rules
+
+- Assigns packaging type automatically
+
+- Calculates dimensions and weight
+
+👉 In short:\
+Match shipping → select packaging → apply dimensions & weight.
+
+## When It Runs
+
+Used for packaging automation and shipping preparation
+
+Typically runs:
+
+- After order import
+
+- Before label generation
+
+- During shipping rule processing
+
+- When multiple packaging types exist
+
+- For courier-specific packaging
+
+## Parameters
+
+<ParamField path="KeywordsCsv" param-type="string" required="true" deprecated="false">
+  Comma-separated keywords used to match shipping methods with packaging rules.
+</ParamField>
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  Comma-separated list of order numbers to process.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Only orders provided in OrderIds are processed, and keywords must match the "Override" packaging group.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Start Execution" icon="play" title-type="p">
+    Logs macro start and validates input parameters.
+  </Step>
+
+  <Step title="Load Packaging Rules" icon="box" title-type="p">
+    Retrieves packaging groups and identifies the "Override" group.
+  </Step>
+
+  <Step title="Build Keyword Mapping" icon="link" title-type="p">
+    Maps provided keywords to packaging titles for matching.
+  </Step>
+
+  <Step title="Process Orders" icon="list" title-type="p">
+    Iterates through each order and skips invalid or already processed ones.
+  </Step>
+
+  <Step title="Apply DPD Logic" icon="truck" title-type="p">
+    Applies special handling for DPD shipping:
+
+    - Order value \< £30 → Weight = 0.90 kg
+
+    - Else → Weight = 15 kg
+  </Step>
+
+  <Step title="Match Shipping Method" icon="search" title-type="p">
+    Matches shipping method with keywords to determine packaging type.
+  </Step>
+
+  <Step title="Calculate Weight" icon="calculator" title-type="p">
+    Computes total weight including item weight and packaging weight.
+  </Step>
+
+  <Step title="Apply Packaging" icon="package" title-type="p">
+    Sets packaging type, dimensions (W, H, D), and total weight.
+  </Step>
+
+  <Step title="Mark as Processed" icon="check-circle" title-type="p">
+    Assigns identifier to prevent duplicate processing.
+  </Step>
+
+  <Step title="Add Notes & Logging" icon="file-text" title-type="p">
+    Saves packaging details in notes and logs execution results.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Correct packaging type applied
+
+  - Accurate dimensions and weight assigned
+
+  - Orders marked as processed
+
+  - Internal notes added for tracking
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Automated packaging selection
+
+- Improving shipping accuracy
+
+- Reducing manual effort
+
+- Preventing courier-related errors
+
+- Standardizing packaging rules
+
+- Enhancing fulfilment efficiency
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Keywords must match shipping methods correctly
+
+  - Packaging group must be "Override"
+
+  - DPD logic overrides standard weight calculation
+
+  - Orders already processed are skipped
+
+  - Missing shipping method results in skip
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Shipping-Based Packaging Example" default-open="false">
+  Scenario:
+
+  - Shipping Method: DPD Next Day
+
+  - Order Value: £25
+
+  👉 The macro:
+
+  - Applies DPD logic
+
+  - Sets weight = 0.90 kg
+
+  - Assigns DPD packaging
+
+  Another Case:
+
+  - Shipping Method: Royal Mail Large Letter
+
+  👉 Result:
+
+  - Letter packaging applied automatically
+
+  Outcome:
+
+  - Before → No packaging assigned
+
+  - After → Correct packaging with accurate values
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By linking shipping methods with predefined packaging rules, this macro ensures consistent, accurate, and automated packaging assignment—eliminating manual effort and reducing shipping errors.
+</Callout>
+

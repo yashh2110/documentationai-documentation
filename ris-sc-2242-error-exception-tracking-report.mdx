@@ -1,0 +1,140 @@
+---
+title: 'Error & Exception Tracking Report '
+description: >-
+  Track picking errors and exceptions to measure accuracy, quality, and
+  performance of warehouse users during order processing.
+---
+## Overview
+
+The **RIS-SC-2242 – Error & Exception Tracking Report** provides insights into picking accuracy by tracking errors and exceptions across warehouse operations.
+
+<Callout kind="tip" collapsed="false">
+  Use this report alongside productivity reports to balance speed and accuracy analysis.
+</Callout>
+
+## Purpose
+
+This report:
+
+- Tracks errors and exceptions in picking
+
+- Measures accuracy per user
+
+- Calculates error rates
+
+- Supports quality control and improvement
+
+👉 In short:\
+Track errors → calculate rates → measure accuracy → improve quality.
+
+## When It Runs
+
+Typically executed:
+
+- Daily warehouse quality checks
+
+- Weekly performance reviews
+
+- Error and exception analysis
+
+- Staff training evaluation
+
+- Process improvement initiatives
+
+- Manually or via scheduled reports
+
+## Parameters
+
+<ParamField path="@fromDate" param-type="DateTime" required="false" deprecated="false">
+  Start date filter for the report.
+</ParamField>
+
+<ParamField path="@toDate" param-type="DateTime" required="false" deprecated="false">
+  End date filter for the report.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  If both parameters are NULL, the report returns all available data.
+</Callout>
+
+## Simple Explanation
+
+The report reviews picking activity, identifies errors, and calculates accuracy metrics for each user.
+
+## Step-by-Step Flow
+
+<Steps>
+  <Step title="Get Pickwaves in Date Range" icon="filter" title-type="p">
+    Filter pickwaves based on selected date range and include all relevant picking activities.
+  </Step>
+
+  <Step title="Calculate Work Done per Pickwave" icon="list" title-type="p">
+    Compute:
+  </Step>
+
+  <Step title="Combine Data with Users" icon="users" title-type="p">
+    Link pickwave data with users and group results per user.
+  </Step>
+
+  <Step title="Calculate Error Metrics" icon="bar-chart" title-type="p">
+    For each user, calculate:
+  </Step>
+
+  <Step title="Calculate Error Rates" icon="percent" title-type="p">
+    Compute:
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Error and accuracy insights per user
+
+  - Clear visibility of picking quality
+
+  - Data for performance and quality improvement
+</Callout>
+
+## Usefulness
+
+- **Quality Control** – Monitor picking accuracy
+
+- **Error Detection** – Identify users making mistakes
+
+- **Training Support** – Highlight improvement areas
+
+- **Process Improvement** – Reduce operational errors
+
+- **Performance Balance** – Compare speed vs accuracy
+
+## Example Scenario
+
+<Expandable title="High Picking Errors Analysis" default-open="false">
+  Customers are receiving incorrect items.\
+  The report:
+
+  - Tracks mis-picks and failures
+
+  - Calculates error rate per user
+
+  Result:
+
+  - Identifies error-prone users
+
+  - Enables targeted training
+
+  - Improves picking accuracy
+</Expandable>
+
+## Key Insight
+
+<Callout kind="warning" collapsed="false">
+  Mis-picks, stock-outs, and order failures are currently set to 0 (dummy values).\
+  Real data logic must be implemented for accurate reporting.
+</Callout>
+
+<Callout kind="tip" collapsed="false">
+  This report follows a clear structure: User → Work Done → Errors → Accuracy Level.\
+  It helps prevent undetected picking errors, incorrect shipments, poor quality control, and repeated operational mistakes.
+</Callout>
+

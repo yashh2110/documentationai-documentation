@@ -1,0 +1,126 @@
+---
+title: Mark Note As External (Rules Engine)
+description: >-
+  Automatically convert internal order notes into external notes using Rules
+  Engine or manual execution, ensuring visibility to customers and external systems.
+---
+## Overview
+
+The **RIS-RM-1023 – MarkNoteAsExternalRulesEngine** macro converts internal (private) order notes into external (public) notes.
+
+It ensures that important information stored within orders becomes visible to customers, integrations, or third-party systems.
+
+<Callout kind="tip" collapsed="false">
+  Use this macro carefully, as all internal notes will be converted without filtering.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Retrieves order notes  
+- Identifies internal (hidden) notes  
+- Converts them to external (visible)  
+- Ensures visibility across systems  
+
+👉 In short:  
+Make all internal notes visible externally automatically.
+
+## When It Runs
+
+Used for automated note visibility management
+
+Typically runs:
+
+- Triggered via Rules Engine (automatic)  
+- Manually triggered (on selected orders)  
+- During order processing workflows  
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of order IDs to process.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Note:  
+  - The macro updates existing notes only  
+  - It does not create or modify note content  
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Process Orders" icon="list" title-type="p">
+    Loop through each OrderId and retrieve full order details.
+  </Step>
+
+  <Step title="Fetch Order Notes" icon="file-text" title-type="p">
+    Retrieve all notes associated with each order.
+  </Step>
+
+  <Step title="Identify Internal Notes" icon="search" title-type="p">
+    Filter notes where Internal = true.
+  </Step>
+
+  <Step title="Convert Notes" icon="edit" title-type="p">
+    Update each internal note by setting:
+    - Internal = false
+  </Step>
+
+  <Step title="Save Updates" icon="save" title-type="p">
+    Push updated notes back to the system using the API.
+  </Step>
+
+  <Step title="Log Execution" icon="file-text" title-type="p">
+    Record processing details, including any skipped or empty cases.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - All internal notes converted to external  
+  - Notes become visible to customers and integrations  
+  - Multiple orders processed in bulk  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Automating communication with external systems  
+- Ensuring important notes are not hidden  
+- Reducing manual effort in note management  
+- Improving workflow efficiency  
+- Maintaining consistent note visibility  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Converts all internal notes (no selective filtering)  
+  - Does not modify note content  
+  - No action taken if no notes exist  
+  - No reverse functionality (cannot revert to internal)  
+  - Works on selected orders only  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Auto Publish Internal Notes" default-open="false">
+  Orders contain important notes marked as internal.
+
+  👉 The macro:
+
+  - Retrieves all notes  
+  - Converts internal notes to external  
+  - Updates the order automatically  
+
+  Result: Notes become visible to customers and external platforms without manual updates.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By automating the conversion of internal notes to external visibility through Rules Engine, this macro eliminates communication gaps and ensures critical order information is always accessible where needed.
+</Callout>

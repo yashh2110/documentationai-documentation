@@ -1,0 +1,132 @@
+---
+title: ' Shopify POS Location Stock Deduction'
+description: >-
+  Automatically deduct stock from the correct inventory location for Shopify POS
+  orders,  ensuring accurate location-based inventory management and preventing
+  duplicate updates.
+---
+## Overview
+
+The **RIS-RM-2171 – Shopify POS Location Stock Deduction** macro identifies Shopify POS orders, determines their fulfillment location, and deducts stock from the correct inventory location while preventing duplicate updates.
+
+<Callout kind="tip" collapsed="false">
+  Ensures stock is always reduced from the correct store/warehouse location and avoids double deduction.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Detects Shopify POS orders
+
+- Maps order to correct fulfillment location
+
+- Deducts stock from the right inventory location
+
+- Prevents duplicate stock deductions
+
+👉 In short:\
+Automatically reduces stock from the correct location for Shopify POS orders.
+
+## When It Runs
+
+Typically runs:
+
+- Automatically (scheduled or manual trigger)
+
+- After order processing
+
+- During inventory reconciliation
+
+- Within Shopify POS automation workflows
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="none" required="false" deprecated="false">
+  No input parameters required. Processes today’s processed orders automatically.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Note: The macro runs based on the system date and does not require manual input.
+</Callout>
+
+## Simple Explanation
+
+The macro finds Shopify POS orders, checks their fulfillment location, deducts stock from that location, and ensures the update is not duplicated.
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Fetch Stock Locations" icon="warehouse" title-type="p">
+    Get a list of all current warehouse and store locations.
+  </Step>
+
+  <Step title="Fetch Processed Orders" icon="search" title-type="p">
+    Search for and filter orders processed today (limiting the results to 500).
+  </Step>
+
+  <Step title="Loop Through Orders" icon="repeat" title-type="p">
+    Process each order individually and log order ID and location.
+  </Step>
+
+  <Step title="Identify Shopify POS Orders" icon="shopping-cart" title-type="p">
+    Check for extended property: "SHOPIFY\_POS". Only process matching orders.
+  </Step>
+
+  <Step title="Match Fulfillment Location" icon="map-pin" title-type="p">
+    Map order location to the correct stock location.
+  </Step>
+
+  <Step title="Process Order Items" icon="layers" title-type="p">
+    Skip service or empty SKUs. Handle both composite and simple items.
+  </Step>
+
+  <Step title="Check Stock History" icon="history" title-type="p">
+    Check the item's stock change history to see if the stock was already updated for this specific order. Skip it if it has already been processed.
+  </Step>
+
+  <Step title="Deduct Stock" icon="minus-circle" title-type="p">
+    Update the stock levels by applying a negative quantity (deduction) to the specific mapped location for that SKU.
+  </Step>
+
+  <Step title="Logging" icon="file-text" title-type="p">
+    Track updated SKUs, skipped duplicates, and log any errors.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  The macro ensures accurate stock deduction per location:
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Location-Based Accuracy – Stock reduced from correct location
+
+- Duplicate Prevention – Avoids double deduction
+
+- Automation – No manual stock updates needed
+
+- Shopify POS Sync – Keeps systems aligned
+
+## Example Scenario
+
+<Expandable title="Retail Store POS Integration Example" default-open="false">
+  Shopify POS orders are created from physical stores.
+
+  **Problem:** Stock is not deducted in Linnworks automatically.
+
+  **Action:** Macro detects POS orders, matches store location, and deducts stock.
+
+  **Result:** Inventory stays accurate across all locations.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Accurate, location-based inventory management is ensured by linking Shopify POS orders with the correct warehouse, preventing duplicate updates, and maintaining real-time stock consistency across systems.
+</Callout>
+

@@ -1,0 +1,762 @@
+---
+title: Purchase Order and Operations Documentation
+description: >-
+  Simple business documentation for authentication, dashboard reporting, file
+  imports, and purchase order automation, with main focus on purchase orders.
+---
+## 1. Overview
+
+This system helps a business manage daily work in one place.
+
+It supports four main areas:
+
+- Signing in securely
+
+- Viewing business performance on the dashboard
+
+- Importing courier and delivery files
+
+- Creating and managing purchase orders automatically
+
+The most important area in this document is **Purchase Orders** because this is where the system helps keep stock available and reduces manual work.
+
+---
+
+## 2. Who This System Is For
+
+This document is written for:
+
+- Business owners
+
+- Operations staff
+
+- Warehouse teams
+
+- Purchasing teams
+
+- Non technical users who need to understand how the system works
+
+The language below is intentionally simple so that anyone in the business can understand it.
+
+---
+
+## 3. Main Business Areas
+
+| Area                      | Purpose                                                   |
+| ------------------------- | --------------------------------------------------------- |
+| Authentication            | Lets admins and users sign in safely                      |
+| Dashboard                 | Shows sales, orders, stock, and business trends           |
+| File Processing           | Imports courier files into the system                     |
+| Purchase Order Automation | Creates and manages purchase orders with less manual work |
+
+---
+
+## 4. Authentication
+
+Authentication means confirming that the right person is entering the system.
+
+### 4.1 Admin Sign In
+
+#### Purpose
+
+Used when an administrator wants to enter the system with login details.
+
+#### What it does
+
+- Checks the admin username and password
+
+- Confirms whether the details are correct
+
+- Grants access to system features after successful sign in
+
+#### When it is used
+
+- At the beginning of the working day
+
+- When an admin needs to manage business settings
+
+- When access to reports or operational tools is required
+
+#### Expected result
+
+- If details are correct, access is allowed
+
+- If details are wrong, access is denied
+
+---
+
+### 4.2 User Sign In by Token
+
+#### Purpose
+
+Used when a normal user signs in with a secure token instead of typing full login details again.
+
+#### What it does
+
+- Accepts a secure token
+
+- Checks whether the token is valid
+
+- Allows access if the token is accepted
+
+#### When it is used
+
+- For faster login
+
+- For users already verified by the business
+
+- In cases where token based access is preferred
+
+#### Expected result
+
+- Valid token gives access
+
+- Invalid token blocks access
+
+---
+
+## 5. Dashboard Documentation
+
+## 5.1 Dashboard Overview
+
+The dashboard gives a quick summary of business performance.
+
+It helps teams answer questions like:
+
+- How many orders came in today
+
+- How many orders have already been processed
+
+- Which products are selling best
+
+- How much revenue has been made
+
+- Which items may need restocking
+
+### Main value of the dashboard
+
+- Gives quick visibility
+
+- Reduces manual checking
+
+- Helps managers make better decisions
+
+- Shows trends over time
+
+---
+
+## 5.2 Top Products
+
+#### Purpose
+
+Shows which products are performing best.
+
+#### What it helps with
+
+- Understanding customer demand
+
+- Planning future purchases
+
+- Identifying strong selling items
+
+#### Business value
+
+This helps the purchasing team know which products need regular restocking.
+
+---
+
+## 5.3 Open Orders Today
+
+#### Purpose
+
+Shows how many orders were created today and are still waiting to be completed.
+
+#### What it helps with
+
+- Tracking unfinished work
+
+- Monitoring daily operations
+
+- Identifying delays early
+
+#### Business value
+
+This is useful for operations teams who need to know how much work is still pending.
+
+---
+
+## 5.4 Processed Orders Today
+
+#### Purpose
+
+Shows how many orders have been completed today.
+
+#### What it helps with
+
+- Measuring daily performance
+
+- Tracking team productivity
+
+- Comparing open work against completed work
+
+#### Business value
+
+Managers can quickly see whether the team is keeping up with demand.
+
+---
+
+## 5.5 Open Order Sales Summary Today
+
+#### Purpose
+
+Shows the sales value linked to today's open orders.
+
+#### What it helps with
+
+- Understanding revenue that is waiting to be completed
+
+- Seeing the value of work still in progress
+
+#### Business value
+
+This gives a clearer picture than order count alone because it shows the money connected to the pending work.
+
+---
+
+## 5.6 Total Orders
+
+#### Purpose
+
+Shows the full number of orders in the system.
+
+#### What it helps with
+
+- Measuring overall business activity
+
+- Comparing order volume across periods
+
+---
+
+## 5.7 Split Packaging Orders
+
+#### Purpose
+
+Shows orders that need to be packed in more than one package.
+
+#### What it helps with
+
+- Identifying special packing needs
+
+- Preparing the warehouse for more complex shipments
+
+#### Business value
+
+This is useful for packing teams because these orders often need extra care and time.
+
+---
+
+## 5.8 Sales by Source
+
+#### Purpose
+
+Shows where sales are coming from during a selected time period.
+
+#### Examples of sources
+
+- Sales channels
+
+- Platforms
+
+- Campaign groups
+
+- Business sources set by the company
+
+#### What it helps with
+
+- Understanding which source performs best
+
+- Supporting marketing decisions
+
+- Guiding future investment
+
+---
+
+## 5.9 Sales Trend Over Time
+
+#### Purpose
+
+Shows how sales move across a longer time period.
+
+#### What it helps with
+
+- Spotting growth or decline
+
+- Identifying seasonal changes
+
+- Planning stock purchases better
+
+#### Business value
+
+This is especially important for purchase order planning because buying decisions should follow real sales patterns.
+
+---
+
+## 5.10 Total Sales
+
+#### Purpose
+
+Shows the total revenue recorded by the system.
+
+#### What it helps with
+
+- Measuring business performance
+
+- Comparing sales periods
+
+- Supporting management reporting
+
+---
+
+## 5.11 Average Order Value
+
+#### Purpose
+
+Shows the average amount spent per order.
+
+#### What it helps with
+
+- Understanding customer buying behavior
+
+- Comparing sales quality, not just quantity
+
+---
+
+## 5.12 Total Counts and Summary Figures
+
+The dashboard also includes summary figures for:
+
+- Total order count
+
+- Total sales count
+
+- Average order summary figures
+
+These are useful for quick review and regular reporting.
+
+---
+
+## 5.13 Minimum Stock Levels
+
+#### Purpose
+
+Shows products that are close to low stock level.
+
+#### What it helps with
+
+- Preventing stock shortages
+
+- Supporting purchase order creation
+
+- Highlighting urgent restocking needs
+
+#### Business value
+
+This is one of the most important dashboard areas for purchasing teams because it directly supports stock control.
+
+---
+
+## 5.14 Seven Day Data
+
+#### Purpose
+
+Shows recent activity for the last seven days.
+
+#### What it helps with
+
+- Reviewing short term performance
+
+- Seeing changes quickly
+
+- Tracking recent sales and orders
+
+---
+
+## 5.15 Orders Data
+
+#### Purpose
+
+Shows order related information for reporting and review.
+
+#### What it helps with
+
+- Monitoring order movement
+
+- Reviewing operational performance
+
+- Supporting daily and weekly reporting
+
+---
+
+## 5.16 Total Sales by Source and Sales Charts
+
+#### Purpose
+
+Shows sales in grouped and visual form.
+
+#### What it helps with
+
+- Easier comparison between sources
+
+- Faster review of sales movement
+
+- Better understanding of business trends
+
+---
+
+## 6. File Processing Documentation
+
+## 6.1 Overview
+
+This area handles the import of courier related files into the system.
+
+It is mainly used when shipment or delivery information needs to be brought into the system in bulk.
+
+---
+
+## 6.2 Import Courier File Type One
+
+#### Purpose
+
+Used to upload and process the first courier file type.
+
+#### What it does
+
+- Accepts the uploaded courier file
+
+- Reads the file contents
+
+- Stores or updates shipment related information
+
+#### Typical use
+
+- Importing delivery information
+
+- Updating records from courier partners
+
+- Reducing manual entry
+
+---
+
+## 6.3 Import Courier File Type Two
+
+#### Purpose
+
+Used to upload and process the second courier file type.
+
+#### What it does
+
+- Accepts the uploaded file
+
+- Reads delivery related data
+
+- Updates the system with the file information
+
+#### Business value
+
+Using file imports saves time and improves accuracy compared with typing shipment data manually.
+
+---
+
+## 7. Purchase Order Documentation
+
+## 7.1 Purchase Order Overview
+
+A Purchase Order is a formal buying request sent to a supplier.
+
+It tells the supplier:
+
+- What products are needed
+
+- How many are needed
+
+- What price is expected
+
+- What extra charges may apply
+
+This system supports purchase orders through automation so the business can reorder stock with less manual work.
+
+---
+
+## 7.2 Why Purchase Orders Matter
+
+Purchase orders are important because they help the business:
+
+- Keep enough stock available
+
+- Avoid missing customer sales
+
+- Track what has been ordered from suppliers
+
+- Reduce confusion in purchasing
+
+- Plan costs before stock arrives
+
+Without purchase orders, teams may rely on guesswork, which can lead to stock shortages or overbuying.
+
+---
+
+## 7.3 Purchase Order Automation Overview
+
+Purchase order automation means the system can create purchase related jobs and trigger purchasing actions without someone doing everything manually.
+
+This reduces repetitive work and helps the business respond faster when stock runs low.
+
+---
+
+## 7.4 Create Automation Job
+
+#### Purpose
+
+Creates a purchase order automation rule or job.
+
+#### What it does
+
+- Sets up a repeatable purchasing action
+
+- Allows the system to prepare purchase order activity automatically
+
+- Supports stock based purchasing decisions
+
+#### When it is used
+
+- When the business wants to automate purchasing
+
+- When regular stock checks lead to repeated buying patterns
+
+- When manual purchase creation takes too much time
+
+#### Business value
+
+This is useful for businesses with fast moving products because it helps keep stock levels healthy.
+
+---
+
+## 7.5 Delete Automation Job
+
+#### Purpose
+
+Removes an existing purchase order automation job.
+
+#### What it does
+
+- Stops the selected automation from running
+
+- Prevents future purchase order actions tied to that job
+
+#### When it is used
+
+- When the automation is no longer needed
+
+- When purchasing rules change
+
+- When products are no longer active
+
+#### Business value
+
+This gives the business control and helps avoid unwanted purchase activity.
+
+---
+
+## 7.6 Manual Purchase Order Scheduling
+
+#### Purpose
+
+Allows purchase order activity to be triggered manually.
+
+#### What it does
+
+- Starts purchase order scheduling when a user chooses to run it
+
+- Gives immediate control without waiting for automatic timing
+
+#### When it is used
+
+- In urgent restocking situations
+
+- When the team wants to test the process
+
+- When purchasing needs to happen immediately
+
+#### Business value
+
+This is useful when stock is critically low and the team does not want to wait for the next automatic run.
+
+---
+
+## 7.7 How Purchase Order Automation Works
+
+Below is the simple business flow.
+
+### Step 1. Stock is reviewed
+
+The system looks at stock levels and business conditions.
+
+### Step 2. Rules are checked
+
+The system checks whether a purchase rule applies.
+
+### Step 3. Purchase action is prepared
+
+If the rule matches, the system prepares the purchase order activity.
+
+### Step 4. Manual or automatic run happens
+
+The purchase order process can happen automatically or be triggered manually.
+
+### Step 5. Team reviews the result
+
+The purchasing or operations team can then review the outcome and continue supplier communication if needed.
+
+---
+
+## 7.8 Common Business Uses for Purchase Orders
+
+| Situation                                    | How the system helps                  |
+| -------------------------------------------- | ------------------------------------- |
+| Stock is running low                         | Helps trigger new purchasing activity |
+| Best selling product is increasing in demand | Supports faster restocking            |
+| Purchasing team wants less manual work       | Uses automation jobs                  |
+| Urgent restock is needed                     | Manual scheduling can be used         |
+| Old automation is no longer relevant         | Job can be removed                    |
+
+---
+
+## 7.9 Benefits of Purchase Order Automation
+
+- Saves staff time
+
+- Reduces missed restocking
+
+- Supports faster response to stock issues
+
+- Improves consistency
+
+- Makes purchasing more controlled
+
+- Helps growing businesses handle more volume
+
+---
+
+## 7.10 Important Notes for Purchase Order Teams
+
+- Automation is only useful when stock and product data are accurate
+
+- Rules should be reviewed regularly
+
+- Manual control should still be available for urgent cases
+
+- Dashboard stock alerts should be watched closely
+
+- Purchasing decisions should consider sales trend, not just current stock
+
+---
+
+## 8. Suggested Daily Usage
+
+Below is a simple daily business routine.
+
+### Morning
+
+- Sign in to the system
+
+- Review dashboard figures
+
+- Check open orders and processed orders
+
+- Review low stock items
+
+### Mid day
+
+- Import courier files if needed
+
+- Review any important sales changes
+
+- Check if purchase order action is required
+
+### End of day
+
+- Review completed work
+
+- Check pending orders
+
+- Confirm whether purchasing automation ran as expected
+
+---
+
+## 9. Troubleshooting Guide
+
+## 9.1 Cannot Sign In
+
+Check:
+
+- Username and password
+
+- Token validity
+
+- User access rights
+
+---
+
+## 9.2 Dashboard Numbers Look Incorrect
+
+Check:
+
+- Whether the correct user or business view is being used
+
+- Whether recent data has been updated
+
+- Whether date based reports are using the correct time range
+
+---
+
+## 9.3 Courier File Does Not Process Correctly
+
+Check:
+
+- File format
+
+- File contents
+
+- Whether the correct courier file type was selected
+
+---
+
+## 9.4 Purchase Order Automation Is Not Working
+
+Check:
+
+- Whether the automation job exists
+
+- Whether it has been removed by mistake
+
+- Whether stock rules are correctly set
+
+- Whether the process needs to be triggered manually
+
+---
+
+## 10. Summary
+
+This system supports day to day business operations in a practical way.
+
+Its main strengths are:
+
+- Safe sign in for admins and users
+
+- Clear dashboard reporting
+
+- Easy courier file imports
+
+- Strong support for purchase order automation
+
+The most valuable business feature is the purchase order process because it helps keep stock available, lowers manual effort, and supports smoother operations.&#x20;

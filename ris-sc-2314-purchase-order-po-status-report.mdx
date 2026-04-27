@@ -1,0 +1,182 @@
+---
+title: Purchase Order (PO) Status Report
+description: >-
+  Provides a complete overview of purchase orders including status, delivery
+  progress, supplier details, and cost with tax breakdown.
+---
+
+## Overview
+
+The **RIS-SC-2314 – Purchase Order (PO) Status Report** gives full visibility into purchase orders by combining header-level and item-level data.
+
+It helps track ordered quantities, delivered quantities, pending items, and associated financial details.
+
+<Callout kind="tip" collapsed="false">
+  Use this report to monitor procurement progress and identify incomplete or delayed deliveries.
+</Callout>
+
+---
+
+## Purpose
+
+This report:
+
+- Tracks purchase order status  
+- Monitors delivery progress at item level  
+- Provides supplier and warehouse details  
+- Displays cost and tax breakdown  
+
+👉 In short:  
+Track what was ordered, delivered, and still pending.
+
+---
+
+## When It Runs
+
+Executed on-demand (SQL report)
+
+Typically used:
+
+- Procurement tracking  
+- Delivery monitoring  
+- Financial reconciliation  
+- Supplier performance analysis  
+
+---
+
+## Parameters
+
+<ParamField path="POStatus" param-type="string" required="false">
+  Filter by purchase order status (e.g., Open, Delivered, ALL).
+</ParamField>
+
+<ParamField path="SupplierName" param-type="string" required="false">
+  Filter by supplier name.
+</ParamField>
+
+<ParamField path="LocationName" param-type="string" required="false">
+  Filter by warehouse/location.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  All filters are optional and allow flexible report customization.
+</Callout>
+
+---
+
+## How It Works
+
+<Steps>
+  <Step title="Fetch Purchase Orders" icon="database">
+    Retrieve PO reference, supplier reference, status, and key dates.
+  </Step>
+
+  <Step title="Join Item-Level Data" icon="list">
+    Link each PO with SKU, item title, and quantities.
+  </Step>
+
+  <Step title="Map Supplier Details" icon="users">
+    Fetch supplier name, supplier SKU, and barcode information.
+  </Step>
+
+  <Step title="Calculate Quantities" icon="calculator">
+    Compute:
+    - Ordered quantity  
+    - Delivered quantity  
+    - Undelivered quantity  
+    - Returned quantity (default = 0)
+  </Step>
+
+  <Step title="Calculate Costs" icon="dollar-sign">
+    Derive:
+    - Unit cost  
+    - Line cost  
+    - PO total cost  
+    - Tax values  
+  </Step>
+
+  <Step title="Apply Filters" icon="filter">
+    Apply optional filters:
+    - PO Status  
+    - Supplier Name  
+    - Location  
+  </Step>
+
+  <Step title="Sort Results" icon="arrow-down">
+    Sort by latest PO first, then by PO reference and SKU.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Complete PO overview  
+
+  - Item-level delivery tracking  
+
+  - Supplier and warehouse details  
+
+  - Cost and tax breakdown  
+
+  - Pending and delivered quantities clearly visible  
+</Callout>
+
+---
+
+## Usefulness
+
+This report is highly beneficial for:
+
+- Tracking procurement progress  
+- Identifying incomplete deliveries  
+- Monitoring supplier performance  
+- Supporting financial reconciliation  
+- Improving inventory planning  
+
+---
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Returned quantity is currently set to 0  
+
+  - Accuracy depends on PurchaseItem data  
+
+  - Partial deliveries must be correctly updated in system  
+
+  - Filters are optional but improve performance  
+
+  - Large datasets may impact query speed  
+</Callout>
+
+---
+
+## Example Scenario
+
+<Expandable title="Partial Delivery Tracking Example" default-open="false">
+  A purchase order is created for 100 units.
+
+  Supplier delivers only 70 units.
+
+  👉 The report shows:
+
+  - Ordered: 100  
+  - Delivered: 70  
+  - Pending: 30  
+
+  It also includes supplier details, cost, tax, and delivery dates.
+
+  Result: Easy identification of incomplete deliveries.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  The report’s biggest strength is item-level tracking within each purchase order.  
+  This allows precise monitoring of partial deliveries, improves procurement decisions,
+  and provides complete visibility into supplier performance and inventory flow.
+</Callout>

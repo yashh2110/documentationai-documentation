@@ -1,0 +1,175 @@
+---
+title: Metadata Processing Macro
+description: >-
+  Extract and transform order metadata from XML into structured, readable order
+  notes in Linnworks for improved visibility and processing.
+---
+## Overview
+
+The **RIS-RM-2024 –Metadata Processing Macro&#x20;**&#x70;rocesses WooCommerce order XML to extract hidden metadata and convert it into structured, grouped order notes.
+
+It enhances visibility by transforming raw XML data into meaningful information directly accessible within the order.
+
+<Callout kind="tip" collapsed="false">
+  Ensure WooCommerce XML structure and metadata keys are correctly configured before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Reads order XML
+
+- Extracts metadata (Linnworks-specific fields)
+
+- Groups items logically
+
+- Saves structured notes to the order
+
+- Assigns identifier to prevent reprocessing
+
+👉 In short:\
+Convert WooCommerce metadata into readable grouped order notes.
+
+## When It Runs
+
+Used for WooCommerce data processing and enrichment
+
+Typically runs:
+
+- Manual execution (on selected orders)
+
+- Triggered via Rules Engine
+
+- After WooCommerce order import
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of order IDs to process.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Note:
+
+  - Works only on selected orders
+
+  - Metadata extraction depends on XML structure
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Check Identifier" icon="tag" title-type="p">
+    Skip order if identifier "linnworks part of macro" already exists.
+  </Step>
+
+  <Step title="Fetch Order XML" icon="download" title-type="p">
+    Retrieve XML data using GetOrderXml API.
+  </Step>
+
+  <Step title="Extract Line Items" icon="list" title-type="p">
+    Read SKU and Quantity from XML.
+  </Step>
+
+  <Step title="Read Meta Data" icon="search" title-type="p">
+    Extract values where key = "Linnworks part of".
+  </Step>
+
+  <Step title="Group Items" icon="layers" title-type="p">
+    Group items based on extracted metadata values.
+  </Step>
+
+  <Step title="Build Notes" icon="file-text" title-type="p">
+    Create formatted notes combining:
+
+    - SKU
+
+    - Quantity
+
+    - Grouped metadata
+  </Step>
+
+  <Step title="Save Notes" icon="edit" title-type="p">
+    Add notes to order:
+
+    - Internal = false (external note)
+
+    - Appended to existing notes
+  </Step>
+
+  <Step title="Assign Identifier" icon="check-circle" title-type="p">
+    Assign identifier "linnworks part of macro" to prevent duplicate processing.
+  </Step>
+
+  <Step title="Log Execution" icon="file-text" title-type="p">
+    Record execution details and processed data.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - metadata extracted and structured
+
+  - Items grouped logically in notes
+
+  - Notes added to orders
+
+  - Orders tagged to prevent reprocessing
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Making hidden metadata visible
+
+- Improving warehouse clarity and operations
+
+- Reducing manual XML inspection
+
+- Grouping related items efficiently
+
+- Preventing duplicate processing
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Depends on WooCommerce XML structure
+
+  - Requires correct meta key "Linnworks part of"
+
+  - Notes may duplicate if identifier logic fails
+
+  - Assumes XML nodes always exist (no null validation)
+
+  - No validation for missing SKU or Quantity
+
+  - Identifier must remain consistent
+
+  - Performance may degrade with large XML orders
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Convert  Metadata into Notes" default-open="false">
+  Orders imported from contain hidden metadata in XML.
+
+  👉 The macro:
+
+  - Extracts metadata values
+
+  - Groups items logically
+
+  - Creates structured notes
+
+  Result: Order notes clearly display grouped item information for warehouse teams.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Transforming hidden metadata into structured notes improves operational visibility, reduces manual effort, and ensures consistent order processing through identifier-based tracking.
+</Callout>
+

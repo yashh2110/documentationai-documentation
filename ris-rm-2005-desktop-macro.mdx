@@ -1,0 +1,157 @@
+---
+title: Desktop Macro
+description: >-
+  Automatically assign packaging type and shipping service based on item
+  details, SKU rules, and order quantity.
+---
+## Overview
+
+The **RIS-RM-2005 – Desktop Macro** automatically determines and applies the correct packaging type and shipping service for orders.
+
+It evaluates item details, SKU configurations, and order quantity to ensure accurate and consistent fulfilment decisions.
+
+<Callout kind="tip" collapsed="false">
+  Ensure SKU mappings and item extended properties (e.g., Shipping Type) are properly configured for accurate results.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Evaluates order item details and quantity
+
+- Applies SKU-based and rule-based logic
+
+- Assigns appropriate packaging and shipping service
+
+👉 In short:\
+Automatically decide packaging and shipping based on SKU and quantity.
+
+## When It Runs
+
+Used for packaging automation & shipping standardization
+
+Typically runs:
+
+- Manually triggered
+
+- During order processing (prior to dispatch)
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of orders to be processed.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  No external input is required.\
+  The macro uses existing system data and predefined rules.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Evaluate Order" icon="search" title-type="p">
+    Retrieve order details and calculate total item quantity.
+  </Step>
+
+  <Step title="Handle Single Item Orders" icon="box" title-type="p">
+    Identify SKU and apply predefined packaging and shipping service.
+  </Step>
+
+  <Step title="Evaluate Multi-Item Orders" icon="layers" title-type="p">
+    Read item extended properties (e.g., Shipping Type).
+  </Step>
+
+  <Step title="Apply Shipping Type Logic" icon="filter" title-type="p">
+    ✔ All items Automatic → apply quantity-based rules\
+    ✔ Manual items → assign default packaging
+  </Step>
+
+  <Step title="Apply Quantity Rules" icon="package" title-type="p">
+    Assign packaging and shipping based on item count.
+  </Step>
+
+  <Step title="Update Order" icon="save" title-type="p">
+    Apply selected packaging group and shipping service while retaining weight and details.
+  </Step>
+</Steps>
+
+## Packaging & Shipping Rules
+
+<Callout kind="info" collapsed="false">
+  Automatic Items:
+
+  - 2–5 items → Small Bubble Mailer + First Class
+
+  - 6–8 items → Priority Envelope + Priority Mail
+
+  - 9–26 items → Priority Envelope + Priority Mail
+
+  - 27+ items → Default packaging required
+
+  Manual Items:
+
+  - Default packaging applied
+</Callout>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Packaging assigned automatically
+
+  - Shipping service applied based on rules
+
+  - No manual intervention required
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Saving time during order processing
+
+- Reducing human errors
+
+- Standardising packaging decisions
+
+- Improving shipping efficiency
+
+- Ensuring consistent service selection
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Behaviour differs for single-item and multi-item orders
+
+  - Requires accurate SKU configuration
+
+  - Depends on Shipping Type extended property
+
+  - Default packaging applied if no rules match
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Packaging Assignment Example" default-open="false">
+  An order contains 4 items marked as Automatic.
+
+  👉 The macro:
+
+  - Identifies quantity (2–5 range)
+
+  - Selects Small Bubble Mailer
+
+  - Applies First Class shipping
+
+  Result: Order is processed with correct packaging and shipping method.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Combining SKU-level configuration with quantity-based logic ensures consistent, efficient, and automated fulfilment decisions.
+</Callout>
+
+##
+

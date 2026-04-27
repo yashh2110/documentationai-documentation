@@ -1,0 +1,90 @@
+---
+title: Import products
+---
+The Odoo **Sales** app allows users to import products, including categories and variants, using a spreadsheet template compatible with Microsoft Excel, OpenOffice, Google Sheets, and similar software. Once correctly filled, this template can be uploaded to Odoo, making all products and their variants available in the product catalog within minutes.
+
+## **Download template**
+
+To start importing products:
+
+1. Navigate to **Sales app ‣ Products ‣ Products**.  
+2. Click the **(Action)** icon in the upper-left corner of the page.  
+3. Select **Import records** from the drop-down menu.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/cog-import-records.png" width="293" height="150" alt="The Import records option from the cog icon in Odoo Sales Products page." />
+
+4. On the next page, download the **Import Template for Products** link.  
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/import-template-products.png" width="427" height="340" alt="Download Import Template for Products in Odoo Sales." />
+
+Open the spreadsheet to customize it.
+
+## **Customize product import template**
+
+When editing the template:
+
+- Keep the **Internal Reference** column. While optional, unique identifiers (e.g., `FURN_001`) simplify updates and prevent duplicates.  
+- Do **not** rename existing column headers; Odoo requires them for automatic mapping.  
+- New columns may be added if the corresponding fields exist in Odoo. During import, columns that cannot be automatically matched can be manually mapped.  
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/odoo-field-dropdown-menu.png" width="518" height="176" alt="Manual mapping of spreadsheet columns to Odoo fields." />
+
+## **Upload and test spreadsheet**
+
+1. Return to **Import records** in the **Products** page.  
+2. Click **Upload File** and select the completed spreadsheet.  
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/upload-file-button.png" width="311" height="101" alt="Upload file button for product import." />
+
+3. Review all columns, map manually if needed, and click **Test**.  
+
+- If correctly mapped, Odoo shows a blue banner: **Everything seems valid**.  
+- If errors exist, a red banner displays instructions to fix them.  
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/everything-seems-valid-message.png" width="518" height="155" alt="Validation success message." />  
+<Image src="https://www.odoo.com/documentation/19.0/_images/import-error-message.png" width="554" height="157" alt="Import error message example." />
+
+4. Once valid, click **Import**. The products are added, and a success pop-up confirms the number of products imported.  
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/successful-import-popup.png" width="701" height="294" alt="Successful import confirmation." />
+
+## **Import relation fields, attributes, and variants**
+
+### **Relation fields**
+
+Products are linked to categories, vendors, and other objects. Relation fields can only be imported if the related record exists in Odoo.  
+
+- Add the field name as a column header.  
+- Enter the desired relation for each product row.  
+- Upload the spreadsheet via **Sales app ‣ Products ‣ Products ‣ Import records**.  
+
+### **Attributes and values**
+
+Attributes define variations like size or color. Upload attributes and values before applying them to products. Spreadsheet columns:
+
+- **Attribute** – e.g., `Size`  
+- **Display Type** – `Radio`, `Selection`, or `Color`  
+- **Variant Creation Mode** – `Instantly`, `Dynamically`, or `Never`  
+- **Values / Value** – possible attribute values (one per line for multiple values)  
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/attributes-and-values-spreadsheet.png" width="672" height="196" alt="Attributes and values spreadsheet template." />
+
+Import via **Sales app ‣ Configuration ‣ Attributes ‣ Import records**.
+
+### **Product variants**
+
+Once attributes and values exist:
+
+- Use columns **Name**, **Product Attributes / Attribute**, and **Product Attributes / Values** in the import spreadsheet.  
+- Multiple values in a cell should be comma-separated **without spaces** (e.g., `furniture,couch,home`).  
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/product-attribute-spreadsheet-import.png" width="662" height="97" alt="Importing product variants spreadsheet." />  
+
+After import, variants are visible and editable under **Attributes & Variants** in the product form.  
+
+**Example**
+
+- **Customizable Desk** – Color: White, Black; Legs: Wood, Steel  
+- **Stool** – Color: Green, Navy; Seat: Leather, Wood  
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/product-variants-spreadsheet.png" width="604" height="106" alt="Example product variants import spreadsheet." />

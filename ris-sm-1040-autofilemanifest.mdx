@@ -1,0 +1,159 @@
+---
+title: Auto File Manifest
+description: >-
+  Automatically file shipping manifests, generate manifest PDFs, and send them
+  via email for streamlined end-of-day shipping operations.
+---
+## Overview
+
+The **RIS-SM-1040 – AutoFileManifest** macro automates the process of filing shipping manifests for configured shipping integrations.
+
+It generates manifest PDFs and sends them via email, ensuring smooth and efficient shipping closure operations.
+
+<Callout kind="tip" collapsed="false">
+  Ensure shipping integrations and the "Consignments" print template are properly configured before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Files shipping manifests automatically  
+- Generates manifest PDFs  
+- Sends manifests via email  
+
+👉 In short:  
+File manifest → generate PDF → email it.
+
+## When It Runs
+
+Used for shipping and dispatch closure workflows
+
+Typically runs:
+
+- Scheduled automation (daily / end-of-day)  
+- Manual execution  
+- After order dispatch  
+- During courier manifest generation  
+
+## Parameters
+
+<ParamField path="Vendor" param-type="string" required="false" deprecated="false">
+  Shipping provider name used as an optional filter.
+</ParamField>
+
+<ParamField path="AccountId" param-type="string" required="false" deprecated="false">
+  Specific shipping account ID used as an optional filter.
+</ParamField>
+
+<ParamField path="email" param-type="string" required="true" deprecated="false">
+  Email address where the manifest PDF will be sent.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Vendor and AccountId are optional filters. If not provided, the macro processes all eligible shipping accounts.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Initialize Macro" icon="play" title-type="p">
+    Start execution and fetch all shipping integrations.
+  </Step>
+
+  <Step title="Filter Shipping Accounts" icon="filter" title-type="p">
+    Select accounts where:
+    - ManifestPending is false  
+    - Optional filters (Vendor / AccountId) match  
+  </Step>
+
+  <Step title="Prepare Manifest Request" icon="settings" title-type="p">
+    Build manifest request with vendor, account ID, and default manifest ID.
+  </Step>
+
+  <Step title="File Manifest" icon="send" title-type="p">
+    Call Shipping Service API to file the manifest and log response.
+  </Step>
+
+  <Step title="Generate Manifest PDF" icon="file-text" title-type="p">
+    Use print service with template <code>Consignments</code> to generate PDF.
+  </Step>
+
+  <Step title="Download PDF" icon="download" title-type="p">
+    Retrieve the generated PDF from URL and convert it into file data.
+  </Step>
+
+  <Step title="Send Email" icon="mail" title-type="p">
+    Send email with:
+    - Subject: Print Manifest  
+    - Attached PDF file  
+  </Step>
+
+  <Step title="Log Execution" icon="file-text" title-type="p">
+    Log processed accounts, API responses, email status, and errors.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Shipping manifests filed successfully  
+
+  - PDF generated for each manifest  
+
+  - Email sent with attachment  
+
+  - Full process logged for tracking  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Automating end-of-day shipping operations  
+- Reducing manual manifest handling  
+- Ensuring courier compliance  
+- Centralizing document sharing  
+- Saving operational time and effort  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Works only for configured shipping integrations  
+
+  - Requires correct print template setup (<code>Consignments</code>)  
+
+  - Email configuration must be valid  
+
+  - Depends on correct handling of ManifestPending flag  
+
+  - Network/API failures may impact PDF download or email sending  
+
+  - Optional filters (Vendor / AccountId) must match correctly if used  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="End-of-Day Manifest Automation" default-open="false">
+  At the end of the day:
+
+  - Multiple orders are dispatched  
+  - Courier manifests need to be filed  
+
+  👉 The macro:
+
+  - Files manifests for all shipping accounts  
+  - Generates PDF documents  
+  - Sends them via email  
+
+  Result:
+
+  - Manifests are ready and shared automatically  
+  - No manual intervention required  
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By combining manifest filing, document generation, and email delivery into one automated flow, this macro ensures efficient, accurate, and timely shipping operations with minimal manual effort.
+</Callout>

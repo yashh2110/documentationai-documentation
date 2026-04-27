@@ -1,0 +1,147 @@
+---
+title: 'Throughput & Capacity Planning Report '
+description: >-
+  Measure warehouse productivity (throughput), calculate work done per hour, and
+  identify peak activity times for better capacity planning.
+---
+## Overview
+
+The **RIS-SC-2243 – Throughput & Capacity Planning Report&#x20;**&#x20;provides a comprehensive view of warehouse performance by analyzing throughput, working hours, and peak activity periods.
+
+<Callout kind="tip" collapsed="false">
+  Use this report to align staffing levels with peak workload periods for optimal efficiency.
+</Callout>
+
+## Purpose
+
+This report:
+
+- Measures overall warehouse throughput
+
+- Calculates items and orders processed per hour
+
+- Identifies peak working hours
+
+- Supports workforce and capacity planning
+
+👉 In short:\
+Measure work → calculate speed → identify peaks → optimize capacity.
+
+## When It Runs
+
+Typically executed:
+
+- Daily or weekly operations review
+
+- Workforce and capacity planning
+
+- Peak hour analysis
+
+- Warehouse optimization
+
+- Management reporting
+
+- Manually or via scheduled reports
+
+## Parameters
+
+<ParamField path="@FromDate" param-type="DateTime" required="true" deprecated="false">
+  Start date for the report.
+</ParamField>
+
+<ParamField path="@ToDate" param-type="DateTime" required="true" deprecated="false">
+  End date for the report.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Both FromDate and ToDate must be provided to generate accurate results.
+</Callout>
+
+## Simple Explanation
+
+The report evaluates picking activity, calculates throughput (items/hour), and highlights peak workload times to help optimize warehouse operations.
+
+## Step-by-Step Flow
+
+<Steps>
+  <Step title="Get Pickwaves" icon="database" title-type="p">
+    Fetch pickwaves within the selected date range, including created, start, and end times.
+  </Step>
+
+  <Step title="Calculate Orders & Items" icon="list" title-type="p">
+    Count number of orders and items per pickwave.
+  </Step>
+
+  <Step title="Calculate Time Spent" icon="clock" title-type="p">
+    Compute duration of each pickwave and convert time into hours.
+  </Step>
+
+  <Step title="Calculate Overall Totals" icon="bar-chart" title-type="p">
+    Calculate:
+  </Step>
+
+  <Step title="Calculate Throughput" icon="trending-up" title-type="p">
+    Compute:
+
+    Example: 500 items in 5 hours → 100 items/hour.
+  </Step>
+
+  <Step title="Identify Peak Times" icon="activity" title-type="p">
+    Analyze busiest periods based on:
+
+    For each, calculate:
+  </Step>
+
+  <Step title="Combine Results" icon="layers" title-type="p">
+    Generate summary metrics and peak time insights in the final report.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Complete throughput summary
+
+  - Items/hour and waves/hour metrics
+
+  - Peak activity time analysis
+</Callout>
+
+## Usefulness
+
+- **Capacity Planning** – Determine staffing needs
+
+- **Peak Identification** – Identify busiest working hours
+
+- **Performance Tracking** – Measure warehouse speed
+
+- **Better Scheduling** – Allocate staff efficiently
+
+- **Process Optimization** – Improve operations
+
+## Example Scenario
+
+<Expandable title="Peak Hour Staffing Optimization" default-open="false">
+  Warehouse experiences overload during certain hours.\
+  The report:
+
+  - Identifies peak activity times
+
+  - Shows workload distribution
+
+  Result:
+
+  - Additional staff allocated during peak hours
+
+  - Reduced delays
+
+  - Improved throughput
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This report follows a clear flow: Work Done → Time Taken → Speed → Peak Hour Analysis.\
+  It helps prevent understaffing during busy periods, overstaffing during slow times, poor workload distribution, and missed delivery timelines.
+</Callout>
+

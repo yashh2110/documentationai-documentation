@@ -1,0 +1,166 @@
+---
+title: Packaging Selection By Location
+description: >-
+  Determines the correct packaging type based on warehouse/location, applies the
+  appropriate packaging group, and recalculates order dimensions and weight.
+---
+## Overview
+
+The **RIS-RM-2137 – Packaging Selection By Location** macro automatically assigns the right packaging for orders depending on the warehouse they are fulfilled from.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  It automatically selects the right packaging for an order based on where it will be shipped from.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Determines the correct packaging group based on warehouse/location
+
+- Recalculates order dimensions and weight
+
+- Updates the order with accurate packaging details
+
+- Ensures compliance with location-specific shipping rules
+
+---
+
+## When It Runs
+
+Typically executed:
+
+- Automatically or manually during order processing
+
+- Before shipping label generation
+
+- After warehouse allocation of orders
+
+- Within WMS/fulfillment workflows
+
+---
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="list[int]" required="true" deprecated="false">
+  List of orders to process. Orders must already be assigned to a warehouse/location.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  This parameter controls which orders the macro will process.
+</Callout>
+
+---
+
+## Simple Explanation
+
+The macro:
+
+1. Checks the order’s warehouse/location
+
+2. Selects the correct packaging rules
+
+3. Calculates box size and weight
+
+4. Applies updated packaging to the order
+
+This ensures accurate shipping dimensions and weight for every order based on its fulfillment location.
+
+---
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Fetch Packaging Groups" icon="package" title-type="p">
+    Retrieve all available packaging groups registered in the system (e.g., UK, Germany, USA).
+  </Step>
+
+  <Step title="Fetch Order Details" icon="shopping-cart" title-type="p">
+    Retrieve targeted orders and identify their assigned fulfillment warehouse locations.
+  </Step>
+
+  <Step title="Get Location Data" icon="map-pin" title-type="p">
+    Cross-reference the order's location with the master list of active warehouse locations.
+  </Step>
+
+  <Step title="Map Location to Packaging Group" icon="layers" title-type="p">
+    Assign packaging category based on location:
+
+    - UK → UK Packaging
+
+    - Germany → Germany Packaging
+
+    - USA → USA Packaging
+
+    - etc.
+  </Step>
+
+  <Step title="Retrieve Packaging Details" icon="box" title-type="p">
+    Get packaging group ID, type ID, and base weight for the selected category.
+  </Step>
+
+  <Step title="Calculate Packaging" icon="calculator" title-type="p">
+    Determine the final estimated weight, height, width, and depth of the packaged order.
+  </Step>
+
+  <Step title="Apply Packaging" icon="truck" title-type="p">
+    Update the order's packaging type and dimensions with the newly calculated values.
+  </Step>
+
+  <Step title="Logging" icon="file-text" title-type="p">
+    Track before and after packaging values for auditing and verification.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  Orders are updated with:
+
+  - **Correct packaging group and type applied**
+
+  - **Accurate dimensions** (height, width, depth)
+
+  - **Correct total weight**
+</Callout>
+
+---
+
+## Usefulness
+
+- **Automation** – Eliminates manual packaging selection
+
+- **Accuracy** – Ensures correct packaging per warehouse
+
+- **Shipping Optimization** – Accurate weight and dimensions
+
+- **Cost Control** – Prevents over/under packaging
+
+---
+
+## Example Scenario
+
+<Expandable title="Scenario: Multi-Warehouse Fulfillment" default-open="false">
+  **Location:** Germany FC
+
+  **Insight:**\
+  Orders require Germany-specific packaging rules.
+
+  **Action:**\
+  Macro applies Germany packaging automatically.
+
+  **Result:**\
+  Correct packaging selected and shipping calculations are accurate.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This macro ensures that packaging is dynamically selected based on warehouse location, enabling accurate shipping calculations, reducing errors, and improving overall fulfillment efficiency by aligning packaging with operational requirements.
+</Callout>
+

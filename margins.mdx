@@ -1,0 +1,150 @@
+---
+title: Margins
+description: >-
+  The sales margin is the profit gained from the sale of a product or service
+  after all the costs related to it have been accounted for.
+---
+The sales margin represents the profit earned from selling a product or service after deducting all associated costs.
+
+In the Odoo **Sales** application, margins can be displayed directly on quotations and sales orders, helping sales teams track profitability in real time.
+
+## **Configuration**
+
+To enable margins:
+
+1. Go to **Sales app ‣ Configuration ‣ Settings**
+
+2. In the **Pricing** section, enable **Margins**
+
+3. Click **Save**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/margins-checkbox.png" width="768" height="184" alt="Margins checkbox." />
+
+> **Info**\
+> Once enabled, margin calculations are automatically available across quotations and sales orders without additional setup.
+
+### **Configure price and cost**
+
+To ensure accurate margin calculations, define both **Sales Price** and **Cost** for each product.
+
+Go to: **Sales app ‣ Products ‣ Products** and update these fields in the **General Information** tab.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/product-view.png" width="768" height="317" alt="Cable Management box product page." />
+
+> **Tip**\
+> Always keep product costs updated (especially for frequently changing supplier prices) to avoid misleading margin calculations.
+
+> **Example**\
+> If a product has:
+>
+> - Cost = $50
+>
+> - Sales Price = $80
+>
+> Then:
+>
+> - Margin = $30
+>
+> - Margin (%) = 37.5%
+
+## **Compute margins on sales orders**
+
+To view margins in action:
+
+1. Go to **Sales app ‣ Orders ‣ Quotations**
+
+2. Click **New**
+
+3. Add products to the quotation
+
+A **Margin** field automatically appears at the bottom, showing total profit and percentage.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/so-with-margin-field.png" width="768" height="332" alt="Sales order with Margin field on the bottom." />
+
+To display margins per product line:
+
+1. Click the **(settings adjust)** icon in **Order Lines**
+
+2. Enable:
+
+   - **Margin**
+
+   - **Margin (%)**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/so-with-margins-checkboxes.png" width="768" height="434" alt="Sales order with Margin and Margin(%) columns displayed." />
+
+> **Info**\
+> The margin per line is calculated based on product cost and selling price, multiplied by quantity.
+
+> **Alert**\
+> Margin fields are read-only. To adjust margins, update the product’s **Cost** or **Sales Price**.
+
+## **Margin calculation with a pricelist**
+
+Margins dynamically adjust when pricelists are applied.
+
+### Steps:
+
+1. Go to **Sales app ‣ Products ‣ Pricelists**
+
+2. Click **New**
+
+3. Add pricing rules
+
+4. Create a quotation
+
+5. Apply the pricelist
+
+6. Click **Update Prices**
+
+> **Example**\
+> A seasonal discount scenario:
+>
+> - Product: Blue denim jeans
+>
+> - Discount: 5%
+>
+> - Minimum quantity: 2
+>
+> - Valid period: October to December
+>
+> This reduces the selling price, which directly lowers the margin.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/pricelist-configuration.png" width="768" height="170" alt="Pricelist Rules pop-up window." />
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/so-with-pricelist.png" width="768" height="288" alt="Sales order with a new pricelist selected." />
+
+After applying changes:
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/so-with-applied-pricelist.png" width="768" height="288" alt="Sales order with margins recalculated based on the price-list adjustment." />
+
+> **Tip**\
+> Always click **Update Prices** after applying a pricelist to ensure margins are recalculated correctly.
+
+> **Alert**\
+> Heavy discounts may significantly reduce or eliminate margins—review pricing strategies carefully.
+
+## **Analyze margins**
+
+Margins can also be analyzed visually:
+
+1. Go to **Sales app ‣ Orders ‣ Quotations**
+
+2. Switch to **Graph** or **Pivot** view
+
+3. Use **Measures → Margin**
+
+> **Tip**\
+> Use pivot view to compare margins by:
+>
+> - Customer
+>
+> - Salesperson
+>
+> - Product
+>
+> This helps identify high-performing and low-performing areas.
+
+> **Info**\
+> Margin analysis is especially useful for strategic decisions like pricing optimization, discount control, and product performance evaluation.
+

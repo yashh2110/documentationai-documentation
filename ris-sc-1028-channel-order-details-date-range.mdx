@@ -1,0 +1,150 @@
+---
+title: Channel Order Details
+description: >-
+  Retrieves detailed order and item-level data for channel orders within a specified date range,
+  including customer, shipping, and inventory information.
+---
+## Overview
+
+The **RIS-SC-1028 – Channel Order Details: Date Range** script helps analysts generate a comprehensive report of channel orders within a selected date range, including item, customer, shipping, and inventory information.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  Get a complete view of orders and their details within any specified date range.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Retrieves orders within a specified date range  
+- Combines item-level, customer, shipping, and inventory data  
+- Provides a detailed consolidated report  
+
+---
+
+## When It Runs
+
+Used for sales reporting, finance, audits, and operational visibility.
+
+**Typically runs:**
+
+- Manually executed by analysts  
+- During sales reporting  
+- For finance and tax calculations  
+- While auditing order details  
+- For customer or shipment investigations  
+
+---
+
+## Parameters
+
+<ParamField path="startDate" param-type="date" required="true" deprecated="false">
+  Start date for filtering orders.
+</ParamField>
+
+<ParamField path="endDate" param-type="date" required="true" deprecated="false">
+  End date for filtering orders.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  The script filters orders based on processed date and requires correct date format (YYYY-MM-DD).
+</Callout>
+
+---
+
+## Simple Explanation
+
+The script selects orders between the specified start and end dates, merges item, customer, shipping, and warehouse information, and creates a detailed report for analysis or reporting purposes.
+
+---
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Set Date Range" icon="calendar" title-type="p">
+    Filter orders between start date and end date.
+  </Step>
+
+  <Step title="Filter Order Status" icon="check-circle" title-type="p">
+    Include only valid or processed orders.
+  </Step>
+
+  <Step title="Join Orders with Items" icon="layers" title-type="p">
+    Combine order-level and item-level data.
+  </Step>
+
+  <Step title="Fetch Customer Details" icon="user" title-type="p">
+    Retrieve name, address, email, and phone.
+  </Step>
+
+  <Step title="Get Shipping Information" icon="map-pin" title-type="p">
+    Use carrier details or fallback to internal carrier data.
+  </Step>
+
+  <Step title="Resolve Channel Order ID" icon="link" title-type="p">
+    Use available reference numbers for order identification.
+  </Step>
+
+  <Step title="Add Item-Level Details" icon="tag" title-type="p">
+    Include SKU, quantity, price, title, and barcode.
+  </Step>
+
+  <Step title="Include Warehouse Information" icon="warehouse" title-type="p">
+    Fetch bin or rack location for each item.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+The script generates a detailed report containing:
+
+- Order ID  
+- Channel order reference  
+- Order date  
+- SKU and quantity  
+- Price and totals  
+- Customer details  
+- Shipping carrier  
+- Warehouse location
+</Callout>
+
+---
+
+## Usefulness
+
+- **Sales Reporting** – Track orders within any date range  
+- **Financial Analysis** – Includes totals, tax, and pricing  
+- **Customer Support** – Access complete order information  
+- **Operational Visibility** – Combines warehouse and shipping data  
+
+---
+
+## Example Scenario
+
+<Expandable title="Daily Order Report Example" default-open="false">
+**Scenario:** Daily order report  
+
+**Parameters:** startDate = 2026-03-01, endDate = 2026-03-01  
+
+**Result:**  
+- Order 2001  
+  - SKU: SKU 01  
+  - Quantity: 1  
+  - Total: 1000  
+  - Carrier: FedEx  
+  - Status: Shipped  
+
+**Insight:** Provides a complete view of daily orders, helping track revenue and shipments.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+By combining order, customer, shipping, and inventory data into a single report, this script delivers complete visibility into operations, enabling better decision-making, accurate reporting, and efficient issue resolution.
+</Callout>

@@ -1,0 +1,141 @@
+---
+title: Remove Non UK Orders Macro
+description: >-
+  Checks the shipping country of orders and deletes all orders that are not from
+  the United Kingdom.
+---
+## Overview
+
+The **RIS-RM-2154 – Remove Non Uk Order&#xA0;**&#x6D;acro automatically removes non-UK orders from the system, keeping the order queue region-specific.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  It checks each order’s shipping country and deletes it if it is not from the United Kingdom.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Checks the shipping country of each order
+
+- Deletes orders that are not from the United Kingdom
+
+- Logs all deletions and skipped orders
+
+- Ensures only UK orders remain for fulfillment
+
+---
+
+## When It Runs
+
+Typically executed:
+
+- Automatically or manually during order processing
+
+- After order import from channels
+
+- Before fulfillment or picking
+
+- As part of automation workflows for region-specific processing
+
+---
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="list[int]" required="true" deprecated="false">
+  List of order IDs to process. Determines which orders will be checked and filtered.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  This parameter controls which orders the macro will evaluate for UK-only fulfillment.
+</Callout>
+
+---
+
+## Simple Explanation
+
+The macro:
+
+1. Iterates through each order in the provided list
+
+2. Retrieves the shipping country of each order
+
+3. Deletes the order if it is not from the United Kingdom
+
+4. Logs each deletion and skipped order for audit tracking
+
+This ensures the system only contains UK orders, ready for region-specific fulfillment.
+
+---
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Loop Through Orders" icon="repeat" title-type="p">
+    Iterate through each order ID provided in the input list.
+  </Step>
+
+  <Step title="Fetch Order Details" icon="shopping-cart" title-type="p">
+    Retrieve order number and shipping country for each order.
+  </Step>
+
+  <Step title="Check Country" icon="map-pin" title-type="p">
+    Compare the shipping country to "United Kingdom".
+  </Step>
+
+  <Step title="Delete Non-UK Orders" icon="trash" title-type="p">
+    If the shipping country is not the United Kingdom, delete the order from the system.
+  </Step>
+
+  <Step title="Skip UK Orders" icon="check-circle" title-type="p">
+    If the shipping country is the United Kingdom, retain the order and log it as skipped.
+  </Step>
+
+  <Step title="Logging" icon="file-text" title-type="p">
+    Track the number of orders processed, deleted, and skipped for auditing and reporting purposes.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  The macro ensures that only UK orders remain in the system:
+</Callout>
+
+---
+
+## Usefulness
+
+- **Data Cleanup** – Removes irrelevant international orders
+
+- **Region-Specific Processing** – Keeps only UK orders
+
+- **Automation** – Eliminates manual filtering
+
+- **Efficiency** – Reduces unnecessary processing workload
+
+---
+
+## Example Scenario
+
+<Expandable title="Scenario: UK-Only Fulfillment System" default-open="false">
+  **Context:** Orders imported from multiple countries.
+
+  **Action:**\
+  Macro checks the shipping country and deletes any non-UK orders.
+
+  **Result:**\
+  Only valid UK orders remain for processing and fulfillment.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This macro ensures a clean and region-specific order queue by filtering orders based on shipping country, preventing incorrect fulfillment, reducing manual effort, and improving overall operational efficiency.
+</Callout>
+

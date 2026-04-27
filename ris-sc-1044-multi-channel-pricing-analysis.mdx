@@ -1,0 +1,189 @@
+---
+title: Multi-Channel Pricing Analysis
+description: >-
+  Compares product prices across multiple sales channels (Amazon, eBay, Etsy,
+  Website) and identifies pricing differences, inconsistencies, and variation
+  percentages.
+---
+## Overview
+
+The **RIS-SC-1044 – Multi-Channel Pricing Analysis** script collects prices for SKUs across multiple channels, calculates min/max values, and highlights percentage differences.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  See how each product is priced across Amazon, eBay, Etsy, and website channels.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Retrieves product pricing from multiple sales channels
+
+- Calculates price differences and variation percentages
+
+- Highlights inconsistencies for analysis and corrective action
+
+---
+
+## When It Runs
+
+Typically used for:
+
+- Pricing audits
+
+- Promotion planning
+
+- Catalog or margin reviews
+
+- Competitive pricing analysis
+
+---
+
+## Parameters
+
+<ParamField path="SKU" param-type="string" required="false" deprecated="false">
+  Product SKU(s) to analyze. If empty, the script processes all active SKUs.
+</ParamField>
+
+<ParamField path="ChannelList" param-type="string" required="false" deprecated="false">
+  Comma-separated list of channels to include in the pricing comparison (e.g., Amazon,eBay,Etsy,Website).
+</ParamField>
+
+<ParamField path="IncludeVariations" param-type="boolean" required="false" deprecated="false">
+  Whether to include eBay variation-level prices in the analysis. Default: True.
+</ParamField>
+
+<ParamField path="DateRange" param-type="string" required="false" deprecated="false">
+  Optional date filter for price changes (e.g., last 30 days). Format: YYYY-MM-DD to YYYY-MM-DD.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  These parameters allow analysts to filter SKUs, select channels, include variations, and apply date ranges for flexible pricing comparisons.
+</Callout>
+
+---
+
+## Simple Explanation
+
+The script takes a product SKU, collects its price from multiple channels, compares all prices, and calculates the minimum, maximum, difference, and percentage variation.
+
+---
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Filter Products" icon="filter" title-type="p">
+    Use SKU parameter or select all active SKUs from StockItem.
+  </Step>
+
+  <Step title="Fetch Product Details" icon="info" title-type="p">
+    Retrieve SKU, title, and barcode from StockItem.
+  </Step>
+
+  <Step title="Get Amazon & Etsy Prices" icon="shopping-cart" title-type="p">
+    Use Stock\_ChannelList for channel-specific prices.
+  </Step>
+
+  <Step title="Get eBay Prices" icon="shopping-bag" title-type="p">
+    Use Automation\_eBayListing\_Variaitions and Automation\_eBayListing for variation-level pricing.
+  </Step>
+
+  <Step title="Map Channel Data" icon="link" title-type="p">
+    Use Stock\_ChannelSKU to link all channel SKUs to the internal SKU.
+  </Step>
+
+  <Step title="Combine Pricing Data" icon="merge" title-type="p">
+    Merge all channel prices into a single dataset.
+  </Step>
+
+  <Step title="Calculate Minimum Price" icon="trending-down" title-type="p">
+    Find the lowest price across channels.
+  </Step>
+
+  <Step title="Calculate Maximum Price" icon="trending-up" title-type="p">
+    Find the highest price across channels.
+  </Step>
+
+  <Step title="Calculate Price Difference" icon="calculator" title-type="p">
+    Compute difference between max and min price.
+  </Step>
+
+  <Step title="Calculate Percentage Difference" icon="percent" title-type="p">
+    Calculate variation percentage.
+  </Step>
+
+  <Step title="Execute Query" icon="play" title-type="p">
+    Generate final pricing comparison report.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  The report contains:
+
+  - SKU and product details
+
+  - Channel-wise pricing (Amazon, eBay, Etsy, Website)
+
+  - Minimum and maximum price
+
+  - Price difference
+
+  - Percentage variation
+</Callout>
+
+---
+
+## Usefulness
+
+- **Pricing Consistency** – Ensure uniform pricing across channels
+
+- **Profit Optimization** – Identify underpriced listings
+
+- **Competitive Analysis** – Improve pricing strategy
+
+- **Channel Control** – Avoid pricing conflicts
+
+---
+
+## Example Scenario
+
+<Expandable title="Price Mismatch Across Channels" default-open="false">
+  **Scenario:**\
+  A product has differing prices across marketplaces:
+
+  - eBay1: £8
+
+  - eBay2: £12
+
+  - Amazon: £11
+
+  **Insight:**
+
+  - Minimum Price: £8
+
+  - Maximum Price: £12
+
+  - Difference: £4
+
+  - Variation: 33%
+
+  **Action:**
+
+  - Standardize pricing across all channels
+
+  - Adjust underpriced listings
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Consistent pricing across channels improves customer trust, prevents revenue loss due to underpricing, and avoids conflicts between marketplaces, making this script essential for pricing control and optimization.
+</Callout>
+

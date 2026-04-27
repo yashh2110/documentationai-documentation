@@ -1,0 +1,92 @@
+---
+title: Invoice project milestones
+description: >
+  Milestone-based invoicing allows businesses to bill customers as specific
+  project phases are completed, providing clear visibility into progress and
+  value delivered over time.
+---
+Milestone-based invoicing is ideal for companies that deliver work in clearly defined stages. Instead of charging the full amount upfront or only at project completion, businesses can invoice customers progressively as each milestone is achieved. This method gives customers a clear view of the work completed and the value received over time.
+
+In Odoo, milestone invoicing is set up at the product level in the **Sales** app, while milestone tracking and completion are managed in the **Projects** app. When a milestone is marked as complete, the delivered quantity on the related sales order (SO) line is updated, making it ready for invoicing.
+
+## **How milestone invoicing works**
+
+Milestone invoicing follows a structured workflow involving multiple Odoo apps:
+
+1. Create a product in **Sales**, configured for milestone invoicing.
+
+2. Create a sales order (SO) with the product.
+
+3. Set up a project in **Projects**, with associated milestones.
+
+4. When a milestone is completed, mark it as reached. This updates the *Delivered* quantity on the SO line.
+
+5. Generate an invoice for the completed milestone and send it to the customer.
+
+**Important**
+
+This guide covers the configuration in the **Sales** app and the invoicing workflow for milestone-based products.
+
+## **Creating milestone products**
+
+Begin by setting up a service product for milestone invoicing:
+
+1. Navigate to **Sales app ‣ Products ‣ Products** and click **New**.
+
+2. Enter the product name and **Sales Price**.
+
+3. Set **Product Type** to **Service**, which reveals the **Create on Order** field.
+
+4. Choose **Project**, **Project and Task**, or **Task**, depending on how the work should be tracked in the **Projects** app.
+
+**Note**
+
+You may also assign a **Project Template** to the product. Templates can define milestones in advance, but the *Quantity (%)* field must be manually updated for each new project.
+
+For **Invoicing Policy**, select **Based on Milestones**. This ensures delivered quantities update automatically as milestones are completed.
+
+**Important**
+
+The *Based on Milestones* option is only available if at least one project with milestones exists.
+
+## **Defining milestones**
+
+Once a milestone product is sold, a **Milestones** smart button appears on the SO. Click it to view, edit, or create milestones.
+
+The **Delivered %** reflects the portion of the SO value billed when a milestone is reached.
+
+**Example**
+
+A pool installation company bills 25% per milestone:
+
+- Site Preparation & Excavation
+
+- Structural Installation
+
+- Plumbing & Equipment Installation
+
+- Finishing & Final Inspection
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/view-milestones.png" width="933" height="250" alt="The milestones for a sales order line." />
+
+The team uses a *Pool installation* project template with these milestones defined. Every new SO with the product triggers a project based on this template.
+
+## **Invoicing completed milestones**
+
+Milestones are tracked in the **Projects** app (<a href="https://www.odoo.com/documentation/19.0/applications/services/project/project_management/project_milestones.html#project-using-milestones" target="_blank" rel="noopener noreferrer">Using milestones</a>).
+
+To mark a milestone as reached from the SO:
+
+1. Click the **Milestones** smart button.
+
+2. Enable the checkbox in the **Reached** column for the completed milestone.
+
+3. Return to the SO (via **View Sales Order** or breadcrumbs). The **Delivered** column now reflects the milestone’s percentage.
+
+Repeat as additional milestones are reached.
+
+**Important**
+
+Marking a milestone as reached **does not automatically create an invoice**—it only updates the SO to indicate the portion ready for billing.
+
+Once the **Delivered** column is accurate, click **Create Invoice** to generate the invoice. Continue invoicing as further milestones are completed until all services are fulfilled.

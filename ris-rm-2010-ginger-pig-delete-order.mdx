@@ -1,0 +1,135 @@
+---
+title: Ginger Pig Delete Order
+description: >-
+  Permanently delete open orders from a specified folder for cleanup and
+  maintenance.
+---
+## Overview
+
+The **RIS-RM-2010 – Ginger Pig Delete Order** macro deletes open orders from Linnworks based on a specified folder.
+
+It identifies all orders within the selected folder and permanently removes them from the system, helping maintain a clean and organised order queue.
+
+<Callout kind="tip" collapsed="false">
+  Use this macro carefully, especially in production environments, as deleted orders cannot be recovered.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Retrieves orders from a specific folder
+
+- Deletes them permanently from the system
+
+- Logs execution details
+
+👉 In short:\
+Delete all orders from a selected folder.
+
+## When It Runs
+
+Used for system cleanup & order management
+
+Typically runs:
+
+- Manually triggered
+
+- Scheduled for automated cleanup
+
+## Parameters
+
+<ParamField path="FolderName" param-type="string" required="true" deprecated="false">
+  Name of the folder from which orders should be deleted.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Only orders present in the specified folder will be processed.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Fetch Orders" icon="download" title-type="p">
+    Retrieve all open orders from the specified folder (including paginated results).
+  </Step>
+
+  <Step title="Iterate Orders" icon="repeat" title-type="p">
+    Process each order individually.
+  </Step>
+
+  <Step title="Log Order Details" icon="file-text" title-type="p">
+    Record order information such as Order ID and GUID.
+  </Step>
+
+  <Step title="Delete Order" icon="trash-2" title-type="p">
+    Execute deletion using Linnworks Orders API.
+  </Step>
+
+  <Step title="Confirm Deletion" icon="check-circle" title-type="p">
+    Log successful deletion of each order.
+  </Step>
+
+  <Step title="Track Execution" icon="activity" title-type="p">
+    Record start, completion, and any errors during execution.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - All orders in the specified folder are deleted
+
+  - Unwanted or test orders removed
+
+  - Full execution logs available
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Bulk order deletion
+
+- Removing test or failed orders
+
+- Maintaining a clean order queue
+
+- Reducing manual cleanup effort
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Deleted orders cannot be recovered
+
+  - Works only on open orders
+
+  - Folder name must be accurate
+
+  - Should be used cautiously in production
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Order Cleanup Example" default-open="false">
+  A folder contains test or failed orders.
+
+  👉 The macro:
+
+  - Retrieves all orders from the folder
+
+  - Deletes each order
+
+  - Logs all actions
+
+  Result: The folder is cleared and system remains clean.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Automating bulk order deletion helps maintain system hygiene and operational clarity, but must be handled carefully due to its irreversible nature.
+</Callout>
+
+##
+

@@ -1,0 +1,187 @@
+---
+title: FBA Transfer Macro
+description: >-
+  Automatically create warehouse stock transfers from orders and optionally
+  cancel processed orders.
+---
+## Overview
+
+The **RIS-SM-1010 – FBA Transfer Macro** converts eligible orders into warehouse stock transfers between locations.
+
+It automates stock movement (e.g., Default → FBA) and can optionally cancel the original orders after successful transfer completion.
+
+<Callout kind="tip" collapsed="false">
+  Ensure warehouse locations and folders are correctly configured before running this macro to avoid incorrect stock movement.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Identifies eligible orders
+
+- Creates warehouse stock transfers
+
+- Optionally cancels processed orders
+
+👉 In short:\
+Convert orders into stock transfers between locations.
+
+## When It Runs
+
+Used for stock movement & warehouse automation
+
+Typically runs:
+
+- Scheduled execution
+
+- Manually triggered
+
+## Parameters
+
+<ParamField path="locationfrom" param-type="string" required="true" deprecated="false">
+  Source warehouse location.
+</ParamField>
+
+<ParamField path="locationto" param-type="string" required="true" deprecated="false">
+  Destination warehouse location.
+</ParamField>
+
+<ParamField path="isorderdelete" param-type="boolean" required="true" deprecated="false">
+  True to cancel order after transfer.
+</ParamField>
+
+<ParamField path="companyname" param-type="string" required="false" deprecated="false">
+  Filter orders by company or customer name.
+</ParamField>
+
+<ParamField path="foldername" param-type="string" required="false" deprecated="false">
+  Process only orders within this folder.
+</ParamField>
+
+<ParamField path="fromdays" param-type="number" required="false" deprecated="false">
+  Process orders created within the last specified number of days.
+</ParamField>
+
+<ParamField path="testorder" param-type="string" required="false" deprecated="false">
+  Specific order number for testing purposes.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Example:\
+  Move stock from Default → FBA and process only orders in the FBA Transfer folder.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Validate Locations" icon="map" title-type="p">
+    Verify source and destination warehouse locations.
+  </Step>
+
+  <Step title="Fetch Orders" icon="download" title-type="p">
+    Retrieve open orders from the source location.
+  </Step>
+
+  <Step title="Apply Filters" icon="filter" title-type="p">
+    Filter orders by date, folder, company name, or test order.
+  </Step>
+
+  <Step title="Create Transfer" icon="plus-circle" title-type="p">
+    Generate a warehouse transfer with a unique reference.
+  </Step>
+
+  <Step title="Add Items" icon="layers" title-type="p">
+    Add all order items to the transfer, including composite items.
+  </Step>
+
+  <Step title="Assign Bin" icon="box" title-type="p">
+    Create and assign bin using order reference.
+  </Step>
+
+  <Step title="Process Transfer" icon="refresh-cw" title-type="p">
+    Move transfer through stages:
+    Request → Accepted → Delivered
+  </Step>
+
+  <Step title="Update Quantities" icon="edit" title-type="p">
+    Update sent quantities for all items.
+  </Step>
+
+  <Step title="Optional Order Cancellation" icon="x-circle" title-type="p">
+    Cancel order if isorderdelete = True.
+  </Step>
+
+  <Step title="Finalize Transfer" icon="check-circle" title-type="p">
+    Mark transfer as Delivered.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Orders converted into warehouse transfers
+
+  - Stock moved between locations
+
+  - Composite items handled correctly
+
+  - Orders optionally cancelled after processing
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Automating FBA and internal transfers
+
+- Reducing manual warehouse work
+
+- Ensuring accurate stock movement
+
+- Handling bundled/composite items
+
+- Supporting bulk transfer operations
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Processes only orders in specified folder
+
+  - Company name must match Company or Full Name
+
+  - All items in the order are included
+
+  - Order cancellation is irreversible
+
+  - Composite items are split into components
+
+  - testorder overrides bulk processing
+
+  - Requires correct warehouse configuration
+</Callout>
+
+## Example Scenario
+
+<Expandable title="FBA Transfer Example" default-open="false">
+  Orders exist in the FBA Transfer folder.
+
+  👉 The macro:
+
+  - Retrieves eligible orders
+
+  - Creates stock transfer from Default → FBA
+
+  - Moves items and completes transfer
+
+  - Cancels order (if enabled)
+
+  Result: Stock is moved to FBA without manual intervention.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Converting orders into structured warehouse transfers ensures accurate inventory movement, improves operational efficiency, and simplifies multi-location stock management.
+</Callout>
+

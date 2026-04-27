@@ -1,0 +1,170 @@
+---
+title: Create and send quotations
+description: >-
+  After qualifying a lead and converting it into an opportunity, the next step
+  is to prepare and send a quotation. This process can be managed directly from
+  the CRM system.
+---
+Once a lead has been qualified and converted into an opportunity, the next step in the sales process is to prepare and send a quotation. This can be done directly within the *CRM* workflow.
+
+## **Create a new quotation**
+
+To begin, open the **CRM app** and access your **Pipeline**.
+
+Select an opportunity to open its detailed view. Review the existing information and update any details if needed.
+
+**Note**
+
+If quotations already exist for this opportunity, they can be accessed via the **Quotations** smart button at the top of the record. The number displayed indicates how many quotations are linked.
+
+Click the **New Quotation** button located at the top-left.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/send-quotes-new-button.png" width="768" height="266" alt="Qualified lead form with New Quotation button emphasized." />
+
+**Important**
+
+The **Sales** module must be installed for this option to be available.
+
+### **Customer selection**
+
+A customer must be defined before sending a quotation. If no customer is linked to the opportunity, a pop-up will prompt you to choose one of the following:
+
+- **Create a new customer**: generates a new customer record using available information
+
+- **Link to an existing customer**: select an existing contact from the list
+
+- **Do not link to a customer**: proceed without associating a customer
+
+After making your selection, the quotation form will open.
+
+## **Quotation details**
+
+Verify and complete the required fields in the quotation form:
+
+- **Customer**: the recipient of the quotation
+
+- **Referrer**: optional field for tracking referrals
+
+- **Invoice Address**: billing location
+
+- **Delivery Address**: shipping destination
+
+- **Quotation Template**: apply a predefined template if available
+
+- **Expiration**: the date until which the quotation remains valid
+
+- **Quotation Date**: visible in developer mode for tracking purposes
+
+- **Recurring Plan**: used for subscription-based products
+
+- **Pricelist**: determines pricing rules
+
+- **Payment Terms**: defines how and when payment is expected
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/send-quotes-new-quotation.png" width="768" height="294" alt="Qualified lead form with New Quotation button emphasized." />
+
+**Tip**
+
+The expiration date is automatically calculated based on default settings. You can adjust this by configuring quotation validity in the Sales settings.
+
+If templates are used, the validity period is controlled by the template configuration.
+
+Once all details are completed, click **Save**.
+
+## **Add products to the quotation**
+
+Use the **Order Lines** section to add products or services.
+
+Click **Add a product**, then:
+
+- Search and select an item from the catalog
+
+- Adjust the quantity if required
+
+- Review pricing and other details
+
+To remove an item, click the **trash** icon.
+
+To organize items:
+
+- Use **Add a section** to group related products
+
+- Drag and reorder items as needed
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/product-sections.png" width="764" height="247" alt="Categories are used to create separate sections on the order lines of a quote." />
+
+---
+
+### **Use the product catalog**
+
+For faster product selection, click the **Catalog** button.
+
+This opens a visual catalog where products are displayed as cards. You can filter items by category or attributes.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/product-catalog1.png" width="765" height="438" alt="The product catalog displays all products as cards." />
+
+To add products:
+
+- Click **Add** on a product card
+
+- Adjust the quantity using the plus/minus controls or by typing a value
+
+- Click **Remove** if needed
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/set-quantity.png" width="412" height="189" alt="The purple add and subtract buttons are used to set the quantity of an item." />
+
+Once finished, click **Back to Quotation** to return. All selected items will be added to the order lines.
+
+## **Preview and send quotation**
+
+Before sending, you can preview how the quotation will appear to the customer by clicking **Preview**. This opens the document in the customer-facing view.
+
+After reviewing, return to edit mode if changes are needed.
+
+To send the quotation, click **Send by Email**.
+
+An email window will open with a pre-filled template. It automatically includes:
+
+- Customer details
+
+- Quotation summary
+
+- Total amount
+
+A PDF version of the quotation is attached to the email.
+
+**Note**
+
+You can modify the email template or select a different one if required.
+
+After making any changes, click **Send**. A copy of the email will be stored in the record’s activity thread.
+
+Once sent, the **Quotations** smart button updates to reflect the new document. If a quotation is confirmed and converted into a sales order, it will be reflected under the **Orders** smart button instead.
+
+## **Mark an opportunity as won or lost**
+
+After the customer responds, update the opportunity status to keep your pipeline accurate.
+
+To do this:
+
+- Navigate back to the opportunity
+
+- Click either **Won** or **Lost**
+
+If marked as **Won**, the opportunity moves to the final stage and is labeled accordingly.
+
+If marked as **Lost**, a pop-up window appears where you can:
+
+- Select or create a **Lost Reason**
+
+- Add additional notes in the **Closing Note** field
+
+**Tip**
+
+Using standardized lost reasons helps improve reporting and analysis. Limit the creation of new reasons to maintain consistency.
+
+After confirming, the opportunity will be marked as lost and removed from the active pipeline.
+
+**Important**
+
+Lost opportunities are considered archived, but for accurate reporting, they must be explicitly marked as *lost*, not just archived.

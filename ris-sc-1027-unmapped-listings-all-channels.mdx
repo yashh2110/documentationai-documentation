@@ -1,0 +1,133 @@
+---
+title: Unmapped Listings
+description: >-
+  Retrieves listings from multiple sales channels, identifies SKUs that are not mapped to any stock item,
+  and consolidates them into a single report.
+---
+
+## Overview
+
+The **RIS-SC-1027 – Unmapped Listings: All Channels** script helps analysts identify listings from various sales channels that are not linked to inventory SKUs.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  Find channel listings that are not connected to stock items.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Retrieves listings from multiple channels (Amazon, eBay, Etsy)  
+- Identifies SKUs not mapped to inventory  
+- Consolidates all unmapped listings into a single report  
+
+---
+
+## When It Runs
+
+Used for channel integration checks, inventory synchronization, and SKU mapping audits.
+
+**Typically runs:**
+
+- Manually executed by analysts  
+- During channel integration checks  
+- Before inventory synchronization  
+- While onboarding new listings  
+- During SKU mapping audits  
+
+---
+
+## Parameters
+
+<ParamField path="None" param-type="fixed" required="false" deprecated="false">
+  Uses predefined channel filters; no manual input required.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  The script is fully hardcoded for multiple channels and does not require any input parameters.
+</Callout>
+
+---
+
+## Simple Explanation
+
+The script collects listings from various channels, compares them with inventory stock items, and identifies SKUs that are not mapped to any stock item.
+
+---
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Extract Channel Listings" icon="list" title-type="p">
+    Collect listings from Amazon, eBay, and Etsy across multiple accounts.
+  </Step>
+
+  <Step title="Check Mapping with Stock Items" icon="search" title-type="p">
+    Identify SKUs that do not exist in inventory.
+  </Step>
+
+  <Step title="Combine All Unmapped SKUs" icon="layers" title-type="p">
+    Merge all unmapped listings into one dataset.
+  </Step>
+
+  <Step title="Re-check Mapping" icon="check-circle" title-type="p">
+    Verify mapping status using mapping and stock tables.
+  </Step>
+
+  <Step title="Add Row Number" icon="hash" title-type="p">
+    Organize results per subsource for easy tracking.
+  </Step>
+
+  <Step title="Select Final Output" icon="layers" title-type="p">
+    Display source, subsource, SKU, listing ID, and mapping status.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+The script generates a report containing:
+
+- Source  
+- Subsource  
+- SKU  
+- Listing ID  
+- Mapping status  
+
+Only includes SKUs that are not mapped across all channels.
+</Callout>
+
+---
+
+## Usefulness
+
+- **Inventory Sync Accuracy** – Prevents missing stock updates  
+- **Order Processing Safety** – Avoids failures due to unmapped SKUs  
+- **Channel Health Monitoring** – Ensures proper listing linkage  
+- **Data Cleanup** – Helps identify and fix mapping gaps  
+
+---
+
+## Example Scenario
+
+<Expandable title="Unmapped Listings Example" default-open="false">
+**Scenario:** Some new channel listings are not syncing with inventory  
+
+**Observations:**  
+
+- SKU 001 from Amazon is not mapped  
+- SKU 002 from eBay is not mapped  
+
+**Insight:** These SKUs must be linked to stock items to enable proper inventory synchronization.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+By identifying unmapped SKUs across all channels, this script ensures accurate inventory synchronization, prevents operational issues, and maintains healthy integration between sales channels and the inventory system.
+</Callout>

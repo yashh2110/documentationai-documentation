@@ -1,0 +1,154 @@
+---
+title: Scrap Order with Resend Booking Report
+description: >-
+  Identifies scrapped or problematic orders, links them to replacement or resend
+  orders, and provides financial and customer details for analysis.
+---
+## Overview
+
+The **RIS-SC-1022 – Scrap Order with Resend Booking Report** script helps track orders that were scrapped or problematic and identifies their corresponding replacement or resend orders.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  It helps you monitor replaced orders and understand the associated costs and customer impact.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Finds problematic or scrapped orders
+
+- Links original orders to their replacement or resend orders
+
+- Provides financial details, item information, and customer data for analysis
+
+## When It Runs
+
+Manually executed by users or analysts
+
+**Typically used:**
+
+- During order issue investigation
+
+- For resend or replacement tracking
+
+- In finance and loss analysis
+
+## Parameters
+
+<ParamField path="StartDate" param-type="date" required="true" deprecated="false">
+  Report start date
+</ParamField>
+
+<ParamField path="EndDate" param-type="date" required="true" deprecated="false">
+  Report end date
+</ParamField>
+
+<ParamField path="Subsource" param-type="string" required="false" deprecated="false">
+  Channel filter such as eBay or Website
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  These parameters define the date range and channels included in the report.
+</Callout>
+
+## Simple Explanation
+
+The script finds orders with issues, checks if they were resent, and displays both original and replacement order details along with estimated costs and customer information.
+
+## Process Flow Step-by-Step
+
+<Steps>
+  <Step title="Set Filters" icon="filter" title-type="p">
+    Define the date range and channel filters.
+  </Step>
+
+  <Step title="Identify Resend Orders" icon="repeat" title-type="p">
+    Find orders marked as resend using the order relations table.
+  </Step>
+
+  <Step title="Map Original to Replacement" icon="link" title-type="p">
+    Link each original order ID with its corresponding replacement order ID.
+  </Step>
+
+  <Step title="Get Order and Item Details" icon="table" title-type="p">
+    Retrieve SKU, quantity, subtotal, and total charge for each order.
+  </Step>
+
+  <Step title="Calculate Cost Estimates" icon="calculator" title-type="p">
+    Estimate costs using predefined percentages (e.g., 20%, 30%, 40%).
+  </Step>
+
+  <Step title="Get Customer Details" icon="user" title-type="p">
+    Retrieve customer name, address, and postcode for context.
+  </Step>
+
+  <Step title="Apply Filters" icon="filter" title-type="p">
+    Include only orders within the selected date range and channels. Exclude composite items.
+  </Step>
+
+  <Step title="Execute Query" icon="play" title-type="p">
+    Run the dynamically built query to fetch results.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  Report containing:
+
+  - Original Order ID
+
+  - Replacement Order ID
+
+  - Channel source and subsource
+
+  - SKU and quantity
+
+  - Total charge
+
+  - Estimated costs
+
+  - Customer details
+
+  - Order and processed dates
+</Callout>
+
+## Usefulness
+
+- **Issue Tracking** – Identify orders that required resending
+
+- **Cost Analysis** – Estimate financial impact of replacements
+
+- **Customer Insights** – Understand problematic orders
+
+- **Channel Performance** – Spot channels with higher resend rates
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Depends on accurate order relation data
+
+  - Read-only report; no automatic updates
+
+  - Useful for operational and financial analysis of replacements
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Damaged Item Replacement Example" default-open="false">
+  Original Order: **1001**\
+  Replacement Order: **2001**\
+  Total Charge: 50\
+  Estimated Cost (30%): 15
+
+  **Insight:** The business incurred a replacement cost, helping track losses and plan corrective measures.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By linking original and replacement orders with estimated costs, this script provides actionable insights into operational losses, supports improved customer service, and enables informed decision-making for order management.
+</Callout>
+

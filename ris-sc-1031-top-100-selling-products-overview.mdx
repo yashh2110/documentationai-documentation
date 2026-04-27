@@ -1,0 +1,133 @@
+---
+title: Top 100 Selling Products Overview
+description: >-
+  Identifies the top 100 selling SKUs based on recent sales, groups them by
+  category, and calculates key performance metrics for reporting and planning.
+---
+## Overview
+
+The **RIS-SC-1031 – Top 100 Selling Products Overview** script helps analysts and business teams identify the best-selling products and categories over the last 3 months.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  Shows the top-performing products and categories based on recent sales data.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Retrieves sales data for the last 3 months  
+- Groups products by category  
+- Ranks SKUs based on performance  
+- Displays the top 100 selling products  
+
+---
+
+## When It Runs
+
+Used for business analysis, inventory planning, and promotion strategy.
+
+**Typically runs:**
+
+- Manually executed by analysts or business teams  
+- During monthly or quarterly reviews  
+- For identifying best-selling products  
+- While planning promotions or restocking  
+- For business performance reporting  
+
+---
+
+## Parameters
+
+<ParamField path="None" param-type="fixed" required="false" deprecated="false">
+  No manual parameters; the script uses automatic 3-month date logic.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  The script always considers data from the last 3 months based on the current date.
+</Callout>
+
+---
+
+## Simple Explanation
+
+The script analyzes recent sales, groups products by category, ranks SKUs, and shows the top 100 products for business and inventory decisions.
+
+---
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Filter Last 3 Months Orders" icon="calendar" title-type="p">
+    Include only orders processed in the last 3 months.
+  </Step>
+
+  <Step title="Exclude Composite Items" icon="x-circle" title-type="p">
+    Remove child items to avoid duplication in ranking.
+  </Step>
+
+  <Step title="Get Product Category" icon="layers" title-type="p">
+    Group products based on category from extended properties.
+  </Step>
+
+  <Step title="Join Required Tables" icon="link" title-type="p">
+    Combine order, item, product, and channel data for analysis.
+  </Step>
+
+  <Step title="Calculate Metrics" icon="bar-chart" title-type="p">
+    Compute total units sold, number of orders, and total revenue per SKU.
+  </Step>
+
+  <Step title="Sort and Limit Results" icon="sort" title-type="p">
+    Sort products by order count and return the top 100 SKUs.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+The script generates a report containing:
+
+- Category  
+- SKU  
+- Product title  
+- Units sold  
+- Order count  
+- Revenue  
+
+Only the top 100 products based on performance are included.
+</Callout>
+
+---
+
+## Usefulness
+
+- **Best Seller Identification** – Quickly find top-performing products  
+- **Sales Strategy Planning** – Focus on high-demand items  
+- **Inventory Optimization** – Maintain stock for fast movers  
+- **Category Performance Tracking** – Understand key revenue drivers  
+
+---
+
+## Example Scenario
+
+<Expandable title="Promotion Planning Example" default-open="false">
+**Scenario:** Promotion Planning  
+
+- SKU A has 500 orders  
+- SKU B has 50 orders  
+
+**Insight:**  
+SKU A should be promoted further due to high demand, while SKU B may require discounting or marketing improvements.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+By highlighting top-performing products based on recent sales, this script enables data-driven decisions for promotions, inventory management, and overall business growth.
+</Callout>

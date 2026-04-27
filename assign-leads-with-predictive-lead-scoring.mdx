@@ -1,0 +1,204 @@
+---
+title: Assign leads with predictive lead scoring
+description: >-
+  Automatically distribute leads and opportunities using intelligent scoring.
+  Predictive lead scoring helps prioritize high-potential prospects and ensures
+  they are assigned to the right sales teams efficiently.
+---
+The **CRM** application allows businesses to automatically distribute leads and opportunities across sales teams and representatives. A common strategy is to prioritize assignments based on how likely a lead is to convert into a successful deal.
+
+To support this, the system calculates a success probability for each lead using a feature called *predictive lead scoring*.
+
+## **Predictive lead scoring**
+
+Predictive lead scoring is a data-driven model that evaluates open leads and opportunities using historical CRM data.
+
+As your team processes deals through the pipeline, the system records outcomes such as wins and losses. This information is then used to estimate the likelihood of success for new leads and opportunities.
+
+The more data your system gathers over time, the more accurate these predictions become.
+
+This scoring method is based on a probabilistic approach known as the *Naive Bayes* model.
+
+In simple terms:
+
+- **P(A|B)** represents the chance of winning under specific conditions
+
+- **P(A)** is the general success rate across all leads
+
+- **P(B|A)** indicates how often certain conditions appear in successful deals
+
+- **P(B)** reflects how frequently those conditions occur overall
+
+These “conditions” may include factors such as:
+
+- Assigned salesperson
+
+- Lead source (e.g., website, campaign)
+
+- Customer language
+
+- Location or region
+
+- Tags or classifications
+
+You can customize which variables influence this calculation based on your business requirements.
+
+Each opportunity displays its probability of success directly on the form, and this value updates automatically as the record moves through the pipeline.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/probability-opportunity-form.png" width="768" height="144" alt="The probability of success displayed on the opportunity form." />
+
+As opportunities progress through different stages, their probability adjusts dynamically based on system insights.
+
+## **Configuration**
+
+Predictive lead scoring is enabled by default. However, you can refine how it works by selecting which data points are used in the calculation.
+
+To configure this:
+
+- Go to **CRM ‣ Configuration ‣ Settings**
+
+- Find the **Predictive Lead Scoring** section
+
+- Click **Update Probabilities**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/update-probabilities.png" width="768" height="228" alt="The Update Probabilities window in the Predictive Lead Scoring settings." />
+
+You can include or exclude variables such as:
+
+- **State**
+
+- **Country**
+
+- **Phone Quality**
+
+- **Email Quality**
+
+- **Source**
+
+- **Language**
+
+- **Tags**
+
+**Note**
+
+The variables `Stage` and `Team` are always included in the calculation and cannot be removed.
+
+You can also define a starting date for the historical data used in scoring. Once configured, click **Update** to apply your changes.
+
+## **Change the probability manually**
+
+If needed, you can manually adjust the probability value for an opportunity.
+
+Click on the probability field in the opportunity form and enter a new value.
+
+**Important**
+
+- Leads cannot be manually set to **100% probability**
+
+- Attempting to convert such leads will result in an error
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/100-percent-lead-error1.png" width="786" height="150" alt="The error message that appears when attempting to convert a 100% probability lead into an opportunity." />
+
+When a value is edited manually:
+
+- Automatic updates are temporarily overridden
+
+- The system’s calculated probability remains visible
+
+To restore automatic scoring, click the AI icon next to the probability field.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/probability-icon.png" width="411" height="75" alt="The icon used to reactivate automatic probability on an opportunity form." />
+
+## **Assign leads based on probability**
+
+Leads and opportunities can be automatically assigned to teams or individuals using predefined rules based on probability scores.
+
+This helps ensure that high-value opportunities are handled quickly and efficiently.
+
+### **Configure rule-based assignment**
+
+To enable automated assignment:
+
+- Navigate to **CRM ‣ Configuration ‣ Settings**
+
+- Activate **Rule-Based Assignment**
+
+Choose how assignments should run:
+
+- **Manually**: triggered by a user
+
+- **Repeatedly**: runs automatically at defined intervals
+
+If using automatic mode, define how often assignments should run by setting a time interval.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/rule-based-assignment.png" width="536" height="273" alt="The Rule-Based Assignment setting in CRM settings." />
+
+Even in automatic mode, assignments can still be triggered manually using:
+
+- The **Update now** option in settings
+
+- The **Assign Leads** button in sales team settings
+
+Once assigned, leads are automatically converted into opportunities.
+
+## **Configure assignment rules**
+
+Assignment rules define how leads are distributed among teams and salespeople.
+
+To set up rules:
+
+- Go to **CRM ‣ Configuration ‣ Sales Teams**
+
+- Select a sales team
+
+- Under **Assignment Rules**, click **Edit Domain**
+
+Add conditions based on relevant criteria.
+
+To create a rule based on probability:
+
+1. Select **Probability** as the field
+
+2. Choose a comparison operator (e.g., ≥, ≤, >, \<)
+
+3. Enter the desired threshold value
+
+4. Save the rule
+
+**Example**
+
+To assign leads with a probability of 20% or higher:
+
+`Probability &gt;= 20`
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/probability-domain.png" width="708" height="213" alt="Sales team domain set to probability greater than or equal to twenty percent." />
+
+## **Assignment rules for team members**
+
+In addition to team-level rules, you can define assignment conditions for individual salespeople.
+
+- Open the sales team configuration
+
+- Go to the **Members** tab
+
+- Select a salesperson
+
+- Configure their **Domain** rules
+
+This allows more precise lead distribution within a team.
+
+Sales teams or users can also be excluded from automatic assignment by enabling the **Skip auto assignment** option.
+
+## **Manual lead assignment**
+
+Leads can also be assigned manually at any time.
+
+To do this:
+
+- Open the sales team configuration page
+
+- Click **Assign Leads**
+
+This action assigns all unassigned leads that meet the defined criteria.
+
+Using predictive lead scoring combined with rule-based assignment helps streamline lead distribution, improve response times, and increase overall conversion efficiency.

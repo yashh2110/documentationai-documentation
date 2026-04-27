@@ -1,0 +1,164 @@
+---
+title: Manufacturing Sheet 1
+---
+## Overview
+
+Manufacturing Sheet 1 is a custom feature available in the Orders screen.
+
+It allows users to generate a clear and printable manufacturing sheet based on selected orders.
+
+This document is mainly used by the production team to understand product requirements in a simple format.
+
+## Purpose
+
+The main purpose of this feature is to simplify the manufacturing planning process.
+
+Instead of checking each order manually, the system automatically prepares a structured sheet showing product details, sizes, and components.
+
+This helps teams work faster and reduces errors.
+
+## Key Features
+
+- Works on selected orders in Linnworks
+
+- Groups products by SKU
+
+- Combines quantities for the same product
+
+- Retrieves product details from extended properties
+
+- Displays product size and configuration
+
+- Generates a printable manufacturing sheet
+
+- Opens print screen automatically
+
+## Data Required
+
+The system uses product extended properties stored in Linnworks.
+
+**ProductImage**\
+Product image
+
+**Height**\
+Product height
+
+**Width**\
+Product width
+
+**RoofandFloor**\
+Roof and floor details
+
+**OtherPanels**\
+Other panel details
+
+**DoorWindowSticksFelt**\
+Door and window accessories
+
+## Output Fields
+
+The manufacturing sheet includes
+
+- Serial Number
+
+- Product Image
+
+- Height
+
+- Width
+
+- Roof and Floor
+
+- Other Panels
+
+- Door Window Sticks Felt
+
+## How It Works
+
+Step 1\
+User selects one or more orders from the Orders screen
+
+Step 2\
+User clicks Manufacturing Sheet 1 button
+
+Step 3\
+System collects all order items
+
+Step 4\
+Items are grouped by SKU and quantities are combined
+
+Step 5\
+System retrieves product details and images
+
+Step 6\
+Manufacturing sheet is generated
+
+Step 7\
+Print screen opens automatically
+
+## Screens and Explanation
+
+### Orders Screen with Button
+
+This screen shows where the Manufacturing Sheet 1 button is available.\
+Users select orders and click this button to generate the sheet.
+
+<Image src="https://blob-cdn.documentation.ai/org-87fb0951-1e07-4f5d-a887-8a7327c7777d/doc-98941d2e-0032-424f-8414-3034ac5fa6ee/1775628625137-iohkhtxcni-Empireshad.png?fm=auto&auto=compress%2Cformat" width="1520" height="744" alt="" />
+
+### Generated Manufacturing Sheet
+
+This is the generated manufacturing sheet displayed in the system.\
+It shows all product details in a table format for easy understanding.
+
+### Print Preview Screen
+
+This screen opens automatically after the sheet is generated.\
+Users can print or save the document as needed.
+
+<Image src="https://blob-cdn.documentation.ai/org-87fb0951-1e07-4f5d-a887-8a7327c7777d/doc-98941d2e-0032-424f-8414-3034ac5fa6ee/1775628689866-bkmg2k0cae5-pasted-image-1775628599796.png?fm=auto&auto=compress%2Cformat" width="1585" height="804" alt="" />
+
+### Final Printed Layout
+
+This is how the final printed sheet looks.\
+It is clean, structured, and ready for use by the production team.
+
+<Image src="https://blob-cdn.documentation.ai/org-87fb0951-1e07-4f5d-a887-8a7327c7777d/doc-98941d2e-0032-424f-8414-3034ac5fa6ee/1775628717696-7hzjgktxr2s-pasted-image-1775628627398.png?fm=auto&auto=compress%2Cformat" width="525" height="378" alt="" style="width: 525px; height: auto; cursor: pointer; margin: 0 auto;" />
+
+## Important Notes
+
+- At least one order must be selected
+
+- Orders without items will not be included
+
+- Product details depend on available system data
+
+- Images will be shown only if available
+
+## Error Handling
+
+If no order is selected\
+System shows message Please select at least one order
+
+If selected orders have no items\
+System shows message Selected orders contain no items
+
+If any issue occurs\
+System shows message Error generating Manufacturing Sheet
+
+## Business Benefits
+
+- Saves time in production planning
+
+- Reduces manual work
+
+- Improves accuracy
+
+- Provides clear instructions to manufacturing team
+
+- Helps avoid confusion in product configuration
+
+## Summary
+
+Manufacturing Sheet 1 is a simple and effective tool that converts selected orders into a ready to print manufacturing document.
+
+It helps the production team clearly understand what needs to be built and improves overall efficiency.

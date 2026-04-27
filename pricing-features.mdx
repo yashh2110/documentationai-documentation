@@ -1,0 +1,221 @@
+---
+title: Pricing features
+description: >-
+  Configure pricing strategies in Odoo Point of Sale, including discounts,
+  loyalty programs, pricelists, cash rounding, and tax rules.
+---
+## **Discounts**
+
+Discounts allow you to reduce prices either per product or for the entire order.
+
+To enable discounts:
+
+1. Go to <a href="https://www.odoo.com/documentation/19.0/applications/sales/point_of_sale/use.html#pos-use-settings" target="_blank" rel="noopener noreferrer">**POS Settings**</a>
+
+2. Scroll to the **Pricing** section
+
+3. Enable:
+
+- **Global Discounts** → apply discounts to the entire order
+
+- **Line Discounts** → apply discounts to individual products
+
+### **Global discounts**
+
+To apply a discount to the whole order:
+
+1. Open the POS register
+
+2. Click (**⋮**) → **Discount**
+
+3. Enter the percentage
+
+4. Click **Confirm**
+
+### **Line discounts**
+
+To apply a discount to a specific product:
+
+1. Select the product in the cart
+
+2. Click the **%** button
+
+3. Enter the discount value using the numpad
+
+**Note**
+
+- Adding another product resets the modifier back to **Qty**
+
+- To remove a discount, select the product → press **%** → press **⌫**
+
+## **Discount & loyalty programs**
+
+These programs are designed for promotions, rewards, and marketing campaigns.
+
+To enable:
+
+1. Go to **POS Settings**
+
+2. Enable **Promotions, Coupons, Gift Card & Loyalty Program**
+
+Then:
+
+- Go to **Point of Sale ‣ Products ‣ Discount & Loyalty**
+
+- Configure programs based on conditions and rewards
+
+### **Codes (coupons, gift cards)**
+
+1. Click (**⋮**) → **Enter Code**
+
+2. Enter or scan the code
+
+3. Click **Apply**
+
+**Note**
+
+Coupon codes can be printed on receipts for future use.
+
+### **Promotions**
+
+- Automatically applied when conditions are met
+
+- Example: minimum purchase amount or specific product selection
+
+### **Buy X Get Y**
+
+- Rewards must be added manually
+
+- Click (**⋮**) → **Reward**
+
+- Select the applicable reward
+
+### **Loyalty programs**
+
+To use loyalty points:
+
+1. Select a <a href="https://www.odoo.com/documentation/19.0/applications/sales/point_of_sale/use.html#pos-use-customers" target="_blank" rel="noopener noreferrer">**customer**</a>
+
+2. View points at the bottom of the cart
+
+To redeem:
+
+- Click (**⋮**) → **Reward**
+
+- Select the reward
+
+## **Pricelists**
+
+Pricelists allow automatic price adjustments based on rules such as customer type, quantity, or time period.
+
+### **Enable pricelists**
+
+1. Go to **Point of Sale ‣ Configuration ‣ Settings**
+
+2. Enable **Flexible Pricelists**
+
+3. Save
+
+Then:
+
+1. Click **Pricelists** to configure rules
+
+2. Add pricelists to the POS under **Available**
+
+3. Set a **Default** pricelist
+
+### **Apply pricelist in POS**
+
+1. Open the POS register
+
+2. Click (**⋮**)
+
+3. Select the pricelist icon
+
+4. Choose a pricelist
+
+**Tip**
+
+You can assign a default pricelist to a customer from the **Customers** menu.
+
+## **Cash rounding**
+
+Cash rounding is used when small coins are no longer in circulation.
+
+Example: rounding totals to the nearest 0.05.
+
+### **Configuration**
+
+1. Go to **Point of Sale ‣ Configuration ‣ Settings**
+
+2. Enable **Cash Rounding**
+
+3. (Optional) Enable **Apply only on cash methods**
+
+4. Select or create a rounding method
+
+### **Rounding settings**
+
+When creating a method:
+
+- **Rounding Precision** → smallest coin (e.g., 0.05)
+
+- **Rounding Strategy** → how the difference is recorded
+
+- **Profit/Loss Accounts** → accounting entries
+
+- **Rounding Method** → Up, Down, or Nearest
+
+**Important**
+
+POS supports only **Add a rounding line** as the rounding strategy.
+
+### **Example**
+
+Rounding a total of **$19.92** with precision **0.05**:
+
+| Method  | Result | Explanation                 |
+| ------- | ------ | --------------------------- |
+| Up      | $19.95 | Always rounds up            |
+| Down    | $19.90 | Always rounds down          |
+| Nearest | $19.90 | Rounds to the closest value |
+
+**Note**
+
+Rounding applies only to the final total, not individual product prices.
+
+## **Flexible taxes (fiscal positions)**
+
+Fiscal positions allow automatic adjustment of taxes and accounts based on customer or location.
+
+### **Enable fiscal positions**
+
+1. Go to **POS Settings**
+
+2. Scroll to **Accounting**
+
+3. Enable **Flexible Taxes**
+
+### **Configuration**
+
+- Set a **Default** fiscal position
+
+- Add additional ones under **Allowed**
+
+Fiscal positions can also be:
+
+- Preconfigured via localization packages
+
+- Assigned directly to customers
+
+### **Apply fiscal position in POS**
+
+1. Open the POS register
+
+2. Click (**⋮**) → **Tax**
+
+3. Select the fiscal position
+
+**Note**
+
+If no fiscal position is set, the product’s default **Sales Taxes** are applied.

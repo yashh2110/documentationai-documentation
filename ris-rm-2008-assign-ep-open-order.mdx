@@ -1,0 +1,150 @@
+---
+title: Assign EP Open Order
+description: >-
+  Assign a custom Extended Property to orders by consolidating item SKUs based
+  on vendor matching.
+---
+## Overview
+
+The **RIS-RM-2008 – Assign EP Open Order** macro assigns a custom Extended Property (EP) to orders by consolidating all item SKUs into a single field.
+
+It processes only orders that match specified vendor names and stores SKU data for further use in labels, exports, or integrations.
+
+<Callout kind="tip" collapsed="false">
+  Ensure vendor names are correctly formatted and match exactly with order data to avoid missing eligible orders.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Matches orders based on vendor name
+
+- Collects all item SKUs
+
+- Stores them in a single Extended Property
+
+👉 In short:\
+Store all order SKUs in one field for matched vendors.
+
+## When It Runs
+
+Used for data consolidation & integration workflows
+
+Typically runs:
+
+- Manually triggered
+
+- Via workflow automation
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of orders to be processed.
+</ParamField>
+
+<ParamField path="VendorName" param-type="string" required="true" deprecated="false">
+  Comma-separated list of vendor names to match (e.g., Amazon, eBay, Shopify).
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Example:\
+  VendorName = "Amazon, eBay, Shopify"
+
+  Vendor names must be provided in comma-separated format and matched accurately.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Parse Vendors" icon="list" title-type="p">
+    Convert VendorName into a list of vendors.
+  </Step>
+
+  <Step title="Fetch Orders" icon="download" title-type="p">
+    Retrieve each order using OrderIds.
+  </Step>
+
+  <Step title="Match Vendor" icon="search" title-type="p">
+    Check if order shipping vendor matches any provided vendor.
+  </Step>
+
+  <Step title="Collect SKUs" icon="layers" title-type="p">
+    Extract all Channel SKUs from order items.
+  </Step>
+
+  <Step title="Build SKU List" icon="file-text" title-type="p">
+    Combine SKUs into a comma-separated string.
+  </Step>
+
+  <Step title="Assign Extended Property" icon="tag" title-type="p">
+    Create or update LabelRefOrderEP with SKU list.
+  </Step>
+
+  <Step title="Save Order" icon="save" title-type="p">
+    Store updated Extended Property in the order.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Orders filtered by vendor
+
+  - SKUs consolidated into one field
+
+  - Extended Property LabelRefOrderEP updated
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Label generation workflows
+
+- Simplifying SKU tracking
+
+- Supporting warehouse operations
+
+- Enabling integrations requiring SKU lists
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Vendor matching must be exact (after trimming spaces)
+
+  - VendorName must be comma-separated
+
+  - Extended Property is overwritten on each run
+
+  - Only Channel SKUs are stored (not internal SKUs)
+</Callout>
+
+## Example Scenario
+
+<Expandable title="SKU Consolidation Example" default-open="false">
+  An order from Amazon contains multiple items:
+
+  - SKU1
+
+  - SKU2
+
+  - SKU3
+
+  👉 The macro:
+
+  - Matches vendor = Amazon
+
+  - Combines SKUs → "SKU1, SKU2, SKU3"
+
+  - Stores value in LabelRefOrderEP
+
+  Result: All SKUs available in a single field for further use.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Consolidating SKU data into a structured Extended Property improves data accessibility, simplifies integrations, and enhances operational efficiency.
+</Callout>
+

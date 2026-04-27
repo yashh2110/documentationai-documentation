@@ -1,0 +1,125 @@
+---
+title: Lead enrichment
+description: >-
+  Lead enrichment enhances your CRM data by automatically adding valuable
+  company details to leads, helping teams make better-informed sales decisions.
+---
+*Lead enrichment* is a feature that enhances lead records by automatically adding business-related information linked to a contact. This functionality is available as an In-App Purchase (IAP) service and requires credits to operate. It can be used on existing leads within an Odoo database.
+
+Enriched data may include details such as company name and logo, social media profiles, **Company type**, **Year founded**, **Industry sectors**, **Employee count**, **Estimated revenue**, **Phone number**, **Timezone**, and **Technologies used**.
+
+**Note**
+
+Users with an Enterprise subscription receive complimentary credits to explore <u>IAP</u> features. These trial credits are available for standard databases, including demo, training, and single-app instances.
+
+**Important**
+
+To use lead enrichment, the *Leads* feature must be enabled in CRM settings.\
+Go to **CRM app ‣ Configuration ‣ Settings**, enable the **Leads** option, and click **Save**.
+
+## **Lead enrichment setup**
+
+To enable lead enrichment:
+
+1. Navigate to **CRM app ‣ Configuration ‣ Settings**
+
+2. Locate the **Lead Generation** section
+
+3. Enable **Lead Enrichment**
+
+4. Choose one of the following options:
+
+   - **Enrich leads on demand only**
+
+   - **Enrich all leads automatically**
+
+5. Click **Save**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/lead-enrichment-activate.png" width="458" height="241" alt="CRM lead generation settings page, with lead enrichment activation highlighted, and enrich leads on demand only chosen." />
+
+## **Enrich leads**
+
+Lead enrichment works by analyzing the domain of the email address associated with a lead. There are two ways to enrich leads: automatically or manually.
+
+### **Automatically enrich leads**
+
+If **Enrich all leads automatically** is selected during setup, enrichment happens without user intervention.
+
+A background process runs approximately every hour, connecting to an external database to fetch and update lead information.
+
+**Tip**
+
+To adjust how often enrichment runs:
+
+1. Enable <a href="https://www.odoo.com/documentation/19.0/applications/general/developer_mode.html#developer-mode" target="_blank" rel="noopener noreferrer">**developer mode**</a>
+
+2. Go to **Settings app ‣ Technical ‣ Automation ‣ Scheduled Actions**
+
+3. Search for `CRM`
+
+4. Open **CRM: enrich leads (IAP)**
+
+5. Modify the **Execute Every** interval (minimum 5 minutes recommended)
+
+**Example**
+
+Below is an example of a lead successfully enriched with additional data:
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/lead-enrichment-data.png" width="648" height="886" alt="Chatter showing lead enrichment data." />
+
+### **Manually enrich leads**
+
+If **Enrich leads on demand only** is selected, enrichment must be triggered manually for each lead.
+
+To enrich a lead:
+
+1. Open the lead record
+
+2. Click the **Enrich** button in the top menu
+
+Each enrichment consumes one IAP credit. This method is useful when you want to control costs or enrich only selected leads.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/manual-enrichment.png" width="544" height="227" alt="Manual enrich button feature highlighted on the CRM lead." />
+
+**Tip**
+
+You can enrich multiple leads at once using list view:
+
+1. Go to **CRM app ‣ Leads**
+
+2. Switch to list view (**☰ icon**)
+
+3. Select multiple leads using checkboxes
+
+4. Click **⚙️ Action**
+
+5. Choose **Enrich**
+
+This can also be done from the **Pipeline** view.
+
+## **Pricing**
+
+Lead enrichment operates on a credit-based system. Each enriched lead consumes one credit.
+
+**Note**
+
+For detailed pricing, refer to:
+
+To purchase credits:
+
+- Go to **CRM app ‣ Configuration ‣ Settings**
+
+- In the **Lead Generation** section, click **Buy Credits**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/buy-lead-enrichment-credits-setting.png" width="496" height="414" alt="Buy credits from the lead enrichment settings." />
+
+Alternatively:
+
+- Open the **Settings app**
+
+- Navigate to the **Contacts** section
+
+- Under **Odoo IAP**, click **View My Services**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/view-my-services-setting1.png" width="712" height="175" alt="Buy credits in the Odoo IAP settings." />
+

@@ -1,0 +1,143 @@
+---
+title: Multi-Channel Price Comparison
+description: >-
+  Compares product prices across multiple sales channels, identifies the cheapest channel, and generates a comment indicating price differences.
+---
+
+## Overview
+The **RIS-SC-1005 – Multi-Channel Price Comparison** script aggregates pricing data from multiple sales channels and identifies which channel offers the lowest price per product. It also generates a descriptive comment highlighting the cheapest option.
+
+<Callout kind="tip" collapsed="false">
+In simple terms:  
+Check prices across channels → Compare them → Highlight the cheapest
+</Callout>
+
+## Purpose
+This script:  
+- Retrieves prices for each product across multiple channels  
+- Compares prices and identifies the lowest one  
+- Generates a comment indicating the cheapest channel and price difference  
+
+👉 Supports competitive pricing analysis and decision-making.
+
+## When It Runs
+Used for pricing analysis and strategy.  
+
+**Typically runs:**  
+- Manual execution for pricing checks  
+- For competitive pricing strategy  
+- Before updating prices across channels  
+
+## Parameters
+
+<ParamField path="Amazon1" param-type="nvarchar" required="true" deprecated="false">
+Amazon subsource / account name to fetch prices.  
+Example: 'Trimming Shop'
+</ParamField>
+
+<ParamField path="Ebay1" param-type="nvarchar" required="true" deprecated="false">
+eBay subsource / account name to fetch prices.  
+Example: 'Ebay1'
+</ParamField>
+
+<ParamField path="Etsy1" param-type="nvarchar" required="true" deprecated="false">
+Etsy subsource / account name to fetch prices.  
+Example: 'Etsy-TS'
+</ParamField>
+
+<ParamField path="keyWord" param-type="nvarchar" required="false" deprecated="false">
+Optional SKU or item number filter.  
+Example: '' (empty string to fetch all items)  
+</ParamField>
+
+## Tables Used
+- **StockItem** → Product details  
+- **Stock_ChannelList** → Channel prices  
+- **Stock_ChannelSKU** → Mapping channel SKU to internal SKU  
+- **Automation_EbayListing** and related tables → eBay pricing  
+
+<Callout kind="info" collapsed="false">
+The script collects pricing from different channels and compares them per product.
+</Callout>
+
+## Process Flow Step-by-Step
+<Steps>
+  <Step title="Set Channel Parameters" icon="settings" title-type="p">
+    Define account names for Amazon, eBay, and Etsy.
+  </Step>
+
+  <Step title="Filter Products" icon="filter" title-type="p">
+    Exclude deleted, archived, and variation group items.  
+    Apply optional keyword filter on SKU if provided.
+  </Step>
+
+  <Step title="Get Prices Per Channel" icon="dollar-sign" title-type="p">
+    Retrieve prices for each channel.  
+    Use minimum price when multiple listings exist.
+  </Step>
+
+  <Step title="Combine Channel Prices" icon="layers" title-type="p">
+    Merge all channel prices into a single row per SKU, with each channel as a separate column.
+  </Step>
+
+  <Step title="Compare Prices" icon="bar-chart-2" title-type="p">
+    Use conditional logic to determine the lowest price.  
+    Calculate the difference compared to website price.
+  </Step>
+
+  <Step title="Generate Comment" icon="edit" title-type="p">
+    Create descriptive output such as:  
+    - "Amazon is cheaper than Website by X"  
+    - "eBay is cheaper than Website"  
+    - "Website is cheapest among all"
+  </Step>
+</Steps>
+
+## Final Result
+<Callout kind="success" collapsed="false">
+- Report displaying:  
+  - SKU  
+  - Product title  
+  - Barcode  
+  - Prices across Amazon, eBay, Etsy, and Website  
+  - Comment highlighting the cheapest channel
+</Callout>
+
+## Usefulness
+This script is highly beneficial for:  
+- Optimizing pricing across sales channels  
+- Preventing overpricing or underpricing  
+- Supporting competitive pricing strategies  
+- Providing quick insights for decision making  
+- Improving overall pricing control  
+
+## Important Notes
+<Callout kind="warning" collapsed="false">
+- Depends on accurate channel price data  
+- Keyword filter is optional but useful for focused analysis  
+- Uses minimum price when multiple listings exist  
+- Large datasets may impact performance  
+- Primarily a read-only reporting script
+</Callout>
+
+## Example Scenario
+<Expandable title="Multi-Channel Price Comparison Example" default-open="false">
+Scenario: Product listed on Amazon, eBay, Etsy, and Website  
+
+Processing:  
+- Retrieve prices per channel  
+
+**Result:**  
+- ITEM1 → Amazon: 10, eBay: 12, Etsy: 11, Website: 15  
+
+**Comment:**  
+- Amazon is cheaper than Website by 5  
+
+**Insight:**  
+- Website pricing is higher and may need adjustment
+</Expandable>
+
+## Key Insight
+<Callout kind="tip" collapsed="false">
+Provides a clear comparison of pricing across multiple sales channels, enabling businesses to stay competitive, adjust pricing strategies, and maximize sales performance.
+</Callout>

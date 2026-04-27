@@ -1,0 +1,179 @@
+---
+title: Foreign currencies
+description: >-
+  Odoo allows businesses to manage pricing across multiple currencies using
+  pricelists. With support for a wide range of global currencies, companies can
+  easily operate in international markets and maintain accurate pricing.
+---
+Odoo enables businesses to handle pricing in multiple currencies through the use of pricelists. In total, the system supports up to 167 currencies, making it suitable for global operations.
+
+**Note**
+
+To work with multiple currencies in *Sales*, the *Accounting* application must be installed.
+
+## **Settings**
+
+After installing the *Accounting* app, additional currencies can be configured. Go to **Accounting app ‣ Configuration ‣ Settings**, then scroll to the **Currencies** section and locate the **Main Currency** option.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/main-currency-setting-page.png" width="561" height="301" alt="How the main currency feature appears on settings page in Odoo Accounting." />
+
+By default, Odoo assigns the company’s primary currency based on its country.
+
+To change it, open the **Currency** dropdown, select a new currency, and click **Save**.
+
+**Tip**
+
+Enable *automatic currency rates* to keep exchange rates up to date automatically. This option is available in **Accounting app ‣ Configuration ‣ Settings ‣ Currencies**.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/automatic-currency-rates.png" width="596" height="262" alt="How the main currency feature appears on settings page in Odoo Accounting." />
+
+Activate the **Automatic Currency Rates** option, choose a provider in the **Service** field, and define how frequently updates should occur using the **Interval** setting. You can also control the **Next Run** timing.
+
+To manually refresh rates, click the **🔁** icon next to the **Next Run** field.
+
+Once configured, don’t forget to **Save** your changes.
+
+**Note**
+
+All payment methods must use the same currency as the sales journal (or company currency if no journal is set). Otherwise, a validation error will occur.
+
+## **View, edit, and add currencies**
+
+To manage available currencies, click **Currencies** under the **Currency** field on the settings page.
+
+This opens a dedicated list of all supported currencies.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/main-currencies-page.png" width="817" height="193" alt="How the main currencies page appears in Odoo Accounting." />
+
+Each entry displays details such as:
+
+- Currency code and symbol
+
+- Name
+
+- Last update date
+
+- Current exchange rate
+
+You can also control availability using the **Active** toggle.
+
+**Note**
+
+Currencies marked as **Active** appear at the top of the list.
+
+**Tip**
+
+It’s recommended to create at least one pricelist per active currency. Refer to\
+<a href="https://www.odoo.com/documentation/19.0/applications/sales/sales/products_prices/prices/pricing.html" target="_blank" rel="noopener noreferrer">**Pricelists**</a> for more details.
+
+Toggle currencies on or off using the switch: green indicates active, grey indicates inactive.
+
+### **Currency detail form**
+
+To modify a currency, select it from the list to open its detail view.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/currency-detail-form.png" width="816" height="256" alt="How a currency detail form looks in Odoo Accounting." />
+
+Here you can:
+
+- View or edit the currency code and name
+
+- Enable or disable it using the **Active** toggle
+
+- Define the **Currency Unit** (e.g., Dollars) and **Subunit** (e.g., Cents)
+
+Under the **Rates** tab, you can manage exchange rates. Each entry includes:
+
+- Date
+
+- Company
+
+- Conversion values
+
+**Note**
+
+The column labels depend on your main currency. For example, if the main currency is USD, fields will appear as **Unit per USD** and **USD per Unit**.
+
+To add a rate, click **Add a line** and fill in the required details.
+
+### **Main currency detail form**
+
+If a currency is set as the company’s primary currency, a blue banner appears stating: **This is your company’s currency.**
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/main-currency-detail-form.png" width="817" height="196" alt="How a main currency detail form looks in Odoo Accounting." />
+
+Unlike other currencies, this form does not include a **Rates** tab, since all other currencies are calculated relative to it.
+
+## **Create new currency**
+
+If a currency is not listed, click **New** to create one manually.
+
+**Tip**
+
+The **New** button is also available within any currency detail page.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/blank-currency-detail-form.png" width="815" height="242" alt="How a blank currency detail form looks in Odoo Accounting." />
+
+Enter the following details:
+
+- Currency code
+
+- Name
+
+- Activation status
+
+- Unit and subunit
+
+Then, add at least one exchange rate under the **Rates** tab using **Add a line**.
+
+Ensure all values (date, company, and conversion fields) are correct.
+
+**Note**
+
+Conversion fields will reflect the company’s main currency (e.g., USD).
+
+## **Currency-specific pricelists**
+
+For better control, it’s recommended to assign a pricelist to each active currency.
+
+To do this, go to **Sales app ‣ Products ‣ Pricelists**.
+
+Open an existing pricelist or create a new one, then set the desired currency in the **Currency** field.
+
+## **Auto-conversion from public price**
+
+Product public prices are based on the company’s main currency.
+
+When a different pricelist (with another currency) is applied, Odoo automatically converts the price using the latest exchange rate.
+
+## **Set product prices**
+
+To avoid fluctuations due to exchange rate changes, fixed prices can be defined per currency.
+
+Go to **Sales app ‣ Products ‣ Products**, and open a product.
+
+Click the **Extra Prices** smart button to access price rules.
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/price-rules-currencies.png" width="816" height="145" alt="How to set product prices based on foreign currency pricelists in Odoo Sales." />
+
+Click **New**, then:
+
+- Select a **Pricelist**
+
+- Set **Minimum Quantity**
+
+- Define the **Price**
+
+**Note**
+
+The minimum quantity determines when the price rule is applied.
+
+Optionally, set:
+
+- Start and end dates
+
+- Company (for multi-company setups)
+
+If left blank, the rule applies universally and indefinitely.
+
+Once configured, these fixed prices override automatic currency conversions when the selected pricelist is used.

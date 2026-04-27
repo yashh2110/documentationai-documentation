@@ -1,0 +1,134 @@
+---
+title: Print Shipping Label
+description: >-
+  Automatically print shipping labels for eligible orders and move successfully
+  processed orders into a predefined folder for organized workflow management.
+---
+## Overview
+
+The **RIS-SM-2017 – PrintShippingLabel** macro automates the process of printing shipping labels and organizing orders.
+
+It identifies eligible orders, generates shipping label PDFs, and moves successfully processed orders into the **"Printed Orders"** folder.
+
+<Callout kind="tip" collapsed="false">
+  Ensure the identifier "Test2" is correctly assigned to orders before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Filters eligible orders using identifier  
+- Prints shipping labels in PDF format  
+- Moves successfully processed orders to a folder  
+- Prevents duplicate processing  
+
+👉 In short:  
+Print shipping labels and organize processed orders automatically.
+
+## When It Runs
+
+Used for shipping and fulfilment automation
+
+Typically runs:
+
+- Manually triggered  
+- After order verification or tagging  
+- During shipping workflows  
+
+## Parameters
+
+<Callout kind="info" collapsed="false">
+  No input parameters required  
+
+  Note:  
+  - Processes all open orders  
+  - Uses identifier: **"Test2"**  
+  - Folder name: **"Printed Orders"** (auto-created if not present)  
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Fetch Open Orders" icon="download" title-type="p">
+    Retrieve all open orders from the system.
+  </Step>
+
+  <Step title="Filter Eligible Orders" icon="filter" title-type="p">
+    Select orders that:
+    - Have identifier "Test2"  
+    - Are NOT already in "Printed Orders" folder  
+  </Step>
+
+  <Step title="Collect Order IDs" icon="list" title-type="p">
+    Loop through filtered orders and store their OrderIds.
+  </Step>
+
+  <Step title="Print Shipping Labels" icon="printer" title-type="p">
+    Generate labels using:
+    - Template: "Shipping Labels"  
+    - Format: PDF  
+  </Step>
+
+  <Step title="Capture Successful Prints" icon="check-circle" title-type="p">
+    Extract only successfully printed order IDs.
+  </Step>
+
+  <Step title="Assign Folder" icon="folder" title-type="p">
+    Assign orders to folder: "Printed Orders"  
+    (Auto-created if not available)
+  </Step>
+
+  <Step title="Log Results" icon="file-text" title-type="p">
+    Record execution details including success and failures.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Shipping labels generated successfully  
+  - Only successful orders processed  
+  - Orders moved to "Printed Orders" folder  
+  - Workflow execution logged  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Automating shipping label printing  
+- Preventing duplicate label generation  
+- Organizing processed orders efficiently  
+- Improving warehouse workflow  
+- Reducing manual effort in shipping operations  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Processes only orders with identifier "Test2"  
+  - Skips orders already in "Printed Orders" folder  
+  - Uses fixed template "Shipping Labels"  
+  - Failed prints are not retried  
+  - Processes all open orders (no additional filtering)  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Print and Organize Orders" default-open="false">
+  Orders are tagged with identifier "Test2" for shipping.
+
+  👉 The macro:
+
+  - Filters eligible orders  
+  - Prints shipping labels  
+  - Moves successful orders to "Printed Orders" folder  
+
+  Result: Orders are printed and organized for dispatch without duplication.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Combining identifier-based filtering with automated printing and folder organization ensures efficient shipping workflows and prevents duplicate processing.
+</Callout>

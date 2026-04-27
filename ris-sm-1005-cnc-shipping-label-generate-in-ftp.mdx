@@ -1,0 +1,145 @@
+---
+title: CNC Shipping Label Generate in FTP
+description: >-
+  Automatically generate shipping labels and upload them to an FTP server for
+  eligible orders.
+---
+## Overview
+
+The **RIS-SM-1005 – CNC Shipping Label Generate in FTP** macro automates the generation of shipping labels and uploads them to an FTP server.
+
+It filters eligible orders, generates label PDFs, and securely transfers them to a specified FTP location for further processing or integration.
+
+<Callout kind="tip" collapsed="false">
+  Ensure FTP credentials and print templates are properly configured before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Identifies eligible orders based on identifiers
+
+- Generates shipping label PDFs
+
+- Uploads label files to FTP server
+
+👉 In short:\
+Automatically generate shipping labels and upload them to FTP.
+
+## When It Runs
+
+Used for label automation & external system integration
+
+Typically runs:
+
+- Manually triggered
+
+- Scheduled execution (e.g., daily automation)
+
+## Parameters
+
+<ParamField path="identifier" param-type="string" required="true" deprecated="false">
+  Order identifiers used to filter eligible orders (comma-separated).
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Example:\
+  identifier = ReadyToShip, Processed
+
+  Meaning:\
+  Only orders containing these identifiers will be processed.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Fetch Orders" icon="download" title-type="p">
+    Retrieve open orders created within the last 24 hours.
+  </Step>
+
+  <Step title="Filter Orders" icon="filter" title-type="p">
+    Select orders matching the provided identifiers.
+  </Step>
+
+  <Step title="Exclude Processed Orders" icon="check-circle" title-type="p">
+    Skip orders where labels have already been generated.
+  </Step>
+
+  <Step title="Generate Labels" icon="printer" title-type="p">
+    Create shipping label PDFs using configured print templates.
+  </Step>
+
+  <Step title="Convert to File" icon="file" title-type="p">
+    Convert generated labels into byte/file format.
+  </Step>
+
+  <Step title="Upload to FTP" icon="upload" title-type="p">
+    Upload label file using order number as filename.
+  </Step>
+
+  <Step title="Log Results" icon="list" title-type="p">
+    Record success or failure of each operation.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Shipping labels generated automatically
+
+  - Files uploaded to FTP server
+
+  - Only valid and unprocessed orders handled
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Automating label generation
+
+- Centralising label storage
+
+- Reducing manual effort
+
+- Supporting external system integrations
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Processes only orders from the last 24 hours
+
+  - Filters based on provided identifiers
+
+  - Skips already processed orders
+
+  - Requires valid FTP configuration
+
+  - Upload failures are logged for review
+</Callout>
+
+## Example Scenario
+
+<Expandable title="FTP Label Upload Example" default-open="false">
+  Orders are marked with identifier ReadyToShip.
+
+  👉 The macro:
+
+  - Filters eligible orders
+
+  - Generates shipping labels
+
+  - Uploads PDFs to FTP server
+
+  - Logs results
+
+  Result: Labels are available on FTP without manual work.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Automating label generation and FTP uploads ensures faster fulfilment, reduces manual effort, and enables seamless integration with external systems.
+</Callout>
+

@@ -1,0 +1,206 @@
+---
+title: 'Scheduled Auto Print Label '
+description: >-
+  Automates bulk label generation by grouping eligible orders, creating
+  consolidated PDFs, uploading them to SFTP, and marking orders as processed for
+  efficient warehouse operations.
+---
+## Overview
+
+The **RIS-SC-2288 – Scheduled Auto Print Label&#x20;**&#x20;macro automates large-scale label processing by intelligently grouping orders, generating combined PDFs, and uploading them to an SFTP server.
+
+It ensures efficient, structured, and error-free label handling in high-volume environments.
+
+<Callout kind="tip" collapsed="false">
+  Ensure identifier-to-folder mapping is correctly configured before execution.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Retrieves eligible open orders
+
+- Groups them based on business logic
+
+- Generates consolidated label PDFs
+
+- Uploads files to SFTP
+
+- Marks orders as processed
+
+👉 In short:\
+Fetch orders → group → generate PDF → upload → mark processed.
+
+## When It Runs
+
+Used for automated label processing workflows
+
+Typically runs:
+
+- Via scheduled execution
+
+- During warehouse label cycles
+
+- In high-volume environments
+
+- For configured identifiers and locations
+
+## Parameters
+
+<ParamField path="IdentifiersCsv" param-type="string" required="true" deprecated="false">
+  List of identifiers used to filter orders.
+</ParamField>
+
+<ParamField path="FoldersCsv" param-type="string" required="true" deprecated="false">
+  SFTP folder paths mapped to identifiers.
+</ParamField>
+
+<ParamField path="DefaultFolder" param-type="string" required="true" deprecated="false">
+  Fallback folder used if upload fails.
+</ParamField>
+
+<ParamField path="SFTP_server" param-type="string" required="true" deprecated="false">
+  SFTP server address.
+</ParamField>
+
+<ParamField path="SFTP_port" param-type="int" required="true" deprecated="false">
+  SFTP port number.
+</ParamField>
+
+<ParamField path="SFTP_user" param-type="string" required="true" deprecated="false">
+  SFTP username.
+</ParamField>
+
+<ParamField path="SFTP_password" param-type="string" required="true" deprecated="false">
+  SFTP password.
+</ParamField>
+
+<ParamField path="LocationName" param-type="string" required="true" deprecated="false">
+  Stock location to filter orders.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  IdentifiersCsv and FoldersCsv must have matching values for correct folder mapping.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Validate Configuration" icon="check-circle" title-type="p">
+    Ensures identifier and folder mappings are correct and aligned.
+  </Step>
+
+  <Step title="Validate Location" icon="map-pin" title-type="p">
+    Confirms that the provided stock location exists.
+  </Step>
+
+  <Step title="Fetch Orders" icon="download" title-type="p">
+    Retrieves open orders filtered by identifiers and location.
+  </Step>
+
+  <Step title="Filter Eligible Orders" icon="filter" title-type="p">
+    Skips orders that are multi-line, missing category, or missing vendor details.
+  </Step>
+
+  <Step title="Map Identifier to Folder" icon="folder" title-type="p">
+    Assigns each order to its respective SFTP folder based on identifier mapping.
+  </Step>
+
+  <Step title="Group Orders" icon="layers" title-type="p">
+    Groups orders by category, vendor, and identifier/folder.
+  </Step>
+
+  <Step title="Generate PDFs" icon="file-text" title-type="p">
+    Creates consolidated label PDFs for each group using templates.
+  </Step>
+
+  <Step title="Upload to SFTP" icon="upload" title-type="p">
+    Uploads generated PDFs to the respective SFTP folders.
+  </Step>
+
+  <Step title="Fallback Handling" icon="refresh-cw" title-type="p">
+    If upload fails, retries using the default folder.
+  </Step>
+
+  <Step title="Mark Orders Processed" icon="check" title-type="p">
+    Updates orders with identifiers, notes, and flags to prevent reprocessing.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Orders grouped efficiently
+
+  - Combined label PDFs generated
+
+  - Files uploaded to SFTP
+
+  - Orders marked as processed
+
+  - Duplicate processing prevented
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Bulk label automation
+
+- High-volume warehouse operations
+
+- Structured file delivery
+
+- Reducing manual effort
+
+- Preventing duplicate label generation
+
+- Improving operational efficiency
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Identifier and folder mapping must match exactly
+
+  - Multi-line orders are skipped
+
+  - Orders without category/vendor are ignored
+
+  - Default folder is used if upload fails
+
+  - Incorrect configuration may lead to misrouted files
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Batch Label Processing Example" default-open="false">
+  Orders:
+
+  - Category: Electronics
+
+  - Vendor: BestBuy
+
+  - Identifier: BB\_US
+
+  👉 The macro:
+
+  - Groups orders
+
+  - Generates one combined PDF
+
+  - Uploads file to mapped SFTP folder
+
+  Result:
+
+  - File: Electronics\_BestBuy\_BB\_US\_Labels\_20260101.pdf
+
+  - Uploaded to: /Electronics/BB\_US/
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  By grouping orders and generating consolidated label files, this macro enables scalable, efficient, and error-free label processing—making it ideal for high-volume warehouse operations.
+</Callout>
+

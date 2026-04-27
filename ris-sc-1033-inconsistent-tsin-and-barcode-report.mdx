@@ -1,0 +1,119 @@
+---
+title: Inconsistent TSIN and Barcode Report
+description: >-
+  Compares barcode values with TSIN (extended property) for each SKU and identifies mismatches.
+---
+## Overview
+
+The **RIS-SC-1033 – Inconsistent TSIN and Barcode Report** script helps analysts identify SKUs where barcode and TSIN values do not match.
+
+<Callout kind="tip" collapsed="false">
+  In simple terms:\
+  Finds products where barcode and TSIN values are inconsistent.
+</Callout>
+
+## Purpose
+
+This script:
+
+- Compares SKU barcodes with their TSIN values  
+- Identifies mismatched records  
+- Ensures product identifier accuracy for marketplaces and internal systems  
+
+---
+
+## When It Runs
+
+Used for data audits, catalog maintenance, and marketplace compliance.
+
+**Typically runs:**
+
+- Manually executed by analysts  
+- During data audits  
+- Before marketplace integrations  
+- While validating product identifiers  
+- During catalog maintenance  
+
+---
+
+## Parameters
+
+<ParamField path="None" param-type="fixed" required="false" deprecated="false">
+  No parameters; the script uses predefined validation logic on existing data.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  The script does not require manual input and checks all active SKUs.
+</Callout>
+
+---
+
+## Simple Explanation
+
+The script links SKUs with their extended TSIN properties, compares the TSIN with the barcode, and highlights only those records where the values differ.
+
+---
+
+## Step-by-Step Process
+
+<Steps>
+  <Step title="Join SKU with Extended Properties" icon="link" title-type="p">
+    Map each product’s barcode with its TSIN value from extended properties.
+  </Step>
+
+  <Step title="Filter TSIN Property" icon="filter" title-type="p">
+    Select only extended properties where the name is TSIN.
+  </Step>
+
+  <Step title="Compare Barcode and TSIN" icon="tag" title-type="p">
+    Identify records where barcode and TSIN values do not match.
+  </Step>
+
+  <Step title="Exclude Invalid Records" icon="x-circle" title-type="p">
+    Include only active and non-archived SKUs.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+The report contains:
+
+- SKU  
+- Barcode  
+- TSIN  
+
+Only mismatched records are shown.
+</Callout>
+
+---
+
+## Usefulness
+
+- **Data Accuracy** – Ensures consistency between SKU identifiers  
+- **Marketplace Compliance** – Prevents listing errors  
+- **Error Detection** – Quickly identifies incorrect data  
+- **Catalog Maintenance** – Keeps product data clean and reliable  
+
+---
+
+## Example Scenario
+
+<Expandable title="TSIN vs Barcode Mismatch Example" default-open="false">
+**Scenario:** Marketplace listing issue  
+
+- SKU 101 has barcode `12345` but TSIN `54321`  
+
+**Insight:**  
+Mismatch causes syncing issues. Correcting the values ensures proper listing and tracking.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+Detecting mismatches between barcode and TSIN ensures data integrity, prevents marketplace errors, and supports accurate product identification across systems.
+</Callout>

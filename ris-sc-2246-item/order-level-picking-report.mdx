@@ -1,0 +1,147 @@
+---
+title: Item/Order-Level Picking Report
+description: >-
+  Provide detailed tracking of picking activity at order and item level,
+  including user actions, time taken, and accuracy metrics.
+---
+## Overview
+
+The **RIS-SC-2246 – Item/Order-Level Picking Report** offers granular visibility into warehouse picking operations by tracking each order and item, identifying the responsible user, and measuring performance metrics.
+
+<Callout kind="tip" collapsed="false">
+  Use shorter time ranges for more precise analysis during audits or investigations.
+</Callout>
+
+## Purpose
+
+This report:
+
+- Tracks picking activity at item and order level
+
+- Identifies who picked each item
+
+- Measures time taken and accuracy
+
+- Supports audits and performance analysis
+
+👉 In short:\
+Track items → assign user → measure accuracy & time → analyze performance.
+
+## When It Runs
+
+Typically executed:
+
+- During audits and investigations
+
+- For checking picking errors
+
+- Staff performance reviews
+
+- Daily operations analysis
+
+- Identifying process delays
+
+- Manually as needed
+
+## Parameters
+
+<ParamField path="FromDate" param-type="DateTime" required="true" deprecated="false">
+  Start date and time for the report.
+</ParamField>
+
+<ParamField path="ToDate" param-type="DateTime" required="true" deprecated="false">
+  End date and time for the report.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Both FromDate and ToDate must be provided to generate accurate results.
+</Callout>
+
+## Data Used
+
+- Pickwave start and end time
+
+- Orders within each pickwave
+
+- Items planned vs items picked
+
+- User (staff) performing the picking
+
+## Simple Explanation
+
+The report tracks each order and item, identifies the responsible user, and measures time and accuracy to provide detailed performance insights.
+
+## Step-by-Step Flow
+
+<Steps>
+  <Step title="Select Time Range" icon="filter" title-type="p">
+    Filter all picking activity within the selected time period.
+  </Step>
+
+  <Step title="Get Pickwave Details" icon="database" title-type="p">
+    Retrieve pickwave start and end times and calculate total duration.
+  </Step>
+
+  <Step title="Get Order & Item Details" icon="list" title-type="p">
+    Calculate:
+  </Step>
+
+  <Step title="Assign Work to User" icon="users" title-type="p">
+    Identify which user handled each order and item.
+  </Step>
+
+  <Step title="Calculate Key Metrics" icon="bar-chart" title-type="p">
+    For each order:
+  </Step>
+
+  <Step title="Prepare Detailed Output" icon="file-text" title-type="p">
+    Generate detailed rows including:
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Detailed item and order-level tracking
+
+  - Full visibility of user activity
+
+  - Accurate performance and error insights
+</Callout>
+
+## Usefulness
+
+- **Detailed Tracking** – Full visibility of picking activity
+
+- **Error Investigation** – Identify incorrect or missing picks
+
+- **Performance Review** – Evaluate individual staff work
+
+- **Process Improvement** – Detect inefficiencies and delays
+
+## Example Scenario
+
+<Expandable title="Investigating Picking Errors" default-open="false">
+  Some orders contain incorrect items.\
+  The report:
+
+  - Tracks who picked each order
+
+  - Measures accuracy and time
+
+  Result:
+
+  - Identifies mistakes
+
+  - Finds responsible users
+
+  - Improves training and accuracy
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This report follows a clear flow: Track Order → Assign User → Measure Accuracy → Analyze Time.\
+  It helps prevent unknown errors, lack of accountability, hidden inefficiencies, and poor performance tracking.
+</Callout>
+

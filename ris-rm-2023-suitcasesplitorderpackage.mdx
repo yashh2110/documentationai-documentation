@@ -1,0 +1,177 @@
+---
+title: Suitcase Split Order Package
+description: >-
+  Automatically split orders into multiple packages based on product size
+  categories (Small, Medium, Large, Sets) and configurable shipment conditions.
+---
+## Overview
+
+The **RIS-RM-2023 – SuitcaseSplitOrderPackage** macro enables advanced packaging automation by splitting orders into multiple shipments based on item size and predefined rules.
+
+It intelligently groups items into packages using size categories such as Small, Medium, Large, and Sets.
+
+<Callout kind="tip" collapsed="false">
+  Ensure extended property configuration and size mappings are correctly defined before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Reads item size from extended properties  
+- Categorizes items into size groups  
+- Applies custom shipment rules  
+- Splits orders into multiple packages  
+
+👉 In short:  
+Split orders into shipments based on size and rule-based logic.
+
+## When It Runs
+
+Used for advanced packaging and shipping logic
+
+Typically runs:
+
+- Manual execution (on selected orders)  
+- Triggered via Rules Engine  
+- During packing or shipping workflows  
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of order IDs to process.
+</ParamField>
+
+<ParamField path="propertyname" param-type="string" required="true" deprecated="false">
+  Extended property name that stores item size.
+</ParamField>
+
+<ParamField path="smallvalue" param-type="string" required="true" deprecated="false">
+  Values considered as Small category (comma-separated).
+</ParamField>
+
+<ParamField path="mediumvalue" param-type="string" required="true" deprecated="false">
+  Values considered as Medium category (comma-separated).
+</ParamField>
+
+<ParamField path="largevalue" param-type="string" required="true" deprecated="false">
+  Values considered as Large category (comma-separated).
+</ParamField>
+
+<ParamField path="setvalue" param-type="string" required="true" deprecated="false">
+  Values considered as Sets category (comma-separated).
+</ParamField>
+
+<ParamField path="conditions" param-type="string" required="true" deprecated="false">
+  Rules that define how shipments should be split.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Example:  
+  smallvalue → "S,SMALL"  
+  mediumvalue → "M,MEDIUM"  
+  largevalue → "L,LARGE"  
+  setvalue → "SET,COMBO"  
+
+  Meaning:  
+  Items are categorized into standard size groups before applying splitting logic.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Prepare Size Mapping" icon="settings" title-type="p">
+    Convert input values into Small, Medium, Large, and Sets categories.
+  </Step>
+
+  <Step title="Process Orders" icon="list" title-type="p">
+    Loop through each OrderId and retrieve full order details.
+  </Step>
+
+  <Step title="Read Item Properties" icon="search" title-type="p">
+    Extract size value from item extended properties.
+  </Step>
+
+  <Step title="Normalize Categories" icon="layers" title-type="p">
+    Map extracted values into standard size groups.
+  </Step>
+
+  <Step title="Group Items" icon="box" title-type="p">
+    Group items based on size categories.
+  </Step>
+
+  <Step title="Calculate Quantities" icon="hash" title-type="p">
+    Count total quantity for each size group.
+  </Step>
+
+  <Step title="Apply Conditions" icon="git-branch" title-type="p">
+    Evaluate shipment rules and determine grouping logic.
+  </Step>
+
+  <Step title="Build Shipment Groups" icon="package" title-type="p">
+    Assign items into multiple shipment groups.
+  </Step>
+
+  <Step title="Create Packaging Structure" icon="grid" title-type="p">
+    Convert shipment groups into packaging bins.
+  </Step>
+
+  <Step title="Apply Packaging Split" icon="edit" title-type="p">
+    Override default packaging with manual split structure.
+  </Step>
+
+  <Step title="Log Results" icon="file-text" title-type="p">
+    Generate shipment breakdown and execution logs.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Orders split into multiple shipments  
+  - Packaging assigned based on size rules  
+  - Shipment grouping follows defined conditions  
+  - Detailed logs generated for tracking  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Automating complex packaging decisions  
+- Reducing manual packing effort  
+- Optimizing shipment grouping  
+- Improving warehouse efficiency  
+- Supporting custom business rules  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Requires correct extended property configuration  
+  - Size mappings must be accurate  
+  - Logic is complex due to rule-based processing  
+  - Duplicate SKU handling is manual  
+  - Email reporting exists but is disabled  
+  - Incorrect conditions may lead to unexpected splits  
+  - Uses existing packaging type from the order  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Split Orders Based on Suitcase Sizes" default-open="false">
+  Orders contain items of different sizes such as Small, Medium, and Large.
+
+  👉 The macro:
+
+  - Categorizes items by size  
+  - Applies predefined split conditions  
+  - Creates multiple shipment groups  
+
+  Result: Orders are efficiently split into optimized packages for shipping.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Combining size-based categorization with configurable rules enables highly flexible packaging decisions, ensuring efficient shipment handling for complex order scenarios.
+</Callout>

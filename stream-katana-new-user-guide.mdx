@@ -1,0 +1,108 @@
+---
+title: Stream Katana Integration – Quick Start Guide
+---
+<Card title="End User Guide" href="/stream-katana" icon="activity-square" horizontal="false" target="_self">
+  Check the documentation guide for end users
+</Card>
+
+## Overview
+
+The Stream Katana Integration connects your Katana manufacturing and inventory system with Stream, your logistics and delivery platform. Sales orders and returns flow automatically from Katana into Stream, where shipments are created and dispatched. Tracking information syncs back to Katana so your team always has up-to-date delivery status without manual effort.
+
+---
+
+## What You Can Do
+
+- Send sales orders from Katana to Stream automatically
+
+- Create shipments in Stream for each fulfillment batch
+
+- Access shipping labels through the Stream platform
+
+- Receive tracking numbers and consignment references back into Katana
+
+- Track delivery and collection status across both systems
+
+- Process return orders as Stream collection jobs (scheduled pickups)
+
+---
+
+## Before You Start
+
+- Active Katana account with sales orders and products configured
+
+- Stream account with a valid Client ID and Client Secret
+
+- At least one depot configured in Stream
+
+- Complete customer shipping addresses on your Katana orders
+
+---
+
+## Basic Setup
+
+1. Install the Stream Katana Integration on your environment
+
+2. Add your Stream Client ID and Client Secret to the integration settings
+
+3. Add your Katana API key to the integration settings
+
+4. Ensure your Katana warehouse location names match your Stream depot names
+
+5. Register Katana webhooks so order changes trigger syncs automatically
+
+---
+
+## How It Works
+
+1. Create or receive a sales order in Katana and assign products and a delivery address
+
+2. Pick the items and record the fulfillment in Katana
+
+3. The integration detects the fulfillment and sends the order to Stream
+
+4. Stream creates the shipment — the label is available in Stream for printing
+
+5. The tracking number and consignment reference sync back into Katana automatically
+
+---
+
+## What to Check First
+
+- The order in Katana has at least one fulfillment record (items must be picked)
+
+- The customer's shipping address is fully filled in
+
+- No validation errors appear in the sync response
+
+- The tracking number is visible in the Katana fulfillment after sync completes
+
+---
+
+## Common Issues
+
+- **Order not syncing** → The order has no fulfillment records in Katana; pick the items first
+
+- **Shipment not created** → Shipping address is missing or incomplete; update the order and re-sync
+
+- **No tracking number** → Check that Stream credentials are valid and at least one depot exists
+
+- **Wrong depot assigned** → The Katana location name does not match any Stream depot name; align the names on both platforms
+
+---
+
+## Quick Tips
+
+- Always complete the fulfillment step in Katana before expecting a shipment to appear in Stream
+
+- Keep customer address data accurate — invalid addresses will cause Stream to reject the order
+
+- If a sync fails, correct the issue and re-trigger the sync; it is safe to run more than once
+
+- Start with a small number of test orders to confirm everything is working before syncing in bulk
+
+---
+
+## Summary
+
+The Stream Katana Integration automates the handoff from order management to delivery execution — no manual data entry, no missed shipments. Keep your Katana orders fulfilled and your Stream account configured, and tracking flows back to you automatically.

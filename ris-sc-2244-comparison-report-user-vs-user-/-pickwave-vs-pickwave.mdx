@@ -1,0 +1,159 @@
+---
+title: Comparison Report (User vs User / Pickwave vs Pickwave)
+description: >-
+  Compare two users or two pickwaves side-by-side to evaluate performance,
+  efficiency, and productivity differences.
+---
+## Overview
+
+The **RIS-SC-2244 – Comparison Report (User vs User / Pickwave vs Pickwave)** enables side-by-side comparison of performance between two users or two pickwaves to identify efficiency, speed, and output differences.
+
+<Callout kind="tip" collapsed="false">
+  Use consistent date ranges and similar workloads for accurate and fair comparisons.
+</Callout>
+
+## Purpose
+
+This report:
+
+- Compares two users or two pickwaves
+
+- Measures performance metrics side-by-side
+
+- Highlights differences in speed, output, and efficiency
+
+- Supports decision-making and performance evaluation
+
+👉 In short:\
+Compare → analyze → find difference → decide better performer.
+
+## When It Runs
+
+Typically executed:
+
+- During performance reviews
+
+- When comparing staff members
+
+- When analyzing pickwave efficiency
+
+- For improvement tracking
+
+- For operational decision-making
+
+- Manually as needed
+
+## Parameters
+
+<ParamField path="WaveA" param-type="number" required="false" deprecated="false">
+  First pickwave ID for comparison.
+</ParamField>
+
+<ParamField path="WaveB" param-type="number" required="false" deprecated="false">
+  Second pickwave ID for comparison.
+</ParamField>
+
+<ParamField path="FromDate" param-type="DateTime" required="false" deprecated="false">
+  Start date for user comparison.
+</ParamField>
+
+<ParamField path="ToDate" param-type="DateTime" required="false" deprecated="false">
+  End date for user comparison.
+</ParamField>
+
+<ParamField path="UserA" param-type="string" required="false" deprecated="false">
+  First user for comparison.
+</ParamField>
+
+<ParamField path="UserB" param-type="string" required="false" deprecated="false">
+  Second user for comparison.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Provide either WaveA & WaveB for pickwave comparison OR UserA & UserB with date range for user comparison.
+</Callout>
+
+## Data Used
+
+- Pickwave details (start time, end time)
+
+- Orders within each pickwave
+
+- Items picked
+
+- User (staff) information
+
+## Simple Explanation
+
+The report compares two entities (users or pickwaves), analyzes their performance metrics, and displays the results side-by-side for easy evaluation.
+
+## Step-by-Step Flow
+
+<Steps>
+  <Step title="Select Comparison Type" icon="git-compare" title-type="p">
+    Choose between comparing two pickwaves or two users.
+  </Step>
+
+  <Step title="Fetch Data" icon="download" title-type="p">
+    Retrieve:
+  </Step>
+
+  <Step title="Calculate Performance" icon="bar-chart" title-type="p">
+    Compute:
+  </Step>
+
+  <Step title="Display Side-by-Side Comparison" icon="columns" title-type="p">
+    Show metrics for both entities in a comparison table.
+  </Step>
+
+  <Step title="Calculate Difference" icon="trending-up" title-type="p">
+    Display difference between both entities (e.g., +50 items).
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Clear side-by-side comparison
+
+  - Performance differences highlighted
+
+  - Easy identification of better performer
+</Callout>
+
+## Usefulness
+
+- **Easy Comparison** – Quickly compare users or pickwaves
+
+- **Performance Tracking** – Identify better performer
+
+- **Decision Making** – Useful for promotions and training
+
+- **Problem Detection** – Identify inefficiencies
+
+## Example Scenario
+
+<Expandable title="Comparing Two Warehouse Workers" default-open="false">
+  A manager wants to identify the better performer.\
+  The report:
+
+  - Compares both users
+
+  - Evaluates speed, accuracy, and output
+
+  Result:
+
+  - Identifies top performer
+
+  - Highlights training needs
+
+  - Improves team performance
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This report follows a simple logic: Compare → Analyze → Find Difference → Decide.\
+  It helps prevent guess-based evaluations, unfair comparisons, missed underperformance, and unnoticed productivity gaps.
+</Callout>
+

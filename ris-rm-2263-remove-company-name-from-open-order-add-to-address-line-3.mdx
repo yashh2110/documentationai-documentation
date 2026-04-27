@@ -1,0 +1,145 @@
+---
+title: Remove Company Name from Open Order & Add to Address Line 3
+description: >-
+  Standardize address data by moving the Company Name into Address Line 3,
+  applying character limits, and clearing the Company field for courier
+  compatibility.
+---
+## Overview
+
+The **RIS-RM-2263 – Remove Company Name from Open Order & Add to Address Line 3** macro ensures address standardization by relocating the company name into Address Line 3 and clearing the Company field.
+
+<Callout kind="tip" collapsed="false">
+  Use this macro before shipping label generation to ensure compatibility with couriers that do not support the Company field.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Moves Company Name into Address Line 3
+
+- Clears the Company field
+
+- Applies character length restrictions
+
+- Standardizes address format for courier systems
+
+👉 In short:\
+Move company → merge into Address3 → trim → clear field → save.
+
+## When It Runs
+
+Typically executed:
+
+- Before shipping label generation
+
+- For courier system compatibility
+
+- During data standardization
+
+- When courier does not support Company field
+
+- Manually or via automation
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="GUID[]" required="true" deprecated="false">
+  List of orders to process.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Example: OrderIds = \[Order1, Order2, Order3]
+</Callout>
+
+## Simple Explanation
+
+The macro extracts the company name from the order, merges it into Address Line 3, ensures it fits within allowed limits, clears the Company field, and saves the updated address.
+
+## Step-by-Step Flow
+
+<Steps>
+  <Step title="Start Macro" icon="play" title-type="p">
+    Check if OrderIds are provided. If empty → exit execution.
+  </Step>
+
+  <Step title="Apply Date Filter" icon="filter" title-type="p">
+    Fetch open orders from the last 45 days to ensure only recent orders are processed.
+  </Step>
+
+  <Step title="Loop Through Orders" icon="list" title-type="p">
+    Process each order individually.
+  </Step>
+
+  <Step title="Validate Order" icon="check-circle" title-type="p">
+    Ensure order exists and address data is not null. Skip invalid orders.
+  </Step>
+
+  <Step title="Check Company Field" icon="search" title-type="p">
+    If Company field is empty → skip order.
+  </Step>
+
+  <Step title="Build Updated Address" icon="edit" title-type="p">
+    Merge Company into Address Line 3:
+
+    Example:
+  </Step>
+
+  <Step title="Apply Length Restriction" icon="scissors" title-type="p">
+    Limit Address Line 3 to maximum 32 characters. Trim if exceeded.
+  </Step>
+
+  <Step title="Clear Company Field" icon="trash" title-type="p">
+    Set Company = "" (empty).
+  </Step>
+
+  <Step title="Save Updated Address" icon="save" title-type="p">
+    Update order using API while keeping other fields unchanged.
+  </Step>
+
+  <Step title="Logging" icon="file-text" title-type="p">
+    Log processed, skipped, and failed orders.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Company name moved to Address Line 3
+
+  - Company field cleared
+
+  - Address formatted for courier compatibility
+</Callout>
+
+## Usefulness
+
+- **Courier Compatibility** – Supports systems without Company field
+
+- **Standardization** – Consistent address structure
+
+- **Automation** – Eliminates manual correction
+
+- **Error Prevention** – Avoids shipping label issues
+
+## Example Scenario
+
+<Expandable title="Courier Without Company Field Support" default-open="false">
+  Orders contain company names, but courier systems only read address lines.
+
+  The macro:
+
+  - Moves Company → Address Line 3
+
+  - Clears Company field
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This macro follows a structured flow:\
+  Order → Check Company → Merge into Address3 → Trim → Clear Company → Save.
+
+  It prevents courier failures, missing company details, address formatting issues, manual corrections, and data loss during shipping integration.
+</Callout>
+

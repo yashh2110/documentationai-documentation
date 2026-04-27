@@ -1,0 +1,102 @@
+---
+title: Customer display
+description: >-
+  The customer display feature shows real-time order details on a secondary
+  screen during checkout, improving transparency and customer experience.
+---
+The **customer display** provides live updates on a secondary screen during the checkout process. It shows:
+
+- Items added to the cart
+
+- Running subtotal
+
+- Payment details
+
+- Total amount due
+
+- Selected <a href="https://www.odoo.com/documentation/19.0/applications/sales/point_of_sale/payment_methods.html" target="_blank" rel="noopener noreferrer">**payment method**</a>
+
+- Change to be returned
+
+<Image src="https://www.odoo.com/documentation/19.0/_images/display.png" width="651" height="902" alt="Customer display screen in POS." />
+
+**Note**
+
+Both the POS screen and customer display should be at least **6 inches** in size. Larger displays are recommended for better visibility.
+
+## **Configuration**
+
+The customer display can be used in two ways:
+
+- Connected directly via **USB-C or HDMI**
+
+- Connected through an <a href="https://www.odoo.com/documentation/19.0/applications/general/iot.html" target="_blank" rel="noopener noreferrer">**IoT system**</a>
+
+The feature is enabled by default, but you can customize its appearance.
+
+### **Set background image**
+
+1. Go to <a href="https://www.odoo.com/documentation/19.0/applications/sales/point_of_sale/use.html#pos-use-settings" target="_blank" rel="noopener noreferrer">**POS Settings**</a>
+
+2. Scroll to **Connected Devices**
+
+3. Click **Upload your file** to set a background image
+
+### **Using an IoT-connected display**
+
+To use a screen via IoT:
+
+1. Open <a href="https://www.odoo.com/documentation/19.0/applications/sales/point_of_sale/use.html#pos-use-settings" target="_blank" rel="noopener noreferrer">**POS Settings**</a>
+
+2. Enable **IoT Box**
+
+3. Click **Save**
+
+Then:
+
+1. <a href="https://www.odoo.com/documentation/19.0/applications/general/iot/connect.html" target="_blank" rel="noopener noreferrer">**Connect and configure your IoT system**</a>
+
+2. Return to POS settings
+
+3. Select the screen in the **Customer Display** field
+
+## **Open the customer display**
+
+To launch the display:
+
+1. <a href="https://www.odoo.com/documentation/19.0/applications/sales/point_of_sale/use.html#pos-use-open-register" target="_blank" rel="noopener noreferrer">**Open the POS register**</a>
+
+2. Click the menu icon (☰)
+
+3. Select **Customer Display**
+
+The display will either:
+
+- Open in a new browser window (for external screens)
+
+- Appear directly on the IoT-connected display
+
+**Note**
+
+For IoT setups, both the POS and display device must be connected to the same local network.
+
+## **Android dual-screen setup**
+
+For POS terminals running the <a href="https://play.google.com/store/apps/details?id=com.odoo.mobile" target="_blank" rel="noopener noreferrer">**Odoo mobile app**</a> with dual-screen support:
+
+1. <a href="https://www.odoo.com/documentation/19.0/applications/general/apps_modules.html" target="_blank" rel="noopener noreferrer">**Install the Point of Sale Mobile module**</a>
+
+2. Open the POS register
+
+3. Click the menu icon (☰)
+
+4. Select **Customer Display**
+
+The display will automatically appear on the secondary screen.
+
+## **Related resources**
+
+- <a href="https://www.odoo.com/documentation/19.0/applications/sales/point_of_sale/hardware_network/pos_iot.html" target="_blank" rel="noopener noreferrer">**IoT system connection**</a>
+
+- <a href="https://www.odoo.com/documentation/19.0/applications/general/iot.html" target="_blank" rel="noopener noreferrer">**Internet of Things (IoT)**</a>
+

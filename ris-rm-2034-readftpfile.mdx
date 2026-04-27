@@ -1,0 +1,141 @@
+---
+title: FTP File Reader & Downloader
+description: >-
+  Connect to an FTP server, retrieve available files, and download them into
+  memory for external integration workflows.
+---
+## Overview
+
+The **RIS-RM-2034 – ReadFTPFile** macro connects to an FTP server, retrieves a list of available files, and downloads them.
+
+It acts as a basic file ingestion mechanism for integrating external systems with Linnworks.
+
+<Callout kind="tip" collapsed="false">
+  Ensure FTP credentials and server path are correctly configured before executing this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Connects to an FTP server  
+- Retrieves file list from directory  
+- Downloads all available files  
+- Stores file data temporarily  
+
+👉 In short:  
+Fetch files from FTP and download them.
+
+## When It Runs
+
+Used for file import and integration workflows
+
+Typically runs:
+
+- Scheduled execution (recommended)  
+- Manual execution  
+- During external system integrations  
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="false">
+  Placeholder parameter (not used in this macro).
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Note:  
+  - FTP configuration (server, username, password) is hardcoded  
+  - No dynamic input parameters are used  
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Connect to FTP Server" icon="link" title-type="p">
+    Create FTP request using server URL.
+  </Step>
+
+  <Step title="Authenticate" icon="lock" title-type="p">
+    Use username and password to establish connection.
+  </Step>
+
+  <Step title="Retrieve File List" icon="list" title-type="p">
+    Fetch directory listing from FTP server.
+  </Step>
+
+  <Step title="Parse File Names" icon="file-text" title-type="p">
+    Convert raw response into a list of file names.
+  </Step>
+
+  <Step title="Loop Through Files" icon="repeat" title-type="p">
+    Iterate through each file in the list.
+  </Step>
+
+  <Step title="Download Files" icon="download" title-type="p">
+    Download file content into memory using FTP request.
+  </Step>
+
+  <Step title="Complete Execution" icon="check-circle" title-type="p">
+    Finish process without further file processing or storage.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - FTP connection established successfully  
+
+  - File list retrieved from server  
+
+  - All files downloaded into memory  
+
+  - Data ready for further processing (if extended)  
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Supporting external system integrations  
+- Automating file retrieval from FTP  
+- Reducing manual download effort  
+- Acting as a base for import workflows  
+- Preparing data for further processing  
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Files are not saved or processed after download  
+
+  - FTP credentials are hardcoded  
+
+  - No logging implemented  
+
+  - No error handling for individual file failures  
+
+  - Downloads all files without filtering  
+
+  - No duplicate file handling  
+
+  - OrderIds parameter is unused  
+</Callout>
+
+## Example Scenario
+
+<Expandable title="FTP File Download Example" default-open="false">
+  A system uploads order files to an FTP server.
+
+  👉 The macro:
+
+  - Connects to FTP  
+  - Retrieves list of files  
+  - Downloads each file  
+
+  Result: Files are fetched and ready for further processing (if implemented).
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This macro provides a foundational FTP integration layer, but requires additional logic for file storage, validation, and processing to be fully production-ready.
+</Callout>

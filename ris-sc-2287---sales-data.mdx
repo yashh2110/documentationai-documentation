@@ -1,0 +1,181 @@
+---
+title: SKU Sales Quantity Report (Open + Processed Orders with Supplier Filter)
+description: >-
+  Calculates total quantity sold per SKU by combining open and processed orders,
+  with optional supplier filtering and exclusion of composite or inactive items.
+---
+
+## Overview
+
+The **SKU Sales Quantity Report** provides a consolidated view of product performance by calculating total quantities sold across both open and processed orders.
+
+It focuses only on active, non-composite SKUs and supports supplier-based filtering.
+
+<Callout kind="tip" collapsed="false">
+  Total Quantity Sold = Open Order Qty + Processed Order Qty
+</Callout>
+
+---
+
+## Purpose
+
+This report:
+
+- Combines open and processed order data  
+- Calculates total quantity sold per SKU  
+- Filters SKUs by supplier (optional)  
+- Excludes inactive, archived, and composite items  
+
+👉 In short:  
+Get total SKU sales volume across all order stages.
+
+---
+
+## When It Runs
+
+Executed on-demand (SQL report)
+
+Typically used:
+
+- Sales performance analysis  
+- Inventory planning  
+- Supplier-based reporting  
+- Demand forecasting  
+- Stock replenishment decisions  
+
+---
+
+## Parameters
+
+<ParamField path="fromDate_input" param-type="datetime" required="true">
+  Start date for order filtering.
+</ParamField>
+
+<ParamField path="toDate_input" param-type="datetime" required="true">
+  End date for order filtering.
+</ParamField>
+
+<ParamField path="supplierName" param-type="string" required="false">
+  Supplier name filter. Use <b>"All"</b> to include all suppliers.
+</ParamField>
+
+---
+
+## How It Works
+
+<Steps>
+  <Step title="Prepare Date Range" icon="calendar" title-type="p">
+    Adjusts input dates to cover full days:
+    - Start → beginning of day  
+    - End → end of day (23:59:59)
+  </Step>
+
+  <Step title="Filter Master SKUs" icon="package" title-type="p">
+    Selects only valid SKUs:
+    - Not deleted  
+    - Not archived  
+    - Not composite (bundle components excluded)  
+  </Step>
+
+  <Step title="Apply Supplier Filter" icon="filter" title-type="p">
+    Filters SKUs based on supplier mapping:
+    - Includes all if "All" selected  
+    - Otherwise matches supplier name  
+  </Step>
+
+  <Step title="Calculate Open Order Quantity" icon="clock" title-type="p">
+    Retrieves quantities from open orders within date range.
+  </Step>
+
+  <Step title="Calculate Processed Order Quantity" icon="check-circle" title-type="p">
+    Retrieves quantities from processed orders:
+    - Excludes cancelled orders (status ≠ 0)
+  </Step>
+
+  <Step title="Combine Quantities" icon="plus-circle" title-type="p">
+    Total Qty Sold = Open Qty + Processed Qty
+  </Step>
+
+  <Step title="Filter Final Results" icon="list" title-type="p">
+    Includes only SKUs where total quantity > 0.
+  </Step>
+
+  <Step title="Sort Output" icon="arrow-down" title-type="p">
+    Orders results by highest selling SKUs first.
+  </Step>
+</Steps>
+
+---
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - SKU-level sales quantity  
+
+  - Combined open and processed order data  
+
+  - Supplier-based filtering supported  
+
+  - Only active and valid SKUs included  
+
+  - Sorted by top-selling products  
+</Callout>
+
+---
+
+## Usefulness
+
+This report is highly beneficial for:
+
+- Identifying top-selling products  
+- Demand forecasting  
+- Inventory replenishment planning  
+- Supplier performance analysis  
+- Sales trend tracking  
+
+---
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Includes both open and processed orders  
+
+  - Cancelled orders are excluded (status = 0)  
+
+  - Composite/bundle SKUs are excluded  
+
+  - Supplier filter depends on ItemSupplier mapping  
+
+  - SKUs with zero sales are excluded  
+
+  - Purchase price is shown for reference only (not used in calculation)  
+</Callout>
+
+---
+
+## Example Scenario
+
+<Expandable title="SKU Sales Calculation Example" default-open="false">
+  SKU: ABC123  
+
+  Open Orders → Qty = 5  
+  Processed Orders → Qty = 10  
+
+  👉 Total Qty Sold:
+  5 + 10 = 15  
+
+  Result:
+  SKU appears with total quantity = 15  
+
+  Insight:
+  Provides a complete sales picture including pending orders.
+</Expandable>
+
+---
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  This report combines pipeline (open orders) and completed sales (processed orders) into a single metric, giving a more accurate view of product demand.  
+  It is especially useful for proactive inventory planning and supplier coordination.
+</Callout>

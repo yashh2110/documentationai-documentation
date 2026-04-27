@@ -1,0 +1,182 @@
+---
+title: Identifier Assignment for Orders
+description: >-
+  Automatically assign identifiers to orders based on matching shipping or
+  payment methods extracted from order XML for efficient order classification.
+---
+## Overview
+
+The **RIS-RM-2025 – IdentifierAssing** macro automates order tagging by evaluating shipping and payment method values directly from order XML.
+
+It ensures that orders meeting specific conditions are identified and tagged with a predefined identifier for easier tracking and workflow automation.
+
+<Callout kind="tip" collapsed="false">
+  Ensure shipping and payment method values are correctly defined and match XML data before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Reads shipping method from XML
+
+- Reads payment method from XML
+
+- Matches against configured values
+
+- Assigns identifier to matching orders
+
+👉 In short:\
+Tag orders automatically based on shipping or payment method.
+
+## When It Runs
+
+Used for order classification and tagging
+
+Typically runs:
+
+- Manual execution (on selected orders)
+
+- Triggered via Rules Engine
+
+- After order import
+
+## Parameters
+
+<ParamField path="OrderIds" param-type="string" required="true" deprecated="false">
+  List of order IDs to process.
+</ParamField>
+
+<ParamField path="IdentifierName" param-type="string" required="true" deprecated="false">
+  Identifier to assign to matching orders.
+</ParamField>
+
+<ParamField path="ShippingMethod" param-type="string" required="false" deprecated="false">
+  Comma-separated list of shipping methods to match.
+</ParamField>
+
+<ParamField path="PaymentMethod" param-type="string" required="false" deprecated="false">
+  Comma-separated list of payment methods to match.
+</ParamField>
+
+<Callout kind="info" collapsed="false">
+  Matching Logic:
+
+  - Shipping method match OR
+
+  - Payment method match
+
+  If either condition is satisfied → identifier is assigned.
+</Callout>
+
+## How It Works
+
+<Steps>
+  <Step title="Prepare Input Lists" icon="settings" title-type="p">
+    Split ShippingMethod and PaymentMethod into structured lists.
+  </Step>
+
+  <Step title="Process Orders" icon="list" title-type="p">
+    Loop through each OrderId and process orders individually.
+  </Step>
+
+  <Step title="Fetch Order XML" icon="download" title-type="p">
+    Retrieve XML data using GetOrderXml API.
+  </Step>
+
+  <Step title="Extract Values" icon="search" title-type="p">
+    Read shipping method and payment method from XML.
+  </Step>
+
+  <Step title="Match Conditions" icon="check-circle" title-type="p">
+    Check if:
+
+    - Shipping method matches configured list\
+      OR
+
+    - Payment method matches configured list
+  </Step>
+
+  <Step title="Collect Matching Orders" icon="filter" title-type="p">
+    Add matching orders to a processing list.
+  </Step>
+
+  <Step title="Assign Identifier" icon="tag" title-type="p">
+    - Check if identifier exists
+
+    - Create identifier if missing
+
+    - Assign it to all matching orders
+  </Step>
+
+  <Step title="Log Execution" icon="file-text" title-type="p">
+    Record processed orders and any issues.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Orders matching conditions are identified
+
+  - Identifier assigned automatically
+
+  - Orders can be filtered using tags
+
+  - No manual tagging required
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Automating order classification
+
+- Reducing manual tagging effort
+
+- Ensuring consistent identifiers
+
+- Supporting workflow automation
+
+- Improving order visibility
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Depends on correct XML structure
+
+  - Requires accurate shipping and payment values
+
+  - Uses OR condition for matching
+
+  - Limited validation for XML nodes
+
+  - Identifier must remain consistent
+
+  - Matching may be case-sensitive
+
+  - Incorrect inputs may lead to missed tagging
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Tag Orders Based on Shipping or Payment Method" default-open="false">
+  Orders contain specific shipping or payment methods in XML.
+
+  👉 The macro:
+
+  - Reads XML values
+
+  - Matches against configured lists
+
+  - Assigns identifier
+
+  Result: Orders are automatically tagged for filtering and processing.
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Leveraging XML-based shipping and payment data for tagging ensures consistent order classification, reduces manual effort, and enhances workflow automation.
+</Callout>
+

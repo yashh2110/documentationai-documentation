@@ -1,0 +1,155 @@
+---
+title: Add IOSS / Tax ID as Order Note
+description: >-
+  Extracts IOSS or Tax ID information from order Extended Properties and adds it
+  as a customer-visible order note for compliance and shipping purposes.
+---
+## Overview
+
+The **RIS-RM-2053 – PrintTax – IOSS Information to Notes)** macro reads tax-related Extended Properties from orders and attaches them as customer-visible notes.
+
+It ensures tax information is clearly available for shipping, invoices, and compliance checks.
+
+<Callout kind="tip" collapsed="false">
+  Ensure the extended property name "MARKETPLACE\_TAXID" is correctly configured before running this macro.
+</Callout>
+
+## Purpose
+
+This macro:
+
+- Reads Tax ID from order Extended Properties
+
+- Converts the value into an order note
+
+- Adds note as customer-visible
+
+- Supports international shipping and compliance
+
+👉 In short:\
+Automatically add tax information as an order note.
+
+## When It Runs
+
+Used for tax compliance and documentation
+
+Typically runs:
+
+- During order processing
+
+- Manual execution
+
+- Before shipping or invoice generation
+
+## Parameters
+
+<ParamField path="orderIds" param-type="string" required="true" deprecated="false">
+  List of orders to process
+</ParamField>
+
+## How It Works
+
+<Steps>
+  <Step title="Start Macro" icon="play-circle" title-type="p">
+    Log start message and loop through each order ID.
+  </Step>
+
+  <Step title="Fetch Order Details" icon="download" title-type="p">
+    Retrieve full order using GetOrderById.
+  </Step>
+
+  <Step title="Check for Tax ID" icon="search" title-type="p">
+    Look for Extended Property where:
+
+    - Name = MARKETPLACE\_TAXID
+
+    - Type = Attribute\
+      Skip orders if not found.
+  </Step>
+
+  <Step title="Prepare Note Content" icon="file-text" title-type="p">
+    Create note text in format:
+    Tax Details: \[Tax ID value]\
+    Example: Tax Details: IM2760000742
+  </Step>
+
+  <Step title="Add Order Note" icon="note" title-type="p">
+    - Fetch existing notes using GetOrderNotes
+
+    - Create new note with:
+
+      - Text = tax details
+
+      - Internal = FALSE (customer-visible)
+
+      - CreatedBy = "Militar Macro"
+
+    - Save notes using SetOrderNotes
+  </Step>
+
+  <Step title="Logging" icon="check-circle" title-type="p">
+    Log macro start, completion, and any errors.
+  </Step>
+</Steps>
+
+## Final Result
+
+<Callout kind="success" collapsed="false">
+  - Tax ID added as customer-visible order note
+
+  - Supports shipping and invoicing systems
+
+  - Original order data remains unchanged
+</Callout>
+
+## Usefulness
+
+This macro is highly beneficial for:
+
+- Ensuring tax compliance (IOSS, VAT)
+
+- Making tax information easily visible
+
+- Eliminating manual copying of tax IDs
+
+- Reducing shipping and documentation errors
+
+- Improving audit and record keeping
+
+## Important Notes
+
+<Callout kind="warning" collapsed="false">
+  - Only processes orders with the required extended property
+
+  - Does not overwrite existing notes
+
+  - Notes are customer-visible; accuracy is critical
+
+  - Relies on correct naming of extended property
+
+  - Lightweight and fast execution
+</Callout>
+
+## Example Scenario
+
+<Expandable title="Add Tax ID Note Example" default-open="false">
+  Order Extended Property:
+
+  - Name: MARKETPLACE\_TAXID
+
+  - Value: IM2760000742
+
+  Result:
+
+  - Order receives a note:\
+    Tax Details: IM2760000742
+
+  - Note is visible externally and usable for shipping and documentation
+</Expandable>
+
+## Key Insight
+
+<Callout kind="tip" collapsed="false">
+  Automating tax information as order notes ensures compliance, reduces manual effort, and provides visibility for international shipping workflows.
+</Callout>
+
