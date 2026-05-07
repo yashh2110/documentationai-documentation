@@ -2,6 +2,28 @@
 title: Release Notes
 description: 'Changes, fixes, and improvements across versions'
 ---
+<Update label="2026-05-05" description="AI Assistant bot protection, display controls, deployment fixes, and editor polish" tags={["feature","improvement","fix"]}>
+  ## AI Assistant bot protection
+
+  You can now enable bot protection for the AI Assistant using an invisible CAPTCHA. This helps reduce automated abuse while keeping the assistant available to real users. The setting is available in AI Assistant configuration and is now carried through deployment correctly.
+
+  ## AI Assistant display controls
+
+  AI Assistant display settings now support more layout control. You can choose between the default side panel and a floating mode, and configure floating placement with extra bottom spacing when needed.
+
+  ## Deployment and workflow improvements
+
+  Deployment errors now surface more clearly in the dashboard, with better status states and a faster path to resolution. A new **Fix with Agent** flow can open the editor on the affected branch and pass deployment error context to the AI agent automatically.
+
+  Fresh deployments also preserve dashboard-configured AI Assistant settings more reliably, even when those values are not explicitly present in `documentation.json`.
+
+  ## Editor and dashboard polish
+
+  The editor now preserves ordered list numbering more reliably when converting MDX content, and expandable titles are easier to edit with single-click interaction.
+
+  Deployment status and live deployment URLs are also more reliable in the editor and dashboard, with improved loading and route protection behavior.
+</Update>
+
 <Update label="2026-04-10" description="Collections, container pages, JWT/OAuth access control, and cookie consent" tags={["feature"]}>
   ## CollectionList and CollectionContent components
 
