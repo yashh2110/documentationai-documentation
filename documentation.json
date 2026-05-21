@@ -39,6 +39,10 @@
             "expandable": false,
             "pages": [
               {
+                "title": "Testsiasd",
+                "path": "testsiasd"
+              },
+              {
                 "title": "Introduction",
                 "path": "getting-started/introduction",
                 "icon": "star",
